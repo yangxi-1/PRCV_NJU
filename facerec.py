@@ -20,7 +20,7 @@ def load_data(data_dir):
         person_path = os.path.join(data_dir, person_dir)
 
         for filename in os.listdir(person_path):
-            if not filename.endwith('.pgm'):
+            if not filename.endswith('.pgm'):
                 continue
             image_path = os.path.join(person_path, filename)
             # 以灰度图像读入,pgm文件是灰度图像
@@ -47,9 +47,9 @@ def split_data(images, labels):
 
     # 按类别划分数据集(分层抽样)
     for label in np.unique(labels):
-        idx = np.where(train_labels == label)[0]
-        train_idx = idx[:int(0.8*len(idx))]
-        test_idx = idx[int(0.8*len(idx)):]
+        idx = np.where(labels == label)[0]
+        train_idx = idx[:int(0.7*len(idx))]
+        test_idx = idx[int(0.7*len(idx)):]
         train_images.append(images[train_idx])
         train_labels.append(labels[train_idx])
         test_images.append(images[test_idx])
@@ -59,6 +59,8 @@ def split_data(images, labels):
     train_labels = np.array(train_labels)
     test_images = np.array(test_images)
     test_labels = np.array(test_labels)
+    print(train_images.shape, train_labels.shape,
+          test_images.shape, test_labels.shape)
     return train_images, train_labels, test_images, test_labels
 
 
@@ -72,8 +74,10 @@ class PCA:
         self.mean = np.mean(X, axis=0)  # axis=0表示按列求均值
         Xc = X-self.mean
 
+        print(Xc.shape, Xc.T.shape)
+
         # 计算协方差矩阵,Xc.shape[0]-1是为了得到无偏估计
-        cov_matrix = Xc.T.dot(Xc)/(Xc.shape[0]-1)
+        cov_matrix = Xc.T@Xc/(Xc.shape[0]-1)
         eigenvalues, eigenvectors = np.linalg.eig(cov_matrix)  # 计算特征值和特征向量
 
         # 对特征向量排序
@@ -88,8 +92,12 @@ class PCA:
             np.linalg.norm(self.components, axis=0)  # 归一化
         return self
 
+    def transform(self, X):
+        Xc = X - self.mean
+        return Xc @ self.components
 
-data_dir = 'att_faces'
+
+data_dir = 'D:/codes/.vscode/NLP/att_faces.tar/att_faces/orl_faces'
 images, labels = load_data(data_dir)
 images = images/255.0
 
