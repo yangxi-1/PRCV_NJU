@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using OpenCV Java with Eclipse &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="Introduction to OpenCV" href="../table_of_content_introduction/table_of_content_introduction.html" />
+    <link rel="next" title="Introduction to OpenCV Development with Clojure" href="../clojure_dev_intro/clojure_dev_intro.html" />
+    <link rel="prev" title="Introduction to Java Development" href="../desktop_java/java_dev_intro.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../clojure_dev_intro/clojure_dev_intro.html" title="Introduction to OpenCV Development with Clojure"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../desktop_java/java_dev_intro.html" title="Introduction to Java Development"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_introduction/table_of_content_introduction.html" accesskey="U">Introduction to OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="using-opencv-java-with-eclipse">
+<span id="java-eclipse"></span><h1>Using OpenCV Java with Eclipse<a class="headerlink" href="#using-opencv-java-with-eclipse" title="Permalink to this headline">¶</a></h1>
+<p>Since version 2.4.4 <a class="reference external" href="http://opencv.org/opencv-java-api.html">OpenCV supports Java</a>. In this tutorial I will explain how to setup development environment for using OpenCV Java with Eclipse in <strong>Windows</strong>, so you can enjoy the benefits of garbage collected, very refactorable (rename variable, extract method and whatnot) modern language that enables you to write code with less effort and make less mistakes. Here we go.</p>
+<div class="section" id="configuring-eclipse">
+<h2>Configuring Eclipse<a class="headerlink" href="#configuring-eclipse" title="Permalink to this headline">¶</a></h2>
+<p>First, obtain a fresh release of OpenCV <a class="reference external" href="http://opencv.org/downloads.html">from download page</a> and extract it under a simple location like <code class="docutils literal"><span class="pre">C:\OpenCV-2.4.6\</span></code>. I am using version 2.4.6, but the steps are more or less the same for other versions.</p>
+<p>Now, we will define OpenCV as a user library in Eclipse, so we can reuse the configuration for any project. Launch Eclipse and select <span class="guilabel">Window &#8211;&gt; Preferences</span> from the menu.</p>
+<img alt="Eclipse preferences" class="align-center" src="../../../../_images/1-window-preferences.png" />
+<p>Navigate under <span class="guilabel">Java &#8211;&gt; Build Path &#8211;&gt; User Libraries</span> and click <span class="guilabel">New...</span>.</p>
+<img alt="Creating a new library" class="align-center" src="../../../../_images/2-user-library-new.png" />
+<p>Enter a name, e.g. <code class="docutils literal"><span class="pre">OpenCV-2.4.6</span></code>, for your new library.</p>
+<img alt="Naming the new library" class="align-center" src="../../../../_images/3-library-name.png" />
+<p>Now select your new user library and click <span class="guilabel">Add External JARs...</span>.</p>
+<img alt="Adding external jar" class="align-center" src="../../../../_images/4-add-external-jars.png" />
+<p>Browse through <code class="docutils literal"><span class="pre">C:\OpenCV-2.4.6\build\java\</span></code> and select <code class="docutils literal"><span class="pre">opencv-246.jar</span></code>. After adding the jar, extend the <span class="guilabel">opencv-246.jar</span> and select <span class="guilabel">Native library location</span> and press <span class="guilabel">Edit...</span>.</p>
+<img alt="Selecting native library location 1" class="align-center" src="../../../../_images/5-native-library.png" />
+<p>Select <span class="guilabel">External Folder...</span> and browse to select the folder <code class="docutils literal"><span class="pre">C:\OpenCV-2.4.6\build\java\x64</span></code>. If you have a 32-bit system you need to select the <code class="docutils literal"><span class="pre">x86</span></code> folder instead of <code class="docutils literal"><span class="pre">x64</span></code>.</p>
+<img alt="Selecting native library location 2" class="align-center" src="../../../../_images/6-external-folder.png" />
+<p>Your user library configuration should look like this:</p>
+<img alt="Selecting native library location 2" class="align-center" src="../../../../_images/7-user-library-final.png" />
+</div>
+<div class="section" id="testing-the-configuration-on-a-new-java-project">
+<h2>Testing the configuration on a new Java project<a class="headerlink" href="#testing-the-configuration-on-a-new-java-project" title="Permalink to this headline">¶</a></h2>
+<p>Now start creating a new Java project.</p>
+<img alt="Creating new Java project" class="align-center" src="../../../../_images/7_5-new-java-project.png" />
+<p>On the <span class="guilabel">Java Settings</span> step, under <span class="guilabel">Libraries</span> tab, select <span class="guilabel">Add Library...</span> and select <span class="guilabel">OpenCV-2.4.6</span>, then click <span class="guilabel">Finish</span>.</p>
+<img alt="Adding user defined library 1" class="align-center" src="../../../../_images/8-add-library.png" />
+<img alt="Adding user defined library 2" class="align-center" src="../../../../_images/9-select-user-lib.png" />
+<p>Libraries should look like this:</p>
+<img alt="Adding user defined library" class="align-center" src="../../../../_images/10-new-project-created.png" />
+<p>Now you have created and configured a new Java project it is time to test it. Create a new java file. Here is a starter code for your convenience:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">org.opencv.core.Core</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.opencv.core.CvType</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.opencv.core.Mat</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Hello</span>
+<span class="o">{</span>
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span> <span class="n">String</span><span class="o">[]</span> <span class="n">args</span> <span class="o">)</span>
+   <span class="o">{</span>
+      <span class="n">System</span><span class="o">.</span><span class="na">loadLibrary</span><span class="o">(</span> <span class="n">Core</span><span class="o">.</span><span class="na">NATIVE_LIBRARY_NAME</span> <span class="o">);</span>
+      <span class="n">Mat</span> <span class="n">mat</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">.</span><span class="na">eye</span><span class="o">(</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="n">CvType</span><span class="o">.</span><span class="na">CV_8UC1</span> <span class="o">);</span>
+      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="s">&quot;mat = &quot;</span> <span class="o">+</span> <span class="n">mat</span><span class="o">.</span><span class="na">dump</span><span class="o">()</span> <span class="o">);</span>
+   <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>When you run the code you should see 3x3 identity matrix as output.</p>
+<img alt="Adding user defined library" class="align-center" src="../../../../_images/11-the-code.png" />
+<p>That is it, whenever you start a new project just add the OpenCV user library that you have defined to your project and you are good to go. Enjoy your powerful, less painful development environment :)</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Using OpenCV Java with Eclipse</a><ul>
+<li><a class="reference internal" href="#configuring-eclipse">Configuring Eclipse</a></li>
+<li><a class="reference internal" href="#testing-the-configuration-on-a-new-java-project">Testing the configuration on a new Java project</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../desktop_java/java_dev_intro.html"
+                        title="previous chapter">Introduction to Java Development</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../clojure_dev_intro/clojure_dev_intro.html"
+                        title="next chapter">Introduction to OpenCV Development with Clojure</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/introduction/java_eclipse/java_eclipse.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../clojure_dev_intro/clojure_dev_intro.html" title="Introduction to OpenCV Development with Clojure"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../desktop_java/java_dev_intro.html" title="Introduction to Java Development"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_introduction/table_of_content_introduction.html" >Introduction to OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

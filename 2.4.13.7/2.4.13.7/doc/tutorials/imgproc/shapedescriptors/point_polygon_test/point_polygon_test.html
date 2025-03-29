@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Point Polygon Test &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../../index.html" />
+    <link rel="up" title="imgproc module. Image Processing" href="../../table_of_content_imgproc/table_of_content_imgproc.html" />
+    <link rel="next" title="highgui module. High Level GUI and Media" href="../../../highgui/table_of_content_highgui/table_of_content_highgui.html" />
+    <link rel="prev" title="Image Moments" href="../moments/moments.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../highgui/table_of_content_highgui/table_of_content_highgui.html" title="highgui module. High Level GUI and Media"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../moments/moments.html" title="Image Moments"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" accesskey="U"><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="point-polygon-test">
+<span id="id1"></span><h1>Point Polygon Test<a class="headerlink" href="#point-polygon-test" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Use the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/structural_analysis_and_shape_descriptors.html?highlight=pointpolygontest#pointpolygontest">pointPolygonTest</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial code&#8217;s is shown lines below. You can also download it from <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/tutorial_code/ShapeDescriptors/pointPolygonTest_demo.cpp">here</a></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;opencv2/highgui/highgui.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/imgproc/imgproc.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="cm">/** @function main */</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">/// Create an image</span>
+  <span class="k">const</span> <span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+  <span class="n">Mat</span> <span class="n">src</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span> <span class="n">Size</span><span class="p">(</span> <span class="mi">4</span><span class="o">*</span><span class="n">r</span><span class="p">,</span> <span class="mi">4</span><span class="o">*</span><span class="n">r</span> <span class="p">),</span> <span class="n">CV_8UC1</span> <span class="p">);</span>
+
+  <span class="c1">/// Create a sequence of points to make a contour:</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">Point2f</span><span class="o">&gt;</span> <span class="n">vert</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+
+  <span class="n">vert</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">r</span><span class="p">,</span> <span class="mf">1.34</span><span class="o">*</span><span class="n">r</span> <span class="p">);</span>
+  <span class="n">vert</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">1</span><span class="o">*</span><span class="n">r</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">r</span> <span class="p">);</span>
+  <span class="n">vert</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">r</span><span class="p">,</span> <span class="mf">2.866</span><span class="o">*</span><span class="n">r</span> <span class="p">);</span>
+  <span class="n">vert</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mf">2.5</span><span class="o">*</span><span class="n">r</span><span class="p">,</span> <span class="mf">2.866</span><span class="o">*</span><span class="n">r</span> <span class="p">);</span>
+  <span class="n">vert</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">3</span><span class="o">*</span><span class="n">r</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">r</span> <span class="p">);</span>
+  <span class="n">vert</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mf">2.5</span><span class="o">*</span><span class="n">r</span><span class="p">,</span> <span class="mf">1.34</span><span class="o">*</span><span class="n">r</span> <span class="p">);</span>
+
+  <span class="c1">/// Draw it in src</span>
+  <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span> <span class="p">)</span>
+     <span class="p">{</span> <span class="n">line</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">vert</span><span class="p">[</span><span class="n">j</span><span class="p">],</span>  <span class="n">vert</span><span class="p">[(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="mi">6</span><span class="p">],</span> <span class="n">Scalar</span><span class="p">(</span> <span class="mi">255</span> <span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span> <span class="p">);</span> <span class="p">}</span>
+
+  <span class="c1">/// Get the contours</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">contours</span><span class="p">;</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Vec4i</span><span class="o">&gt;</span> <span class="n">hierarchy</span><span class="p">;</span>
+  <span class="n">Mat</span> <span class="n">src_copy</span> <span class="o">=</span> <span class="n">src</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+
+  <span class="n">findContours</span><span class="p">(</span> <span class="n">src_copy</span><span class="p">,</span> <span class="n">contours</span><span class="p">,</span> <span class="n">hierarchy</span><span class="p">,</span> <span class="n">RETR_TREE</span><span class="p">,</span> <span class="n">CHAIN_APPROX_SIMPLE</span><span class="p">);</span>
+
+  <span class="c1">/// Calculate the distances to the contour</span>
+  <span class="n">Mat</span> <span class="n">raw_dist</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">CV_32FC1</span> <span class="p">);</span>
+
+  <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span> <span class="p">)</span>
+     <span class="p">{</span> <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+          <span class="p">{</span> <span class="n">raw_dist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">pointPolygonTest</span><span class="p">(</span> <span class="n">contours</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Point2f</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">),</span> <span class="nb">true</span> <span class="p">);</span> <span class="p">}</span>
+     <span class="p">}</span>
+
+  <span class="kt">double</span> <span class="n">minVal</span><span class="p">;</span> <span class="kt">double</span> <span class="n">maxVal</span><span class="p">;</span>
+  <span class="n">minMaxLoc</span><span class="p">(</span> <span class="n">raw_dist</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">minVal</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">maxVal</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+  <span class="n">minVal</span> <span class="o">=</span> <span class="n">abs</span><span class="p">(</span><span class="n">minVal</span><span class="p">);</span> <span class="n">maxVal</span> <span class="o">=</span> <span class="n">abs</span><span class="p">(</span><span class="n">maxVal</span><span class="p">);</span>
+
+  <span class="c1">/// Depicting the  distances graphically</span>
+  <span class="n">Mat</span> <span class="n">drawing</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">CV_8UC3</span> <span class="p">);</span>
+
+  <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span> <span class="p">)</span>
+     <span class="p">{</span> <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+          <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span> <span class="n">raw_dist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">)</span>
+              <span class="p">{</span> <span class="n">drawing</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">Vec3b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span> <span class="o">-</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">abs</span><span class="p">(</span><span class="n">raw_dist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">))</span><span class="o">*</span><span class="mi">255</span><span class="o">/</span><span class="n">minVal</span><span class="p">;</span> <span class="p">}</span>
+            <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">raw_dist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">)</span>
+              <span class="p">{</span> <span class="n">drawing</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">Vec3b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span> <span class="o">-</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">raw_dist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span><span class="o">*</span><span class="mi">255</span><span class="o">/</span><span class="n">maxVal</span><span class="p">;</span> <span class="p">}</span>
+            <span class="k">else</span>
+              <span class="p">{</span> <span class="n">drawing</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">Vec3b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span><span class="p">;</span> <span class="n">drawing</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">Vec3b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span><span class="p">;</span> <span class="n">drawing</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">Vec3b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span><span class="p">;</span> <span class="p">}</span>
+          <span class="p">}</span>
+     <span class="p">}</span>
+
+  <span class="c1">/// Create Window and show your results</span>
+  <span class="kt">char</span><span class="o">*</span> <span class="n">source_window</span> <span class="o">=</span> <span class="s">&quot;Source&quot;</span><span class="p">;</span>
+  <span class="n">namedWindow</span><span class="p">(</span> <span class="n">source_window</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+  <span class="n">imshow</span><span class="p">(</span> <span class="n">source_window</span><span class="p">,</span> <span class="n">src</span> <span class="p">);</span>
+  <span class="n">namedWindow</span><span class="p">(</span> <span class="s">&quot;Distance&quot;</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+  <span class="n">imshow</span><span class="p">(</span> <span class="s">&quot;Distance&quot;</span><span class="p">,</span> <span class="n">drawing</span> <span class="p">);</span>
+
+  <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">return</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="result">
+<h2>Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Here it is:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><img alt="PPT_0" class="align-middle" src="../../../../../_images/Point_Polygon_Test_Source_Image.png" /></td>
+<td><img alt="PPT_1" class="align-middle" src="../../../../../_images/Point_Polygon_Test_Result.jpg" /></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Point Polygon Test</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a></li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#result">Result</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../moments/moments.html"
+                        title="previous chapter">Image Moments</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../../highgui/table_of_content_highgui/table_of_content_highgui.html"
+                        title="next chapter"><em>highgui</em> module. High Level GUI and Media</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../../_sources/doc/tutorials/imgproc/shapedescriptors/point_polygon_test/point_polygon_test.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../highgui/table_of_content_highgui/table_of_content_highgui.html" title="highgui module. High Level GUI and Media"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../moments/moments.html" title="Image Moments"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" ><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

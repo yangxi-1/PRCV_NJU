@@ -1,0 +1,834 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Feature Detection &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="imgproc. Image Processing" href="imgproc.html" />
+    <link rel="next" title="Object Detection" href="object_detection.html" />
+    <link rel="prev" title="Motion Analysis and Object Tracking" href="motion_analysis_and_object_tracking.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="object_detection.html" title="Object Detection"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="motion_analysis_and_object_tracking.html" title="Motion Analysis and Object Tracking"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="imgproc.html" accesskey="U">imgproc. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="feature-detection">
+<h1>Feature Detection<a class="headerlink" href="#feature-detection" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="canny">
+<h2>Canny<a class="headerlink" href="#canny" title="Permalink to this headline">¶</a></h2>
+<p>Finds edges in an image using the <a class="reference internal" href="#canny86" id="id1">[Canny86]</a> algorithm.</p>
+<dl class="function">
+<dt id="void Canny(InputArray image, OutputArray edges, double threshold1, double threshold2, int apertureSize, bool L2gradient)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">Canny</code><span class="sig-paren">(</span>InputArray <strong>image</strong>, OutputArray <strong>edges</strong>, double <strong>threshold1</strong>, double <strong>threshold2</strong>, int <strong>apertureSize</strong>=3, bool <strong>L2gradient</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#void Canny(InputArray image, OutputArray edges, double threshold1, double threshold2, int apertureSize, bool L2gradient)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.Canny">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">Canny</code><span class="sig-paren">(</span>image, threshold1, threshold2<span class="optional">[</span>, edges<span class="optional">[</span>, apertureSize<span class="optional">[</span>, L2gradient<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; edges<a class="headerlink" href="#cv2.Canny" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvCanny(const CvArr* image, CvArr* edges, double threshold1, double threshold2, int aperture_size)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvCanny</code><span class="sig-paren">(</span>const CvArr* <strong>image</strong>, CvArr* <strong>edges</strong>, double <strong>threshold1</strong>, double <strong>threshold2</strong>, int <strong>aperture_size</strong>=3 <span class="sig-paren">)</span><a class="headerlink" href="#void cvCanny(const CvArr* image, CvArr* edges, double threshold1, double threshold2, int aperture_size)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Canny">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Canny</code><span class="sig-paren">(</span>image, edges, threshold1, threshold2, aperture_size=3<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.Canny" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; single-channel 8-bit input image.</li>
+<li><strong>edges</strong> &#8211; output edge map; it has the same size and type as  <code class="docutils literal"><span class="pre">image</span></code> .</li>
+<li><strong>threshold1</strong> &#8211; first threshold for the hysteresis procedure.</li>
+<li><strong>threshold2</strong> &#8211; second threshold for the hysteresis procedure.</li>
+<li><strong>apertureSize</strong> &#8211; aperture size for the <a class="reference internal" href="filtering.html#void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)" title="void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Sobel()</span></code></a> operator.</li>
+<li><strong>L2gradient</strong> &#8211; a flag, indicating whether a more accurate  <img class="math" src="../../../_images/math/c80021c104dcee49fc0f685e54711978dff03111.png" alt="L_2"/>  norm  <img class="math" src="../../../_images/math/be14865ba11769377900576b01b30a683f84d091.png" alt="=\sqrt{(dI/dx)^2 + (dI/dy)^2}"/>  should be used to calculate the image gradient magnitude ( <code class="docutils literal"><span class="pre">L2gradient=true</span></code> ), or whether the default  <img class="math" src="../../../_images/math/99a8045a334a911a88e1d2e3805e17bd1d254c39.png" alt="L_1"/>  norm  <img class="math" src="../../../_images/math/50098b0fb8a0251ddd4ef15f5b037f7c61dccdb7.png" alt="=|dI/dx|+|dI/dy|"/>  is enough ( <code class="docutils literal"><span class="pre">L2gradient=false</span></code> ).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function finds edges in the input image <code class="docutils literal"><span class="pre">image</span></code> and marks them in the output map <code class="docutils literal"><span class="pre">edges</span></code> using the Canny algorithm. The smallest value between <code class="docutils literal"><span class="pre">threshold1</span></code> and <code class="docutils literal"><span class="pre">threshold2</span></code> is used for edge linking. The largest value is used to find initial segments of strong edges. See
+<a class="reference external" href="http://en.wikipedia.org/wiki/Canny_edge_detector">http://en.wikipedia.org/wiki/Canny_edge_detector</a></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example on using the canny edge detector can be found at opencv_source_code/samples/cpp/edge.cpp</li>
+<li>(Python) An example on using the canny edge detector can be found at opencv_source_code/samples/python/edge.py</li>
+</ul>
+</div>
+</div>
+<div class="section" id="cornereigenvalsandvecs">
+<h2>cornerEigenValsAndVecs<a class="headerlink" href="#cornereigenvalsandvecs" title="Permalink to this headline">¶</a></h2>
+<p>Calculates eigenvalues and eigenvectors of image blocks for corner detection.</p>
+<dl class="function">
+<dt id="void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">cornerEigenValsAndVecs</code><span class="sig-paren">(</span>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>blockSize</strong>, int <strong>ksize</strong>, int <strong>borderType</strong>=BORDER_DEFAULT <span class="sig-paren">)</span><a class="headerlink" href="#void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.cornerEigenValsAndVecs">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">cornerEigenValsAndVecs</code><span class="sig-paren">(</span>src, blockSize, ksize<span class="optional">[</span>, dst<span class="optional">[</span>, borderType<span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; dst<a class="headerlink" href="#cv2.cornerEigenValsAndVecs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvCornerEigenValsAndVecs(const CvArr* image, CvArr* eigenvv, int block_size, int aperture_size)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvCornerEigenValsAndVecs</code><span class="sig-paren">(</span>const CvArr* <strong>image</strong>, CvArr* <strong>eigenvv</strong>, int <strong>block_size</strong>, int <strong>aperture_size</strong>=3 <span class="sig-paren">)</span><a class="headerlink" href="#void cvCornerEigenValsAndVecs(const CvArr* image, CvArr* eigenvv, int block_size, int aperture_size)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CornerEigenValsAndVecs">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CornerEigenValsAndVecs</code><span class="sig-paren">(</span>image, eigenvv, blockSize, aperture_size=3<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.CornerEigenValsAndVecs" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input single-channel 8-bit or floating-point image.</li>
+<li><strong>dst</strong> &#8211; Image to store the results. It has the same size as  <code class="docutils literal"><span class="pre">src</span></code>  and the type  <code class="docutils literal"><span class="pre">CV_32FC(6)</span></code> .</li>
+<li><strong>blockSize</strong> &#8211; Neighborhood size (see details below).</li>
+<li><strong>ksize</strong> &#8211; Aperture parameter for the  <a class="reference internal" href="filtering.html#void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)" title="void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Sobel()</span></code></a>  operator.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. See  <a class="reference internal" href="filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>For every pixel
+<img class="math" src="../../../_images/math/ce2fe3b1374c2c722dfc53928e8b4d32ff89bdc2.png" alt="p"/> , the function <code class="docutils literal"><span class="pre">cornerEigenValsAndVecs</span></code> considers a <code class="docutils literal"><span class="pre">blockSize</span></code> <img class="math" src="../../../_images/math/a6a16449e67875c4a5662fc983ca294cadda0273.png" alt="\times"/> <code class="docutils literal"><span class="pre">blockSize</span></code> neighborhood
+<img class="math" src="../../../_images/math/2c1e256be499e3a9359e4d4063a98f02fd7164b9.png" alt="S(p)"/> . It calculates the covariation matrix of derivatives over the neighborhood as:</p>
+<div class="math">
+<p><img src="../../../_images/math/8b058bc0b532748270d5b155ad99df9d4c444caf.png" alt="M =  \begin{bmatrix} \sum _{S(p)}(dI/dx)^2 &amp;  \sum _{S(p)}(dI/dx dI/dy)  \\ \sum _{S(p)}(dI/dx dI/dy) &amp;  \sum _{S(p)}(dI/dy)^2 \end{bmatrix}"/></p>
+</div><p>where the derivatives are computed using the
+<a class="reference internal" href="filtering.html#void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)" title="void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Sobel()</span></code></a> operator.</p>
+<p>After that, it finds eigenvectors and eigenvalues of
+<img class="math" src="../../../_images/math/336950fdbecc1771997c5eb48994a4b7056f3b81.png" alt="M"/> and stores them in the destination image as
+<img class="math" src="../../../_images/math/389847a6fe21db6a3d3ed7e39ec8d86c44f55499.png" alt="(\lambda_1, \lambda_2, x_1, y_1, x_2, y_2)"/> where</p>
+<ul class="simple">
+<li><img class="math" src="../../../_images/math/7b72c898f9790e7662dde23fcf3ab81936bd436d.png" alt="\lambda_1, \lambda_2"/> are the non-sorted eigenvalues of <img class="math" src="../../../_images/math/336950fdbecc1771997c5eb48994a4b7056f3b81.png" alt="M"/></li>
+<li><img class="math" src="../../../_images/math/0e806be9e5f66652c2feef262ab9a9141caa2d5d.png" alt="x_1, y_1"/> are the eigenvectors corresponding to <img class="math" src="../../../_images/math/b7f726d67d9b66643c975014c661c50ac292b6de.png" alt="\lambda_1"/></li>
+<li><img class="math" src="../../../_images/math/3a418e42c84f9de5bd1ba72cac961a53986786ce.png" alt="x_2, y_2"/> are the eigenvectors corresponding to <img class="math" src="../../../_images/math/0b73476c2d8159f36f69103dff732103452e07de.png" alt="\lambda_2"/></li>
+</ul>
+<p>The output of the function can be used for robust edge or corner detection.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerMinEigenVal()</span></code></a>,
+<a class="reference internal" href="#void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)" title="void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerHarris()</span></code></a>,
+<a class="reference internal" href="#void preCornerDetect(InputArray src, OutputArray dst, int ksize, int borderType)" title="void preCornerDetect(InputArray src, OutputArray dst, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">preCornerDetect()</span></code></a></p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>(Python) An example on how to use eigenvectors and eigenvalues to estimate image texture flow direction can be found at opencv_source_code/samples/python2/texture_flow.py</li>
+</ul>
+</div>
+</div>
+<div class="section" id="cornerharris">
+<h2>cornerHarris<a class="headerlink" href="#cornerharris" title="Permalink to this headline">¶</a></h2>
+<p>Harris edge detector.</p>
+<dl class="function">
+<dt id="void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">cornerHarris</code><span class="sig-paren">(</span>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>blockSize</strong>, int <strong>ksize</strong>, double <strong>k</strong>, int <strong>borderType</strong>=BORDER_DEFAULT <span class="sig-paren">)</span><a class="headerlink" href="#void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.cornerHarris">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">cornerHarris</code><span class="sig-paren">(</span>src, blockSize, ksize, k<span class="optional">[</span>, dst<span class="optional">[</span>, borderType<span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; dst<a class="headerlink" href="#cv2.cornerHarris" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvCornerHarris(const CvArr* image, CvArr* harris_response, int block_size, int aperture_size, double k)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvCornerHarris</code><span class="sig-paren">(</span>const CvArr* <strong>image</strong>, CvArr* <strong>harris_response</strong>, int <strong>block_size</strong>, int <strong>aperture_size</strong>=3, double <strong>k</strong>=0.04 <span class="sig-paren">)</span><a class="headerlink" href="#void cvCornerHarris(const CvArr* image, CvArr* harris_response, int block_size, int aperture_size, double k)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CornerHarris">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CornerHarris</code><span class="sig-paren">(</span>image, harris_dst, blockSize, aperture_size=3, k=0.04<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.CornerHarris" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input single-channel 8-bit or floating-point image.</li>
+<li><strong>dst</strong> &#8211; Image to store the Harris detector responses. It has the type  <code class="docutils literal"><span class="pre">CV_32FC1</span></code>  and the same size as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>blockSize</strong> &#8211; Neighborhood size (see the details on  <a class="reference internal" href="#void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerEigenValsAndVecs()</span></code></a> ).</li>
+<li><strong>ksize</strong> &#8211; Aperture parameter for the  <a class="reference internal" href="filtering.html#void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)" title="void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Sobel()</span></code></a>  operator.</li>
+<li><strong>k</strong> &#8211; Harris detector free parameter. See the formula below.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. See  <a class="reference internal" href="filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function runs the Harris edge detector on the image. Similarly to
+<a class="reference internal" href="#void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerMinEigenVal()</span></code></a> and
+<a class="reference internal" href="#void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerEigenValsAndVecs()</span></code></a> , for each pixel
+<img class="math" src="../../../_images/math/dee21a914bf9088bc0dfbd38a96c1f859c412ec7.png" alt="(x, y)"/> it calculates a
+<img class="math" src="../../../_images/math/b964f96040edc3f5a0e5ae4649dd28a552d273c1.png" alt="2\times2"/> gradient covariance matrix
+<img class="math" src="../../../_images/math/6a5bdd571f23238e9283b691d723ee3e38bbf18b.png" alt="M^{(x,y)}"/> over a
+<img class="math" src="../../../_images/math/91b988f5a3acb7025e903a2b1bc6b7558e5970dd.png" alt="\texttt{blockSize} \times \texttt{blockSize}"/> neighborhood. Then, it computes the following characteristic:</p>
+<div class="math">
+<p><img src="../../../_images/math/036f94428a4446002d557b78978b5d85248aaa5d.png" alt="\texttt{dst} (x,y) =  \mathrm{det} M^{(x,y)} - k  \cdot \left ( \mathrm{tr} M^{(x,y)} \right )^2"/></p>
+</div><p>Corners in the image can be found as the local maxima of this response map.</p>
+</div>
+<div class="section" id="cornermineigenval">
+<h2>cornerMinEigenVal<a class="headerlink" href="#cornermineigenval" title="Permalink to this headline">¶</a></h2>
+<p>Calculates the minimal eigenvalue of gradient matrices for corner detection.</p>
+<dl class="function">
+<dt id="void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">cornerMinEigenVal</code><span class="sig-paren">(</span>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>blockSize</strong>, int <strong>ksize</strong>=3, int <strong>borderType</strong>=BORDER_DEFAULT <span class="sig-paren">)</span><a class="headerlink" href="#void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.cornerMinEigenVal">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">cornerMinEigenVal</code><span class="sig-paren">(</span>src, blockSize<span class="optional">[</span>, dst<span class="optional">[</span>, ksize<span class="optional">[</span>, borderType<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; dst<a class="headerlink" href="#cv2.cornerMinEigenVal" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvCornerMinEigenVal(const CvArr* image, CvArr* eigenval, int block_size, int aperture_size)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvCornerMinEigenVal</code><span class="sig-paren">(</span>const CvArr* <strong>image</strong>, CvArr* <strong>eigenval</strong>, int <strong>block_size</strong>, int <strong>aperture_size</strong>=3 <span class="sig-paren">)</span><a class="headerlink" href="#void cvCornerMinEigenVal(const CvArr* image, CvArr* eigenval, int block_size, int aperture_size)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CornerMinEigenVal">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CornerMinEigenVal</code><span class="sig-paren">(</span>image, eigenval, blockSize, aperture_size=3<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.CornerMinEigenVal" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input single-channel 8-bit or floating-point image.</li>
+<li><strong>dst</strong> &#8211; Image to store the minimal eigenvalues. It has the type  <code class="docutils literal"><span class="pre">CV_32FC1</span></code>  and the same size as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>blockSize</strong> &#8211; Neighborhood size (see the details on  <a class="reference internal" href="#void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerEigenValsAndVecs()</span></code></a> ).</li>
+<li><strong>ksize</strong> &#8211; Aperture parameter for the  <a class="reference internal" href="filtering.html#void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)" title="void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Sobel()</span></code></a>  operator.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. See  <a class="reference internal" href="filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function is similar to
+<a class="reference internal" href="#void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerEigenValsAndVecs()</span></code></a> but it calculates and stores only the minimal eigenvalue of the covariance matrix of derivatives, that is,
+<img class="math" src="../../../_images/math/a1f97dee5f51830d519598e8eb15e5a4a4803db9.png" alt="\min(\lambda_1, \lambda_2)"/> in terms of the formulae in the
+<a class="reference internal" href="#void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerEigenValsAndVecs()</span></code></a> description.</p>
+</div>
+<div class="section" id="cornersubpix">
+<h2>cornerSubPix<a class="headerlink" href="#cornersubpix" title="Permalink to this headline">¶</a></h2>
+<p>Refines the corner locations.</p>
+<dl class="function">
+<dt id="void cornerSubPix(InputArray image, InputOutputArray corners, Size winSize, Size zeroZone, TermCriteria criteria)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">cornerSubPix</code><span class="sig-paren">(</span>InputArray <strong>image</strong>, InputOutputArray <strong>corners</strong>, Size <strong>winSize</strong>, Size <strong>zeroZone</strong>, TermCriteria <strong>criteria</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cornerSubPix(InputArray image, InputOutputArray corners, Size winSize, Size zeroZone, TermCriteria criteria)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.cornerSubPix">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">cornerSubPix</code><span class="sig-paren">(</span>image, corners, winSize, zeroZone, criteria<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv2.cornerSubPix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvFindCornerSubPix(const CvArr* image, CvPoint2D32f* corners, int count, CvSize win, CvSize zero_zone, CvTermCriteria criteria)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvFindCornerSubPix</code><span class="sig-paren">(</span>const CvArr* <strong>image</strong>, CvPoint2D32f* <strong>corners</strong>, int <strong>count</strong>, CvSize <strong>win</strong>, CvSize <strong>zero_zone</strong>, CvTermCriteria <strong>criteria</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvFindCornerSubPix(const CvArr* image, CvPoint2D32f* corners, int count, CvSize win, CvSize zero_zone, CvTermCriteria criteria)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.FindCornerSubPix">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">FindCornerSubPix</code><span class="sig-paren">(</span>image, corners, win, zero_zone, criteria<span class="sig-paren">)</span> &rarr; corners<a class="headerlink" href="#cv.FindCornerSubPix" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Input image.</li>
+<li><strong>corners</strong> &#8211; Initial coordinates of the input corners and refined coordinates provided for output.</li>
+<li><strong>winSize</strong> &#8211; Half of the side length of the search window. For example, if  <code class="docutils literal"><span class="pre">winSize=Size(5,5)</span></code> , then a  <img class="math" src="../../../_images/math/d7bf039ec556bbb1eaa1ef3085e8911ee2d80797.png" alt="5*2+1 \times 5*2+1 = 11 \times 11"/>  search window is used.</li>
+<li><strong>zeroZone</strong> &#8211; Half of the size of the dead region in the middle of the search zone over which the summation in the formula below is not done. It is used sometimes to avoid possible singularities of the autocorrelation matrix. The value of (-1,-1) indicates that there is no such a size.</li>
+<li><strong>criteria</strong> &#8211; Criteria for termination of the iterative process of corner refinement. That is, the process of corner position refinement stops either after <code class="docutils literal"><span class="pre">criteria.maxCount</span></code> iterations or when the corner position moves by less than <code class="docutils literal"><span class="pre">criteria.epsilon</span></code> on some iteration.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function iterates to find the sub-pixel accurate location of corners or radial saddle points, as shown on the figure below.</p>
+<img alt="../../../_images/cornersubpix.png" src="../../../_images/cornersubpix.png" />
+<p>Sub-pixel accurate corner locator is based on the observation that every vector from the center
+<img class="math" src="../../../_images/math/948d9d866621d6d437794bb98b09244aab2b2427.png" alt="q"/> to a point
+<img class="math" src="../../../_images/math/ce2fe3b1374c2c722dfc53928e8b4d32ff89bdc2.png" alt="p"/> located within a neighborhood of
+<img class="math" src="../../../_images/math/948d9d866621d6d437794bb98b09244aab2b2427.png" alt="q"/> is orthogonal to the image gradient at
+<img class="math" src="../../../_images/math/ce2fe3b1374c2c722dfc53928e8b4d32ff89bdc2.png" alt="p"/> subject to image and measurement noise. Consider the expression:</p>
+<div class="math">
+<p><img src="../../../_images/math/99868eeda69186014cffde8171ef01ad86bc4ff1.png" alt="\epsilon _i = {DI_{p_i}}^T  \cdot (q - p_i)"/></p>
+</div><p>where
+<img class="math" src="../../../_images/math/a45e037d69d59bd0f1e7202894937f170948e1bc.png" alt="{DI_{p_i}}"/> is an image gradient at one of the points
+<img class="math" src="../../../_images/math/e726c85891aff38330c54fcbaf3d4244f5ad8395.png" alt="p_i"/> in a neighborhood of
+<img class="math" src="../../../_images/math/948d9d866621d6d437794bb98b09244aab2b2427.png" alt="q"/> . The value of
+<img class="math" src="../../../_images/math/948d9d866621d6d437794bb98b09244aab2b2427.png" alt="q"/> is to be found so that
+<img class="math" src="../../../_images/math/6033306b5e4cd36f340e0542a0b05b9856dd714c.png" alt="\epsilon_i"/> is minimized. A system of equations may be set up with
+<img class="math" src="../../../_images/math/6033306b5e4cd36f340e0542a0b05b9856dd714c.png" alt="\epsilon_i"/> set to zero:</p>
+<div class="math">
+<p><img src="../../../_images/math/1cff760afbc0b01d8b0e4edf2d70c97de971d8a5.png" alt="\sum _i(DI_{p_i}  \cdot {DI_{p_i}}^T) -  \sum _i(DI_{p_i}  \cdot {DI_{p_i}}^T  \cdot p_i)"/></p>
+</div><p>where the gradients are summed within a neighborhood (&#8220;search window&#8221;) of
+<img class="math" src="../../../_images/math/948d9d866621d6d437794bb98b09244aab2b2427.png" alt="q"/> . Calling the first gradient term
+<img class="math" src="../../../_images/math/736cc857b4cf29b0f82579e3c9295e0903115496.png" alt="G"/> and the second gradient term
+<img class="math" src="../../../_images/math/99e6f571c844c85d38da0ac7d86e658a5d02a67a.png" alt="b"/> gives:</p>
+<div class="math">
+<p><img src="../../../_images/math/2d3e33b08cd6e9bd54495679bed2ca7470af91d3.png" alt="q = G^{-1}  \cdot b"/></p>
+</div><p>The algorithm sets the center of the neighborhood window at this new center
+<img class="math" src="../../../_images/math/948d9d866621d6d437794bb98b09244aab2b2427.png" alt="q"/> and then iterates until the center stays within a set threshold.</p>
+</div>
+<div class="section" id="goodfeaturestotrack">
+<h2>goodFeaturesToTrack<a class="headerlink" href="#goodfeaturestotrack" title="Permalink to this headline">¶</a></h2>
+<p>Determines strong corners on an image.</p>
+<dl class="function">
+<dt id="void goodFeaturesToTrack(InputArray image, OutputArray corners, int maxCorners, double qualityLevel, double minDistance, InputArray mask, int blockSize, bool useHarrisDetector, double k)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">goodFeaturesToTrack</code><span class="sig-paren">(</span>InputArray <strong>image</strong>, OutputArray <strong>corners</strong>, int <strong>maxCorners</strong>, double <strong>qualityLevel</strong>, double <strong>minDistance</strong>, InputArray <strong>mask</strong>=noArray(), int <strong>blockSize</strong>=3, bool <strong>useHarrisDetector</strong>=false, double <strong>k</strong>=0.04 <span class="sig-paren">)</span><a class="headerlink" href="#void goodFeaturesToTrack(InputArray image, OutputArray corners, int maxCorners, double qualityLevel, double minDistance, InputArray mask, int blockSize, bool useHarrisDetector, double k)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.goodFeaturesToTrack">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">goodFeaturesToTrack</code><span class="sig-paren">(</span>image, maxCorners, qualityLevel, minDistance<span class="optional">[</span>, corners<span class="optional">[</span>, mask<span class="optional">[</span>, blockSize<span class="optional">[</span>, useHarrisDetector<span class="optional">[</span>, k<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; corners<a class="headerlink" href="#cv2.goodFeaturesToTrack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvGoodFeaturesToTrack(const CvArr* image, CvArr* eig_image, CvArr* temp_image, CvPoint2D32f* corners, int* corner_count, double quality_level, double min_distance, const CvArr* mask, int block_size, int use_harris, double k)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvGoodFeaturesToTrack</code><span class="sig-paren">(</span>const CvArr* <strong>image</strong>, CvArr* <strong>eig_image</strong>, CvArr* <strong>temp_image</strong>, CvPoint2D32f* <strong>corners</strong>, int* <strong>corner_count</strong>, double <strong>quality_level</strong>, double <strong>min_distance</strong>, const CvArr* <strong>mask</strong>=NULL, int <strong>block_size</strong>=3, int <strong>use_harris</strong>=0, double <strong>k</strong>=0.04 <span class="sig-paren">)</span><a class="headerlink" href="#void cvGoodFeaturesToTrack(const CvArr* image, CvArr* eig_image, CvArr* temp_image, CvPoint2D32f* corners, int* corner_count, double quality_level, double min_distance, const CvArr* mask, int block_size, int use_harris, double k)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.GoodFeaturesToTrack">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">GoodFeaturesToTrack</code><span class="sig-paren">(</span>image, eigImage, tempImage, cornerCount, qualityLevel, minDistance, mask=None, blockSize=3, useHarris=0, k=0.04<span class="sig-paren">)</span> &rarr; cornerCount<a class="headerlink" href="#cv.GoodFeaturesToTrack" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Input 8-bit or floating-point 32-bit, single-channel image.</li>
+<li><strong>eig_image</strong> &#8211; The parameter is ignored.</li>
+<li><strong>temp_image</strong> &#8211; The parameter is ignored.</li>
+<li><strong>corners</strong> &#8211; Output vector of detected corners.</li>
+<li><strong>maxCorners</strong> &#8211; Maximum number of corners to return. If there are more corners than are found, the strongest of them is returned.</li>
+<li><strong>qualityLevel</strong> &#8211; Parameter characterizing the minimal accepted quality of image corners. The parameter value is multiplied by the best corner quality measure, which is the minimal eigenvalue (see  <a class="reference internal" href="#void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerMinEigenVal()</span></code></a> ) or the Harris function response (see  <a class="reference internal" href="#void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)" title="void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerHarris()</span></code></a> ). The corners with the quality measure less than the product are rejected. For example, if the best corner has the quality measure = 1500, and the  <code class="docutils literal"><span class="pre">qualityLevel=0.01</span></code> , then all the corners with the quality measure less than 15 are rejected.</li>
+<li><strong>minDistance</strong> &#8211; Minimum possible Euclidean distance between the returned corners.</li>
+<li><strong>mask</strong> &#8211; Optional region of interest. If the image is not empty (it needs to have the type  <code class="docutils literal"><span class="pre">CV_8UC1</span></code>  and the same size as  <code class="docutils literal"><span class="pre">image</span></code> ), it  specifies the region in which the corners are detected.</li>
+<li><strong>blockSize</strong> &#8211; Size of an average block for computing a derivative covariation matrix over each pixel neighborhood. See  <a class="reference internal" href="#void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerEigenValsAndVecs()</span></code></a> .</li>
+<li><strong>useHarrisDetector</strong> &#8211; Parameter indicating whether to use a Harris detector (see <a class="reference internal" href="#void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)" title="void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerHarris()</span></code></a>) or <a class="reference internal" href="#void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerMinEigenVal()</span></code></a>.</li>
+<li><strong>k</strong> &#8211; Free parameter of the Harris detector.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function finds the most prominent corners in the image or in the specified image region, as described in <a class="reference internal" href="#shi94" id="id2">[Shi94]</a>:</p>
+<ol class="arabic simple">
+<li>Function calculates the corner quality measure at every source image pixel using the
+<a class="reference internal" href="#void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerMinEigenVal()</span></code></a>     or
+<a class="reference internal" href="#void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)" title="void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerHarris()</span></code></a> .</li>
+<li>Function performs a non-maximum suppression (the local maximums in <em>3 x 3</em> neighborhood are retained).</li>
+<li>The corners with the minimal eigenvalue less than
+<img class="math" src="../../../_images/math/06c191d957deac74964011ee647f669c7c5038e9.png" alt="\texttt{qualityLevel} \cdot \max_{x,y} qualityMeasureMap(x,y)"/>   are rejected.</li>
+<li>The remaining corners are sorted by the quality measure in the descending order.</li>
+<li>Function throws away each corner for which there is a stronger corner at a distance less than <code class="docutils literal"><span class="pre">maxDistance</span></code>.</li>
+</ol>
+<p>The function can be used to initialize a point-based tracker of an object.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If the function is called with different values <code class="docutils literal"><span class="pre">A</span></code> and <code class="docutils literal"><span class="pre">B</span></code> of the parameter <code class="docutils literal"><span class="pre">qualityLevel</span></code> , and <code class="docutils literal"><span class="pre">A</span></code> &gt; {B}, the vector of returned corners with <code class="docutils literal"><span class="pre">qualityLevel=A</span></code> will be the prefix of the output vector with <code class="docutils literal"><span class="pre">qualityLevel=B</span></code> .</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerMinEigenVal()</span></code></a>,
+<a class="reference internal" href="#void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)" title="void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerHarris()</span></code></a>,
+<a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)" title="void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcOpticalFlowPyrLK()</span></code></a>,
+<a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#Mat estimateRigidTransform(InputArray src, InputArray dst, bool fullAffine)" title="Mat estimateRigidTransform(InputArray src, InputArray dst, bool fullAffine)"><code class="xref ocv ocv-func docutils literal"><span class="pre">estimateRigidTransform()</span></code></a>,</p>
+</div>
+</div>
+<div class="section" id="houghcircles">
+<h2>HoughCircles<a class="headerlink" href="#houghcircles" title="Permalink to this headline">¶</a></h2>
+<p>Finds circles in a grayscale image using the Hough transform.</p>
+<dl class="function">
+<dt id="void HoughCircles(InputArray image, OutputArray circles, int method, double dp, double minDist, double param1, double param2, int minRadius, int maxRadius)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">HoughCircles</code><span class="sig-paren">(</span>InputArray <strong>image</strong>, OutputArray <strong>circles</strong>, int <strong>method</strong>, double <strong>dp</strong>, double <strong>minDist</strong>, double <strong>param1</strong>=100, double <strong>param2</strong>=100, int <strong>minRadius</strong>=0, int <strong>maxRadius</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void HoughCircles(InputArray image, OutputArray circles, int method, double dp, double minDist, double param1, double param2, int minRadius, int maxRadius)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="CvSeq* cvHoughCircles(CvArr* image, void* circle_storage, int method, double dp, double min_dist, double param1, double param2, int min_radius, int max_radius)">
+<strong>C:</strong><code class="descname"> </code>CvSeq* <code class="descname">cvHoughCircles</code><span class="sig-paren">(</span>CvArr* <strong>image</strong>, void* <strong>circle_storage</strong>, int <strong>method</strong>, double <strong>dp</strong>, double <strong>min_dist</strong>, double <strong>param1</strong>=100, double <strong>param2</strong>=100, int <strong>min_radius</strong>=0, int <strong>max_radius</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#CvSeq* cvHoughCircles(CvArr* image, void* circle_storage, int method, double dp, double min_dist, double param1, double param2, int min_radius, int max_radius)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.HoughCircles">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">HoughCircles</code><span class="sig-paren">(</span>image, method, dp, minDist<span class="optional">[</span>, circles<span class="optional">[</span>, param1<span class="optional">[</span>, param2<span class="optional">[</span>, minRadius<span class="optional">[</span>, maxRadius<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; circles<a class="headerlink" href="#cv2.HoughCircles" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; 8-bit, single-channel, grayscale input image.</li>
+<li><strong>circles</strong> &#8211; Output vector of found circles. Each vector is encoded as a 3-element floating-point vector  <img class="math" src="../../../_images/math/0e71bb2a73928b62cb9c577dcb727bc51a361e85.png" alt="(x, y, radius)"/> .</li>
+<li><strong>circle_storage</strong> &#8211; In C function this is a memory storage that will contain the output sequence of found circles.</li>
+<li><strong>method</strong> &#8211; Detection method to use. Currently, the only implemented method is  <code class="docutils literal"><span class="pre">CV_HOUGH_GRADIENT</span></code> , which is basically  <em>21HT</em> , described in  <a class="reference internal" href="#yuen90" id="id3">[Yuen90]</a>.</li>
+<li><strong>dp</strong> &#8211; Inverse ratio of the accumulator resolution to the image resolution. For example, if  <code class="docutils literal"><span class="pre">dp=1</span></code> , the accumulator has the same resolution as the input image. If  <code class="docutils literal"><span class="pre">dp=2</span></code> , the accumulator has half as big width and height.</li>
+<li><strong>minDist</strong> &#8211; Minimum distance between the centers of the detected circles. If the parameter is too small, multiple neighbor circles may be falsely detected in addition to a true one. If it is too large, some circles may be missed.</li>
+<li><strong>param1</strong> &#8211; First method-specific parameter. In case of  <code class="docutils literal"><span class="pre">CV_HOUGH_GRADIENT</span></code> , it is the higher threshold of the two passed to  the <a class="reference internal" href="#void Canny(InputArray image, OutputArray edges, double threshold1, double threshold2, int apertureSize, bool L2gradient)" title="void Canny(InputArray image, OutputArray edges, double threshold1, double threshold2, int apertureSize, bool L2gradient)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Canny()</span></code></a>  edge detector (the lower one is twice smaller).</li>
+<li><strong>param2</strong> &#8211; Second method-specific parameter. In case of  <code class="docutils literal"><span class="pre">CV_HOUGH_GRADIENT</span></code> , it is the accumulator threshold for the circle centers at the detection stage. The smaller it is, the more false circles may be detected. Circles, corresponding to the larger accumulator values, will be returned first.</li>
+<li><strong>minRadius</strong> &#8211; Minimum circle radius.</li>
+<li><strong>maxRadius</strong> &#8211; Maximum circle radius.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function finds circles in a grayscale image using a modification of the Hough transform.</p>
+<p>Example:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&lt;cv.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;highgui.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;math.h&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Mat</span> <span class="n">img</span><span class="p">,</span> <span class="n">gray</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">argc</span> <span class="o">!=</span> <span class="mi">2</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="p">(</span><span class="n">img</span><span class="o">=</span><span class="n">imread</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)).</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">gray</span><span class="p">,</span> <span class="n">CV_BGR2GRAY</span><span class="p">);</span>
+    <span class="c1">// smooth it, otherwise a lot of false circles may be detected</span>
+    <span class="n">GaussianBlur</span><span class="p">(</span> <span class="n">gray</span><span class="p">,</span> <span class="n">gray</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span> <span class="p">);</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">Vec3f</span><span class="o">&gt;</span> <span class="n">circles</span><span class="p">;</span>
+    <span class="n">HoughCircles</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="n">circles</span><span class="p">,</span> <span class="n">CV_HOUGH_GRADIENT</span><span class="p">,</span>
+                 <span class="mi">2</span><span class="p">,</span> <span class="n">gray</span><span class="o">-&gt;</span><span class="n">rows</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">100</span> <span class="p">);</span>
+    <span class="k">for</span><span class="p">(</span> <span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">circles</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+    <span class="p">{</span>
+         <span class="n">Point</span> <span class="n">center</span><span class="p">(</span><span class="n">cvRound</span><span class="p">(</span><span class="n">circles</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">circles</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]));</span>
+         <span class="kt">int</span> <span class="n">radius</span> <span class="o">=</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">circles</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]);</span>
+         <span class="c1">// draw the circle center</span>
+         <span class="n">circle</span><span class="p">(</span> <span class="n">img</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+         <span class="c1">// draw the circle outline</span>
+         <span class="n">circle</span><span class="p">(</span> <span class="n">img</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">namedWindow</span><span class="p">(</span> <span class="s">&quot;circles&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">imshow</span><span class="p">(</span> <span class="s">&quot;circles&quot;</span><span class="p">,</span> <span class="n">img</span> <span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Usually the function detects the centers of circles well. However, it may fail to find correct radii. You can assist to the function by specifying the radius range ( <code class="docutils literal"><span class="pre">minRadius</span></code> and <code class="docutils literal"><span class="pre">maxRadius</span></code> ) if you know it. Or, you may ignore the returned radius, use only the center, and find the correct radius using an additional procedure.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html#RotatedRect fitEllipse(InputArray points)" title="RotatedRect fitEllipse(InputArray points)"><code class="xref ocv ocv-func docutils literal"><span class="pre">fitEllipse()</span></code></a>,
+<a class="reference internal" href="structural_analysis_and_shape_descriptors.html#void minEnclosingCircle(InputArray points, Point2f&amp; center, float&amp; radius)" title="void minEnclosingCircle(InputArray points, Point2f&amp; center, float&amp; radius)"><code class="xref ocv ocv-func docutils literal"><span class="pre">minEnclosingCircle()</span></code></a></p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example using the Hough circle detector can be found at opencv_source_code/samples/cpp/houghcircles.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="houghlines">
+<h2>HoughLines<a class="headerlink" href="#houghlines" title="Permalink to this headline">¶</a></h2>
+<p>Finds lines in a binary image using the standard Hough transform.</p>
+<dl class="function">
+<dt id="void HoughLines(InputArray image, OutputArray lines, double rho, double theta, int threshold, double srn, double stn)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">HoughLines</code><span class="sig-paren">(</span>InputArray <strong>image</strong>, OutputArray <strong>lines</strong>, double <strong>rho</strong>, double <strong>theta</strong>, int <strong>threshold</strong>, double <strong>srn</strong>=0, double <strong>stn</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void HoughLines(InputArray image, OutputArray lines, double rho, double theta, int threshold, double srn, double stn)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.HoughLines">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">HoughLines</code><span class="sig-paren">(</span>image, rho, theta, threshold<span class="optional">[</span>, lines<span class="optional">[</span>, srn<span class="optional">[</span>, stn<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; lines<a class="headerlink" href="#cv2.HoughLines" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="CvSeq* cvHoughLines2(CvArr* image, void* line_storage, int method, double rho, double theta, int threshold, double param1, double param2)">
+<strong>C:</strong><code class="descname"> </code>CvSeq* <code class="descname">cvHoughLines2</code><span class="sig-paren">(</span>CvArr* <strong>image</strong>, void* <strong>line_storage</strong>, int <strong>method</strong>, double <strong>rho</strong>, double <strong>theta</strong>, int <strong>threshold</strong>, double <strong>param1</strong>=0, double <strong>param2</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#CvSeq* cvHoughLines2(CvArr* image, void* line_storage, int method, double rho, double theta, int threshold, double param1, double param2)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.HoughLines2">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">HoughLines2</code><span class="sig-paren">(</span>image, storage, method, rho, theta, threshold, param1=0, param2=0<span class="sig-paren">)</span> &rarr; lines<a class="headerlink" href="#cv.HoughLines2" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; 8-bit, single-channel binary source image. The image may be modified by the function.</li>
+<li><strong>lines</strong> &#8211; Output vector of lines. Each line is represented by a two-element vector  <img class="math" src="../../../_images/math/9dade0b8c81764b99b163a1ac2ef198e74a32045.png" alt="(\rho, \theta)"/> .  <img class="math" src="../../../_images/math/2b6a0a1d67cf5985b52f3c718c5a9bc38c01e568.png" alt="\rho"/>  is the distance from the coordinate origin  <img class="math" src="../../../_images/math/efcf02ab5643293fb10588214b1ed71ead4edd4c.png" alt="(0,0)"/>  (top-left corner of the image).  <img class="math" src="../../../_images/math/f324df69016bcdbbc6a6b842f7cdb42d6b305049.png" alt="\theta"/>  is the line rotation angle in radians ( <img class="math" src="../../../_images/math/857b27e518060c40f2159daef1ca113faa081d3f.png" alt="0 \sim \textrm{vertical line}, \pi/2 \sim \textrm{horizontal line}"/> ).</li>
+<li><strong>rho</strong> &#8211; Distance resolution of the accumulator in pixels.</li>
+<li><strong>theta</strong> &#8211; Angle resolution of the accumulator in radians.</li>
+<li><strong>threshold</strong> &#8211; Accumulator threshold parameter. Only those lines are returned that get enough votes ( <img class="math" src="../../../_images/math/6104115b7991b520555581f27af6a3da5c991419.png" alt="&gt;\texttt{threshold}"/> ).</li>
+<li><strong>srn</strong> &#8211; For the multi-scale Hough transform, it is a divisor for the distance resolution  <code class="docutils literal"><span class="pre">rho</span></code> . The coarse accumulator distance resolution is  <code class="docutils literal"><span class="pre">rho</span></code>  and the accurate accumulator resolution is  <code class="docutils literal"><span class="pre">rho/srn</span></code> . If both  <code class="docutils literal"><span class="pre">srn=0</span></code>  and  <code class="docutils literal"><span class="pre">stn=0</span></code> , the classical Hough transform is used. Otherwise, both these parameters should be positive.</li>
+<li><strong>stn</strong> &#8211; For the multi-scale Hough transform, it is a divisor for the distance resolution  <code class="docutils literal"><span class="pre">theta</span></code>.</li>
+<li><strong>method</strong> &#8211; <p>One of the following Hough transform variants:</p>
+<ul>
+<li><strong>CV_HOUGH_STANDARD</strong> classical or standard Hough transform. Every line is represented by two floating-point numbers  <img class="math" src="../../../_images/math/9dade0b8c81764b99b163a1ac2ef198e74a32045.png" alt="(\rho, \theta)"/> , where  <img class="math" src="../../../_images/math/2b6a0a1d67cf5985b52f3c718c5a9bc38c01e568.png" alt="\rho"/>  is a distance between (0,0) point and the line, and  <img class="math" src="../../../_images/math/f324df69016bcdbbc6a6b842f7cdb42d6b305049.png" alt="\theta"/>  is the angle between x-axis and the normal to the line. Thus, the matrix must be (the created sequence will be) of  <code class="docutils literal"><span class="pre">CV_32FC2</span></code>  type</li>
+<li><strong>CV_HOUGH_PROBABILISTIC</strong> probabilistic Hough transform (more efficient in case if the picture contains a few long linear segments). It returns line segments rather than the whole line. Each segment is represented by starting and ending points, and the matrix must be (the created sequence will be) of  the <code class="docutils literal"><span class="pre">CV_32SC4</span></code>  type.</li>
+<li><strong>CV_HOUGH_MULTI_SCALE</strong> multi-scale variant of the classical Hough transform. The lines are encoded the same way as  <code class="docutils literal"><span class="pre">CV_HOUGH_STANDARD</span></code>.</li>
+</ul>
+</li>
+<li><strong>param1</strong> &#8211; <p>First method-dependent parameter:</p>
+<ul>
+<li>For the classical Hough transform, it is not used (0).</li>
+<li>For the probabilistic Hough transform, it is the minimum line length.</li>
+<li>For the multi-scale Hough transform, it is <code class="docutils literal"><span class="pre">srn</span></code>.</li>
+</ul>
+</li>
+<li><strong>param2</strong> &#8211; <p>Second method-dependent parameter:</p>
+<ul>
+<li>For the classical Hough transform, it is not used (0).</li>
+<li>For the probabilistic Hough transform, it is the maximum gap between line segments lying on the same line to treat them as a single line segment (that is, to join them).</li>
+<li>For the multi-scale Hough transform, it is <code class="docutils literal"><span class="pre">stn</span></code>.</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function implements the standard or standard multi-scale Hough transform algorithm for line detection.  See <a class="reference external" href="http://homepages.inf.ed.ac.uk/rbf/HIPR2/hough.htm">http://homepages.inf.ed.ac.uk/rbf/HIPR2/hough.htm</a> for a good explanation of Hough transform.
+See also the example in <a class="reference internal" href="#void HoughLinesP(InputArray image, OutputArray lines, double rho, double theta, int threshold, double minLineLength, double maxLineGap)" title="void HoughLinesP(InputArray image, OutputArray lines, double rho, double theta, int threshold, double minLineLength, double maxLineGap)"><code class="xref ocv ocv-func docutils literal"><span class="pre">HoughLinesP()</span></code></a> description.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example using the Hough line detector can be found at opencv_source_code/samples/cpp/houghlines.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="houghlinesp">
+<h2>HoughLinesP<a class="headerlink" href="#houghlinesp" title="Permalink to this headline">¶</a></h2>
+<p>Finds line segments in a binary image using the probabilistic Hough transform.</p>
+<dl class="function">
+<dt id="void HoughLinesP(InputArray image, OutputArray lines, double rho, double theta, int threshold, double minLineLength, double maxLineGap)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">HoughLinesP</code><span class="sig-paren">(</span>InputArray <strong>image</strong>, OutputArray <strong>lines</strong>, double <strong>rho</strong>, double <strong>theta</strong>, int <strong>threshold</strong>, double <strong>minLineLength</strong>=0, double <strong>maxLineGap</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void HoughLinesP(InputArray image, OutputArray lines, double rho, double theta, int threshold, double minLineLength, double maxLineGap)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.HoughLinesP">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">HoughLinesP</code><span class="sig-paren">(</span>image, rho, theta, threshold<span class="optional">[</span>, lines<span class="optional">[</span>, minLineLength<span class="optional">[</span>, maxLineGap<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; lines<a class="headerlink" href="#cv2.HoughLinesP" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; 8-bit, single-channel binary source image. The image may be modified by the function.</li>
+<li><strong>lines</strong> &#8211; Output vector of lines. Each line is represented by a 4-element vector  <img class="math" src="../../../_images/math/fba9fafd757b09fb79bb1e3195225e4da1915881.png" alt="(x_1, y_1, x_2, y_2)"/> , where  <img class="math" src="../../../_images/math/d7765429cb69b57687846d15872a6782137ffab3.png" alt="(x_1,y_1)"/>  and  <img class="math" src="../../../_images/math/ae2e7abf8c35578f2d86ddf13f088e5dd2c33905.png" alt="(x_2, y_2)"/>  are the ending points of each detected line segment.</li>
+<li><strong>rho</strong> &#8211; Distance resolution of the accumulator in pixels.</li>
+<li><strong>theta</strong> &#8211; Angle resolution of the accumulator in radians.</li>
+<li><strong>threshold</strong> &#8211; Accumulator threshold parameter. Only those lines are returned that get enough votes ( <img class="math" src="../../../_images/math/6104115b7991b520555581f27af6a3da5c991419.png" alt="&gt;\texttt{threshold}"/> ).</li>
+<li><strong>minLineLength</strong> &#8211; Minimum line length. Line segments shorter than that are rejected.</li>
+<li><strong>maxLineGap</strong> &#8211; Maximum allowed gap between points on the same line to link them.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function implements the probabilistic Hough transform algorithm for line detection, described in
+<a class="reference internal" href="#matas00" id="id4">[Matas00]</a>. See the line detection example below:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cm">/* This is a standalone program. Pass an image name as the first parameter</span>
+<span class="cm">of the program.  Switch between standard and probabilistic Hough transform</span>
+<span class="cm">by changing &quot;#if 1&quot; to &quot;#if 0&quot; and back */</span>
+<span class="cp">#include</span> <span class="cpf">&lt;cv.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;highgui.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;math.h&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">color_dst</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">argc</span> <span class="o">!=</span> <span class="mi">2</span> <span class="o">||</span> <span class="o">!</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="n">imread</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">)).</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+
+    <span class="n">Canny</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">3</span> <span class="p">);</span>
+    <span class="n">cvtColor</span><span class="p">(</span> <span class="n">dst</span><span class="p">,</span> <span class="n">color_dst</span><span class="p">,</span> <span class="n">CV_GRAY2BGR</span> <span class="p">);</span>
+
+<span class="cp">#if 0</span><span class="c"></span>
+<span class="c">    vector&lt;Vec2f&gt; lines;</span>
+<span class="c">    HoughLines( dst, lines, 1, CV_PI/180, 100 );</span>
+
+<span class="c">    for( size_t i = 0; i &lt; lines.size(); i++ )</span>
+<span class="c">    {</span>
+<span class="c">        float rho = lines[i][0];</span>
+<span class="c">        float theta = lines[i][1];</span>
+<span class="c">        double a = cos(theta), b = sin(theta);</span>
+<span class="c">        double x0 = a*rho, y0 = b*rho;</span>
+<span class="c">        Point pt1(cvRound(x0 + 1000*(-b)),</span>
+<span class="c">                  cvRound(y0 + 1000*(a)));</span>
+<span class="c">        Point pt2(cvRound(x0 - 1000*(-b)),</span>
+<span class="c">                  cvRound(y0 - 1000*(a)));</span>
+<span class="c">        line( color_dst, pt1, pt2, Scalar(0,0,255), 3, 8 );</span>
+<span class="c">    }</span>
+<span class="cp">#else</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">Vec4i</span><span class="o">&gt;</span> <span class="n">lines</span><span class="p">;</span>
+    <span class="n">HoughLinesP</span><span class="p">(</span> <span class="n">dst</span><span class="p">,</span> <span class="n">lines</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">CV_PI</span><span class="o">/</span><span class="mi">180</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">10</span> <span class="p">);</span>
+    <span class="k">for</span><span class="p">(</span> <span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">lines</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">line</span><span class="p">(</span> <span class="n">color_dst</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span>
+            <span class="n">Point</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">3</span><span class="p">]),</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span> <span class="p">);</span>
+    <span class="p">}</span>
+<span class="cp">#endif</span>
+    <span class="n">namedWindow</span><span class="p">(</span> <span class="s">&quot;Source&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">imshow</span><span class="p">(</span> <span class="s">&quot;Source&quot;</span><span class="p">,</span> <span class="n">src</span> <span class="p">);</span>
+
+    <span class="n">namedWindow</span><span class="p">(</span> <span class="s">&quot;Detected Lines&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">imshow</span><span class="p">(</span> <span class="s">&quot;Detected Lines&quot;</span><span class="p">,</span> <span class="n">color_dst</span> <span class="p">);</span>
+
+    <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This is a sample picture the function parameters have been tuned for:</p>
+<img alt="../../../_images/building.jpg" src="../../../_images/building.jpg" />
+<p>And this is the output of the above program in case of the probabilistic Hough transform:</p>
+<img alt="../../../_images/houghp.png" src="../../../_images/houghp.png" />
+</div>
+<div class="section" id="precornerdetect">
+<h2>preCornerDetect<a class="headerlink" href="#precornerdetect" title="Permalink to this headline">¶</a></h2>
+<p>Calculates a feature map for corner detection.</p>
+<dl class="function">
+<dt id="void preCornerDetect(InputArray src, OutputArray dst, int ksize, int borderType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">preCornerDetect</code><span class="sig-paren">(</span>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, int <strong>ksize</strong>, int <strong>borderType</strong>=BORDER_DEFAULT <span class="sig-paren">)</span><a class="headerlink" href="#void preCornerDetect(InputArray src, OutputArray dst, int ksize, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.preCornerDetect">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">preCornerDetect</code><span class="sig-paren">(</span>src, ksize<span class="optional">[</span>, dst<span class="optional">[</span>, borderType<span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; dst<a class="headerlink" href="#cv2.preCornerDetect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvPreCornerDetect(const CvArr* image, CvArr* corners, int aperture_size)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvPreCornerDetect</code><span class="sig-paren">(</span>const CvArr* <strong>image</strong>, CvArr* <strong>corners</strong>, int <strong>aperture_size</strong>=3 <span class="sig-paren">)</span><a class="headerlink" href="#void cvPreCornerDetect(const CvArr* image, CvArr* corners, int aperture_size)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.PreCornerDetect">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">PreCornerDetect</code><span class="sig-paren">(</span>image, corners, apertureSize=3<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.PreCornerDetect" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source single-channel 8-bit of floating-point image.</li>
+<li><strong>dst</strong> &#8211; Output image that has the type  <code class="docutils literal"><span class="pre">CV_32F</span></code>  and the same size as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>ksize</strong> &#8211; Aperture size of the <a class="reference internal" href="filtering.html#void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)" title="void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Sobel()</span></code></a> .</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. See  <a class="reference internal" href="filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function calculates the complex spatial derivative-based function of the source image</p>
+<div class="math">
+<p><img src="../../../_images/math/02305c286d1fe0445864480292f4cdaa91f25c6d.png" alt="\texttt{dst} = (D_x  \texttt{src} )^2  \cdot D_{yy}  \texttt{src} + (D_y  \texttt{src} )^2  \cdot D_{xx}  \texttt{src} - 2 D_x  \texttt{src} \cdot D_y  \texttt{src} \cdot D_{xy}  \texttt{src}"/></p>
+</div><p>where
+<img class="math" src="../../../_images/math/2cd6f7fc2e31af8726c35c5528f2a43957afd1d0.png" alt="D_x"/>,:math:<cite>D_y</cite> are the first image derivatives,
+<img class="math" src="../../../_images/math/fc16d3d54e9c34850dd6915788fb9add550f1f7c.png" alt="D_{xx}"/>,:math:<cite>D_{yy}</cite> are the second image derivatives, and
+<img class="math" src="../../../_images/math/2069acec1742daaf728193f306697a0b6aacb1b8.png" alt="D_{xy}"/> is the mixed derivative.</p>
+<p>The corners can be found as local maximums of the functions, as shown below:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">corners</span><span class="p">,</span> <span class="n">dilated_corners</span><span class="p">;</span>
+<span class="n">preCornerDetect</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<span class="c1">// dilation with 3x3 rectangular structuring element</span>
+<span class="n">dilate</span><span class="p">(</span><span class="n">corners</span><span class="p">,</span> <span class="n">dilated_corners</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="mi">1</span><span class="p">);</span>
+<span class="n">Mat</span> <span class="n">corner_mask</span> <span class="o">=</span> <span class="n">corners</span> <span class="o">==</span> <span class="n">dilated_corners</span><span class="p">;</span>
+</pre></div>
+</div>
+<table class="docutils citation" frame="void" id="canny86" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[Canny86]</a></td><td><ol class="first last upperalpha simple" start="10">
+<li>Canny. <em>A Computational Approach to Edge Detection</em>, IEEE Trans. on Pattern Analysis and Machine Intelligence, 8(6), pp. 679-698 (1986).</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="matas00" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[Matas00]</a></td><td>Matas, J. and Galambos, C. and Kittler, J.V., <em>Robust Detection of Lines Using the Progressive Probabilistic Hough Transform</em>. CVIU 78 1, pp 119-137 (2000)</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="shi94" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[Shi94]</a></td><td><ol class="first last upperalpha simple" start="10">
+<li>Shi and C. Tomasi. <em>Good Features to Track</em>. Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, pages 593-600, June 1994.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="yuen90" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[Yuen90]</a></td><td>Yuen, H. K. and Princen, J. and Illingworth, J. and Kittler, J., <em>Comparative study of Hough transform methods for circle finding</em>. Image Vision Comput. 8 1, pp 71–77 (1990)</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Feature Detection</a><ul>
+<li><a class="reference internal" href="#canny">Canny</a></li>
+<li><a class="reference internal" href="#cornereigenvalsandvecs">cornerEigenValsAndVecs</a></li>
+<li><a class="reference internal" href="#cornerharris">cornerHarris</a></li>
+<li><a class="reference internal" href="#cornermineigenval">cornerMinEigenVal</a></li>
+<li><a class="reference internal" href="#cornersubpix">cornerSubPix</a></li>
+<li><a class="reference internal" href="#goodfeaturestotrack">goodFeaturesToTrack</a></li>
+<li><a class="reference internal" href="#houghcircles">HoughCircles</a></li>
+<li><a class="reference internal" href="#houghlines">HoughLines</a></li>
+<li><a class="reference internal" href="#houghlinesp">HoughLinesP</a></li>
+<li><a class="reference internal" href="#precornerdetect">preCornerDetect</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="motion_analysis_and_object_tracking.html"
+                        title="previous chapter">Motion Analysis and Object Tracking</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="object_detection.html"
+                        title="next chapter">Object Detection</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/imgproc/doc/feature_detection.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="object_detection.html" title="Object Detection"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="motion_analysis_and_object_tracking.html" title="Motion Analysis and Object Tracking"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="imgproc.html" >imgproc. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

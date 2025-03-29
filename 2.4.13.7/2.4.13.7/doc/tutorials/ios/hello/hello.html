@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>OpenCV iOS Hello &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="OpenCV iOS" href="../table_of_content_ios/table_of_content_ios.html" />
+    <link rel="next" title="OpenCV iOS - Image Processing" href="../image_manipulation/image_manipulation.html" />
+    <link rel="prev" title="OpenCV iOS" href="../table_of_content_ios/table_of_content_ios.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../image_manipulation/image_manipulation.html" title="OpenCV iOS - Image Processing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../table_of_content_ios/table_of_content_ios.html" title="OpenCV iOS"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_ios/table_of_content_ios.html" accesskey="U"><strong>OpenCV iOS</strong></a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="opencv-ios-hello">
+<span id="opencvioshelloworld"></span><h1>OpenCV iOS Hello<a class="headerlink" href="#opencv-ios-hello" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial we will learn how to:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Link OpenCV framework with Xcode</li>
+<li>How to write simple Hello World application using OpenCV and Xcode.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="linking-opencv-ios">
+<h2><em>Linking OpenCV iOS</em><a class="headerlink" href="#linking-opencv-ios" title="Permalink to this headline">¶</a></h2>
+<p>Follow this step by step guide to link OpenCV to iOS.</p>
+<ol class="arabic simple">
+<li>Create a new XCode project.</li>
+<li>Now we need to link <em>opencv2.framework</em> with Xcode. Select the project Navigator in the left hand panel and click on project name.</li>
+<li>Under the TARGETS click on Build Phases. Expand Link Binary With Libraries option.</li>
+<li>Click on Add others and go to directory where <em>opencv2.framework</em> is located and click open</li>
+<li>Now you can start writing your application.</li>
+</ol>
+<img alt="OpenCV iOS in Xcode" class="align-center" src="../../../../_images/linking_opencv_ios.png" />
+</div>
+<div class="section" id="hello-opencv-ios-application">
+<h2><em>Hello OpenCV iOS Application</em><a class="headerlink" href="#hello-opencv-ios-application" title="Permalink to this headline">¶</a></h2>
+<p>Now we will learn how to write a simple Hello World Application in Xcode using OpenCV.</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Link your project with OpenCV as shown in previous section.</li>
+<li>Open the file named <em>NameOfProject-Prefix.pch</em> ( replace NameOfProject with name of your project) and add the following lines of code.</li>
+</ul>
+</div>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#ifdef __cplusplus</span>
+<span class="cp">#import &lt;opencv2/opencv.hpp&gt;</span>
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+<img alt="header" class="align-center" src="../../../../_images/header_directive.png" />
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Add the following lines of code to viewDidLoad method in ViewController.m.</li>
+</ul>
+</div>
+<div class="highlight-cpp"><div class="highlight"><pre>UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@&quot;Hello!&quot; message:@&quot;Welcome to OpenCV&quot; delegate:self cancelButtonTitle:@&quot;Continue&quot; otherButtonTitles:nil];
+[alert show];
+</pre></div>
+</div>
+<img alt="view did load" class="align-center" src="../../../../_images/view_did_load.png" />
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>You are good to run the project.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="output">
+<h2><em>Output</em><a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
+<img alt="output" class="align-center" src="../../../../_images/output.png" />
+</div>
+<div class="section" id="changes-for-xcode5-and-ios8">
+<h2><em>Changes for XCode5+ and iOS8+</em><a class="headerlink" href="#changes-for-xcode5-and-ios8" title="Permalink to this headline">¶</a></h2>
+<p>With the newer XCode and iOS versions you need to watch out for some specific details</p>
+<div class="enumerateattentionpoints container">
+<ul class="simple">
+<li>The <code class="docutils literal"><span class="pre">*.m</span></code> file in your project should be renamed to <code class="docutils literal"><span class="pre">*.mm</span></code>.</li>
+<li>You have to manually include AssetsLibrary.framework into your project, which is not done anymore by default.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">OpenCV iOS Hello</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#linking-opencv-ios"><em>Linking OpenCV iOS</em></a></li>
+<li><a class="reference internal" href="#hello-opencv-ios-application"><em>Hello OpenCV iOS Application</em></a></li>
+<li><a class="reference internal" href="#output"><em>Output</em></a></li>
+<li><a class="reference internal" href="#changes-for-xcode5-and-ios8"><em>Changes for XCode5+ and iOS8+</em></a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../table_of_content_ios/table_of_content_ios.html"
+                        title="previous chapter"><strong>OpenCV iOS</strong></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../image_manipulation/image_manipulation.html"
+                        title="next chapter">OpenCV iOS - Image Processing</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/ios/hello/hello.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../image_manipulation/image_manipulation.html" title="OpenCV iOS - Image Processing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../table_of_content_ios/table_of_content_ios.html" title="OpenCV iOS"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_ios/table_of_content_ios.html" ><strong>OpenCV iOS</strong></a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

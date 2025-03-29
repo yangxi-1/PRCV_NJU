@@ -1,0 +1,1064 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Operations on Matrics &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="ocl. OpenCL-accelerated Computer Vision" href="ocl.html" />
+    <link rel="next" title="Matrix Reductions" href="matrix_reductions.html" />
+    <link rel="prev" title="Data Structures" href="data_structures.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="matrix_reductions.html" title="Matrix Reductions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="data_structures.html" title="Data Structures"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" accesskey="U">ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="operations-on-matrics">
+<h1>Operations on Matrics<a class="headerlink" href="#operations-on-matrics" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ocl-abs">
+<h2>ocl::abs<a class="headerlink" href="#ocl-abs" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::abs(const oclMat&amp; src, oclMat&amp; dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">abs</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::abs(const oclMat& src, oclMat& dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; input array.</li>
+<li><strong>dst</strong> &#8211; destination array, it will have the same size and same type as <code class="docutils literal"><span class="pre">src</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Computes per-element absolute values of the input array. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-absdiff">
+<h2>ocl::absdiff<a class="headerlink" href="#ocl-absdiff" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::absdiff(const oclMat&amp; src1, const oclMat&amp; src2, oclMat&amp; dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">absdiff</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, const oclMat&amp; <strong>src2</strong>, oclMat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::absdiff(const oclMat& src1, const oclMat& src2, oclMat& dst)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::absdiff(const oclMat&amp; src1, const Scalar&amp; s, oclMat&amp; dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">absdiff</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, const Scalar&amp; <strong>s</strong>, oclMat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::absdiff(const oclMat& src1, const Scalar& s, oclMat& dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; the first input array.</li>
+<li><strong>src2</strong> &#8211; the second input array, must be the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>s</strong> &#8211; scalar, the second input parameter.</li>
+<li><strong>dst</strong> &#8211; the destination array, it will have the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Computes per-element absolute difference between two arrays or between array and a scalar. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-add">
+<h2>ocl::add<a class="headerlink" href="#ocl-add" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::add(const oclMat &amp; src1, const oclMat &amp; src2, oclMat &amp; dst, const oclMat &amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">add</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, const oclMat&amp; <strong>src2</strong>, oclMat&amp; <strong>dst</strong>, const oclMat&amp; <strong>mask</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::add(const oclMat & src1, const oclMat & src2, oclMat & dst, const oclMat & mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::add(const oclMat &amp; src1, const Scalar &amp; s, oclMat &amp; dst, const oclMat &amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">add</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, const Scalar&amp; <strong>s</strong>, oclMat&amp; <strong>dst</strong>, const oclMat&amp; <strong>mask</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::add(const oclMat & src1, const Scalar & s, oclMat & dst, const oclMat & mask)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; the first input array.</li>
+<li><strong>src2</strong> &#8211; the second input array, must be the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>s</strong> &#8211; scalar, the second input parameter</li>
+<li><strong>dst</strong> &#8211; the destination array, it will have the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>mask</strong> &#8211; the optional operation mask, 8-bit single channel array; specifies elements of the destination array to be changed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Computes per-element additon between two arrays or between array and a scalar. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-addweighted">
+<h2>ocl::addWeighted<a class="headerlink" href="#ocl-addweighted" title="Permalink to this headline">¶</a></h2>
+<p>Computes the weighted sum of two arrays.</p>
+<dl class="function">
+<dt id="void ocl::addWeighted(const oclMat&amp; src1, double alpha, const oclMat&amp; src2, double beta, double gama, oclMat&amp; dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">addWeighted</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, double <strong>alpha</strong>, const oclMat&amp; <strong>src2</strong>, double <strong>beta</strong>, double <strong>gama</strong>, oclMat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::addWeighted(const oclMat& src1, double alpha, const oclMat& src2, double beta, double gama, oclMat& dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; First source array.</li>
+<li><strong>alpha</strong> &#8211; Weight for the first array elements.</li>
+<li><strong>src2</strong> &#8211; Second source array of the same size and channel number as  <code class="docutils literal"><span class="pre">src1</span></code> .</li>
+<li><strong>beta</strong> &#8211; Weight for the second array elements.</li>
+<li><strong>dst</strong> &#8211; Destination array that has the same size and number of channels as the input arrays.</li>
+<li><strong>gamma</strong> &#8211; Scalar added to each sum.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">addWeighted</span></code> calculates the weighted sum of two arrays as follows:</p>
+<div class="math">
+<p><img src="../../../_images/math/db488d7909d89dbbed393504c0368ca15f3bf5d8.png" alt="\texttt{c} (I)= \texttt{saturate} ( \texttt{a} (I)* \texttt{alpha} +  \texttt{b} (I)* \texttt{beta} +  \texttt{gamma} )"/></p>
+</div><p>where <code class="docutils literal"><span class="pre">I</span></code> is a multi-dimensional index of array elements. In case of multi-channel arrays, each channel is processed independently.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void addWeighted(InputArray src1, double alpha, InputArray src2, double beta, double gamma, OutputArray dst, int dtype)" title="void addWeighted(InputArray src1, double alpha, InputArray src2, double beta, double gamma, OutputArray dst, int dtype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">addWeighted()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-bitwise-and">
+<h2>ocl::bitwise_and<a class="headerlink" href="#ocl-bitwise-and" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::bitwise_and(const oclMat&amp; src1, const oclMat&amp; src2, oclMat&amp; dst, const oclMat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">bitwise_and</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, const oclMat&amp; <strong>src2</strong>, oclMat&amp; <strong>dst</strong>, const oclMat&amp; <strong>mask</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::bitwise_and(const oclMat& src1, const oclMat& src2, oclMat& dst, const oclMat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::bitwise_and(const oclMat&amp; src1, const Scalar&amp; s, oclMat&amp; dst, const oclMat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">bitwise_and</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, const Scalar&amp; <strong>s</strong>, oclMat&amp; <strong>dst</strong>, const oclMat&amp; <strong>mask</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::bitwise_and(const oclMat& src1, const Scalar& s, oclMat& dst, const oclMat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; the first input array.</li>
+<li><strong>src2</strong> &#8211; the second input array, must be the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>s</strong> &#8211; scalar, the second input parameter.</li>
+<li><strong>dst</strong> &#8211; the destination array, it will have the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>mask</strong> &#8211; the optional operation mask, 8-bit single channel array; specifies elements of the destination array to be changed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Computes per-element bitwise_and between two arrays or between array and a scalar. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-bitwise-not">
+<h2>ocl::bitwise_not<a class="headerlink" href="#ocl-bitwise-not" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::bitwise_not(const oclMat &amp;src, oclMat &amp;dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">bitwise_not</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::bitwise_not(const oclMat &src, oclMat &dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; the input array.</li>
+<li><strong>dst</strong> &#8211; the destination array, it will have the same size and same type as <code class="docutils literal"><span class="pre">src</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The functions bitwise not compute per-element bit-wise inversion of the source array. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-bitwise-or">
+<h2>ocl::bitwise_or<a class="headerlink" href="#ocl-bitwise-or" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::bitwise_or(const oclMat&amp; src1, const oclMat&amp; src2, oclMat&amp; dst, const oclMat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">bitwise_or</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, const oclMat&amp; <strong>src2</strong>, oclMat&amp; <strong>dst</strong>, const oclMat&amp; <strong>mask</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::bitwise_or(const oclMat& src1, const oclMat& src2, oclMat& dst, const oclMat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::bitwise_or(const oclMat&amp; src1, const Scalar&amp; s, oclMat&amp; dst, const oclMat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">bitwise_or</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, const Scalar&amp; <strong>s</strong>, oclMat&amp; <strong>dst</strong>, const oclMat&amp; <strong>mask</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::bitwise_or(const oclMat& src1, const Scalar& s, oclMat& dst, const oclMat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; the first input array.</li>
+<li><strong>src2</strong> &#8211; the second input array, must be the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>s</strong> &#8211; scalar, the second input parameter.</li>
+<li><strong>dst</strong> &#8211; the destination array, it will have the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>mask</strong> &#8211; the optional operation mask, 8-bit single channel array; specifies elements of the destination array to be changed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Computes per-element bitwise_or between two arrays or between array and a scalar. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-bitwise-xor">
+<h2>ocl::bitwise_xor<a class="headerlink" href="#ocl-bitwise-xor" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::bitwise_xor(const oclMat&amp; src1, const oclMat&amp; src2, oclMat&amp; dst, const oclMat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">bitwise_xor</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, const oclMat&amp; <strong>src2</strong>, oclMat&amp; <strong>dst</strong>, const oclMat&amp; <strong>mask</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::bitwise_xor(const oclMat& src1, const oclMat& src2, oclMat& dst, const oclMat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::bitwise_xor(const oclMat&amp; src1, const Scalar&amp; s, oclMat&amp; dst, const oclMat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">bitwise_xor</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, const Scalar&amp; <strong>s</strong>, oclMat&amp; <strong>dst</strong>, const oclMat&amp; <strong>mask</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::bitwise_xor(const oclMat& src1, const Scalar& s, oclMat& dst, const oclMat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; the first input array.</li>
+<li><strong>src2</strong> &#8211; the second input array, must be the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>sc</strong> &#8211; scalar, the second input parameter.</li>
+<li><strong>dst</strong> &#8211; the destination array, it will have the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>mask</strong> &#8211; the optional operation mask, 8-bit single channel array; specifies elements of the destination array to be changed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Computes per-element bitwise_xor between two arrays or between array and a scalar. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-carttopolar">
+<h2>ocl::cartToPolar<a class="headerlink" href="#ocl-carttopolar" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::cartToPolar(const oclMat &amp;x, const oclMat &amp;y, oclMat &amp;magnitude, oclMat &amp;angle, bool angleInDegrees)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">cartToPolar</code><span class="sig-paren">(</span>const oclMat&amp; <strong>x</strong>, const oclMat&amp; <strong>y</strong>, oclMat&amp; <strong>magnitude</strong>, oclMat&amp; <strong>angle</strong>, bool <strong>angleInDegrees</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::cartToPolar(const oclMat &x, const oclMat &y, oclMat &magnitude, oclMat &angle, bool angleInDegrees)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; the array of x-coordinates; must be single-precision or double-precision floating-point array.</li>
+<li><strong>y</strong> &#8211; the array of y-coordinates; it must have the same size and same type as <code class="docutils literal"><span class="pre">x</span></code>.</li>
+<li><strong>magnitude</strong> &#8211; the destination array of magnitudes of the same size and same type as <code class="docutils literal"><span class="pre">x</span></code>.</li>
+<li><strong>angle</strong> &#8211; the destination array of angles of the same size and same type as <code class="docutils literal"><span class="pre">x</span></code>. The angles are measured in radians (0 to 2pi) or in degrees (0 to 360 degrees).</li>
+<li><strong>angleInDegrees</strong> &#8211; the flag indicating whether the angles are measured in radians, which is default mode, or in degrees.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Calculates the magnitude and angle of 2D vectors. Supports only <code class="docutils literal"><span class="pre">CV_32F</span></code> and <code class="docutils literal"><span class="pre">CV_64F</span></code> data types.</p>
+</div>
+<div class="section" id="ocl-compare">
+<h2>ocl::compare<a class="headerlink" href="#ocl-compare" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::compare(const oclMat &amp;src1, const oclMat &amp;src2, oclMat &amp;dst, int cmpop)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">compare</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, const oclMat&amp; <strong>src2</strong>, oclMat&amp; <strong>dst</strong>, int <strong>cmpop</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::compare(const oclMat &src1, const oclMat &src2, oclMat &dst, int cmpop)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; the first source array.</li>
+<li><strong>src2</strong> &#8211; the second source array; must have the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>dst</strong> &#8211; the destination array; will have the same size as <code class="docutils literal"><span class="pre">src1</span></code> and type <code class="docutils literal"><span class="pre">CV_8UC1</span></code>.</li>
+<li><strong>cmpop</strong> &#8211; the flag specifying the relation between the elements to be checked.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Performs per-element comparison of two arrays or an array and scalar value. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-dft">
+<h2>ocl::dft<a class="headerlink" href="#ocl-dft" title="Permalink to this headline">¶</a></h2>
+<p>Performs a forward or inverse discrete Fourier transform (1D or 2D) of the floating point matrix.</p>
+<dl class="function">
+<dt id="void ocl::dft(const oclMat&amp; src, oclMat&amp; dst, Size dft_size , int flags)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">dft</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong>, Size <strong>dft_size</strong>=Size(), int <strong>flags</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::dft(const oclMat& src, oclMat& dst, Size dft_size , int flags)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; source matrix (real or complex).</li>
+<li><strong>dst</strong> &#8211; destination matrix (real or complex).</li>
+<li><strong>dft_size</strong> &#8211; size of original input, which is used for transformation from complex to real.</li>
+<li><strong>flags</strong> &#8211; <p>optional flags:</p>
+<ul>
+<li><strong>DFT_ROWS</strong> transforms each individual row of the source matrix.</li>
+<li><strong>DFT_COMPLEX_OUTPUT</strong> performs a forward transformation of 1D or 2D real array. The result, though being a complex array, has complex-conjugate symmetry (<em>CCS</em>, see the function description below for details). Such an array can be packed into a real array of the same size as input, which is the fastest option and which is what the function does by default. However, you may wish to get a full complex array (for simpler spectrum analysis, and so on). Pass the flag to enable the function to produce a full-size complex output array.</li>
+<li><strong>DFT_INVERSE</strong> inverts DFT. Use for complex-complex cases (real-complex and complex-real cases are always forward and inverse, respectively).</li>
+<li><strong>DFT_REAL_OUTPUT</strong> specifies the output as real. The source matrix is the result of real-complex transform, so the destination matrix must be real.</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Use to handle real matrices (<code class="docutils literal"><span class="pre">CV_32FC1</span></code>) and complex matrices in the interleaved format (<code class="docutils literal"><span class="pre">CV_32FC2</span></code>).</p>
+<p>The <code class="docutils literal"><span class="pre">dft_size</span></code> must be powers of <code class="docutils literal"><span class="pre">2</span></code>, <code class="docutils literal"><span class="pre">3</span></code> and <code class="docutils literal"><span class="pre">5</span></code>. Real to complex dft output is not the same with cpu version. Real to complex and complex to real does not support <code class="docutils literal"><span class="pre">DFT_ROWS</span></code>.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void dft(InputArray src, OutputArray dst, int flags, int nonzeroRows)" title="void dft(InputArray src, OutputArray dst, int flags, int nonzeroRows)"><code class="xref ocv ocv-func docutils literal"><span class="pre">dft()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-divide">
+<h2>ocl::divide<a class="headerlink" href="#ocl-divide" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::divide(const oclMat&amp; src1, const oclMat&amp; src2, oclMat&amp; dst, double scale)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">divide</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, const oclMat&amp; <strong>src2</strong>, oclMat&amp; <strong>dst</strong>, double <strong>scale</strong>=1<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::divide(const oclMat& src1, const oclMat& src2, oclMat& dst, double scale)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::divide(double scale, const oclMat&amp; src1, oclMat&amp; dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">divide</code><span class="sig-paren">(</span>double <strong>scale</strong>, const oclMat&amp; <strong>src1</strong>, oclMat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::divide(double scale, const oclMat& src1, oclMat& dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; the first input array.</li>
+<li><strong>src2</strong> &#8211; the second input array, must be the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>dst</strong> &#8211; the destination array, it will have the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>scale</strong> &#8211; scalar factor.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Computes per-element divide between two arrays or between array and a scalar. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-exp">
+<h2>ocl::exp<a class="headerlink" href="#ocl-exp" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::exp(const oclMat &amp;src, oclMat &amp;dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">exp</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::exp(const oclMat &src, oclMat &dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; the first source array.</li>
+<li><strong>dst</strong> &#8211; the dst array; must have the same size and same type as <code class="docutils literal"><span class="pre">src</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function exp calculates the exponent of every element of the input array. Supports only <code class="docutils literal"><span class="pre">CV_32FC1</span></code> and <code class="docutils literal"><span class="pre">CV_64F</span></code> data types.</p>
+</div>
+<div class="section" id="ocl-flip">
+<h2>ocl::flip<a class="headerlink" href="#ocl-flip" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::flip(const oclMat&amp; src, oclMat&amp; dst, int flipCode)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">flip</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong>, int <strong>flipCode</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::flip(const oclMat& src, oclMat& dst, int flipCode)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; source image.</li>
+<li><strong>dst</strong> &#8211; destination image.</li>
+<li><strong>flipCode</strong> &#8211; specifies how to flip the array: 0 means flipping around the x-axis, positive (e.g., 1) means flipping around y-axis, and negative (e.g., -1) means flipping around both axes.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function flip flips the array in one of three different ways (row and column indices are 0-based). Supports all data types.</p>
+</div>
+<div class="section" id="ocl-gemm">
+<h2>ocl::gemm<a class="headerlink" href="#ocl-gemm" title="Permalink to this headline">¶</a></h2>
+<p>Performs generalized matrix multiplication.</p>
+<dl class="function">
+<dt id="void ocl::gemm(const oclMat&amp; src1, const oclMat&amp; src2, double alpha, const oclMat&amp; src3, double beta, oclMat&amp; dst, int flags)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">gemm</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, const oclMat&amp; <strong>src2</strong>, double <strong>alpha</strong>, const oclMat&amp; <strong>src3</strong>, double <strong>beta</strong>, oclMat&amp; <strong>dst</strong>, int <strong>flags</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::gemm(const oclMat& src1, const oclMat& src2, double alpha, const oclMat& src3, double beta, oclMat& dst, int flags)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; first multiplied input matrix that should be <code class="docutils literal"><span class="pre">CV_32FC1</span></code> type.</li>
+<li><strong>src2</strong> &#8211; second multiplied input matrix of the same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>alpha</strong> &#8211; weight of the matrix product.</li>
+<li><strong>src3</strong> &#8211; third optional delta matrix added to the matrix product. It should have the same type as <code class="docutils literal"><span class="pre">src1</span></code> and <code class="docutils literal"><span class="pre">src2</span></code>.</li>
+<li><strong>beta</strong> &#8211; weight of <code class="docutils literal"><span class="pre">src3</span></code>.</li>
+<li><strong>dst</strong> &#8211; destination matrix. It has the proper size and the same type as input matrices.</li>
+<li><strong>flags</strong> &#8211; <p>operation flags:</p>
+<ul>
+<li><strong>GEMM_1_T</strong> transpose <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>GEMM_2_T</strong> transpose <code class="docutils literal"><span class="pre">src2</span></code>.</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void gemm(InputArray src1, InputArray src2, double alpha, InputArray src3, double beta, OutputArray dst, int flags)" title="void gemm(InputArray src1, InputArray src2, double alpha, InputArray src3, double beta, OutputArray dst, int flags)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gemm()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-log">
+<h2>ocl::log<a class="headerlink" href="#ocl-log" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::log(const oclMat &amp;src, oclMat &amp;dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">log</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::log(const oclMat &src, oclMat &dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; the first source array.</li>
+<li><strong>dst</strong> &#8211; the dst array; must have the same size and same type as <code class="docutils literal"><span class="pre">src</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function log calculates the log of every element of the input array. Supports only <code class="docutils literal"><span class="pre">CV_32FC1</span></code> and <code class="docutils literal"><span class="pre">CV_64F</span></code> data types.</p>
+</div>
+<div class="section" id="ocl-lut">
+<h2>ocl::LUT<a class="headerlink" href="#ocl-lut" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::LUT(const oclMat &amp;src, const oclMat &amp;lut, oclMat &amp;dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">LUT</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, const oclMat&amp; <strong>lut</strong>, oclMat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::LUT(const oclMat &src, const oclMat &lut, oclMat &dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; source array of 8-bit elements.</li>
+<li><strong>lut</strong> &#8211; look-up table of 256 elements. In the case of multi-channel source array, the table should either have a single channel (in this case the same table is used for all channels) or the same number of channels as in the source array.</li>
+<li><strong>dst</strong> &#8211; destination array; will have the same size and the same number of channels as <code class="docutils literal"><span class="pre">src</span></code>, and the same depth as <code class="docutils literal"><span class="pre">lut</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Performs a look-up table transform of an array.</p>
+</div>
+<div class="section" id="ocl-magnitude">
+<h2>ocl::magnitude<a class="headerlink" href="#ocl-magnitude" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::magnitude(const oclMat &amp;x, const oclMat &amp;y, oclMat &amp;magnitude)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">magnitude</code><span class="sig-paren">(</span>const oclMat&amp; <strong>x</strong>, const oclMat&amp; <strong>y</strong>, oclMat&amp; <strong>magnitude</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::magnitude(const oclMat &x, const oclMat &y, oclMat &magnitude)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; the floating-point array of x-coordinates of the vectors.</li>
+<li><strong>y</strong> &#8211; the floating-point array of y-coordinates of the vectors; must have the same size as <code class="docutils literal"><span class="pre">x</span></code>.</li>
+<li><strong>magnitude</strong> &#8211; the destination array; will have the same size and same type as <code class="docutils literal"><span class="pre">x</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function magnitude calculates magnitude of 2D vectors formed from the corresponding elements of <code class="docutils literal"><span class="pre">x</span></code> and <code class="docutils literal"><span class="pre">y</span></code> arrays. Supports only <code class="docutils literal"><span class="pre">CV_32F</span></code> and <code class="docutils literal"><span class="pre">CV_64F</span></code> data types.</p>
+</div>
+<div class="section" id="ocl-meanstddev">
+<h2>ocl::meanStdDev<a class="headerlink" href="#ocl-meanstddev" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::meanStdDev(const oclMat &amp;mtx, Scalar &amp;mean, Scalar &amp;stddev)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">meanStdDev</code><span class="sig-paren">(</span>const oclMat&amp; <strong>mtx</strong>, Scalar&amp; <strong>mean</strong>, Scalar&amp; <strong>stddev</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::meanStdDev(const oclMat &mtx, Scalar &mean, Scalar &stddev)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mtx</strong> &#8211; source image.</li>
+<li><strong>mean</strong> &#8211; the output parameter: computed mean value.</li>
+<li><strong>stddev</strong> &#8211; the output parameter: computed standard deviation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The functions meanStdDev compute the mean and the standard deviation M of array elements, independently for each channel, and return it via the output parameters. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-merge">
+<h2>ocl::merge<a class="headerlink" href="#ocl-merge" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::merge(const vector&lt;oclMat&gt; &amp;src, oclMat &amp;dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">merge</code><span class="sig-paren">(</span>const vector&lt;oclMat&gt;&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::merge(const vector<oclMat> &src, oclMat &dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; The source array or vector of the single-channel matrices to be merged. All the matrices in src must have the same size and the same type.</li>
+<li><strong>dst</strong> &#8211; The destination array; will have the same size and the same depth as src, the number of channels will match the number of source matrices.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Composes a multi-channel array from several single-channel arrays. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-multiply">
+<h2>ocl::multiply<a class="headerlink" href="#ocl-multiply" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::multiply(const oclMat&amp; src1, const oclMat&amp; src2, oclMat&amp; dst, double scale)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">multiply</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, const oclMat&amp; <strong>src2</strong>, oclMat&amp; <strong>dst</strong>, double <strong>scale</strong>=1<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::multiply(const oclMat& src1, const oclMat& src2, oclMat& dst, double scale)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; the first input array.</li>
+<li><strong>src2</strong> &#8211; the second input array, must be the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>dst</strong> &#8211; the destination array, it will have the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>scale</strong> &#8211; optional scale factor.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Computes per-element multiply between two arrays or between array and a scalar. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-norm">
+<h2>ocl::norm<a class="headerlink" href="#ocl-norm" title="Permalink to this headline">¶</a></h2>
+<p>Returns the calculated norm</p>
+<dl class="function">
+<dt id="double ocl::norm(const oclMat &amp;src1, int normType)">
+<strong>C++:</strong><code class="descname"> </code>double <code class="descclassname">ocl::</code><code class="descname">norm</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, int <strong>normType</strong>=NORM_L2<span class="sig-paren">)</span><a class="headerlink" href="#double ocl::norm(const oclMat &src1, int normType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="double ocl::norm(const oclMat &amp;src1, const oclMat &amp;src2, int normType)">
+<strong>C++:</strong><code class="descname"> </code>double <code class="descclassname">ocl::</code><code class="descname">norm</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, const oclMat&amp; <strong>src2</strong>, int <strong>normType</strong>=NORM_L2<span class="sig-paren">)</span><a class="headerlink" href="#double ocl::norm(const oclMat &src1, const oclMat &src2, int normType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; the first source array.</li>
+<li><strong>src2</strong> &#8211; the second source array of the same size and the same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>normType</strong> &#8211; type of the norm.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The functions <code class="docutils literal"><span class="pre">norm</span></code> calculate an absolute norm of <code class="docutils literal"><span class="pre">src1</span></code> (when there is no <code class="docutils literal"><span class="pre">src2</span></code> ):</p>
+<div class="math">
+<p><img src="../../../_images/math/99ed6771acf6fa12588487d65a9526eb97d48f63.png" alt="norm =  \forkthree{\|\texttt{src1}\|_{L_{\infty}} =  \max _I | \texttt{src1} (I)|}{if  $\texttt{normType} = \texttt{NORM\_INF}$ }
+{ \| \texttt{src1} \| _{L_1} =  \sum _I | \texttt{src1} (I)|}{if  $\texttt{normType} = \texttt{NORM\_L1}$ }
+{ \| \texttt{src1} \| _{L_2} =  \sqrt{\sum_I \texttt{src1}(I)^2} }{if  $\texttt{normType} = \texttt{NORM\_L2}$ }"/></p>
+</div><p>or an absolute or relative difference norm if <code class="docutils literal"><span class="pre">src2</span></code> is there:</p>
+<div class="math">
+<p><img src="../../../_images/math/2fc3007b6ac3fa7b8dcb853725990ee13e2a0a02.png" alt="norm =  \forkthree{\|\texttt{src1}-\texttt{src2}\|_{L_{\infty}} =  \max _I | \texttt{src1} (I) -  \texttt{src2} (I)|}{if  $\texttt{normType} = \texttt{NORM\_INF}$ }
+{ \| \texttt{src1} - \texttt{src2} \| _{L_1} =  \sum _I | \texttt{src1} (I) -  \texttt{src2} (I)|}{if  $\texttt{normType} = \texttt{NORM\_L1}$ }
+{ \| \texttt{src1} - \texttt{src2} \| _{L_2} =  \sqrt{\sum_I (\texttt{src1}(I) - \texttt{src2}(I))^2} }{if  $\texttt{normType} = \texttt{NORM\_L2}$ }"/></p>
+</div><p>or</p>
+<div class="math">
+<p><img src="../../../_images/math/d631cbd53c679c6e35deddf1dc910cc97394cea1.png" alt="norm =  \forkthree{\frac{\|\texttt{src1}-\texttt{src2}\|_{L_{\infty}}    }{\|\texttt{src2}\|_{L_{\infty}} }}{if  $\texttt{normType} = \texttt{NORM\_RELATIVE\_INF}$ }
+{ \frac{\|\texttt{src1}-\texttt{src2}\|_{L_1} }{\|\texttt{src2}\|_{L_1}} }{if  $\texttt{normType} = \texttt{NORM\_RELATIVE\_L1}$ }
+{ \frac{\|\texttt{src1}-\texttt{src2}\|_{L_2} }{\|\texttt{src2}\|_{L_2}} }{if  $\texttt{normType} = \texttt{NORM\_RELATIVE\_L2}$ }"/></p>
+</div><p>The functions <code class="docutils literal"><span class="pre">norm</span></code> return the calculated norm.</p>
+<p>A multi-channel input arrays are treated as a single-channel, that is, the results for all channels are combined.</p>
+</div>
+<div class="section" id="ocl-oclmat-convertto">
+<h2>ocl::oclMat::convertTo<a class="headerlink" href="#ocl-oclmat-convertto" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::oclMat::convertTo(oclMat &amp;m, int rtype, double alpha , double beta) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::oclMat::</code><code class="descname">convertTo</code><span class="sig-paren">(</span>oclMat&amp; <strong>m</strong>, int <strong>rtype</strong>, double <strong>alpha</strong>=1, double <strong>beta</strong>=0<span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void ocl::oclMat::convertTo(oclMat &m, int rtype, double alpha , double beta) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>m</strong> &#8211; the destination matrix. If it does not have a proper size or type before the operation, it will be reallocated.</li>
+<li><strong>rtype</strong> &#8211; the desired destination matrix type, or rather, the depth (since the number of channels will be the same with the source one). If rtype is negative, the destination matrix will have the same type as the source.</li>
+<li><strong>alpha</strong> &#8211; optional scale factor.</li>
+<li><strong>beta</strong> &#8211; optional delta added to the scaled values.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method converts source pixel values to the target datatype. Saturate cast is applied in the end to avoid possible overflows. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-oclmat-copyto">
+<h2>ocl::oclMat::copyTo<a class="headerlink" href="#ocl-oclmat-copyto" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::oclMat::copyTo(oclMat &amp;m, const oclMat &amp;mask) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::oclMat::</code><code class="descname">copyTo</code><span class="sig-paren">(</span>oclMat&amp; <strong>m</strong>, const oclMat&amp; <strong>mask</strong>=oclMat()<span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void ocl::oclMat::copyTo(oclMat &m, const oclMat &mask) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>m</strong> &#8211; The destination matrix. If it does not have a proper size or type before the operation, it will be reallocated.</li>
+<li><strong>mask</strong> &#8211; The operation mask. Its non-zero elements indicate, which matrix elements need to be copied.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Copies the matrix to another one. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-oclmat-setto">
+<h2>ocl::oclMat::setTo<a class="headerlink" href="#ocl-oclmat-setto" title="Permalink to this headline">¶</a></h2>
+<p>Returns oclMat</p>
+<dl class="function">
+<dt id="oclMat&amp; ocl::oclMat::setTo(const Scalar &amp;s, const oclMat &amp;mask)">
+<strong>C++:</strong><code class="descname"> </code>oclMat&amp; <code class="descclassname">ocl::oclMat::</code><code class="descname">setTo</code><span class="sig-paren">(</span>const Scalar&amp; <strong>s</strong>, const oclMat&amp; <strong>mask</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#oclMat& ocl::oclMat::setTo(const Scalar &s, const oclMat &mask)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>s</strong> &#8211; Assigned scalar, which is converted to the actual array type.</li>
+<li><strong>mask</strong> &#8211; The operation mask of the same size as <code class="docutils literal"><span class="pre">*this</span></code> and type <code class="docutils literal"><span class="pre">CV_8UC1</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Sets all or some of the array elements to the specified value. This is the advanced variant of Mat::operator=(const Scalar s) operator. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-phase">
+<h2>ocl::phase<a class="headerlink" href="#ocl-phase" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::phase(const oclMat &amp;x, const oclMat &amp;y, oclMat &amp;angle, bool angleInDegrees)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">phase</code><span class="sig-paren">(</span>const oclMat&amp; <strong>x</strong>, const oclMat&amp; <strong>y</strong>, oclMat&amp; <strong>angle</strong>, bool <strong>angleInDegrees</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::phase(const oclMat &x, const oclMat &y, oclMat &angle, bool angleInDegrees)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; the source floating-point array of x-coordinates of 2D vectors</li>
+<li><strong>y</strong> &#8211; the source array of y-coordinates of 2D vectors; must have the same size and the same type as <code class="docutils literal"><span class="pre">x</span></code>.</li>
+<li><strong>angle</strong> &#8211; the destination array of vector angles; it will have the same size and same type as <code class="docutils literal"><span class="pre">x</span></code>.</li>
+<li><strong>angleInDegrees</strong> &#8211; when it is true, the function will compute angle in degrees, otherwise they will be measured in radians.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function phase computes the rotation angle of each 2D vector that is formed from the corresponding elements of <code class="docutils literal"><span class="pre">x</span></code> and <code class="docutils literal"><span class="pre">y</span></code>. Supports only <code class="docutils literal"><span class="pre">CV_32FC1</span></code> and <code class="docutils literal"><span class="pre">CV_64FC1</span></code> data type.</p>
+</div>
+<div class="section" id="ocl-polartocart">
+<h2>ocl::polarToCart<a class="headerlink" href="#ocl-polartocart" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::polarToCart(const oclMat &amp;magnitude, const oclMat &amp;angle, oclMat &amp;x, oclMat &amp;y, bool angleInDegrees)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">polarToCart</code><span class="sig-paren">(</span>const oclMat&amp; <strong>magnitude</strong>, const oclMat&amp; <strong>angle</strong>, oclMat&amp; <strong>x</strong>, oclMat&amp; <strong>y</strong>, bool <strong>angleInDegrees</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::polarToCart(const oclMat &magnitude, const oclMat &angle, oclMat &x, oclMat &y, bool angleInDegrees)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>magnitude</strong> &#8211; the source floating-point array of magnitudes of 2D vectors. It can be an empty matrix (=Mat()) - in this case the function assumes that all the magnitudes are = 1. If it&#8217;s not empty, it must have the same size and same type as <code class="docutils literal"><span class="pre">angle</span></code>.</li>
+<li><strong>angle</strong> &#8211; the source floating-point array of angles of the 2D vectors.</li>
+<li><strong>x</strong> &#8211; the destination array of x-coordinates of 2D vectors; will have the same size and the same type as <code class="docutils literal"><span class="pre">angle</span></code>.</li>
+<li><strong>y</strong> &#8211; the destination array of y-coordinates of 2D vectors; will have the same size and the same type as <code class="docutils literal"><span class="pre">angle</span></code>.</li>
+<li><strong>angleInDegrees</strong> &#8211; the flag indicating whether the angles are measured in radians, which is default mode, or in degrees.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function polarToCart computes the cartesian coordinates of each 2D vector represented by the corresponding elements of magnitude and angle. Supports only <code class="docutils literal"><span class="pre">CV_32F</span></code> and <code class="docutils literal"><span class="pre">CV_64F</span></code> data types.</p>
+</div>
+<div class="section" id="ocl-pow">
+<h2>ocl::pow<a class="headerlink" href="#ocl-pow" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::pow(const oclMat &amp;x, double p, oclMat &amp;y)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">pow</code><span class="sig-paren">(</span>const oclMat&amp; <strong>x</strong>, double <strong>p</strong>, oclMat&amp; <strong>y</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::pow(const oclMat &x, double p, oclMat &y)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; the source array.</li>
+<li><strong>p</strong> &#8211; the exponent of power; the source floating-point array of angles of the 2D vectors.</li>
+<li><strong>y</strong> &#8211; the destination array, should be the same type as the source.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function pow raises every element of the input array to <code class="docutils literal"><span class="pre">p</span></code>. Supports only <code class="docutils literal"><span class="pre">CV_32FC1</span></code> and <code class="docutils literal"><span class="pre">CV_64FC1</span></code> data types.</p>
+</div>
+<div class="section" id="ocl-setidentity">
+<h2>ocl::setIdentity<a class="headerlink" href="#ocl-setidentity" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::setIdentity(oclMat&amp; src, const Scalar &amp; val)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">setIdentity</code><span class="sig-paren">(</span>oclMat&amp; <strong>src</strong>, const Scalar&amp; <strong>val</strong>=Scalar(1)<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::setIdentity(oclMat& src, const Scalar & val)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; matrix to initialize (not necessarily square).</li>
+<li><strong>val</strong> &#8211; value to assign to diagonal elements.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function initializes a scaled identity matrix.</p>
+</div>
+<div class="section" id="ocl-sortbykey">
+<h2>ocl::sortByKey<a class="headerlink" href="#ocl-sortbykey" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::sortByKey(oclMat&amp; keys, oclMat&amp; values, int method, bool isGreaterThan)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">sortByKey</code><span class="sig-paren">(</span>oclMat&amp; <strong>keys</strong>, oclMat&amp; <strong>values</strong>, int <strong>method</strong>, bool <strong>isGreaterThan</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::sortByKey(oclMat& keys, oclMat& values, int method, bool isGreaterThan)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>keys</strong> &#8211; the keys to be used as sorting indices.</li>
+<li><strong>values</strong> &#8211; the array of values.</li>
+<li><strong>isGreaterThan</strong> &#8211; determine sorting order.</li>
+<li><strong>method</strong> &#8211; <p>supported sorting methods:</p>
+<ul>
+<li><strong>SORT_BITONIC</strong>   bitonic sort, only support power-of-2 buffer size.</li>
+<li><strong>SORT_SELECTION</strong> selection sort, currently cannot sort duplicate keys.</li>
+<li><strong>SORT_MERGE</strong>     merge sort.</li>
+<li><strong>SORT_RADIX</strong>     radix sort, only support signed int/float keys(<code class="docutils literal"><span class="pre">CV_32S</span></code>/<code class="docutils literal"><span class="pre">CV_32F</span></code>).</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Returns the sorted result of all the elements in values based on equivalent keys.</p>
+<p>The element unit in the values to be sorted is determined from the data type, i.e., a <code class="docutils literal"><span class="pre">CV_32FC2</span></code> input <code class="docutils literal"><span class="pre">{a1a2,</span> <span class="pre">b1b2}</span></code> will be considered as two elements, regardless its matrix dimension.</p>
+<p>Both keys and values will be sorted inplace.</p>
+<p>Keys needs to be a <strong>single</strong> channel <code class="docutils literal"><span class="pre">oclMat</span></code>.</p>
+<p>Example:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">input</span> <span class="o">-</span>
+<span class="n">keys</span>   <span class="o">=</span> <span class="p">{</span><span class="mi">2</span><span class="p">,</span>    <span class="mi">3</span><span class="p">,</span>   <span class="mi">1</span><span class="p">}</span>   <span class="p">(</span><span class="n">CV_8UC1</span><span class="p">)</span>
+<span class="n">values</span> <span class="o">=</span> <span class="p">{</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span><span class="mi">2</span><span class="p">}</span> <span class="p">(</span><span class="n">CV_8UC2</span><span class="p">)</span>
+<span class="n">sortByKey</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">SORT_SELECTION</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+<span class="n">output</span> <span class="o">-</span>
+<span class="n">keys</span>   <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span>    <span class="mi">2</span><span class="p">,</span>   <span class="mi">3</span><span class="p">}</span>   <span class="p">(</span><span class="n">CV_8UC1</span><span class="p">)</span>
+<span class="n">values</span> <span class="o">=</span> <span class="p">{</span><span class="mi">6</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">}</span> <span class="p">(</span><span class="n">CV_8UC2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ocl-split">
+<h2>ocl::split<a class="headerlink" href="#ocl-split" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::split(const oclMat &amp;src, vector&lt;oclMat&gt; &amp;dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">split</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, vector&lt;oclMat&gt;&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::split(const oclMat &src, vector<oclMat> &dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; The source multi-channel array</li>
+<li><strong>dst</strong> &#8211; The destination array or vector of arrays; The number of arrays must match src.channels(). The arrays themselves will be reallocated if needed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The functions split split multi-channel array into separate single-channel arrays. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-subtract">
+<h2>ocl::subtract<a class="headerlink" href="#ocl-subtract" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::subtract(const oclMat&amp; src1, const oclMat&amp; src2, oclMat&amp; dst, const oclMat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">subtract</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, const oclMat&amp; <strong>src2</strong>, oclMat&amp; <strong>dst</strong>, const oclMat&amp; <strong>mask</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::subtract(const oclMat& src1, const oclMat& src2, oclMat& dst, const oclMat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::subtract(const oclMat&amp; src1, const Scalar&amp; s, oclMat&amp; dst, const oclMat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">subtract</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, const Scalar&amp; <strong>s</strong>, oclMat&amp; <strong>dst</strong>, const oclMat&amp; <strong>mask</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::subtract(const oclMat& src1, const Scalar& s, oclMat& dst, const oclMat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; the first input array.</li>
+<li><strong>src2</strong> &#8211; the second input array, must be the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>s</strong> &#8211; scalar, the second input parameter.</li>
+<li><strong>dst</strong> &#8211; the destination array, it will have the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>mask</strong> &#8211; the optional operation mask, 8-bit single channel array; specifies elements of the destination array to be changed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Computes per-element subtract between two arrays or between array and a scalar. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-transpose">
+<h2>ocl::transpose<a class="headerlink" href="#ocl-transpose" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::transpose(const oclMat &amp;src, oclMat &amp;dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">transpose</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::transpose(const oclMat &src, oclMat &dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; the source array.</li>
+<li><strong>dst</strong> &#8211; the destination array of the same type as <code class="docutils literal"><span class="pre">src</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Transposes a matrix (in case when <code class="docutils literal"><span class="pre">src</span></code> == <code class="docutils literal"><span class="pre">dst</span></code> and matrix is square the operation are performed inplace).</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Operations on Matrics</a><ul>
+<li><a class="reference internal" href="#ocl-abs">ocl::abs</a></li>
+<li><a class="reference internal" href="#ocl-absdiff">ocl::absdiff</a></li>
+<li><a class="reference internal" href="#ocl-add">ocl::add</a></li>
+<li><a class="reference internal" href="#ocl-addweighted">ocl::addWeighted</a></li>
+<li><a class="reference internal" href="#ocl-bitwise-and">ocl::bitwise_and</a></li>
+<li><a class="reference internal" href="#ocl-bitwise-not">ocl::bitwise_not</a></li>
+<li><a class="reference internal" href="#ocl-bitwise-or">ocl::bitwise_or</a></li>
+<li><a class="reference internal" href="#ocl-bitwise-xor">ocl::bitwise_xor</a></li>
+<li><a class="reference internal" href="#ocl-carttopolar">ocl::cartToPolar</a></li>
+<li><a class="reference internal" href="#ocl-compare">ocl::compare</a></li>
+<li><a class="reference internal" href="#ocl-dft">ocl::dft</a></li>
+<li><a class="reference internal" href="#ocl-divide">ocl::divide</a></li>
+<li><a class="reference internal" href="#ocl-exp">ocl::exp</a></li>
+<li><a class="reference internal" href="#ocl-flip">ocl::flip</a></li>
+<li><a class="reference internal" href="#ocl-gemm">ocl::gemm</a></li>
+<li><a class="reference internal" href="#ocl-log">ocl::log</a></li>
+<li><a class="reference internal" href="#ocl-lut">ocl::LUT</a></li>
+<li><a class="reference internal" href="#ocl-magnitude">ocl::magnitude</a></li>
+<li><a class="reference internal" href="#ocl-meanstddev">ocl::meanStdDev</a></li>
+<li><a class="reference internal" href="#ocl-merge">ocl::merge</a></li>
+<li><a class="reference internal" href="#ocl-multiply">ocl::multiply</a></li>
+<li><a class="reference internal" href="#ocl-norm">ocl::norm</a></li>
+<li><a class="reference internal" href="#ocl-oclmat-convertto">ocl::oclMat::convertTo</a></li>
+<li><a class="reference internal" href="#ocl-oclmat-copyto">ocl::oclMat::copyTo</a></li>
+<li><a class="reference internal" href="#ocl-oclmat-setto">ocl::oclMat::setTo</a></li>
+<li><a class="reference internal" href="#ocl-phase">ocl::phase</a></li>
+<li><a class="reference internal" href="#ocl-polartocart">ocl::polarToCart</a></li>
+<li><a class="reference internal" href="#ocl-pow">ocl::pow</a></li>
+<li><a class="reference internal" href="#ocl-setidentity">ocl::setIdentity</a></li>
+<li><a class="reference internal" href="#ocl-sortbykey">ocl::sortByKey</a></li>
+<li><a class="reference internal" href="#ocl-split">ocl::split</a></li>
+<li><a class="reference internal" href="#ocl-subtract">ocl::subtract</a></li>
+<li><a class="reference internal" href="#ocl-transpose">ocl::transpose</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="data_structures.html"
+                        title="previous chapter">Data Structures</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="matrix_reductions.html"
+                        title="next chapter">Matrix Reductions</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/ocl/doc/operations_on_matrices.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="matrix_reductions.html" title="Matrix Reductions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="data_structures.html" title="Data Structures"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" >ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

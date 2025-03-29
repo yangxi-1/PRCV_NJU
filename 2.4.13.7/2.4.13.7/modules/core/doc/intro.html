@@ -1,0 +1,370 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="OpenCV API Reference" href="../../refman.html" />
+    <link rel="next" title="core. The Core Functionality" href="core.html" />
+    <link rel="prev" title="OpenCV API Reference" href="../../refman.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="core.html" title="core. The Core Functionality"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../../refman.html" title="OpenCV API Reference"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" accesskey="U">OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>OpenCV (Open Source Computer Vision Library: <a class="reference external" href="http://opencv.org">http://opencv.org</a>) is an open-source BSD-licensed library that includes several hundreds of computer vision algorithms. The document describes the so-called OpenCV 2.x API, which is essentially a C++ API, as opposite to the C-based OpenCV 1.x API. The latter is described in opencv1x.pdf.</p>
+<p>OpenCV has a modular structure, which means that the package includes several shared or static libraries. The following modules are available:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>core</strong> - a compact module defining basic data structures, including the dense multi-dimensional array <code class="docutils literal"><span class="pre">Mat</span></code> and basic functions used by all other modules.</li>
+<li><strong>imgproc</strong> - an image processing module that includes linear and non-linear image filtering, geometrical image transformations (resize, affine and perspective warping, generic table-based remapping), color space conversion, histograms, and so on.</li>
+<li><strong>video</strong> - a video analysis module that includes motion estimation, background subtraction, and object tracking algorithms.</li>
+<li><strong>calib3d</strong> - basic multiple-view geometry algorithms, single and stereo camera calibration, object pose estimation, stereo correspondence algorithms, and elements of 3D reconstruction.</li>
+<li><strong>features2d</strong> - salient feature detectors, descriptors, and descriptor matchers.</li>
+<li><strong>objdetect</strong> - detection of objects and instances of the predefined classes (for example, faces, eyes, mugs, people, cars, and so on).</li>
+<li><strong>highgui</strong> - an easy-to-use interface to video capturing, image and video codecs, as well as simple UI capabilities.</li>
+<li><strong>gpu</strong> - GPU-accelerated algorithms from different OpenCV modules.</li>
+<li>... some other helper modules, such as FLANN and Google test wrappers, Python bindings, and others.</li>
+</ul>
+</div></blockquote>
+<p>The further chapters of the document describe functionality of each module. But first, make sure to get familiar with the common API concepts used thoroughly in the library.</p>
+<div class="section" id="api-concepts">
+<h2>API Concepts<a class="headerlink" href="#api-concepts" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cv-namespace">
+<h3><code class="docutils literal"><span class="pre">cv</span></code> Namespace<a class="headerlink" href="#cv-namespace" title="Permalink to this headline">¶</a></h3>
+<p>All the OpenCV classes and functions are placed into the <code class="docutils literal"><span class="pre">cv</span></code> namespace. Therefore, to access this functionality from your code, use the <code class="docutils literal"><span class="pre">cv::</span></code> specifier or <code class="docutils literal"><span class="pre">using</span> <span class="pre">namespace</span> <span class="pre">cv;</span></code> directive:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;opencv2/core/core.hpp&quot;</span><span class="cp"></span>
+<span class="p">...</span>
+<span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">H</span> <span class="o">=</span> <span class="n">cv</span><span class="o">::</span><span class="n">findHomography</span><span class="p">(</span><span class="n">points1</span><span class="p">,</span> <span class="n">points2</span><span class="p">,</span> <span class="n">CV_RANSAC</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;opencv2/core/core.hpp&quot;</span><span class="cp"></span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="n">Mat</span> <span class="n">H</span> <span class="o">=</span> <span class="n">findHomography</span><span class="p">(</span><span class="n">points1</span><span class="p">,</span> <span class="n">points2</span><span class="p">,</span> <span class="n">CV_RANSAC</span><span class="p">,</span> <span class="mi">5</span> <span class="p">);</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>Some of the current or future OpenCV external names may conflict with STL
+or other libraries. In this case, use explicit namespace specifiers to resolve the name conflicts:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="nf">a</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">);</span>
+<span class="n">randu</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">rand</span><span class="p">()));</span>
+<span class="n">cv</span><span class="o">::</span><span class="n">log</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">);</span>
+<span class="n">a</span> <span class="o">/=</span> <span class="n">std</span><span class="o">::</span><span class="n">log</span><span class="p">(</span><span class="mf">2.</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="automatic-memory-management">
+<h3>Automatic Memory Management<a class="headerlink" href="#automatic-memory-management" title="Permalink to this headline">¶</a></h3>
+<p>OpenCV handles all the memory automatically.</p>
+<p>First of all, <code class="docutils literal"><span class="pre">std::vector</span></code>, <code class="docutils literal"><span class="pre">Mat</span></code>, and other data structures used by the functions and methods have destructors that deallocate the underlying memory buffers when needed. This means that the destructors do not always deallocate the buffers as in case of <code class="docutils literal"><span class="pre">Mat</span></code>. They take into account possible data sharing. A destructor decrements the reference counter associated with the matrix data buffer. The buffer is deallocated if and only if the reference counter reaches zero, that is, when no other structures refer to the same buffer. Similarly, when a <code class="docutils literal"><span class="pre">Mat</span></code> instance is copied, no actual data is really copied. Instead, the reference counter is incremented to memorize that there is another owner of the same data. There is also the <code class="docutils literal"><span class="pre">Mat::clone</span></code> method that creates a full copy of the matrix data. See the example below:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// create a big 8Mb matrix</span>
+<span class="n">Mat</span> <span class="nf">A</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">CV_64F</span><span class="p">);</span>
+
+<span class="c1">// create another header for the same matrix;</span>
+<span class="c1">// this is an instant operation, regardless of the matrix size.</span>
+<span class="n">Mat</span> <span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="p">;</span>
+<span class="c1">// create another header for the 3-rd row of A; no data is copied either</span>
+<span class="n">Mat</span> <span class="n">C</span> <span class="o">=</span> <span class="n">B</span><span class="p">.</span><span class="n">row</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="c1">// now create a separate copy of the matrix</span>
+<span class="n">Mat</span> <span class="n">D</span> <span class="o">=</span> <span class="n">B</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="c1">// copy the 5-th row of B to C, that is, copy the 5-th row of A</span>
+<span class="c1">// to the 3-rd row of A.</span>
+<span class="n">B</span><span class="p">.</span><span class="n">row</span><span class="p">(</span><span class="mi">5</span><span class="p">).</span><span class="n">copyTo</span><span class="p">(</span><span class="n">C</span><span class="p">);</span>
+<span class="c1">// now let A and D share the data; after that the modified version</span>
+<span class="c1">// of A is still referenced by B and C.</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">D</span><span class="p">;</span>
+<span class="c1">// now make B an empty matrix (which references no memory buffers),</span>
+<span class="c1">// but the modified version of A will still be referenced by C,</span>
+<span class="c1">// despite that C is just a single row of the original A</span>
+<span class="n">B</span><span class="p">.</span><span class="n">release</span><span class="p">();</span>
+
+<span class="c1">// finally, make a full copy of C. As a result, the big modified</span>
+<span class="c1">// matrix will be deallocated, since it is not referenced by anyone</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">C</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>You see that the use of <code class="docutils literal"><span class="pre">Mat</span></code> and other basic structures is simple. But what about high-level classes or even user data types created without taking automatic memory management into account? For them, OpenCV offers the <code class="docutils literal"><span class="pre">Ptr&lt;&gt;</span></code> template class that is similar to <code class="docutils literal"><span class="pre">std::shared_ptr</span></code> from C++ TR1. So, instead of using plain pointers:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">T</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">T</span><span class="p">(...);</span>
+</pre></div>
+</div>
+<p>you can use:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">T</span><span class="p">(...);</span>
+</pre></div>
+</div>
+<p>That is, <code class="docutils literal"><span class="pre">Ptr&lt;T&gt;</span> <span class="pre">ptr</span></code> encapsulates a pointer to a <code class="docutils literal"><span class="pre">T</span></code> instance and a reference counter associated with the pointer. See the
+<a class="reference internal" href="basic_structures.html#Ptr" title="class Ptr"><code class="xref ocv ocv-class docutils literal"><span class="pre">Ptr</span></code></a>
+description for details.</p>
+</div>
+<div class="section" id="automatic-allocation-of-the-output-data">
+<span id="automaticallocation"></span><h3>Automatic Allocation of the Output Data<a class="headerlink" href="#automatic-allocation-of-the-output-data" title="Permalink to this headline">¶</a></h3>
+<p>OpenCV deallocates the memory automatically, as well as automatically allocates the memory for output function parameters most of the time. So, if a function has one or more input arrays (<code class="docutils literal"><span class="pre">cv::Mat</span></code> instances) and some output arrays, the output arrays are automatically allocated or reallocated. The size and type of the output arrays are determined from the size and type of input arrays. If needed, the functions take extra parameters that help to figure out the output array properties.</p>
+<p>Example:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;cv.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;highgui.h&quot;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">VideoCapture</span> <span class="n">cap</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">cap</span><span class="p">.</span><span class="n">isOpened</span><span class="p">())</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+
+    <span class="n">Mat</span> <span class="n">frame</span><span class="p">,</span> <span class="n">edges</span><span class="p">;</span>
+    <span class="n">namedWindow</span><span class="p">(</span><span class="s">&quot;edges&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">for</span><span class="p">(;;)</span>
+    <span class="p">{</span>
+        <span class="n">cap</span> <span class="o">&gt;&gt;</span> <span class="n">frame</span><span class="p">;</span>
+        <span class="n">cvtColor</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">CV_BGR2GRAY</span><span class="p">);</span>
+        <span class="n">GaussianBlur</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">7</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">);</span>
+        <span class="n">Canny</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+        <span class="n">imshow</span><span class="p">(</span><span class="s">&quot;edges&quot;</span><span class="p">,</span> <span class="n">edges</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The array <code class="docutils literal"><span class="pre">frame</span></code> is automatically allocated by the <code class="docutils literal"><span class="pre">&gt;&gt;</span></code> operator since the video frame resolution and the bit-depth is known to the video capturing module. The array <code class="docutils literal"><span class="pre">edges</span></code> is automatically allocated by the <code class="docutils literal"><span class="pre">cvtColor</span></code> function. It has the same size and the bit-depth as the input array. The number of channels is 1 because the color conversion code <code class="docutils literal"><span class="pre">CV_BGR2GRAY</span></code> is passed, which means a color to grayscale conversion. Note that <code class="docutils literal"><span class="pre">frame</span></code> and <code class="docutils literal"><span class="pre">edges</span></code> are allocated only once during the first execution of the loop body since all the next video frames have the same resolution. If you somehow change the video resolution, the arrays are automatically reallocated.</p>
+<p>The key component of this technology is the <code class="docutils literal"><span class="pre">Mat::create</span></code> method. It takes the desired array size and type. If the array already has the specified size and type, the method does nothing. Otherwise, it releases the previously allocated data, if any (this part involves decrementing the reference counter and comparing it with zero), and then allocates a new buffer of the required size. Most functions call the <code class="docutils literal"><span class="pre">Mat::create</span></code> method for each output array, and so the automatic output data allocation is implemented.</p>
+<p>Some notable exceptions from this scheme are <code class="docutils literal"><span class="pre">cv::mixChannels</span></code>, <code class="docutils literal"><span class="pre">cv::RNG::fill</span></code>, and a few other functions and methods. They are not able to allocate the output array, so you have to do this in advance.</p>
+</div>
+<div class="section" id="saturation-arithmetics">
+<h3>Saturation Arithmetics<a class="headerlink" href="#saturation-arithmetics" title="Permalink to this headline">¶</a></h3>
+<p>As a computer vision library, OpenCV deals a lot with image pixels that are often encoded in a compact, 8- or 16-bit per channel, form and thus have a limited value range. Furthermore, certain operations on images, like color space conversions, brightness/contrast adjustments, sharpening, complex interpolation (bi-cubic, Lanczos) can produce values out of the available range. If you just store the lowest 8 (16) bits of the result, this results in visual artifacts and may affect a further image analysis. To solve this problem, the so-called <em>saturation</em> arithmetics is used. For example, to store <code class="docutils literal"><span class="pre">r</span></code>, the result of an operation, to an 8-bit image, you find the nearest value within the 0..255 range:</p>
+<div class="math">
+<p><img src="../../../_images/math/6083147258be56f14c94720e60fd2e334022d152.png" alt="I(x,y)= \min ( \max (\textrm{round}(r), 0), 255)"/></p>
+</div><p>Similar rules are applied to 8-bit signed, 16-bit signed and unsigned types. This semantics is used everywhere in the library. In C++ code, it is done using the <code class="docutils literal"><span class="pre">saturate_cast&lt;&gt;</span></code> functions that resemble standard C++ cast operations. See below the implementation of the formula provided above:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">I</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="n">saturate_cast</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal"><span class="pre">cv::uchar</span></code> is an OpenCV 8-bit unsigned integer type. In the optimized SIMD code, such SSE2 instructions as <code class="docutils literal"><span class="pre">paddusb</span></code>, <code class="docutils literal"><span class="pre">packuswb</span></code>, and so on are used. They help achieve exactly the same behavior as in C++ code.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Saturation is not applied when the result is 32-bit integer.</p>
+</div>
+</div>
+<div class="section" id="fixed-pixel-types-limited-use-of-templates">
+<h3>Fixed Pixel Types. Limited Use of Templates<a class="headerlink" href="#fixed-pixel-types-limited-use-of-templates" title="Permalink to this headline">¶</a></h3>
+<p>Templates is a great feature of C++ that enables implementation of very powerful, efficient and yet safe data structures and algorithms. However, the extensive use of templates may dramatically increase compilation time and code size. Besides, it is difficult to separate an interface and implementation when templates are used exclusively. This could be fine for basic algorithms but not good for computer vision libraries where a single algorithm may span thousands lines of code. Because of this and also to simplify development of bindings for other languages, like Python, Java, Matlab that do not have templates at all or have limited template capabilities, the current OpenCV implementation is based on polymorphism and runtime dispatching over templates. In those places where runtime dispatching would be too slow (like pixel access operators), impossible (generic <code class="docutils literal"><span class="pre">Ptr&lt;&gt;</span></code> implementation), or just very inconvenient (<code class="docutils literal"><span class="pre">saturate_cast&lt;&gt;()</span></code>) the current implementation introduces small template classes, methods, and functions. Anywhere else in the current OpenCV version the use of templates is limited.</p>
+<p>Consequently, there is a limited fixed set of primitive data types the library can operate on. That is, array elements should have one of the following types:</p>
+<blockquote>
+<div><ul class="simple">
+<li>8-bit unsigned integer (uchar)</li>
+<li>8-bit signed integer (schar)</li>
+<li>16-bit unsigned integer (ushort)</li>
+<li>16-bit signed integer (short)</li>
+<li>32-bit signed integer (int)</li>
+<li>32-bit floating-point number (float)</li>
+<li>64-bit floating-point number (double)</li>
+<li>a tuple of several elements where all elements have the same type (one of the above). An array whose elements are such tuples, are called multi-channel arrays, as opposite to the single-channel arrays, whose elements are scalar values. The maximum possible number of channels is defined by the <code class="docutils literal"><span class="pre">CV_CN_MAX</span></code> constant, which is currently set to 512.</li>
+</ul>
+</div></blockquote>
+<p>For these basic types, the following enumeration is applied:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">enum</span> <span class="p">{</span> <span class="n">CV_8U</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">CV_8S</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">CV_16U</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">CV_16S</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">CV_32S</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">CV_32F</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">CV_64F</span><span class="o">=</span><span class="mi">6</span> <span class="p">};</span>
+</pre></div>
+</div>
+<p>Multi-channel (<code class="docutils literal"><span class="pre">n</span></code>-channel) types can be specified using the following options:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">CV_8UC1</span></code> ... <code class="docutils literal"><span class="pre">CV_64FC4</span></code> constants (for a number of channels from 1 to 4)</li>
+<li><code class="docutils literal"><span class="pre">CV_8UC(n)</span></code> ... <code class="docutils literal"><span class="pre">CV_64FC(n)</span></code> or <code class="docutils literal"><span class="pre">CV_MAKETYPE(CV_8U,</span> <span class="pre">n)</span></code> ... <code class="docutils literal"><span class="pre">CV_MAKETYPE(CV_64F,</span> <span class="pre">n)</span></code> macros when the number of channels is more than 4 or unknown at the compilation time.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><code class="docutils literal"><span class="pre">CV_32FC1</span> <span class="pre">==</span> <span class="pre">CV_32F</span></code>, <code class="docutils literal"><span class="pre">CV_32FC2</span> <span class="pre">==</span> <span class="pre">CV_32FC(2)</span> <span class="pre">==</span> <span class="pre">CV_MAKETYPE(CV_32F,</span> <span class="pre">2)</span></code>, and <code class="docutils literal"><span class="pre">CV_MAKETYPE(depth,</span> <span class="pre">n)</span> <span class="pre">==</span> <span class="pre">(depth&amp;7)</span> <span class="pre">+</span> <span class="pre">((n-1)&lt;&lt;3)</span></code>. This means that the  constant type is formed from the <code class="docutils literal"><span class="pre">depth</span></code>, taking the lowest 3 bits, and the number of channels minus 1, taking the next <code class="docutils literal"><span class="pre">log2(CV_CN_MAX)</span></code> bits.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="nf">mtx</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">);</span> <span class="c1">// make a 3x3 floating-point matrix</span>
+<span class="n">Mat</span> <span class="nf">cmtx</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">CV_64FC2</span><span class="p">);</span> <span class="c1">// make a 10x1 2-channel floating-point</span>
+                           <span class="c1">// matrix (10-element complex vector)</span>
+<span class="n">Mat</span> <span class="nf">img</span><span class="p">(</span><span class="n">Size</span><span class="p">(</span><span class="mi">1920</span><span class="p">,</span> <span class="mi">1080</span><span class="p">),</span> <span class="n">CV_8UC3</span><span class="p">);</span> <span class="c1">// make a 3-channel (color) image</span>
+                                    <span class="c1">// of 1920 columns and 1080 rows.</span>
+<span class="n">Mat</span> <span class="nf">grayscale</span><span class="p">(</span><span class="n">image</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">CV_MAKETYPE</span><span class="p">(</span><span class="n">image</span><span class="p">.</span><span class="n">depth</span><span class="p">(),</span> <span class="mi">1</span><span class="p">));</span> <span class="c1">// make a 1-channel image of</span>
+                                                            <span class="c1">// the same size and same</span>
+                                                            <span class="c1">// channel type as img</span>
+</pre></div>
+</div>
+<p>Arrays with more complex elements cannot be constructed or processed using OpenCV. Furthermore, each function or method can handle only a subset of all possible array types. Usually, the more complex the algorithm is, the smaller the supported subset of formats is. See below typical examples of such limitations:</p>
+<blockquote>
+<div><ul class="simple">
+<li>The face detection algorithm only works with 8-bit grayscale or color images.</li>
+<li>Linear algebra functions and most of the machine learning algorithms work with floating-point arrays only.</li>
+<li>Basic functions, such as <code class="docutils literal"><span class="pre">cv::add</span></code>, support all types.</li>
+<li>Color space conversion functions support 8-bit unsigned, 16-bit unsigned, and 32-bit floating-point types.</li>
+</ul>
+</div></blockquote>
+<p>The subset of supported types for each function has been defined from practical needs and could be extended in future based on user requests.</p>
+</div>
+<div class="section" id="inputarray-and-outputarray">
+<h3>InputArray and OutputArray<a class="headerlink" href="#inputarray-and-outputarray" title="Permalink to this headline">¶</a></h3>
+<p>Many OpenCV functions process dense 2-dimensional or multi-dimensional numerical arrays. Usually, such functions take cpp:class:<cite>Mat</cite> as parameters, but in some cases it&#8217;s more convenient to use <code class="docutils literal"><span class="pre">std::vector&lt;&gt;</span></code> (for a point set, for example) or <code class="docutils literal"><span class="pre">Matx&lt;&gt;</span></code> (for 3x3 homography matrix and such). To avoid many duplicates in the API, special &#8220;proxy&#8221; classes have been introduced. The base &#8220;proxy&#8221; class is <code class="docutils literal"><span class="pre">InputArray</span></code>. It is used for passing read-only arrays on a function input. The derived from <code class="docutils literal"><span class="pre">InputArray</span></code> class <code class="docutils literal"><span class="pre">OutputArray</span></code> is used to specify an output array for a function. Normally, you should not care of those intermediate types (and you should not declare variables of those types explicitly) - it will all just work automatically. You can assume that instead of <code class="docutils literal"><span class="pre">InputArray</span></code>/<code class="docutils literal"><span class="pre">OutputArray</span></code> you can always use <code class="docutils literal"><span class="pre">Mat</span></code>, <code class="docutils literal"><span class="pre">std::vector&lt;&gt;</span></code>, <code class="docutils literal"><span class="pre">Matx&lt;&gt;</span></code>, <code class="docutils literal"><span class="pre">Vec&lt;&gt;</span></code> or <code class="docutils literal"><span class="pre">Scalar</span></code>. When a function has an optional input or output array, and you do not have or do not want one, pass <code class="docutils literal"><span class="pre">cv::noArray()</span></code>.</p>
+</div>
+<div class="section" id="error-handling">
+<h3>Error Handling<a class="headerlink" href="#error-handling" title="Permalink to this headline">¶</a></h3>
+<p>OpenCV uses exceptions to signal critical errors. When the input data has a correct format and belongs to the specified value range, but the algorithm cannot succeed for some reason (for example, the optimization algorithm did not converge), it returns a special error code (typically, just a boolean variable).</p>
+<p>The exceptions can be instances of the <code class="docutils literal"><span class="pre">cv::Exception</span></code> class or its derivatives. In its turn, <code class="docutils literal"><span class="pre">cv::Exception</span></code> is a derivative of <code class="docutils literal"><span class="pre">std::exception</span></code>. So it can be gracefully handled in the code using other standard C++ library components.</p>
+<p>The exception is typically thrown either using the <code class="docutils literal"><span class="pre">CV_Error(errcode,</span> <span class="pre">description)</span></code> macro, or its printf-like <code class="docutils literal"><span class="pre">CV_Error_(errcode,</span> <span class="pre">printf-spec,</span> <span class="pre">(printf-args))</span></code> variant, or using the <code class="docutils literal"><span class="pre">CV_Assert(condition)</span></code> macro that checks the condition and throws an exception when it is not satisfied. For performance-critical code, there is <code class="docutils literal"><span class="pre">CV_DbgAssert(condition)</span></code> that is only retained in the Debug configuration. Due to the automatic memory management, all the intermediate buffers are automatically deallocated in case of a sudden error. You only need to add a try statement to catch exceptions, if needed:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">try</span>
+<span class="p">{</span>
+    <span class="p">...</span> <span class="c1">// call OpenCV</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="p">(</span> <span class="n">cv</span><span class="o">::</span><span class="n">Exception</span><span class="o">&amp;</span> <span class="n">e</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">err_msg</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">();</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;exception caught: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">err_msg</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="multi-threading-and-re-enterability">
+<h3>Multi-threading and Re-enterability<a class="headerlink" href="#multi-threading-and-re-enterability" title="Permalink to this headline">¶</a></h3>
+<p>The current OpenCV implementation is fully re-enterable. That is, the same function, the same <em>constant</em> method of a class instance, or the same <em>non-constant</em> method of different class instances can be called from different threads. Also, the same <code class="docutils literal"><span class="pre">cv::Mat</span></code> can be used in different threads because the reference-counting operations use the architecture-specific atomic instructions.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction</a><ul>
+<li><a class="reference internal" href="#api-concepts">API Concepts</a><ul>
+<li><a class="reference internal" href="#cv-namespace"><code class="docutils literal"><span class="pre">cv</span></code> Namespace</a></li>
+<li><a class="reference internal" href="#automatic-memory-management">Automatic Memory Management</a></li>
+<li><a class="reference internal" href="#automatic-allocation-of-the-output-data">Automatic Allocation of the Output Data</a></li>
+<li><a class="reference internal" href="#saturation-arithmetics">Saturation Arithmetics</a></li>
+<li><a class="reference internal" href="#fixed-pixel-types-limited-use-of-templates">Fixed Pixel Types. Limited Use of Templates</a></li>
+<li><a class="reference internal" href="#inputarray-and-outputarray">InputArray and OutputArray</a></li>
+<li><a class="reference internal" href="#error-handling">Error Handling</a></li>
+<li><a class="reference internal" href="#multi-threading-and-re-enterability">Multi-threading and Re-enterability</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../../refman.html"
+                        title="previous chapter">OpenCV API Reference</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="core.html"
+                        title="next chapter">core. The Core Functionality</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/core/doc/intro.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="core.html" title="core. The Core Functionality"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../../refman.html" title="OpenCV API Reference"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

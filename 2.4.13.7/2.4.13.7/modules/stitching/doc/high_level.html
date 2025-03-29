@@ -1,0 +1,451 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>High Level Functionality &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="stitching. Images stitching" href="stitching.html" />
+    <link rel="next" title="Camera" href="camera.html" />
+    <link rel="prev" title="Stitching Pipeline" href="introduction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="camera.html" title="Camera"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Stitching Pipeline"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="stitching.html" accesskey="U">stitching. Images stitching</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="high-level-functionality">
+<h1>High Level Functionality<a class="headerlink" href="#high-level-functionality" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="stitcher">
+<h2>Stitcher<a class="headerlink" href="#stitcher" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Stitcher">
+<em class="property">class </em><code class="descname">Stitcher</code><a class="headerlink" href="#Stitcher" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>High level image stitcher. It&#8217;s possible to use this class without being aware of the entire stitching pipeline. However, to be able to achieve higher stitching stability and quality of the final images at least being familiar with the theory is recommended (see <a class="reference internal" href="introduction.html#stitching-pipeline"><span>Stitching Pipeline</span></a>).</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">Stitcher</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">ORIG_RESOL</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="p">};</span>
+    <span class="k">enum</span> <span class="n">Status</span> <span class="p">{</span> <span class="n">OK</span><span class="p">,</span> <span class="n">ERR_NEED_MORE_IMGS</span> <span class="p">};</span>
+
+    <span class="c1">// Creates stitcher with default parameters</span>
+    <span class="k">static</span> <span class="n">Stitcher</span> <span class="nf">createDefault</span><span class="p">(</span><span class="kt">bool</span> <span class="n">try_use_gpu</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+
+    <span class="n">Status</span> <span class="nf">estimateTransform</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">images</span><span class="p">);</span>
+    <span class="n">Status</span> <span class="nf">estimateTransform</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">images</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Rect</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">rois</span><span class="p">);</span>
+
+    <span class="n">Status</span> <span class="nf">composePanorama</span><span class="p">(</span><span class="n">OutputArray</span> <span class="n">pano</span><span class="p">);</span>
+    <span class="n">Status</span> <span class="nf">composePanorama</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">images</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">pano</span><span class="p">);</span>
+
+    <span class="n">Status</span> <span class="nf">stitch</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">images</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">pano</span><span class="p">);</span>
+    <span class="n">Status</span> <span class="nf">stitch</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">images</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Rect</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">rois</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">pano</span><span class="p">);</span>
+
+    <span class="kt">double</span> <span class="nf">registrationResol</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">registr_resol_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="nf">setRegistrationResol</span><span class="p">(</span><span class="kt">double</span> <span class="n">resol_mpx</span><span class="p">)</span> <span class="p">{</span> <span class="n">registr_resol_</span> <span class="o">=</span> <span class="n">resol_mpx</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="kt">double</span> <span class="nf">seamEstimationResol</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">seam_est_resol_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="nf">setSeamEstimationResol</span><span class="p">(</span><span class="kt">double</span> <span class="n">resol_mpx</span><span class="p">)</span> <span class="p">{</span> <span class="n">seam_est_resol_</span> <span class="o">=</span> <span class="n">resol_mpx</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="kt">double</span> <span class="nf">compositingResol</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">compose_resol_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="nf">setCompositingResol</span><span class="p">(</span><span class="kt">double</span> <span class="n">resol_mpx</span><span class="p">)</span> <span class="p">{</span> <span class="n">compose_resol_</span> <span class="o">=</span> <span class="n">resol_mpx</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="kt">double</span> <span class="nf">panoConfidenceThresh</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">conf_thresh_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="nf">setPanoConfidenceThresh</span><span class="p">(</span><span class="kt">double</span> <span class="n">conf_thresh</span><span class="p">)</span> <span class="p">{</span> <span class="n">conf_thresh_</span> <span class="o">=</span> <span class="n">conf_thresh</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="kt">bool</span> <span class="nf">waveCorrection</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">do_wave_correct_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="nf">setWaveCorrection</span><span class="p">(</span><span class="kt">bool</span> <span class="n">flag</span><span class="p">)</span> <span class="p">{</span> <span class="n">do_wave_correct_</span> <span class="o">=</span> <span class="n">flag</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="n">detail</span><span class="o">::</span><span class="n">WaveCorrectKind</span> <span class="n">waveCorrectKind</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">wave_correct_kind_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">setWaveCorrectKind</span><span class="p">(</span><span class="n">detail</span><span class="o">::</span><span class="n">WaveCorrectKind</span> <span class="n">kind</span><span class="p">)</span> <span class="p">{</span> <span class="n">wave_correct_kind_</span> <span class="o">=</span> <span class="n">kind</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">FeaturesFinder</span><span class="o">&gt;</span> <span class="n">featuresFinder</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">features_finder_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">const</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">FeaturesFinder</span><span class="o">&gt;</span> <span class="n">featuresFinder</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">features_finder_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">setFeaturesFinder</span><span class="p">(</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">FeaturesFinder</span><span class="o">&gt;</span> <span class="n">features_finder</span><span class="p">)</span>
+        <span class="p">{</span> <span class="n">features_finder_</span> <span class="o">=</span> <span class="n">features_finder</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">FeaturesMatcher</span><span class="o">&gt;</span> <span class="n">featuresMatcher</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">features_matcher_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">const</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">FeaturesMatcher</span><span class="o">&gt;</span> <span class="n">featuresMatcher</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">features_matcher_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">setFeaturesMatcher</span><span class="p">(</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">FeaturesMatcher</span><span class="o">&gt;</span> <span class="n">features_matcher</span><span class="p">)</span>
+        <span class="p">{</span> <span class="n">features_matcher_</span> <span class="o">=</span> <span class="n">features_matcher</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="k">const</span> <span class="n">cv</span><span class="o">::</span><span class="n">Mat</span><span class="o">&amp;</span> <span class="n">matchingMask</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">matching_mask_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">setMatchingMask</span><span class="p">(</span><span class="k">const</span> <span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="o">&amp;</span><span class="n">mask</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">CV_Assert</span><span class="p">(</span><span class="n">mask</span><span class="p">.</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="n">CV_8U</span> <span class="o">&amp;&amp;</span> <span class="n">mask</span><span class="p">.</span><span class="n">cols</span> <span class="o">==</span> <span class="n">mask</span><span class="p">.</span><span class="n">rows</span><span class="p">);</span>
+        <span class="n">matching_mask_</span> <span class="o">=</span> <span class="n">mask</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">BundleAdjusterBase</span><span class="o">&gt;</span> <span class="n">bundleAdjuster</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">bundle_adjuster_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">const</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">BundleAdjusterBase</span><span class="o">&gt;</span> <span class="n">bundleAdjuster</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">bundle_adjuster_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">setBundleAdjuster</span><span class="p">(</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">BundleAdjusterBase</span><span class="o">&gt;</span> <span class="n">bundle_adjuster</span><span class="p">)</span>
+        <span class="p">{</span> <span class="n">bundle_adjuster_</span> <span class="o">=</span> <span class="n">bundle_adjuster</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">WarperCreator</span><span class="o">&gt;</span> <span class="n">warper</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">warper_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">const</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">WarperCreator</span><span class="o">&gt;</span> <span class="n">warper</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">warper_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">setWarper</span><span class="p">(</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">WarperCreator</span><span class="o">&gt;</span> <span class="n">warper</span><span class="p">)</span> <span class="p">{</span> <span class="n">warper_</span> <span class="o">=</span> <span class="n">warper</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">ExposureCompensator</span><span class="o">&gt;</span> <span class="n">exposureCompensator</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">exposure_comp_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">const</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">ExposureCompensator</span><span class="o">&gt;</span> <span class="n">exposureCompensator</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">exposure_comp_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">setExposureCompensator</span><span class="p">(</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">ExposureCompensator</span><span class="o">&gt;</span> <span class="n">exposure_comp</span><span class="p">)</span>
+        <span class="p">{</span> <span class="n">exposure_comp_</span> <span class="o">=</span> <span class="n">exposure_comp</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">SeamFinder</span><span class="o">&gt;</span> <span class="n">seamFinder</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">seam_finder_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">const</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">SeamFinder</span><span class="o">&gt;</span> <span class="n">seamFinder</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">seam_finder_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">setSeamFinder</span><span class="p">(</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">SeamFinder</span><span class="o">&gt;</span> <span class="n">seam_finder</span><span class="p">)</span> <span class="p">{</span> <span class="n">seam_finder_</span> <span class="o">=</span> <span class="n">seam_finder</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">Blender</span><span class="o">&gt;</span> <span class="n">blender</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">blender_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">const</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">Blender</span><span class="o">&gt;</span> <span class="n">blender</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">blender_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">setBlender</span><span class="p">(</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">Blender</span><span class="o">&gt;</span> <span class="n">blender</span><span class="p">)</span> <span class="p">{</span> <span class="n">blender_</span> <span class="o">=</span> <span class="n">blender</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/* hidden */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>A basic example on image stitching can be found at opencv_source_code/samples/cpp/stitching.cpp</li>
+<li>A detailed example on image stitching can be found at opencv_source_code/samples/cpp/stitching_detailed.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="stitcher-createdefault">
+<h2>Stitcher::createDefault<a class="headerlink" href="#stitcher-createdefault" title="Permalink to this headline">¶</a></h2>
+<p>Creates a stitcher with the default parameters.</p>
+<dl class="function">
+<dt id="Stitcher Stitcher::createDefault(bool try_use_gpu)">
+<strong>C++:</strong><code class="descname"> </code>Stitcher <code class="descclassname">Stitcher::</code><code class="descname">createDefault</code><span class="sig-paren">(</span>bool <strong>try_use_gpu</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#Stitcher Stitcher::createDefault(bool try_use_gpu)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>try_use_gpu</strong> &#8211; Flag indicating whether GPU should be used whenever it&#8217;s possible.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Stitcher class instance.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="stitcher-estimatetransform">
+<h2>Stitcher::estimateTransform<a class="headerlink" href="#stitcher-estimatetransform" title="Permalink to this headline">¶</a></h2>
+<p>These functions try to match the given images and to estimate rotations of each camera.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Use the functions only if you&#8217;re aware of the stitching pipeline, otherwise use <a class="reference internal" href="#Status Stitcher::stitch(InputArray images, OutputArray pano)" title="Status Stitcher::stitch(InputArray images, OutputArray pano)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Stitcher::stitch()</span></code></a>.</p>
+</div>
+<dl class="function">
+<dt id="Status Stitcher::estimateTransform(InputArray images)">
+<strong>C++:</strong><code class="descname"> </code>Status <code class="descclassname">Stitcher::</code><code class="descname">estimateTransform</code><span class="sig-paren">(</span>InputArray <strong>images</strong><span class="sig-paren">)</span><a class="headerlink" href="#Status Stitcher::estimateTransform(InputArray images)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Status Stitcher::estimateTransform(InputArray images, const std::vector&lt;std::vector&lt;Rect&gt; &gt; &amp;rois)">
+<strong>C++:</strong><code class="descname"> </code>Status <code class="descclassname">Stitcher::</code><code class="descname">estimateTransform</code><span class="sig-paren">(</span>InputArray <strong>images</strong>, const std::vector&lt;std::vector&lt;Rect&gt;&gt;&amp; <strong>rois</strong><span class="sig-paren">)</span><a class="headerlink" href="#Status Stitcher::estimateTransform(InputArray images, const std::vector<std::vector<Rect> > &rois)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>images</strong> &#8211; Input images.</li>
+<li><strong>rois</strong> &#8211; Region of interest rectangles.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Status code.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="stitcher-composepanorama">
+<h2>Stitcher::composePanorama<a class="headerlink" href="#stitcher-composepanorama" title="Permalink to this headline">¶</a></h2>
+<p>These functions try to compose the given images (or images stored internally from the other function calls) into the final pano under the assumption that the image transformations were estimated before.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Use the functions only if you&#8217;re aware of the stitching pipeline, otherwise use <a class="reference internal" href="#Status Stitcher::stitch(InputArray images, OutputArray pano)" title="Status Stitcher::stitch(InputArray images, OutputArray pano)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Stitcher::stitch()</span></code></a>.</p>
+</div>
+<dl class="function">
+<dt id="Status Stitcher::composePanorama(OutputArray pano)">
+<strong>C++:</strong><code class="descname"> </code>Status <code class="descclassname">Stitcher::</code><code class="descname">composePanorama</code><span class="sig-paren">(</span>OutputArray <strong>pano</strong><span class="sig-paren">)</span><a class="headerlink" href="#Status Stitcher::composePanorama(OutputArray pano)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Status Stitcher::composePanorama(InputArray images, OutputArray pano)">
+<strong>C++:</strong><code class="descname"> </code>Status <code class="descclassname">Stitcher::</code><code class="descname">composePanorama</code><span class="sig-paren">(</span>InputArray <strong>images</strong>, OutputArray <strong>pano</strong><span class="sig-paren">)</span><a class="headerlink" href="#Status Stitcher::composePanorama(InputArray images, OutputArray pano)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>images</strong> &#8211; Input images.</li>
+<li><strong>pano</strong> &#8211; Final pano.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Status code.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="stitcher-stitch">
+<h2>Stitcher::stitch<a class="headerlink" href="#stitcher-stitch" title="Permalink to this headline">¶</a></h2>
+<p>These functions try to stitch the given images.</p>
+<dl class="function">
+<dt id="Status Stitcher::stitch(InputArray images, OutputArray pano)">
+<strong>C++:</strong><code class="descname"> </code>Status <code class="descclassname">Stitcher::</code><code class="descname">stitch</code><span class="sig-paren">(</span>InputArray <strong>images</strong>, OutputArray <strong>pano</strong><span class="sig-paren">)</span><a class="headerlink" href="#Status Stitcher::stitch(InputArray images, OutputArray pano)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Status Stitcher::stitch(InputArray images, const std::vector&lt;std::vector&lt;Rect&gt; &gt; &amp;rois, OutputArray pano)">
+<strong>C++:</strong><code class="descname"> </code>Status <code class="descclassname">Stitcher::</code><code class="descname">stitch</code><span class="sig-paren">(</span>InputArray <strong>images</strong>, const std::vector&lt;std::vector&lt;Rect&gt;&gt;&amp; <strong>rois</strong>, OutputArray <strong>pano</strong><span class="sig-paren">)</span><a class="headerlink" href="#Status Stitcher::stitch(InputArray images, const std::vector<std::vector<Rect> > &rois, OutputArray pano)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>images</strong> &#8211; Input images.</li>
+<li><strong>rois</strong> &#8211; Region of interest rectangles.</li>
+<li><strong>pano</strong> &#8211; Final pano.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Status code.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="warpercreator">
+<h2>WarperCreator<a class="headerlink" href="#warpercreator" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WarperCreator">
+<em class="property">class </em><code class="descname">WarperCreator</code><a class="headerlink" href="#WarperCreator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Image warper factories base class.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">WarperCreator</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">WarperCreator</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="k">virtual</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">RotationWarper</span><span class="o">&gt;</span> <span class="n">create</span><span class="p">(</span><span class="kt">float</span> <span class="n">scale</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="planewarper">
+<h2>PlaneWarper<a class="headerlink" href="#planewarper" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="PlaneWarper : public WarperCreator">
+<em class="property">class </em><code class="descname">PlaneWarper</code> : <em class="property">public</em> <code class="descname">WarperCreator</code><a class="headerlink" href="#PlaneWarper : public WarperCreator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Plane warper factory class.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">PlaneWarper</span> <span class="o">:</span> <span class="k">public</span> <span class="n">WarperCreator</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">RotationWarper</span><span class="o">&gt;</span> <span class="n">create</span><span class="p">(</span><span class="kt">float</span> <span class="n">scale</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="k">new</span> <span class="n">detail</span><span class="o">::</span><span class="n">PlaneWarper</span><span class="p">(</span><span class="n">scale</span><span class="p">);</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="warpers.html#detail::PlaneWarper : public detail::RotationWarperBase&lt;PlaneProjector&gt;" title="class detail::PlaneWarper : public detail::RotationWarperBase&lt;PlaneProjector&gt;"><code class="xref ocv ocv-class docutils literal"><span class="pre">detail::PlaneWarper</span></code></a></p>
+</div>
+</div>
+<div class="section" id="cylindricalwarper">
+<h2>CylindricalWarper<a class="headerlink" href="#cylindricalwarper" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="CylindricalWarper : public WarperCreator">
+<em class="property">class </em><code class="descname">CylindricalWarper</code> : <em class="property">public</em> <code class="descname">WarperCreator</code><a class="headerlink" href="#CylindricalWarper : public WarperCreator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Cylindrical warper factory class.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CylindricalWarper</span><span class="o">:</span> <span class="k">public</span> <span class="n">WarperCreator</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">RotationWarper</span><span class="o">&gt;</span> <span class="n">create</span><span class="p">(</span><span class="kt">float</span> <span class="n">scale</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="k">new</span> <span class="n">detail</span><span class="o">::</span><span class="n">CylindricalWarper</span><span class="p">(</span><span class="n">scale</span><span class="p">);</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="warpers.html#detail::CylindricalWarper : public detail::RotationWarperBase&lt;CylindricalProjector&gt;" title="class detail::CylindricalWarper : public detail::RotationWarperBase&lt;CylindricalProjector&gt;"><code class="xref ocv ocv-class docutils literal"><span class="pre">detail::CylindricalWarper</span></code></a></p>
+</div>
+</div>
+<div class="section" id="sphericalwarper">
+<h2>SphericalWarper<a class="headerlink" href="#sphericalwarper" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="SphericalWarper : public WarperCreator">
+<em class="property">class </em><code class="descname">SphericalWarper</code> : <em class="property">public</em> <code class="descname">WarperCreator</code><a class="headerlink" href="#SphericalWarper : public WarperCreator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Spherical warper factory class.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">SphericalWarper</span><span class="o">:</span> <span class="k">public</span> <span class="n">WarperCreator</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">RotationWarper</span><span class="o">&gt;</span> <span class="n">create</span><span class="p">(</span><span class="kt">float</span> <span class="n">scale</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="k">new</span> <span class="n">detail</span><span class="o">::</span><span class="n">SphericalWarper</span><span class="p">(</span><span class="n">scale</span><span class="p">);</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="warpers.html#detail::SphericalWarper : public detail::RotationWarperBase&lt;SphericalProjector&gt;" title="class detail::SphericalWarper : public detail::RotationWarperBase&lt;SphericalProjector&gt;"><code class="xref ocv ocv-class docutils literal"><span class="pre">detail::SphericalWarper</span></code></a></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">High Level Functionality</a><ul>
+<li><a class="reference internal" href="#stitcher">Stitcher</a></li>
+<li><a class="reference internal" href="#stitcher-createdefault">Stitcher::createDefault</a></li>
+<li><a class="reference internal" href="#stitcher-estimatetransform">Stitcher::estimateTransform</a></li>
+<li><a class="reference internal" href="#stitcher-composepanorama">Stitcher::composePanorama</a></li>
+<li><a class="reference internal" href="#stitcher-stitch">Stitcher::stitch</a></li>
+<li><a class="reference internal" href="#warpercreator">WarperCreator</a></li>
+<li><a class="reference internal" href="#planewarper">PlaneWarper</a></li>
+<li><a class="reference internal" href="#cylindricalwarper">CylindricalWarper</a></li>
+<li><a class="reference internal" href="#sphericalwarper">SphericalWarper</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="introduction.html"
+                        title="previous chapter">Stitching Pipeline</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="camera.html"
+                        title="next chapter">Camera</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/stitching/doc/high_level.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="camera.html" title="Camera"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Stitching Pipeline"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="stitching.html" >stitching. Images stitching</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

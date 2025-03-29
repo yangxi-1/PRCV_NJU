@@ -1,0 +1,536 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Camera calibration With OpenCV &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="calib3d module. Camera calibration and 3D reconstruction" href="../table_of_content_calib3d/table_of_content_calib3d.html" />
+    <link rel="next" title="feature2d module. 2D Features framework" href="../../features2d/table_of_content_features2d/table_of_content_features2d.html" />
+    <link rel="prev" title="Camera calibration with square chessboard" href="../camera_calibration_square_chess/camera_calibration_square_chess.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../features2d/table_of_content_features2d/table_of_content_features2d.html" title="feature2d module. 2D Features framework"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../camera_calibration_square_chess/camera_calibration_square_chess.html" title="Camera calibration with square chessboard"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_calib3d/table_of_content_calib3d.html" accesskey="U"><em>calib3d</em> module. Camera calibration and 3D reconstruction</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="camera-calibration-with-opencv">
+<span id="cameracalibrationopencv"></span><h1>Camera calibration With OpenCV<a class="headerlink" href="#camera-calibration-with-opencv" title="Permalink to this headline">¶</a></h1>
+<p>Cameras have been around for a long-long time. However, with the introduction of the cheap <em>pinhole</em> cameras in the late 20th century, they became a common occurrence in our everyday life. Unfortunately, this cheapness comes with its price: significant distortion. Luckily, these are constants and with a calibration and some remapping we can correct this. Furthermore, with calibration you may also determine the relation between the camera&#8217;s natural units (pixels) and the real world units (for example millimeters).</p>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<p>For the distortion OpenCV takes into account the radial and tangential factors. For the radial factor one uses the following formula:</p>
+<div class="math">
+<p><img src="../../../../_images/math/5e4f3162fa216cb82d4f85628c64398dc7b57e5d.png" alt="x_{corrected} = x( 1 + k_1 r^2 + k_2 r^4 + k_3 r^6) \\
+y_{corrected} = y( 1 + k_1 r^2 + k_2 r^4 + k_3 r^6)"/></p>
+</div><p>So for an old pixel point at <img class="math" src="../../../../_images/math/45b34b73b5a1fed1fd38b3a37ca1ada031de9970.png" alt="(x,y)"/> coordinates in the input image, its position on the corrected output image will be <img class="math" src="../../../../_images/math/20e2011030963ea4bc631b6b39be258080cd2b6f.png" alt="(x_{corrected} y_{corrected})"/>. The presence of the radial distortion manifests in form of the &#8220;barrel&#8221; or &#8220;fish-eye&#8221; effect.</p>
+<p>Tangential distortion occurs because the image taking lenses are not perfectly parallel to the imaging plane. It can be corrected via the formulas:</p>
+<div class="math">
+<p><img src="../../../../_images/math/63e4830dd6b39017395767d53114379d973a7268.png" alt="x_{corrected} = x + [ 2p_1xy + p_2(r^2+2x^2)] \\
+y_{corrected} = y + [ p_1(r^2+ 2y^2)+ 2p_2xy]"/></p>
+</div><p>So we have five distortion parameters which in OpenCV are presented as one row matrix with 5 columns:</p>
+<div class="math">
+<p><img src="../../../../_images/math/83dc2e3ea9d642d6a428090af960f0815e87925b.png" alt="Distortion_{coefficients}=(k_1 \hspace{10pt} k_2 \hspace{10pt} p_1 \hspace{10pt} p_2 \hspace{10pt} k_3)"/></p>
+</div><p>Now for the unit conversion we use the following formula:</p>
+<div class="math">
+<p><img src="../../../../_images/math/5a6f01d9af8b50d0c7a6fecf84e9fe3c6fb4d507.png" alt="\left [  \begin{matrix}   x \\   y \\  w \end{matrix} \right ] = \left [ \begin{matrix}   f_x &amp; 0 &amp; c_x \\  0 &amp; f_y &amp; c_y \\   0 &amp; 0 &amp; 1 \end{matrix} \right ] \left [ \begin{matrix}  X \\  Y \\   Z \end{matrix} \right ]"/></p>
+</div><p>Here the presence of <img class="math" src="../../../../_images/math/b812b344d3aac7810b0e17bd7dae12f997bea67f.png" alt="w"/> is explained by the use of homography coordinate system (and <img class="math" src="../../../../_images/math/772ef3aff084c356344f913a6687ea36d45bb2a9.png" alt="w=Z"/>). The unknown parameters are <img class="math" src="../../../../_images/math/90cbff5be10b7d5d6a3ec6cabfe05e306e99ac1c.png" alt="f_x"/> and <img class="math" src="../../../../_images/math/0a9dfcd96704b05afe921dcabeefcd77bfdbd863.png" alt="f_y"/> (camera focal lengths) and <img class="math" src="../../../../_images/math/9cc51f7bf67bb740b01ea8ec6268eef4cc938139.png" alt="(c_x, c_y)"/> which are the optical centers expressed in pixels coordinates. If for both axes a common focal length is used with a given <img class="math" src="../../../../_images/math/299c00d097414867ab7ef6dc73026305343e80dd.png" alt="a"/> aspect ratio (usually 1), then <img class="math" src="../../../../_images/math/f3e267bdbdfc35bc8d70219ad65ffde88648cff7.png" alt="f_y=f_x*a"/> and in the upper formula we will have a single focal length <img class="math" src="../../../../_images/math/43f689f93c9323831e76724aedb37ece0f77722a.png" alt="f"/>. The matrix containing these four parameters is referred to as the <em>camera matrix</em>. While the distortion coefficients are the same regardless of the camera resolutions used, these should be scaled along with the current resolution from the calibrated resolution.</p>
+<p>The process of determining these two matrices is the calibration. Calculation of these parameters is done through basic geometrical equations. The equations used depend on the chosen calibrating objects. Currently OpenCV supports three types of objects for calibration:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Classical black-white chessboard</li>
+<li>Symmetrical circle pattern</li>
+<li>Asymmetrical circle pattern</li>
+</ul>
+</div>
+<p>Basically, you need to take snapshots of these patterns with your camera and let OpenCV find them. Each found pattern results in a new equation. To solve the equation you need at least a predetermined number of pattern snapshots to form a well-posed equation system. This number is higher for the chessboard pattern and less for the circle ones. For example, in theory the chessboard pattern requires at least two snapshots. However, in practice we have a good amount of noise present in our input images, so for good results you will probably need at least 10 good snapshots of the input pattern in different positions.</p>
+</div>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>The sample application will:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Determine the distortion matrix</li>
+<li>Determine the camera matrix</li>
+<li>Take input from Camera, Video and Image file list</li>
+<li>Read configuration from XML/YAML file</li>
+<li>Save the results into XML/YAML file</li>
+<li>Calculate re-projection error</li>
+</ul>
+</div>
+</div>
+<div class="section" id="source-code">
+<h2>Source code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h2>
+<p>You may also find the source code in the <code class="file docutils literal"><span class="pre">samples/cpp/tutorial_code/calib3d/camera_calibration/</span></code> folder of the OpenCV source library or <a class="reference download internal" href="../../../../_downloads/camera_calibration.cpp" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">it</span> <span class="pre">from</span> <span class="pre">here</span></code></a>. The program has a single argument: the name of its configuration file. If none is given then it will try to open the one named &#8220;default.xml&#8221;. <a class="reference download internal" href="../../../../_downloads/in_VID5.xml" download=""><code class="xref download docutils literal"><span class="pre">Here's</span> <span class="pre">a</span> <span class="pre">sample</span> <span class="pre">configuration</span> <span class="pre">file</span></code></a> in XML format. In the configuration file you may choose to use camera as an input, a video file or an image list. If you opt for the last one, you will need to create a configuration file where you enumerate the images to use. Here&#8217;s <a class="reference download internal" href="../../../../_downloads/VID5.xml" download=""><code class="xref download docutils literal"><span class="pre">an</span> <span class="pre">example</span> <span class="pre">of</span> <span class="pre">this</span></code></a>. The important part to remember is that the images need to be specified using the absolute path or the relative one from your application&#8217;s working directory. You may find all this in the samples directory mentioned above.</p>
+<p>The application starts up with reading the settings from the configuration file. Although, this is an important part of it, it has nothing to do with the subject of this tutorial: <em>camera calibration</em>. Therefore, I&#8217;ve chosen not to post the code for that part here. Technical background on how to do this you can find in the <a class="reference internal" href="../../core/file_input_output_with_xml_yml/file_input_output_with_xml_yml.html#fileinputoutputxmlyaml"><span>File Input and Output using XML and YAML files</span></a> tutorial.</p>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first"><strong>Read the settings.</strong></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Settings</span> <span class="n">s</span><span class="p">;</span>
+<span class="k">const</span> <span class="n">string</span> <span class="n">inputSettingsFile</span> <span class="o">=</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">:</span> <span class="s">&quot;default.xml&quot;</span><span class="p">;</span>
+<span class="n">FileStorage</span> <span class="nf">fs</span><span class="p">(</span><span class="n">inputSettingsFile</span><span class="p">,</span> <span class="n">FileStorage</span><span class="o">::</span><span class="n">READ</span><span class="p">);</span> <span class="c1">// Read the settings</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fs</span><span class="p">.</span><span class="n">isOpened</span><span class="p">())</span>
+<span class="p">{</span>
+      <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Could not open the configuration file: </span><span class="se">\&quot;</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">inputSettingsFile</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+      <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">fs</span><span class="p">[</span><span class="s">&quot;Settings&quot;</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">s</span><span class="p">;</span>
+<span class="n">fs</span><span class="p">.</span><span class="n">release</span><span class="p">();</span>                                         <span class="c1">// close Settings file</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">s</span><span class="p">.</span><span class="n">goodInput</span><span class="p">)</span>
+<span class="p">{</span>
+      <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Invalid input detected. Application stopping. &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+      <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>For this I&#8217;ve used simple OpenCV class input operation. After reading the file I&#8217;ve an additional post-processing function that checks validity of the input. Only if all inputs are good then <em>goodInput</em> variable will be true.</p>
+</li>
+<li><p class="first"><strong>Get next input, if it fails or we have enough of them - calibrate</strong>. After this we have a big loop where we do the following operations: get the next image from the image list, camera or video file. If this fails or we have enough images then we run the calibration process. In case of image we step out of the loop and otherwise the remaining frames will be undistorted (if the option is set) via changing from <em>DETECTION</em> mode to the <em>CALIBRATED</em> one.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;;</span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">Mat</span> <span class="n">view</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">blinkOutput</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+  <span class="n">view</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">nextImage</span><span class="p">();</span>
+
+  <span class="c1">//-----  If no more image, or got enough, then stop calibration and show result -------------</span>
+  <span class="k">if</span><span class="p">(</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">CAPTURING</span> <span class="o">&amp;&amp;</span> <span class="n">imagePoints</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="kt">unsigned</span><span class="p">)</span><span class="n">s</span><span class="p">.</span><span class="n">nrFrames</span> <span class="p">)</span>
+  <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span> <span class="n">runCalibrationAndSave</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">imageSize</span><span class="p">,</span>  <span class="n">cameraMatrix</span><span class="p">,</span> <span class="n">distCoeffs</span><span class="p">,</span> <span class="n">imagePoints</span><span class="p">))</span>
+              <span class="n">mode</span> <span class="o">=</span> <span class="n">CALIBRATED</span><span class="p">;</span>
+        <span class="k">else</span>
+              <span class="n">mode</span> <span class="o">=</span> <span class="n">DETECTION</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">view</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>          <span class="c1">// If no more images then run calibration, save and stop loop.</span>
+  <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span> <span class="n">imagePoints</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">)</span>
+                  <span class="n">runCalibrationAndSave</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">imageSize</span><span class="p">,</span>  <span class="n">cameraMatrix</span><span class="p">,</span> <span class="n">distCoeffs</span><span class="p">,</span> <span class="n">imagePoints</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+  <span class="n">imageSize</span> <span class="o">=</span> <span class="n">view</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>  <span class="c1">// Format input image.</span>
+  <span class="k">if</span><span class="p">(</span> <span class="n">s</span><span class="p">.</span><span class="n">flipVertical</span> <span class="p">)</span>    <span class="n">flip</span><span class="p">(</span> <span class="n">view</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+<p>For some cameras we may need to flip the input image. Here we do this too.</p>
+</li>
+<li><p class="first"><strong>Find the pattern in the current input</strong>. The formation of the equations I mentioned above aims to finding major patterns in the input: in case of the chessboard this are corners of the squares and for the circles, well, the circles themselves. The position of these will form the result which will be written into the <em>pointBuf</em> vector.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point2f</span><span class="o">&gt;</span> <span class="n">pointBuf</span><span class="p">;</span>
+
+<span class="kt">bool</span> <span class="n">found</span><span class="p">;</span>
+<span class="k">switch</span><span class="p">(</span> <span class="n">s</span><span class="p">.</span><span class="n">calibrationPattern</span> <span class="p">)</span> <span class="c1">// Find feature points on the input format</span>
+<span class="p">{</span>
+<span class="k">case</span> <span class="n">Settings</span><span class="o">::</span><span class="nl">CHESSBOARD</span><span class="p">:</span>
+  <span class="n">found</span> <span class="o">=</span> <span class="n">findChessboardCorners</span><span class="p">(</span> <span class="n">view</span><span class="p">,</span> <span class="n">s</span><span class="p">.</span><span class="n">boardSize</span><span class="p">,</span> <span class="n">pointBuf</span><span class="p">,</span>
+  <span class="n">CV_CALIB_CB_ADAPTIVE_THRESH</span> <span class="o">|</span> <span class="n">CV_CALIB_CB_FAST_CHECK</span> <span class="o">|</span> <span class="n">CV_CALIB_CB_NORMALIZE_IMAGE</span><span class="p">);</span>
+  <span class="k">break</span><span class="p">;</span>
+<span class="k">case</span> <span class="n">Settings</span><span class="o">::</span><span class="nl">CIRCLES_GRID</span><span class="p">:</span>
+  <span class="n">found</span> <span class="o">=</span> <span class="n">findCirclesGrid</span><span class="p">(</span> <span class="n">view</span><span class="p">,</span> <span class="n">s</span><span class="p">.</span><span class="n">boardSize</span><span class="p">,</span> <span class="n">pointBuf</span> <span class="p">);</span>
+  <span class="k">break</span><span class="p">;</span>
+<span class="k">case</span> <span class="n">Settings</span><span class="o">::</span><span class="nl">ASYMMETRIC_CIRCLES_GRID</span><span class="p">:</span>
+  <span class="n">found</span> <span class="o">=</span> <span class="n">findCirclesGrid</span><span class="p">(</span> <span class="n">view</span><span class="p">,</span> <span class="n">s</span><span class="p">.</span><span class="n">boardSize</span><span class="p">,</span> <span class="n">pointBuf</span><span class="p">,</span> <span class="n">CALIB_CB_ASYMMETRIC_GRID</span> <span class="p">);</span>
+  <span class="k">break</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Depending on the type of the input pattern you use either the <a class="reference external" href="http://docs.opencv.org/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#findchessboardcorners">findChessboardCorners</a> or the <a class="reference external" href="http://docs.opencv.org/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#findcirclesgrid">findCirclesGrid</a> function. For both of them you pass the current image and the size of the board and you&#8217;ll get the positions of the patterns. Furthermore, they return a boolean variable which states if the pattern was found in the input (we only need to take into account those images where this is true!).</p>
+<p>Then again in case of cameras we only take camera images when an input delay time is passed. This is done in order to allow user moving the chessboard around and getting different images. Similar images result in similar equations, and similar equations at the calibration step will form an ill-posed problem, so the calibration will fail. For square images the positions of the corners are only approximate. We may improve this by calling the <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/feature_detection.html#cornersubpix">cornerSubPix</a> function. It will produce better calibration result. After this we add a valid inputs result to the <em>imagePoints</em> vector to collect all of the equations into a single container. Finally, for visualization feedback purposes we will draw the found points on the input image using <a class="reference external" href="http://docs.opencv.org/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#drawchessboardcorners">findChessboardCorners</a> function.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">if</span> <span class="p">(</span> <span class="n">found</span><span class="p">)</span>                <span class="c1">// If done with success,</span>
+  <span class="p">{</span>
+      <span class="c1">// improve the found corners&#39; coordinate accuracy for chessboard</span>
+        <span class="k">if</span><span class="p">(</span> <span class="n">s</span><span class="p">.</span><span class="n">calibrationPattern</span> <span class="o">==</span> <span class="n">Settings</span><span class="o">::</span><span class="n">CHESSBOARD</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Mat</span> <span class="n">viewGray</span><span class="p">;</span>
+            <span class="n">cvtColor</span><span class="p">(</span><span class="n">view</span><span class="p">,</span> <span class="n">viewGray</span><span class="p">,</span> <span class="n">CV_BGR2GRAY</span><span class="p">);</span>
+            <span class="n">cornerSubPix</span><span class="p">(</span> <span class="n">viewGray</span><span class="p">,</span> <span class="n">pointBuf</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span>
+              <span class="n">Size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">TermCriteria</span><span class="p">(</span> <span class="n">CV_TERMCRIT_EPS</span><span class="o">+</span><span class="n">CV_TERMCRIT_ITER</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mf">0.1</span> <span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">CAPTURING</span> <span class="o">&amp;&amp;</span>  <span class="c1">// For camera only take new samples after delay time</span>
+            <span class="p">(</span><span class="o">!</span><span class="n">s</span><span class="p">.</span><span class="n">inputCapture</span><span class="p">.</span><span class="n">isOpened</span><span class="p">()</span> <span class="o">||</span> <span class="n">clock</span><span class="p">()</span> <span class="o">-</span> <span class="n">prevTimestamp</span> <span class="o">&gt;</span> <span class="n">s</span><span class="p">.</span><span class="n">delay</span><span class="o">*</span><span class="mf">1e-3</span><span class="o">*</span><span class="n">CLOCKS_PER_SEC</span><span class="p">)</span> <span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">imagePoints</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">pointBuf</span><span class="p">);</span>
+            <span class="n">prevTimestamp</span> <span class="o">=</span> <span class="n">clock</span><span class="p">();</span>
+            <span class="n">blinkOutput</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">inputCapture</span><span class="p">.</span><span class="n">isOpened</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Draw the corners.</span>
+        <span class="n">drawChessboardCorners</span><span class="p">(</span> <span class="n">view</span><span class="p">,</span> <span class="n">s</span><span class="p">.</span><span class="n">boardSize</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(</span><span class="n">pointBuf</span><span class="p">),</span> <span class="n">found</span> <span class="p">);</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>Show state and result to the user, plus command line control of the application</strong>. This  part shows text output on the image.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">//----------------------------- Output Text ------------------------------------------------</span>
+<span class="n">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">==</span> <span class="n">CAPTURING</span><span class="p">)</span> <span class="o">?</span> <span class="s">&quot;100/100&quot;</span> <span class="o">:</span>
+          <span class="n">mode</span> <span class="o">==</span> <span class="n">CALIBRATED</span> <span class="o">?</span> <span class="s">&quot;Calibrated&quot;</span> <span class="o">:</span> <span class="s">&quot;Press &#39;g&#39; to start&quot;</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">baseLine</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">Size</span> <span class="n">textSize</span> <span class="o">=</span> <span class="n">getTextSize</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">baseLine</span><span class="p">);</span>
+<span class="n">Point</span> <span class="nf">textOrigin</span><span class="p">(</span><span class="n">view</span><span class="p">.</span><span class="n">cols</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">textSize</span><span class="p">.</span><span class="n">width</span> <span class="o">-</span> <span class="mi">10</span><span class="p">,</span> <span class="n">view</span><span class="p">.</span><span class="n">rows</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">baseLine</span> <span class="o">-</span> <span class="mi">10</span><span class="p">);</span>
+
+<span class="k">if</span><span class="p">(</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">CAPTURING</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">showUndistorsed</span><span class="p">)</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">format</span><span class="p">(</span> <span class="s">&quot;%d/%d Undist&quot;</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">imagePoints</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">s</span><span class="p">.</span><span class="n">nrFrames</span> <span class="p">);</span>
+  <span class="k">else</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">format</span><span class="p">(</span> <span class="s">&quot;%d/%d&quot;</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">imagePoints</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">s</span><span class="p">.</span><span class="n">nrFrames</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">putText</span><span class="p">(</span> <span class="n">view</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">textOrigin</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">CALIBRATED</span> <span class="o">?</span>  <span class="nl">GREEN</span> <span class="p">:</span> <span class="n">RED</span><span class="p">);</span>
+
+<span class="k">if</span><span class="p">(</span> <span class="n">blinkOutput</span> <span class="p">)</span>
+   <span class="n">bitwise_not</span><span class="p">(</span><span class="n">view</span><span class="p">,</span> <span class="n">view</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>If we ran calibration and got camera&#8217;s matrix with the distortion coefficients we may want to correct the image using <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/geometric_transformations.html#undistort">undistort</a> function:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">//------------------------- Video capture  output  undistorted ------------------------------</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">CALIBRATED</span> <span class="o">&amp;&amp;</span> <span class="n">s</span><span class="p">.</span><span class="n">showUndistorsed</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">Mat</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">view</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+  <span class="n">undistort</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">cameraMatrix</span><span class="p">,</span> <span class="n">distCoeffs</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">//------------------------------ Show image and check for input commands -------------------</span>
+<span class="n">imshow</span><span class="p">(</span><span class="s">&quot;Image View&quot;</span><span class="p">,</span> <span class="n">view</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Then we wait for an input key and if this is <em>u</em> we toggle the distortion removal, if it is <em>g</em> we start again the detection process, and finally for the <em>ESC</em> key we quit the application:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">char</span> <span class="n">key</span> <span class="o">=</span>  <span class="n">waitKey</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">inputCapture</span><span class="p">.</span><span class="n">isOpened</span><span class="p">()</span> <span class="o">?</span> <span class="mi">50</span> <span class="o">:</span> <span class="n">s</span><span class="p">.</span><span class="n">delay</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">key</span>  <span class="o">==</span> <span class="n">ESC_KEY</span> <span class="p">)</span>
+      <span class="k">break</span><span class="p">;</span>
+
+<span class="k">if</span><span class="p">(</span> <span class="n">key</span> <span class="o">==</span> <span class="sc">&#39;u&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">CALIBRATED</span> <span class="p">)</span>
+   <span class="n">s</span><span class="p">.</span><span class="n">showUndistorsed</span> <span class="o">=</span> <span class="o">!</span><span class="n">s</span><span class="p">.</span><span class="n">showUndistorsed</span><span class="p">;</span>
+
+<span class="k">if</span><span class="p">(</span> <span class="n">s</span><span class="p">.</span><span class="n">inputCapture</span><span class="p">.</span><span class="n">isOpened</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">key</span> <span class="o">==</span> <span class="sc">&#39;g&#39;</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">mode</span> <span class="o">=</span> <span class="n">CAPTURING</span><span class="p">;</span>
+  <span class="n">imagePoints</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>Show the distortion removal for the images too</strong>. When you work with an image list it is not possible to remove the distortion inside the loop. Therefore, you must do this after the loop. Taking advantage of this now I&#8217;ll expand the <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/geometric_transformations.html#undistort">undistort</a> function, which is in fact first calls <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/geometric_transformations.html#initundistortrectifymap">initUndistortRectifyMap</a> to find transformation matrices and then performs transformation using <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/geometric_transformations.html#remap">remap</a> function. Because, after successful calibration map calculation needs to be done only once, by using this expanded form you may speed up your application:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">if</span><span class="p">(</span> <span class="n">s</span><span class="p">.</span><span class="n">inputType</span> <span class="o">==</span> <span class="n">Settings</span><span class="o">::</span><span class="n">IMAGE_LIST</span> <span class="o">&amp;&amp;</span> <span class="n">s</span><span class="p">.</span><span class="n">showUndistorsed</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">Mat</span> <span class="n">view</span><span class="p">,</span> <span class="n">rview</span><span class="p">,</span> <span class="n">map1</span><span class="p">,</span> <span class="n">map2</span><span class="p">;</span>
+  <span class="n">initUndistortRectifyMap</span><span class="p">(</span><span class="n">cameraMatrix</span><span class="p">,</span> <span class="n">distCoeffs</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span>
+      <span class="n">getOptimalNewCameraMatrix</span><span class="p">(</span><span class="n">cameraMatrix</span><span class="p">,</span> <span class="n">distCoeffs</span><span class="p">,</span> <span class="n">imageSize</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">imageSize</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+      <span class="n">imageSize</span><span class="p">,</span> <span class="n">CV_16SC2</span><span class="p">,</span> <span class="n">map1</span><span class="p">,</span> <span class="n">map2</span><span class="p">);</span>
+
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">s</span><span class="p">.</span><span class="n">imageList</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+  <span class="p">{</span>
+      <span class="n">view</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">imageList</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">1</span><span class="p">);</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">view</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+          <span class="k">continue</span><span class="p">;</span>
+      <span class="n">remap</span><span class="p">(</span><span class="n">view</span><span class="p">,</span> <span class="n">rview</span><span class="p">,</span> <span class="n">map1</span><span class="p">,</span> <span class="n">map2</span><span class="p">,</span> <span class="n">INTER_LINEAR</span><span class="p">);</span>
+      <span class="n">imshow</span><span class="p">(</span><span class="s">&quot;Image View&quot;</span><span class="p">,</span> <span class="n">rview</span><span class="p">);</span>
+      <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">waitKey</span><span class="p">();</span>
+      <span class="k">if</span><span class="p">(</span> <span class="n">c</span>  <span class="o">==</span> <span class="n">ESC_KEY</span> <span class="o">||</span> <span class="n">c</span> <span class="o">==</span> <span class="sc">&#39;q&#39;</span> <span class="o">||</span> <span class="n">c</span> <span class="o">==</span> <span class="sc">&#39;Q&#39;</span> <span class="p">)</span>
+          <span class="k">break</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="the-calibration-and-save">
+<h2>The calibration and save<a class="headerlink" href="#the-calibration-and-save" title="Permalink to this headline">¶</a></h2>
+<p>Because the calibration needs to be done only once per camera, it makes sense to save it after a successful calibration. This way later on you can just load these values into your program. Due to this we first make the calibration, and if it succeeds we save the result into an OpenCV style XML or YAML file, depending on the extension you give in the configuration file.</p>
+<p>Therefore in the first function we just split up these two processes. Because we want to save many of the calibration variables we&#8217;ll create these variables here and pass on both of them to the calibration and saving function. Again, I&#8217;ll not show the saving part as that has little in common with the calibration. Explore the source file in order to find out how and what:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">bool</span> <span class="nf">runCalibrationAndSave</span><span class="p">(</span><span class="n">Settings</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">,</span> <span class="n">Size</span> <span class="n">imageSize</span><span class="p">,</span> <span class="n">Mat</span><span class="o">&amp;</span>  <span class="n">cameraMatrix</span><span class="p">,</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">distCoeffs</span><span class="p">,</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point2f</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">imagePoints</span> <span class="p">)</span>
+<span class="p">{</span>
+ <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;</span> <span class="n">rvecs</span><span class="p">,</span> <span class="n">tvecs</span><span class="p">;</span>
+ <span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">reprojErrs</span><span class="p">;</span>
+ <span class="kt">double</span> <span class="n">totalAvgErr</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+ <span class="kt">bool</span> <span class="n">ok</span> <span class="o">=</span> <span class="n">runCalibration</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">imageSize</span><span class="p">,</span> <span class="n">cameraMatrix</span><span class="p">,</span> <span class="n">distCoeffs</span><span class="p">,</span> <span class="n">imagePoints</span><span class="p">,</span> <span class="n">rvecs</span><span class="p">,</span> <span class="n">tvecs</span><span class="p">,</span>
+                          <span class="n">reprojErrs</span><span class="p">,</span> <span class="n">totalAvgErr</span><span class="p">);</span>
+ <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">ok</span> <span class="o">?</span> <span class="s">&quot;Calibration succeeded&quot;</span> <span class="o">:</span> <span class="s">&quot;Calibration failed&quot;</span><span class="p">)</span>
+     <span class="o">&lt;&lt;</span> <span class="s">&quot;. avg re projection error = &quot;</span>  <span class="o">&lt;&lt;</span> <span class="n">totalAvgErr</span> <span class="p">;</span>
+
+ <span class="k">if</span><span class="p">(</span> <span class="n">ok</span> <span class="p">)</span>   <span class="c1">// save only if the calibration was done with success</span>
+     <span class="n">saveCameraParams</span><span class="p">(</span> <span class="n">s</span><span class="p">,</span> <span class="n">imageSize</span><span class="p">,</span> <span class="n">cameraMatrix</span><span class="p">,</span> <span class="n">distCoeffs</span><span class="p">,</span> <span class="n">rvecs</span> <span class="p">,</span><span class="n">tvecs</span><span class="p">,</span> <span class="n">reprojErrs</span><span class="p">,</span>
+                         <span class="n">imagePoints</span><span class="p">,</span> <span class="n">totalAvgErr</span><span class="p">);</span>
+ <span class="k">return</span> <span class="n">ok</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We do the calibration with the help of the <a class="reference external" href="http://docs.opencv.org/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#calibratecamera">calibrateCamera</a> function. It has the following parameters:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first">The object points. This is a vector of <em>Point3f</em> vector that for each input image describes how should the pattern look. If we have a planar pattern (like a chessboard) then we can simply set all Z coordinates to zero. This is a collection of the points where these important points are present. Because, we use a single pattern for all the input images we can calculate this just once and multiply it for all the other input views. We calculate the corner points with the <em>calcBoardCornerPositions</em> function as:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">void</span> <span class="nf">calcBoardCornerPositions</span><span class="p">(</span><span class="n">Size</span> <span class="n">boardSize</span><span class="p">,</span> <span class="kt">float</span> <span class="n">squareSize</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Point3f</span><span class="o">&gt;&amp;</span> <span class="n">corners</span><span class="p">,</span>
+                  <span class="n">Settings</span><span class="o">::</span><span class="n">Pattern</span> <span class="n">patternType</span> <span class="cm">/*= Settings::CHESSBOARD*/</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="n">corners</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+
+<span class="k">switch</span><span class="p">(</span><span class="n">patternType</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="k">case</span> <span class="n">Settings</span><span class="o">::</span><span class="nl">CHESSBOARD</span><span class="p">:</span>
+<span class="k">case</span> <span class="n">Settings</span><span class="o">::</span><span class="nl">CIRCLES_GRID</span><span class="p">:</span>
+  <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">boardSize</span><span class="p">.</span><span class="n">height</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span> <span class="p">)</span>
+    <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">boardSize</span><span class="p">.</span><span class="n">width</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span> <span class="p">)</span>
+        <span class="n">corners</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">Point3f</span><span class="p">(</span><span class="kt">float</span><span class="p">(</span> <span class="n">j</span><span class="o">*</span><span class="n">squareSize</span> <span class="p">),</span> <span class="kt">float</span><span class="p">(</span> <span class="n">i</span><span class="o">*</span><span class="n">squareSize</span> <span class="p">),</span> <span class="mi">0</span><span class="p">));</span>
+  <span class="k">break</span><span class="p">;</span>
+
+<span class="k">case</span> <span class="n">Settings</span><span class="o">::</span><span class="nl">ASYMMETRIC_CIRCLES_GRID</span><span class="p">:</span>
+  <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">boardSize</span><span class="p">.</span><span class="n">height</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+     <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">boardSize</span><span class="p">.</span><span class="n">width</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span> <span class="p">)</span>
+        <span class="n">corners</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">Point3f</span><span class="p">(</span><span class="kt">float</span><span class="p">((</span><span class="mi">2</span><span class="o">*</span><span class="n">j</span> <span class="o">+</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">squareSize</span><span class="p">),</span> <span class="kt">float</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="n">squareSize</span><span class="p">),</span> <span class="mi">0</span><span class="p">));</span>
+  <span class="k">break</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>And then multiply it as:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point3f</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">objectPoints</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">calcBoardCornerPositions</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">boardSize</span><span class="p">,</span> <span class="n">s</span><span class="p">.</span><span class="n">squareSize</span><span class="p">,</span> <span class="n">objectPoints</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">s</span><span class="p">.</span><span class="n">calibrationPattern</span><span class="p">);</span>
+<span class="n">objectPoints</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">imagePoints</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="n">objectPoints</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The image points. This is a vector of <em>Point2f</em> vector which for each input image contains coordinates of the important points (corners for chessboard and centers of the circles for the circle pattern). We have already collected this from <a class="reference external" href="http://docs.opencv.org/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#findchessboardcorners">findChessboardCorners</a> or <a class="reference external" href="http://docs.opencv.org/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#findcirclesgrid">findCirclesGrid</a> function. We just need to pass it on.</p>
+</li>
+<li><p class="first">The size of the image acquired from the camera, video file or the images.</p>
+</li>
+<li><p class="first">The camera matrix. If we used the fixed aspect ratio option we need to set the <img class="math" src="../../../../_images/math/90cbff5be10b7d5d6a3ec6cabfe05e306e99ac1c.png" alt="f_x"/> to zero:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">cameraMatrix</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">CV_64F</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">s</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="n">CV_CALIB_FIX_ASPECT_RATIO</span> <span class="p">)</span>
+     <span class="n">cameraMatrix</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The distortion coefficient matrix. Initialize with zero.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">distCoeffs</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">CV_64F</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">For all the views the function will calculate rotation and translation vectors which transform the object points (given in the model coordinate space) to the image points (given in the world coordinate space). The 7-th and 8-th parameters are the output vector of matrices containing in the i-th position the rotation and translation vector for the i-th object point to the i-th image point.</p>
+</li>
+<li><p class="first">The final argument is the flag. You need to specify here options like fix the aspect ratio for the focal length, assume zero tangential distortion or to fix the principal point.</p>
+</li>
+</ul>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">double</span> <span class="n">rms</span> <span class="o">=</span> <span class="n">calibrateCamera</span><span class="p">(</span><span class="n">objectPoints</span><span class="p">,</span> <span class="n">imagePoints</span><span class="p">,</span> <span class="n">imageSize</span><span class="p">,</span> <span class="n">cameraMatrix</span><span class="p">,</span>
+                            <span class="n">distCoeffs</span><span class="p">,</span> <span class="n">rvecs</span><span class="p">,</span> <span class="n">tvecs</span><span class="p">,</span> <span class="n">s</span><span class="p">.</span><span class="n">flag</span><span class="o">|</span><span class="n">CV_CALIB_FIX_K4</span><span class="o">|</span><span class="n">CV_CALIB_FIX_K5</span><span class="p">);</span>
+</pre></div>
+</div>
+<ul>
+<li><p class="first">The function returns the average re-projection error. This number gives a good estimation of precision of the found parameters. This should be as close to zero as possible. Given the intrinsic, distortion, rotation and translation matrices we may calculate the error for one view by using the <a class="reference external" href="http://docs.opencv.org/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#projectpoints">projectPoints</a> to first transform the object point to image point. Then we calculate the absolute norm between what we got with our transformation and the corner/circle finding algorithm. To find the average error we calculate the arithmetical mean of the errors calculated for all the calibration images.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">double</span> <span class="nf">computeReprojectionErrors</span><span class="p">(</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point3f</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">objectPoints</span><span class="p">,</span>
+                          <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point2f</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">imagePoints</span><span class="p">,</span>
+                          <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;&amp;</span> <span class="n">rvecs</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;&amp;</span> <span class="n">tvecs</span><span class="p">,</span>
+                          <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">cameraMatrix</span> <span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">distCoeffs</span><span class="p">,</span>
+                          <span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">perViewErrors</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">Point2f</span><span class="o">&gt;</span> <span class="n">imagePoints2</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">totalPoints</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">totalErr</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">err</span><span class="p">;</span>
+<span class="n">perViewErrors</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">objectPoints</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+
+<span class="k">for</span><span class="p">(</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">objectPoints</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">projectPoints</span><span class="p">(</span> <span class="n">Mat</span><span class="p">(</span><span class="n">objectPoints</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="n">rvecs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">tvecs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cameraMatrix</span><span class="p">,</span>  <span class="c1">// project</span>
+                                       <span class="n">distCoeffs</span><span class="p">,</span> <span class="n">imagePoints2</span><span class="p">);</span>
+  <span class="n">err</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">Mat</span><span class="p">(</span><span class="n">imagePoints</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="n">Mat</span><span class="p">(</span><span class="n">imagePoints2</span><span class="p">),</span> <span class="n">CV_L2</span><span class="p">);</span>              <span class="c1">// difference</span>
+
+  <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">objectPoints</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">size</span><span class="p">();</span>
+  <span class="n">perViewErrors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">err</span><span class="o">*</span><span class="n">err</span><span class="o">/</span><span class="n">n</span><span class="p">);</span>                        <span class="c1">// save for this view</span>
+  <span class="n">totalErr</span>        <span class="o">+=</span> <span class="n">err</span><span class="o">*</span><span class="n">err</span><span class="p">;</span>                                             <span class="c1">// sum it up</span>
+  <span class="n">totalPoints</span>     <span class="o">+=</span> <span class="n">n</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">totalErr</span><span class="o">/</span><span class="n">totalPoints</span><span class="p">);</span>              <span class="c1">// calculate the arithmetical mean</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<p>Let there be <a class="reference download internal" href="../../../../_downloads/pattern.png" download=""><code class="xref download docutils literal"><span class="pre">this</span> <span class="pre">input</span> <span class="pre">chessboard</span> <span class="pre">pattern</span></code></a> which has a size of 9 X 6. I&#8217;ve used an AXIS IP camera to create a couple of snapshots of the board and saved it into VID5 directory. I&#8217;ve put this inside the <code class="file docutils literal"><span class="pre">images/CameraCalibration</span></code> folder of my working directory and created the following <code class="file docutils literal"><span class="pre">VID5.XML</span></code> file that describes which images to use:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
+<span class="nt">&lt;opencv_storage&gt;</span>
+<span class="nt">&lt;images&gt;</span>
+images/CameraCalibration/VID5/xx1.jpg
+images/CameraCalibration/VID5/xx2.jpg
+images/CameraCalibration/VID5/xx3.jpg
+images/CameraCalibration/VID5/xx4.jpg
+images/CameraCalibration/VID5/xx5.jpg
+images/CameraCalibration/VID5/xx6.jpg
+images/CameraCalibration/VID5/xx7.jpg
+images/CameraCalibration/VID5/xx8.jpg
+<span class="nt">&lt;/images&gt;</span>
+<span class="nt">&lt;/opencv_storage&gt;</span>
+</pre></div>
+</div>
+<p>Then passed <code class="file docutils literal"><span class="pre">images/CameraCalibration/VID5/VID5.XML</span></code> as an input in the configuration file. Here&#8217;s a chessboard pattern found during the runtime of the application:</p>
+<img alt="A found chessboard" class="align-center" src="../../../../_images/fileListImage.jpg" />
+<p>After applying the distortion removal we get:</p>
+<img alt="Distortion removal for File List" class="align-center" src="../../../../_images/fileListImageUnDist.jpg" />
+<p>The same works for <a class="reference download internal" href="../../../../_downloads/acircles_pattern.png" download=""><code class="xref download docutils literal"><span class="pre">this</span> <span class="pre">asymmetrical</span> <span class="pre">circle</span> <span class="pre">pattern</span></code></a> by setting the input width to 4 and height to 11. This time I&#8217;ve used a live camera feed by specifying its ID (&#8220;1&#8221;) for the input. Here&#8217;s, how a detected pattern should look:</p>
+<img alt="Asymmetrical circle detection" class="align-center" src="../../../../_images/asymetricalPattern.jpg" />
+<p>In both cases in the specified output XML/YAML file you&#8217;ll find the camera and distortion coefficients matrices:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="o">&lt;</span><span class="n">Camera_Matrix</span> <span class="n">type_id</span><span class="o">=</span><span class="s">&quot;opencv-matrix&quot;</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">rows</span><span class="o">&gt;</span><span class="mi">3</span><span class="o">&lt;/</span><span class="n">rows</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">cols</span><span class="o">&gt;</span><span class="mi">3</span><span class="o">&lt;/</span><span class="n">cols</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">dt</span><span class="o">&gt;</span><span class="n">d</span><span class="o">&lt;/</span><span class="n">dt</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">data</span><span class="o">&gt;</span>
+ <span class="mf">6.5746697944293521e+002</span> <span class="mf">0.</span> <span class="mf">3.1950000000000000e+002</span> <span class="mf">0.</span>
+ <span class="mf">6.5746697944293521e+002</span> <span class="mf">2.3950000000000000e+002</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">1.</span><span class="o">&lt;/</span><span class="n">data</span><span class="o">&gt;&lt;/</span><span class="n">Camera_Matrix</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">Distortion_Coefficients</span> <span class="n">type_id</span><span class="o">=</span><span class="s">&quot;opencv-matrix&quot;</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">rows</span><span class="o">&gt;</span><span class="mi">5</span><span class="o">&lt;/</span><span class="n">rows</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">cols</span><span class="o">&gt;</span><span class="mi">1</span><span class="o">&lt;/</span><span class="n">cols</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">dt</span><span class="o">&gt;</span><span class="n">d</span><span class="o">&lt;/</span><span class="n">dt</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">data</span><span class="o">&gt;</span>
+ <span class="o">-</span><span class="mf">4.1802327176423804e-001</span> <span class="mf">5.0715244063187526e-001</span> <span class="mf">0.</span> <span class="mf">0.</span>
+ <span class="o">-</span><span class="mf">5.7843597214487474e-001</span><span class="o">&lt;/</span><span class="n">data</span><span class="o">&gt;&lt;/</span><span class="n">Distortion_Coefficients</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Add these values as constants to your program, call the <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/geometric_transformations.html#initundistortrectifymap">initUndistortRectifyMap</a> and the <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/geometric_transformations.html#remap">remap</a> function to remove distortion and enjoy distortion free inputs for cheap and low quality cameras.</p>
+<p>You may observe a runtime instance of this on the <a class="reference external" href="https://www.youtube.com/watch?v=ViPN810E0SU">YouTube here</a>.</p>
+<div align="center">
+<iframe title=" Camera calibration With OpenCV - Chessboard or asymmetrical circle pattern." width="560" height="349" src="https://www.youtube.com/embed/ViPN810E0SU?rel=0&loop=1" frameborder="0" allowfullscreen align="middle"></iframe>
+</div></div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Camera calibration With OpenCV</a><ul>
+<li><a class="reference internal" href="#theory">Theory</a></li>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#source-code">Source code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#the-calibration-and-save">The calibration and save</a></li>
+<li><a class="reference internal" href="#results">Results</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../camera_calibration_square_chess/camera_calibration_square_chess.html"
+                        title="previous chapter">Camera calibration with square chessboard</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../features2d/table_of_content_features2d/table_of_content_features2d.html"
+                        title="next chapter"><em>feature2d</em> module. 2D Features framework</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/calib3d/camera_calibration/camera_calibration.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../features2d/table_of_content_features2d/table_of_content_features2d.html" title="feature2d module. 2D Features framework"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../camera_calibration_square_chess/camera_calibration_square_chess.html" title="Camera calibration with square chessboard"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_calib3d/table_of_content_calib3d.html" ><em>calib3d</em> module. Camera calibration and 3D reconstruction</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

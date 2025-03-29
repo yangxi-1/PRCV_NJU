@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Camera calibration with square chessboard &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="calib3d module. Camera calibration and 3D reconstruction" href="../table_of_content_calib3d/table_of_content_calib3d.html" />
+    <link rel="next" title="Camera calibration With OpenCV" href="../camera_calibration/camera_calibration.html" />
+    <link rel="prev" title="calib3d module. Camera calibration and 3D reconstruction" href="../table_of_content_calib3d/table_of_content_calib3d.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../camera_calibration/camera_calibration.html" title="Camera calibration With OpenCV"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../table_of_content_calib3d/table_of_content_calib3d.html" title="calib3d module. Camera calibration and 3D reconstruction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_calib3d/table_of_content_calib3d.html" accesskey="U"><em>calib3d</em> module. Camera calibration and 3D reconstruction</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="camera-calibration-with-square-chessboard">
+<span id="cameracalibrationsquarechessboardtutorial"></span><h1>Camera calibration with square chessboard<a class="headerlink" href="#camera-calibration-with-square-chessboard" title="Permalink to this headline">¶</a></h1>
+<p>The goal of this tutorial is to learn how to calibrate a camera given a set of chessboard images.</p>
+<p><em>Test data</em>: use images in your data/chess folder.</p>
+<ol class="arabic simple">
+<li>Compile opencv with samples by setting <code class="docutils literal"><span class="pre">BUILD_EXAMPLES</span></code> to <code class="docutils literal"><span class="pre">ON</span></code> in cmake configuration.</li>
+<li>Go to <code class="docutils literal"><span class="pre">bin</span></code> folder and use <code class="docutils literal"><span class="pre">imagelist_creator</span></code> to create an <code class="docutils literal"><span class="pre">XML/YAML</span></code> list of your images.</li>
+<li>Then, run <code class="docutils literal"><span class="pre">calibration</span></code> sample to get camera parameters. Use square size equal to 3cm.</li>
+</ol>
+<div class="section" id="pose-estimation">
+<h2>Pose estimation<a class="headerlink" href="#pose-estimation" title="Permalink to this headline">¶</a></h2>
+<p>Now, let us write a code that detects a chessboard in a new image and finds its distance from the camera. You can apply the same method to any object with known 3D geometry that you can detect in an image.</p>
+<p><em>Test data</em>: use chess_test*.jpg images from your data folder.</p>
+<ol class="arabic">
+<li><p class="first">Create an empty console project. Load a test image:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">img</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">CV_LOAD_IMAGE_GRAYSCALE</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Detect a chessboard in this image using findChessboard function.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">bool</span> <span class="n">found</span> <span class="o">=</span> <span class="n">findChessboardCorners</span><span class="p">(</span> <span class="n">img</span><span class="p">,</span> <span class="n">boardSize</span><span class="p">,</span> <span class="n">ptvec</span><span class="p">,</span> <span class="n">CV_CALIB_CB_ADAPTIVE_THRESH</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Now, write a function that generates a <code class="docutils literal"><span class="pre">vector&lt;Point3f&gt;</span></code> array of 3d coordinates of a chessboard in any coordinate system. For simplicity, let us choose a system such that one of the chessboard corners is in the origin and the board is in the plane <em>z = 0</em>.</p>
+</li>
+<li><p class="first">Read camera parameters from XML/YAML file:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">FileStorage</span> <span class="nf">fs</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">FileStorage</span><span class="o">::</span><span class="n">READ</span><span class="p">);</span>
+<span class="n">Mat</span> <span class="n">intrinsics</span><span class="p">,</span> <span class="n">distortion</span><span class="p">;</span>
+<span class="n">fs</span><span class="p">[</span><span class="s">&quot;camera_matrix&quot;</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">intrinsics</span><span class="p">;</span>
+<span class="n">fs</span><span class="p">[</span><span class="s">&quot;distortion_coefficients&quot;</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">distortion</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Now we are ready to find chessboard pose by running <code class="docutils literal"><span class="pre">solvePnP</span></code>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point3f</span><span class="o">&gt;</span> <span class="n">boardPoints</span><span class="p">;</span>
+<span class="c1">// fill the array</span>
+<span class="p">...</span>
+
+<span class="n">solvePnP</span><span class="p">(</span><span class="n">Mat</span><span class="p">(</span><span class="n">boardPoints</span><span class="p">),</span> <span class="n">Mat</span><span class="p">(</span><span class="n">foundBoardCorners</span><span class="p">),</span> <span class="n">cameraMatrix</span><span class="p">,</span>
+                     <span class="n">distCoeffs</span><span class="p">,</span> <span class="n">rvec</span><span class="p">,</span> <span class="n">tvec</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Calculate reprojection error like it is done in <code class="docutils literal"><span class="pre">calibration</span></code> sample (see <code class="docutils literal"><span class="pre">opencv/samples/cpp/calibration.cpp</span></code>, function <code class="docutils literal"><span class="pre">computeReprojectionErrors</span></code>).</p>
+</li>
+</ol>
+<p>Question: how to calculate the distance from the camera origin to any of the corners?</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Camera calibration with square chessboard</a><ul>
+<li><a class="reference internal" href="#pose-estimation">Pose estimation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../table_of_content_calib3d/table_of_content_calib3d.html"
+                        title="previous chapter"><em>calib3d</em> module. Camera calibration and 3D reconstruction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../camera_calibration/camera_calibration.html"
+                        title="next chapter">Camera calibration With OpenCV</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/calib3d/camera_calibration_square_chess/camera_calibration_square_chess.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../camera_calibration/camera_calibration.html" title="Camera calibration With OpenCV"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../table_of_content_calib3d/table_of_content_calib3d.html" title="calib3d module. Camera calibration and 3D reconstruction"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_calib3d/table_of_content_calib3d.html" ><em>calib3d</em> module. Camera calibration and 3D reconstruction</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

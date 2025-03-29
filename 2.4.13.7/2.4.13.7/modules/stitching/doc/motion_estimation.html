@@ -1,0 +1,518 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Rotation Estimation &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="stitching. Images stitching" href="stitching.html" />
+    <link rel="next" title="Autocalibration" href="autocalib.html" />
+    <link rel="prev" title="Features Finding and Images Matching" href="matching.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="autocalib.html" title="Autocalibration"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="matching.html" title="Features Finding and Images Matching"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="stitching.html" accesskey="U">stitching. Images stitching</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="rotation-estimation">
+<h1>Rotation Estimation<a class="headerlink" href="#rotation-estimation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="detail-estimator">
+<h2>detail::Estimator<a class="headerlink" href="#detail-estimator" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="detail::Estimator">
+<em class="property">class </em><code class="descclassname">detail::</code><code class="descname">Estimator</code><a class="headerlink" href="#detail::Estimator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Rotation estimator base class. It takes features of all images, pairwise matches between all images and estimates rotations of all cameras.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The coordinate system origin is implementation-dependent, but you can always normalize the rotations in respect to the first camera, for instance.</p>
+</div>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">Estimator</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Estimator</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="kt">void</span> <span class="k">operator</span> <span class="p">()(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ImageFeatures</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">features</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">MatchesInfo</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">pairwise_matches</span><span class="p">,</span>
+                     <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">CameraParams</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">cameras</span><span class="p">)</span>
+        <span class="p">{</span> <span class="n">estimate</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">pairwise_matches</span><span class="p">,</span> <span class="n">cameras</span><span class="p">);</span> <span class="p">}</span>
+
+<span class="k">protected</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">estimate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ImageFeatures</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">features</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">MatchesInfo</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">pairwise_matches</span><span class="p">,</span>
+                          <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">CameraParams</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">cameras</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="detail-estimator-operator">
+<h2>detail::Estimator::operator()<a class="headerlink" href="#detail-estimator-operator" title="Permalink to this headline">¶</a></h2>
+<p>Estimates camera parameters.</p>
+<dl class="function">
+<dt id="detail::Estimator::operator ()(const std::vector&lt;ImageFeatures&gt; &amp;features, const std::vector&lt;MatchesInfo&gt; &amp;pairwise_matches, std::vector&lt;CameraParams&gt; &amp;cameras)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">detail::Estimator::</code><code class="descname">operator()</code><span class="sig-paren">(</span>const std::vector&lt;ImageFeatures&gt;&amp; <strong>features</strong>, const std::vector&lt;MatchesInfo&gt;&amp; <strong>pairwise_matches</strong>, std::vector&lt;CameraParams&gt;&amp; <strong>cameras</strong><span class="sig-paren">)</span><a class="headerlink" href="#detail::Estimator::operator ()(const std::vector<ImageFeatures> &features, const std::vector<MatchesInfo> &pairwise_matches, std::vector<CameraParams> &cameras)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>features</strong> &#8211; Features of images</li>
+<li><strong>pairwise_matches</strong> &#8211; Pairwise matches of images</li>
+<li><strong>cameras</strong> &#8211; Estimated camera parameters</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="detail-estimator-estimate">
+<h2>detail::Estimator::estimate<a class="headerlink" href="#detail-estimator-estimate" title="Permalink to this headline">¶</a></h2>
+<p>This method must implement camera parameters estimation logic in order to make the wrapper <a class="reference internal" href="#detail-estimator-operator">detail::Estimator::operator()</a> work.</p>
+<dl class="function">
+<dt id="void detail::Estimator::estimate(const std::vector&lt;ImageFeatures&gt; &amp;features, const std::vector&lt;MatchesInfo&gt; &amp;pairwise_matches, std::vector&lt;CameraParams&gt; &amp;cameras)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">detail::Estimator::</code><code class="descname">estimate</code><span class="sig-paren">(</span>const std::vector&lt;ImageFeatures&gt;&amp; <strong>features</strong>, const std::vector&lt;MatchesInfo&gt;&amp; <strong>pairwise_matches</strong>, std::vector&lt;CameraParams&gt;&amp; <strong>cameras</strong><span class="sig-paren">)</span><a class="headerlink" href="#void detail::Estimator::estimate(const std::vector<ImageFeatures> &features, const std::vector<MatchesInfo> &pairwise_matches, std::vector<CameraParams> &cameras)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>features</strong> &#8211; Features of images</li>
+<li><strong>pairwise_matches</strong> &#8211; Pairwise matches of images</li>
+<li><strong>cameras</strong> &#8211; Estimated camera parameters</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="detail-homographybasedestimator">
+<h2>detail::HomographyBasedEstimator<a class="headerlink" href="#detail-homographybasedestimator" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="detail::HomographyBasedEstimator : public detail::Estimator">
+<em class="property">class </em><code class="descclassname">detail::</code><code class="descname">HomographyBasedEstimator</code> : <em class="property">public</em> <code class="descclassname">detail::</code><code class="descname">Estimator</code><a class="headerlink" href="#detail::HomographyBasedEstimator : public detail::Estimator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Homography based rotation estimator.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">HomographyBasedEstimator</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Estimator</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">HomographyBasedEstimator</span><span class="p">(</span><span class="kt">bool</span> <span class="n">is_focals_estimated</span> <span class="o">=</span> <span class="nb">false</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">is_focals_estimated_</span><span class="p">(</span><span class="n">is_focals_estimated</span><span class="p">)</span> <span class="p">{}</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/* hidden */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="detail-bundleadjusterbase">
+<h2>detail::BundleAdjusterBase<a class="headerlink" href="#detail-bundleadjusterbase" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="detail::BundleAdjusterBase : public detail::Estimator">
+<em class="property">class </em><code class="descclassname">detail::</code><code class="descname">BundleAdjusterBase</code> : <em class="property">public</em> <code class="descclassname">detail::</code><code class="descname">Estimator</code><a class="headerlink" href="#detail::BundleAdjusterBase : public detail::Estimator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for all camera parameters refinement methods.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">BundleAdjusterBase</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Estimator</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">const</span> <span class="n">Mat</span> <span class="n">refinementMask</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">refinement_mask_</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">setRefinementMask</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">mask</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">CV_Assert</span><span class="p">(</span><span class="n">mask</span><span class="p">.</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="n">CV_8U</span> <span class="o">&amp;&amp;</span> <span class="n">mask</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">Size</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">));</span>
+        <span class="n">refinement_mask_</span> <span class="o">=</span> <span class="n">mask</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="kt">double</span> <span class="n">confThresh</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">conf_thresh_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">setConfThresh</span><span class="p">(</span><span class="kt">double</span> <span class="n">conf_thresh</span><span class="p">)</span> <span class="p">{</span> <span class="n">conf_thresh_</span> <span class="o">=</span> <span class="n">conf_thresh</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="n">CvTermCriteria</span> <span class="n">termCriteria</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">term_criteria_</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">setTermCriteria</span><span class="p">(</span><span class="k">const</span> <span class="n">CvTermCriteria</span><span class="o">&amp;</span> <span class="n">term_criteria</span><span class="p">)</span> <span class="p">{</span> <span class="n">term_criteria_</span> <span class="o">=</span> <span class="n">term_criteria</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="k">protected</span><span class="o">:</span>
+    <span class="n">BundleAdjusterBase</span><span class="p">(</span><span class="kt">int</span> <span class="n">num_params_per_cam</span><span class="p">,</span> <span class="kt">int</span> <span class="n">num_errs_per_measurement</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">num_params_per_cam_</span><span class="p">(</span><span class="n">num_params_per_cam</span><span class="p">),</span>
+          <span class="n">num_errs_per_measurement_</span><span class="p">(</span><span class="n">num_errs_per_measurement</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">setRefinementMask</span><span class="p">(</span><span class="n">Mat</span><span class="o">::</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">CV_8U</span><span class="p">));</span>
+        <span class="n">setConfThresh</span><span class="p">(</span><span class="mf">1.</span><span class="p">);</span>
+        <span class="n">setTermCriteria</span><span class="p">(</span><span class="n">cvTermCriteria</span><span class="p">(</span><span class="n">CV_TERMCRIT_EPS</span> <span class="o">+</span> <span class="n">CV_TERMCRIT_ITER</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">DBL_EPSILON</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Runs bundle adjustment</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">estimate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ImageFeatures</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">features</span><span class="p">,</span>
+                          <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">MatchesInfo</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">pairwise_matches</span><span class="p">,</span>
+                          <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">CameraParams</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">cameras</span><span class="p">);</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">setUpInitialCameraParams</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">CameraParams</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">cameras</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">obtainRefinedCameraParams</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">CameraParams</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">cameras</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">calcError</span><span class="p">(</span><span class="n">Mat</span> <span class="o">&amp;</span><span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">calcJacobian</span><span class="p">(</span><span class="n">Mat</span> <span class="o">&amp;</span><span class="n">jac</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// 3x3 8U mask, where 0 means don&#39;t refine respective parameter, != 0 means refine</span>
+    <span class="n">Mat</span> <span class="n">refinement_mask_</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="n">num_images_</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">total_num_matches_</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="n">num_params_per_cam_</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">num_errs_per_measurement_</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="n">ImageFeatures</span> <span class="o">*</span><span class="n">features_</span><span class="p">;</span>
+    <span class="k">const</span> <span class="n">MatchesInfo</span> <span class="o">*</span><span class="n">pairwise_matches_</span><span class="p">;</span>
+
+    <span class="c1">// Threshold to filter out poorly matched image pairs</span>
+    <span class="kt">double</span> <span class="n">conf_thresh_</span><span class="p">;</span>
+
+    <span class="c1">//Levenberg–Marquardt algorithm termination criteria</span>
+    <span class="n">CvTermCriteria</span> <span class="n">term_criteria_</span><span class="p">;</span>
+
+    <span class="c1">// Camera parameters matrix (CV_64F)</span>
+    <span class="n">Mat</span> <span class="n">cam_params_</span><span class="p">;</span>
+
+    <span class="c1">// Connected images pairs</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">edges_</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#detail::Estimator" title="class detail::Estimator"><code class="xref ocv ocv-class docutils literal"><span class="pre">detail::Estimator</span></code></a></p>
+</div>
+</div>
+<div class="section" id="detail-bundleadjusterbase-bundleadjusterbase">
+<h2>detail::BundleAdjusterBase::BundleAdjusterBase<a class="headerlink" href="#detail-bundleadjusterbase-bundleadjusterbase" title="Permalink to this headline">¶</a></h2>
+<p>Construct a bundle adjuster base instance.</p>
+<dl class="function">
+<dt id="detail::BundleAdjusterBase::BundleAdjusterBase(int num_params_per_cam, int num_errs_per_measurement)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">detail::BundleAdjusterBase::</code><code class="descname">BundleAdjusterBase</code><span class="sig-paren">(</span>int <strong>num_params_per_cam</strong>, int <strong>num_errs_per_measurement</strong><span class="sig-paren">)</span><a class="headerlink" href="#detail::BundleAdjusterBase::BundleAdjusterBase(int num_params_per_cam, int num_errs_per_measurement)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>num_params_per_cam</strong> &#8211; Number of parameters per camera</li>
+<li><strong>num_errs_per_measurement</strong> &#8211; Number of error terms (components) per match</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="detail-bundleadjusterbase-setupinitialcameraparams">
+<h2>detail::BundleAdjusterBase::setUpInitialCameraParams<a class="headerlink" href="#detail-bundleadjusterbase-setupinitialcameraparams" title="Permalink to this headline">¶</a></h2>
+<p>Sets initial camera parameter to refine.</p>
+<dl class="function">
+<dt id="void detail::BundleAdjusterBase::setUpInitialCameraParams(const std::vector&lt;CameraParams&gt; &amp;cameras)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">detail::BundleAdjusterBase::</code><code class="descname">setUpInitialCameraParams</code><span class="sig-paren">(</span>const std::vector&lt;CameraParams&gt;&amp; <strong>cameras</strong><span class="sig-paren">)</span><a class="headerlink" href="#void detail::BundleAdjusterBase::setUpInitialCameraParams(const std::vector<CameraParams> &cameras)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cameras</strong> &#8211; Camera parameters</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="detail-bundleadjusterbase-calcerror">
+<h2>detail::BundleAdjusterBase::calcError<a class="headerlink" href="#detail-bundleadjusterbase-calcerror" title="Permalink to this headline">¶</a></h2>
+<p>Calculates error vector.</p>
+<dl class="function">
+<dt id="void detail::BundleAdjusterBase::calcError(Mat &amp;err)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">detail::BundleAdjusterBase::</code><code class="descname">calcError</code><span class="sig-paren">(</span>Mat&amp; <strong>err</strong><span class="sig-paren">)</span><a class="headerlink" href="#void detail::BundleAdjusterBase::calcError(Mat &err)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>err</strong> &#8211; Error column-vector of length <code class="docutils literal"><span class="pre">total_num_matches</span> <span class="pre">*</span> <span class="pre">num_errs_per_measurement</span></code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="detail-bundleadjusterbase-calcjacobian">
+<h2>detail::BundleAdjusterBase::calcJacobian<a class="headerlink" href="#detail-bundleadjusterbase-calcjacobian" title="Permalink to this headline">¶</a></h2>
+<p>Calculates the cost function jacobian.</p>
+<dl class="function">
+<dt id="void detail::BundleAdjusterBase::calcJacobian(Mat &amp;jac)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">detail::BundleAdjusterBase::</code><code class="descname">calcJacobian</code><span class="sig-paren">(</span>Mat&amp; <strong>jac</strong><span class="sig-paren">)</span><a class="headerlink" href="#void detail::BundleAdjusterBase::calcJacobian(Mat &jac)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>jac</strong> &#8211; Jacobian matrix of dimensions <code class="docutils literal"><span class="pre">(total_num_matches</span> <span class="pre">*</span> <span class="pre">num_errs_per_measurement)</span> <span class="pre">x</span> <span class="pre">(num_images</span> <span class="pre">*</span> <span class="pre">num_params_per_cam)</span></code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="detail-bundleadjusterbase-obtainrefinedcameraparams">
+<h2>detail::BundleAdjusterBase::obtainRefinedCameraParams<a class="headerlink" href="#detail-bundleadjusterbase-obtainrefinedcameraparams" title="Permalink to this headline">¶</a></h2>
+<p>Gets the refined camera parameters.</p>
+<dl class="function">
+<dt id="void detail::BundleAdjusterBase::obtainRefinedCameraParams(std::vector&lt;CameraParams&gt; &amp;cameras) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">detail::BundleAdjusterBase::</code><code class="descname">obtainRefinedCameraParams</code><span class="sig-paren">(</span>std::vector&lt;CameraParams&gt;&amp; <strong>cameras</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void detail::BundleAdjusterBase::obtainRefinedCameraParams(std::vector<CameraParams> &cameras) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cameras</strong> &#8211; Refined camera parameters</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="detail-bundleadjusterreproj">
+<h2>detail::BundleAdjusterReproj<a class="headerlink" href="#detail-bundleadjusterreproj" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="detail::BundleAdjusterReproj : public detail::BundleAdjusterBase">
+<em class="property">class </em><code class="descclassname">detail::</code><code class="descname">BundleAdjusterReproj</code> : <em class="property">public</em> <code class="descclassname">detail::</code><code class="descname">BundleAdjusterBase</code><a class="headerlink" href="#detail::BundleAdjusterReproj : public detail::BundleAdjusterBase" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Implementation of the camera parameters refinement algorithm which minimizes sum of the reprojection error squares.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">BundleAdjusterReproj</span> <span class="p">:</span> <span class="k">public</span> <span class="n">BundleAdjusterBase</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">BundleAdjusterReproj</span><span class="p">()</span> <span class="o">:</span> <span class="n">BundleAdjusterBase</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{}</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/* hidden */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#detail::BundleAdjusterBase : public detail::Estimator" title="class detail::BundleAdjusterBase : public detail::Estimator"><code class="xref ocv ocv-class docutils literal"><span class="pre">detail::BundleAdjusterBase</span></code></a>, <a class="reference internal" href="#detail::Estimator" title="class detail::Estimator"><code class="xref ocv ocv-class docutils literal"><span class="pre">detail::Estimator</span></code></a></p>
+</div>
+</div>
+<div class="section" id="detail-bundleadjusterray">
+<h2>detail::BundleAdjusterRay<a class="headerlink" href="#detail-bundleadjusterray" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="detail::BundleAdjusterRay : public detail::BundleAdjusterBase">
+<em class="property">class </em><code class="descclassname">detail::</code><code class="descname">BundleAdjusterRay</code> : <em class="property">public</em> <code class="descclassname">detail::</code><code class="descname">BundleAdjusterBase</code><a class="headerlink" href="#detail::BundleAdjusterRay : public detail::BundleAdjusterBase" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Implementation of the camera parameters refinement algorithm which minimizes sum of the distances between the rays passing through the camera center and a feature.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">BundleAdjusterRay</span> <span class="p">:</span> <span class="k">public</span> <span class="n">BundleAdjusterBase</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">BundleAdjusterRay</span><span class="p">()</span> <span class="o">:</span> <span class="n">BundleAdjusterBase</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{}</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/* hidden */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#detail::BundleAdjusterBase : public detail::Estimator" title="class detail::BundleAdjusterBase : public detail::Estimator"><code class="xref ocv ocv-class docutils literal"><span class="pre">detail::BundleAdjusterBase</span></code></a></p>
+</div>
+</div>
+<div class="section" id="detail-wavecorrectkind">
+<h2>detail::WaveCorrectKind<a class="headerlink" href="#detail-wavecorrectkind" title="Permalink to this headline">¶</a></h2>
+<p>Wave correction kind.</p>
+<dl class="enum">
+<dt id="detail::WaveCorrectKind">
+<strong>C++:</strong><code class="descname"> </code><em class="property">enum </em><code class="descclassname">detail::</code><code class="descname">WaveCorrectKind</code><a class="headerlink" href="#detail::WaveCorrectKind" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="emember">
+<dt id="WAVE_CORRECT_HORIZ">
+<code class="descname">WAVE_CORRECT_HORIZ</code><a class="headerlink" href="#WAVE_CORRECT_HORIZ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="WAVE_CORRECT_VERT">
+<code class="descname">WAVE_CORRECT_VERT</code><a class="headerlink" href="#WAVE_CORRECT_VERT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="detail-wavecorrect">
+<h2>detail::waveCorrect<a class="headerlink" href="#detail-wavecorrect" title="Permalink to this headline">¶</a></h2>
+<p>Tries to make panorama more horizontal (or vertical).</p>
+<dl class="function">
+<dt id="void detail::waveCorrect(std::vector&lt;Mat&gt; &amp;rmats, WaveCorrectKind kind)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">detail::</code><code class="descname">waveCorrect</code><span class="sig-paren">(</span>std::vector&lt;Mat&gt;&amp; <strong>rmats</strong>, WaveCorrectKind <strong>kind</strong><span class="sig-paren">)</span><a class="headerlink" href="#void detail::waveCorrect(std::vector<Mat> &rmats, WaveCorrectKind kind)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>rmats</strong> &#8211; Camera rotation matrices.</li>
+<li><strong>kind</strong> &#8211; Correction kind, see <a class="reference internal" href="#detail::WaveCorrectKind" title="detail::WaveCorrectKind"><code class="xref ocv ocv-enum docutils literal"><span class="pre">detail::WaveCorrectKind</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Rotation Estimation</a><ul>
+<li><a class="reference internal" href="#detail-estimator">detail::Estimator</a></li>
+<li><a class="reference internal" href="#detail-estimator-operator">detail::Estimator::operator()</a></li>
+<li><a class="reference internal" href="#detail-estimator-estimate">detail::Estimator::estimate</a></li>
+<li><a class="reference internal" href="#detail-homographybasedestimator">detail::HomographyBasedEstimator</a></li>
+<li><a class="reference internal" href="#detail-bundleadjusterbase">detail::BundleAdjusterBase</a></li>
+<li><a class="reference internal" href="#detail-bundleadjusterbase-bundleadjusterbase">detail::BundleAdjusterBase::BundleAdjusterBase</a></li>
+<li><a class="reference internal" href="#detail-bundleadjusterbase-setupinitialcameraparams">detail::BundleAdjusterBase::setUpInitialCameraParams</a></li>
+<li><a class="reference internal" href="#detail-bundleadjusterbase-calcerror">detail::BundleAdjusterBase::calcError</a></li>
+<li><a class="reference internal" href="#detail-bundleadjusterbase-calcjacobian">detail::BundleAdjusterBase::calcJacobian</a></li>
+<li><a class="reference internal" href="#detail-bundleadjusterbase-obtainrefinedcameraparams">detail::BundleAdjusterBase::obtainRefinedCameraParams</a></li>
+<li><a class="reference internal" href="#detail-bundleadjusterreproj">detail::BundleAdjusterReproj</a></li>
+<li><a class="reference internal" href="#detail-bundleadjusterray">detail::BundleAdjusterRay</a></li>
+<li><a class="reference internal" href="#detail-wavecorrectkind">detail::WaveCorrectKind</a></li>
+<li><a class="reference internal" href="#detail-wavecorrect">detail::waveCorrect</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="matching.html"
+                        title="previous chapter">Features Finding and Images Matching</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="autocalib.html"
+                        title="next chapter">Autocalibration</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/stitching/doc/motion_estimation.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="autocalib.html" title="Autocalibration"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="matching.html" title="Features Finding and Images Matching"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="stitching.html" >stitching. Images stitching</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

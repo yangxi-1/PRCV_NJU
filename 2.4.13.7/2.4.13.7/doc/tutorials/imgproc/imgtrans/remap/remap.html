@@ -1,0 +1,430 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Remapping &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../../index.html" />
+    <link rel="up" title="imgproc module. Image Processing" href="../../table_of_content_imgproc/table_of_content_imgproc.html" />
+    <link rel="next" title="Affine Transformations" href="../warp_affine/warp_affine.html" />
+    <link rel="prev" title="Hough Circle Transform" href="../hough_circle/hough_circle.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../warp_affine/warp_affine.html" title="Affine Transformations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../hough_circle/hough_circle.html" title="Hough Circle Transform"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" accesskey="U"><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="remapping">
+<span id="remap"></span><h1>Remapping<a class="headerlink" href="#remapping" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<ol class="loweralpha simple">
+<li>Use the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/geometric_transformations.html?highlight=remap#remap">remap</a> to implement simple remapping routines.</li>
+</ol>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="what-is-remapping">
+<h3>What is remapping?<a class="headerlink" href="#what-is-remapping" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">It is the process of taking pixels from one place in the image and locating them in  another position in a new image.</p>
+</li>
+<li><p class="first">To accomplish the mapping process, it might be necessary to do some interpolation for non-integer pixel locations, since there will not always be a one-to-one-pixel correspondence between source and destination images.</p>
+</li>
+<li><p class="first">We can express the remap for every pixel location <img class="math" src="../../../../../_images/math/45b34b73b5a1fed1fd38b3a37ca1ada031de9970.png" alt="(x,y)"/> as:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/5107f33a3ac6fdce33ce9ced0d2cf7a2d29ab954.png" alt="g(x,y) = f ( h(x,y) )"/></p>
+</div><p>where <img class="math" src="../../../../../_images/math/ba0c5e23fc043b0f4bedded7d22800ecfef42cb3.png" alt="g()"/> is the remapped image, <img class="math" src="../../../../../_images/math/0f69e1c16ba9d089cdf157d6894f65e9654f1ef5.png" alt="f()"/> the source image and <img class="math" src="../../../../../_images/math/d0bc35c326f7b86691de1d7b925500f21fa97b5e.png" alt="h(x,y)"/> is the mapping function that operates on <img class="math" src="../../../../../_images/math/45b34b73b5a1fed1fd38b3a37ca1ada031de9970.png" alt="(x,y)"/>.</p>
+</li>
+<li><p class="first">Let&#8217;s think in a quick example. Imagine that we have an image <img class="math" src="../../../../../_images/math/06f9f0fcaa8d96a6a23b0f7d1566fe5efaa789ad.png" alt="I"/> and, say, we want to do  a remap such that:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/bc683b39ab89b827dcd1078b7676246a6b10663f.png" alt="h(x,y) = (I.cols - x, y )"/></p>
+</div><p>What would happen? It is easily seen that the image would flip in the <img class="math" src="../../../../../_images/math/275d1cfd2234a22c171bcf9ee37dd451fffd5e1b.png" alt="x"/> direction. For instance,  consider the input image:</p>
+<a class="reference internal image-reference" href="../../../../../_images/Remap_Tutorial_Theory_0.jpg"><img alt="Original test image" class="align-center" src="../../../../../_images/Remap_Tutorial_Theory_0.jpg" style="width: 120pt;" /></a>
+<p>observe how the red circle changes positions with respect to x (considering <img class="math" src="../../../../../_images/math/275d1cfd2234a22c171bcf9ee37dd451fffd5e1b.png" alt="x"/> the horizontal direction):</p>
+<a class="reference internal image-reference" href="../../../../../_images/Remap_Tutorial_Theory_1.jpg"><img alt="Original test image" class="align-center" src="../../../../../_images/Remap_Tutorial_Theory_1.jpg" style="width: 120pt;" /></a>
+</li>
+<li><p class="first">In OpenCV, the function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/geometric_transformations.html?highlight=remap#remap">remap</a> offers a simple remapping implementation.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><strong>What does this program do?</strong><ul>
+<li>Loads an image</li>
+<li>Each second, apply 1 of 4 different remapping processes to the image and display them indefinitely in a window.</li>
+<li>Wait for the user to exit the program</li>
+</ul>
+</li>
+<li>The tutorial code&#8217;s is shown lines below. You can also download it from <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/tutorial_code/ImgTrans/Remap_Demo.cpp">here</a></li>
+</ol>
+<div class="highlight-cpp"><div class="highlight"><pre> <span class="cp">#include</span> <span class="cpf">&quot;opencv2/highgui/highgui.hpp&quot;</span><span class="cp"></span>
+ <span class="cp">#include</span> <span class="cpf">&quot;opencv2/imgproc/imgproc.hpp&quot;</span><span class="cp"></span>
+ <span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+ <span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+
+ <span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+ <span class="c1">/// Global variables</span>
+ <span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">;</span>
+ <span class="n">Mat</span> <span class="n">map_x</span><span class="p">,</span> <span class="n">map_y</span><span class="p">;</span>
+ <span class="kt">char</span><span class="o">*</span> <span class="n">remap_window</span> <span class="o">=</span> <span class="s">&quot;Remap demo&quot;</span><span class="p">;</span>
+ <span class="kt">int</span> <span class="n">ind</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+ <span class="c1">/// Function Headers</span>
+ <span class="kt">void</span> <span class="nf">update_map</span><span class="p">(</span> <span class="kt">void</span> <span class="p">);</span>
+
+ <span class="cm">/**</span>
+<span class="cm"> * @function main</span>
+<span class="cm"> */</span>
+ <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+ <span class="p">{</span>
+   <span class="c1">/// Load the image</span>
+   <span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+
+  <span class="c1">/// Create dst, map_x and map_y with the same size as src:</span>
+  <span class="n">dst</span><span class="p">.</span><span class="n">create</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">src</span><span class="p">.</span><span class="n">type</span><span class="p">()</span> <span class="p">);</span>
+  <span class="n">map_x</span><span class="p">.</span><span class="n">create</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">CV_32FC1</span> <span class="p">);</span>
+  <span class="n">map_y</span><span class="p">.</span><span class="n">create</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">CV_32FC1</span> <span class="p">);</span>
+
+  <span class="c1">/// Create window</span>
+  <span class="n">namedWindow</span><span class="p">(</span> <span class="n">remap_window</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+
+  <span class="c1">/// Loop</span>
+  <span class="k">while</span><span class="p">(</span> <span class="nb">true</span> <span class="p">)</span>
+  <span class="p">{</span>
+    <span class="c1">/// Each 1 sec. Press ESC to exit the program</span>
+    <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">waitKey</span><span class="p">(</span> <span class="mi">1000</span> <span class="p">);</span>
+
+    <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">c</span> <span class="o">==</span> <span class="mi">27</span> <span class="p">)</span>
+      <span class="p">{</span> <span class="k">break</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="c1">/// Update map_x &amp; map_y. Then apply remap</span>
+    <span class="n">update_map</span><span class="p">();</span>
+    <span class="n">remap</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">map_x</span><span class="p">,</span> <span class="n">map_y</span><span class="p">,</span> <span class="n">CV_INTER_LINEAR</span><span class="p">,</span> <span class="n">BORDER_CONSTANT</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="p">);</span>
+
+    <span class="c1">/// Display results</span>
+    <span class="n">imshow</span><span class="p">(</span> <span class="n">remap_window</span><span class="p">,</span> <span class="n">dst</span> <span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+ <span class="p">}</span>
+
+ <span class="cm">/**</span>
+<span class="cm"> * @function update_map</span>
+<span class="cm"> * @brief Fill the map_x and map_y matrices with 4 types of mappings</span>
+<span class="cm"> */</span>
+ <span class="kt">void</span> <span class="nf">update_map</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span>
+ <span class="p">{</span>
+   <span class="n">ind</span> <span class="o">=</span> <span class="n">ind</span><span class="o">%</span><span class="mi">4</span><span class="p">;</span>
+
+   <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span> <span class="p">)</span>
+   <span class="p">{</span> <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+       <span class="p">{</span>
+         <span class="k">switch</span><span class="p">(</span> <span class="n">ind</span> <span class="p">)</span>
+         <span class="p">{</span>
+           <span class="k">case</span> <span class="mi">0</span><span class="o">:</span>
+             <span class="k">if</span><span class="p">(</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="o">*</span><span class="mf">0.25</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="o">*</span><span class="mf">0.75</span> <span class="o">&amp;&amp;</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="o">*</span><span class="mf">0.25</span> <span class="o">&amp;&amp;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="o">*</span><span class="mf">0.75</span> <span class="p">)</span>
+               <span class="p">{</span>
+                 <span class="n">map_x</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span> <span class="n">i</span> <span class="o">-</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="o">*</span><span class="mf">0.25</span> <span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="p">;</span>
+                 <span class="n">map_y</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span> <span class="n">j</span> <span class="o">-</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="o">*</span><span class="mf">0.25</span> <span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="p">;</span>
+                <span class="p">}</span>
+             <span class="k">else</span>
+               <span class="p">{</span> <span class="n">map_x</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span>
+                 <span class="n">map_y</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span>
+               <span class="p">}</span>
+                 <span class="k">break</span><span class="p">;</span>
+           <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+                 <span class="n">map_x</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">i</span> <span class="p">;</span>
+                 <span class="n">map_y</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">j</span> <span class="p">;</span>
+                 <span class="k">break</span><span class="p">;</span>
+           <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+                 <span class="n">map_x</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span> <span class="o">-</span> <span class="n">i</span> <span class="p">;</span>
+                 <span class="n">map_y</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">j</span> <span class="p">;</span>
+                 <span class="k">break</span><span class="p">;</span>
+           <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+                 <span class="n">map_x</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span> <span class="o">-</span> <span class="n">i</span> <span class="p">;</span>
+                 <span class="n">map_y</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">j</span> <span class="p">;</span>
+                 <span class="k">break</span><span class="p">;</span>
+         <span class="p">}</span> <span class="c1">// end of switch</span>
+       <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="n">ind</span><span class="o">++</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Create some variables we will use:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">;</span>
+<span class="n">Mat</span> <span class="n">map_x</span><span class="p">,</span> <span class="n">map_y</span><span class="p">;</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">remap_window</span> <span class="o">=</span> <span class="s">&quot;Remap demo&quot;</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">ind</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Load an image:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create the destination image and the two mapping matrices (for x and y )</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">dst</span><span class="p">.</span><span class="n">create</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">src</span><span class="p">.</span><span class="n">type</span><span class="p">()</span> <span class="p">);</span>
+<span class="n">map_x</span><span class="p">.</span><span class="n">create</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">CV_32FC1</span> <span class="p">);</span>
+<span class="n">map_y</span><span class="p">.</span><span class="n">create</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">CV_32FC1</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create a window to  display results</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">namedWindow</span><span class="p">(</span> <span class="n">remap_window</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Establish a loop. Each 1000 ms we update our mapping matrices (<em>mat_x</em> and <em>mat_y</em>) and apply them to our source image:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">while</span><span class="p">(</span> <span class="nb">true</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">/// Each 1 sec. Press ESC to exit the program</span>
+  <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">waitKey</span><span class="p">(</span> <span class="mi">1000</span> <span class="p">);</span>
+
+  <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">c</span> <span class="o">==</span> <span class="mi">27</span> <span class="p">)</span>
+    <span class="p">{</span> <span class="k">break</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="c1">/// Update map_x &amp; map_y. Then apply remap</span>
+  <span class="n">update_map</span><span class="p">();</span>
+  <span class="n">remap</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">map_x</span><span class="p">,</span> <span class="n">map_y</span><span class="p">,</span> <span class="n">CV_INTER_LINEAR</span><span class="p">,</span> <span class="n">BORDER_CONSTANT</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="p">);</span>
+
+  <span class="c1">/// Display results</span>
+  <span class="n">imshow</span><span class="p">(</span> <span class="n">remap_window</span><span class="p">,</span> <span class="n">dst</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The function that applies the remapping is <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/geometric_transformations.html?highlight=remap#remap">remap</a>. We give the following arguments:</p>
+<ul class="simple">
+<li><strong>src</strong>: Source image</li>
+<li><strong>dst</strong>: Destination image of same size as <em>src</em></li>
+<li><strong>map_x</strong>: The mapping function in the x direction. It is equivalent to the first component of <img class="math" src="../../../../../_images/math/544f165b8ea27ac75336cccb29db2307141355fd.png" alt="h(i,j)"/></li>
+<li><strong>map_y</strong>: Same as above, but in y direction. Note that <em>map_y</em> and <em>map_x</em> are both of the same size as <em>src</em></li>
+<li><strong>CV_INTER_LINEAR</strong>: The type of interpolation to use for non-integer pixels. This is by default.</li>
+<li><strong>BORDER_CONSTANT</strong>: Default</li>
+</ul>
+<p>How do we update our mapping matrices <em>mat_x</em> and <em>mat_y</em>? Go on reading:</p>
+</li>
+<li><p class="first"><strong>Updating the mapping matrices:</strong>  We are going to perform 4 different mappings:</p>
+<ol class="loweralpha">
+<li><p class="first">Reduce the picture to half its size and will display it in the middle:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/6c76f9ab554bd1f783e115a951edaa999016de13.png" alt="h(i,j) = ( 2*i - src.cols/2  + 0.5, 2*j - src.rows/2  + 0.5)"/></p>
+</div><p>for all pairs <img class="math" src="../../../../../_images/math/962ce99ac9611d5b47f54c06005bb34eb024574e.png" alt="(i,j)"/> such that: <img class="math" src="../../../../../_images/math/82888c6f43b83013bc263c4f56f5d25eaa9e7d1c.png" alt="\dfrac{src.cols}{4}&lt;i&lt;\dfrac{3 \cdot src.cols}{4}"/>  and  <img class="math" src="../../../../../_images/math/61eb0319ddd2741eab619cba98391839c46e4ac4.png" alt="\dfrac{src.rows}{4}&lt;j&lt;\dfrac{3 \cdot src.rows}{4}"/></p>
+</li>
+<li><p class="first">Turn the image upside down: <img class="math" src="../../../../../_images/math/be785eae3cbc106b55ff0f40e257c4f3ec54c8fb.png" alt="h( i, j ) = (i, src.rows - j)"/></p>
+</li>
+<li><p class="first">Reflect the image from left to right: <img class="math" src="../../../../../_images/math/b800c2aa93cf5983dc1a081c87e2747c4fe889b3.png" alt="h(i,j) = ( src.cols - i, j )"/></p>
+</li>
+<li><p class="first">Combination of b and c: <img class="math" src="../../../../../_images/math/f9ab788b78891418473b9da138b73608411ec2ec.png" alt="h(i,j) = ( src.cols - i, src.rows - j )"/></p>
+</li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<div><p>This is expressed in the following snippet. Here, <em>map_x</em> represents the first coordinate of <em>h(i,j)</em> and <em>map_y</em> the second coordinate.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span> <span class="p">)</span>
+<span class="p">{</span> <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+    <span class="p">{</span>
+      <span class="k">switch</span><span class="p">(</span> <span class="n">ind</span> <span class="p">)</span>
+      <span class="p">{</span>
+        <span class="k">case</span> <span class="mi">0</span><span class="o">:</span>
+          <span class="k">if</span><span class="p">(</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="o">*</span><span class="mf">0.25</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="o">*</span><span class="mf">0.75</span> <span class="o">&amp;&amp;</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="o">*</span><span class="mf">0.25</span> <span class="o">&amp;&amp;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="o">*</span><span class="mf">0.75</span> <span class="p">)</span>
+            <span class="p">{</span>
+              <span class="n">map_x</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span> <span class="n">i</span> <span class="o">-</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="o">*</span><span class="mf">0.25</span> <span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="p">;</span>
+              <span class="n">map_y</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span> <span class="n">j</span> <span class="o">-</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="o">*</span><span class="mf">0.25</span> <span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="p">;</span>
+             <span class="p">}</span>
+          <span class="k">else</span>
+            <span class="p">{</span> <span class="n">map_x</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span>
+              <span class="n">map_y</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span>
+            <span class="p">}</span>
+              <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+              <span class="n">map_x</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">i</span> <span class="p">;</span>
+              <span class="n">map_y</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">j</span> <span class="p">;</span>
+              <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+              <span class="n">map_x</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span> <span class="o">-</span> <span class="n">i</span> <span class="p">;</span>
+              <span class="n">map_y</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">j</span> <span class="p">;</span>
+              <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+              <span class="n">map_x</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span> <span class="o">-</span> <span class="n">i</span> <span class="p">;</span>
+              <span class="n">map_y</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">j</span> <span class="p">;</span>
+              <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span> <span class="c1">// end of switch</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+ <span class="n">ind</span><span class="o">++</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="result">
+<h2>Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">After compiling the code above, you can execute it giving as argument an image path. For instance, by using the following image:</p>
+<a class="reference internal image-reference" href="../../../../../_images/Remap_Tutorial_Original_Image.jpg"><img alt="Original test image" class="align-center" src="../../../../../_images/Remap_Tutorial_Original_Image.jpg" style="width: 250pt;" /></a>
+</li>
+<li><p class="first">This is the result of reducing it to half the size and centering it:</p>
+<a class="reference internal image-reference" href="../../../../../_images/Remap_Tutorial_Result_0.jpg"><img alt="Result 0 for remapping" class="align-center" src="../../../../../_images/Remap_Tutorial_Result_0.jpg" style="width: 250pt;" /></a>
+</li>
+<li><p class="first">Turning it upside down:</p>
+<a class="reference internal image-reference" href="../../../../../_images/Remap_Tutorial_Result_1.jpg"><img alt="Result 0 for remapping" class="align-center" src="../../../../../_images/Remap_Tutorial_Result_1.jpg" style="width: 250pt;" /></a>
+</li>
+<li><p class="first">Reflecting it in the x direction:</p>
+<a class="reference internal image-reference" href="../../../../../_images/Remap_Tutorial_Result_2.jpg"><img alt="Result 0 for remapping" class="align-center" src="../../../../../_images/Remap_Tutorial_Result_2.jpg" style="width: 250pt;" /></a>
+</li>
+<li><p class="first">Reflecting it in both directions:</p>
+</li>
+</ol>
+<a class="reference internal image-reference" href="../../../../../_images/Remap_Tutorial_Result_3.jpg"><img alt="Result 0 for remapping" class="align-center" src="../../../../../_images/Remap_Tutorial_Result_3.jpg" style="width: 250pt;" /></a>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Remapping</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a><ul>
+<li><a class="reference internal" href="#what-is-remapping">What is remapping?</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#result">Result</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../hough_circle/hough_circle.html"
+                        title="previous chapter">Hough Circle Transform</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../warp_affine/warp_affine.html"
+                        title="next chapter">Affine Transformations</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../../_sources/doc/tutorials/imgproc/imgtrans/remap/remap.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../warp_affine/warp_affine.html" title="Affine Transformations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../hough_circle/hough_circle.html" title="Hough Circle Transform"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" ><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Super Resolution &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="superres. Super Resolution" href="superres.html" />
+    <link rel="next" title="viz. 3D Visualizer" href="../../viz/doc/viz.html" />
+    <link rel="prev" title="superres. Super Resolution" href="superres.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../viz/doc/viz.html" title="viz. 3D Visualizer"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="superres.html" title="superres. Super Resolution"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="superres.html" accesskey="U">superres. Super Resolution</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="super-resolution">
+<h1>Super Resolution<a class="headerlink" href="#super-resolution" title="Permalink to this headline">¶</a></h1>
+<p>The Super Resolution module contains a set of functions and classes that can be used to solve the problem of resolution enhancement. There are a few methods implemented, most of them are descibed in the papers <a class="reference internal" href="#farsiu03" id="id1">[Farsiu03]</a> and <a class="reference internal" href="#mitzel09" id="id2">[Mitzel09]</a>.</p>
+<div class="section" id="superres-superresolution">
+<h2>superres::SuperResolution<a class="headerlink" href="#superres-superresolution" title="Permalink to this headline">¶</a></h2>
+<p>Base class for Super Resolution algorithms.</p>
+<dl class="class">
+<dt id="superres::SuperResolution : public Algorithm, public superres::FrameSource">
+<em class="property">class </em><code class="descclassname">superres::</code><code class="descname">SuperResolution</code> : <em class="property">public</em> <code class="descname">Algorithm</code>, <em class="property">public</em> <code class="descclassname">superres::</code><code class="descname">FrameSource</code><a class="headerlink" href="#superres::SuperResolution : public Algorithm, public superres::FrameSource" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The class is only used to define the common interface for the whole family of Super Resolution algorithms.</p>
+</div>
+<div class="section" id="superres-superresolution-setinput">
+<h2>superres::SuperResolution::setInput<a class="headerlink" href="#superres-superresolution-setinput" title="Permalink to this headline">¶</a></h2>
+<p>Set input frame source for Super Resolution algorithm.</p>
+<dl class="function">
+<dt id="void superres::SuperResolution::setInput(const Ptr&lt;FrameSource&gt;&amp; frameSource)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">superres::SuperResolution::</code><code class="descname">setInput</code><span class="sig-paren">(</span>const Ptr&lt;FrameSource&gt;&amp; <strong>frameSource</strong><span class="sig-paren">)</span><a class="headerlink" href="#void superres::SuperResolution::setInput(const Ptr<FrameSource>& frameSource)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>frameSource</strong> &#8211; Input frame source</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="superres-superresolution-nextframe">
+<h2>superres::SuperResolution::nextFrame<a class="headerlink" href="#superres-superresolution-nextframe" title="Permalink to this headline">¶</a></h2>
+<p>Process next frame from input and return output result.</p>
+<dl class="function">
+<dt id="void superres::SuperResolution::nextFrame(OutputArray frame)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">superres::SuperResolution::</code><code class="descname">nextFrame</code><span class="sig-paren">(</span>OutputArray <strong>frame</strong><span class="sig-paren">)</span><a class="headerlink" href="#void superres::SuperResolution::nextFrame(OutputArray frame)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>frame</strong> &#8211; Output result</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="superres-superresolution-collectgarbage">
+<h2>superres::SuperResolution::collectGarbage<a class="headerlink" href="#superres-superresolution-collectgarbage" title="Permalink to this headline">¶</a></h2>
+<p>Clear all inner buffers.</p>
+<dl class="function">
+<dt id="void superres::SuperResolution::collectGarbage()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">superres::SuperResolution::</code><code class="descname">collectGarbage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void superres::SuperResolution::collectGarbage()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="superres-createsuperresolution-btvl1">
+<h2>superres::createSuperResolution_BTVL1<a class="headerlink" href="#superres-createsuperresolution-btvl1" title="Permalink to this headline">¶</a></h2>
+<p>Create Bilateral TV-L1 Super Resolution.</p>
+<dl class="function">
+<dt id="Ptr&lt;SuperResolution&gt; superres::createSuperResolution_BTVL1()">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;SuperResolution&gt; <code class="descclassname">superres::</code><code class="descname">createSuperResolution_BTVL1</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Ptr<SuperResolution> superres::createSuperResolution_BTVL1()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Ptr&lt;SuperResolution&gt; superres::createSuperResolution_BTVL1_GPU()">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;SuperResolution&gt; <code class="descclassname">superres::</code><code class="descname">createSuperResolution_BTVL1_GPU</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Ptr<SuperResolution> superres::createSuperResolution_BTVL1_GPU()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This class implements Super Resolution algorithm described in the papers <a class="reference internal" href="#farsiu03" id="id3">[Farsiu03]</a> and <a class="reference internal" href="#mitzel09" id="id4">[Mitzel09]</a> .</p>
+<p>Here are important members of the class that control the algorithm, which you can set after constructing the class instance:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>int scale</strong> Scale factor.</li>
+<li><strong>int iterations</strong> Iteration count.</li>
+<li><strong>double tau</strong> Asymptotic value of steepest descent method.</li>
+<li><strong>double lambda</strong> Weight parameter to balance data term and smoothness term.</li>
+<li><strong>double alpha</strong> Parameter of spacial distribution in Bilateral-TV.</li>
+<li><strong>int btvKernelSize</strong> Kernel size of Bilateral-TV filter.</li>
+<li><strong>int blurKernelSize</strong> Gaussian blur kernel size.</li>
+<li><strong>double blurSigma</strong> Gaussian blur sigma.</li>
+<li><strong>int temporalAreaRadius</strong> Radius of the temporal search area.</li>
+<li><strong>Ptr&lt;DenseOpticalFlowExt&gt; opticalFlow</strong> Dense optical flow algorithm.</li>
+</ul>
+</div></blockquote>
+<table class="docutils citation" frame="void" id="farsiu03" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Farsiu03]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id3">2</a>)</em> <ol class="last upperalpha simple" start="19">
+<li>Farsiu, D. Robinson, M. Elad, P. Milanfar. Fast and robust Super-Resolution. Proc 2003 IEEE Int Conf on Image Process, pp. 291–294, 2003.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="mitzel09" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Mitzel09]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id4">2</a>)</em> <ol class="last upperalpha simple" start="4">
+<li>Mitzel, T. Pock, T. Schoenemann, D. Cremers. Video super resolution using duality based TV-L1 optical flow. DAGM, 2009.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Super Resolution</a><ul>
+<li><a class="reference internal" href="#superres-superresolution">superres::SuperResolution</a></li>
+<li><a class="reference internal" href="#superres-superresolution-setinput">superres::SuperResolution::setInput</a></li>
+<li><a class="reference internal" href="#superres-superresolution-nextframe">superres::SuperResolution::nextFrame</a></li>
+<li><a class="reference internal" href="#superres-superresolution-collectgarbage">superres::SuperResolution::collectGarbage</a></li>
+<li><a class="reference internal" href="#superres-createsuperresolution-btvl1">superres::createSuperResolution_BTVL1</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="superres.html"
+                        title="previous chapter">superres. Super Resolution</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../viz/doc/viz.html"
+                        title="next chapter">viz. 3D Visualizer</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/superres/doc/super_resolution.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../viz/doc/viz.html" title="viz. 3D Visualizer"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="superres.html" title="superres. Super Resolution"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="superres.html" >superres. Super Resolution</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

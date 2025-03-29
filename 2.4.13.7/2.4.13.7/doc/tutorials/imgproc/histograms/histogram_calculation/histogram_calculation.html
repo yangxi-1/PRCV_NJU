@@ -1,0 +1,462 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Histogram Calculation &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../../index.html" />
+    <link rel="up" title="imgproc module. Image Processing" href="../../table_of_content_imgproc/table_of_content_imgproc.html" />
+    <link rel="next" title="Histogram Comparison" href="../histogram_comparison/histogram_comparison.html" />
+    <link rel="prev" title="Histogram Equalization" href="../histogram_equalization/histogram_equalization.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../histogram_comparison/histogram_comparison.html" title="Histogram Comparison"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../histogram_equalization/histogram_equalization.html" title="Histogram Equalization"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" accesskey="U"><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="histogram-calculation">
+<span id="id1"></span><h1>Histogram Calculation<a class="headerlink" href="#histogram-calculation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Use the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/operations_on_arrays.html?highlight=split#split">split</a> to divide an image into its correspondent planes.</li>
+<li>To calculate histograms of arrays of images by using the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/histograms.html?highlight=calchist#calchist">calcHist</a></li>
+<li>To normalize an array by using the function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/operations_on_arrays.html?highlight=normalize#normalize">normalize</a></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In the last tutorial (<a class="reference internal" href="../histogram_equalization/histogram_equalization.html#histogram-equalization"><span>Histogram Equalization</span></a>) we talked about a particular kind of histogram called <em>Image histogram</em>. Now we will considerate it in its more general concept. Read on!</p>
+</div>
+<div class="section" id="what-are-histograms">
+<h3>What are histograms?<a class="headerlink" href="#what-are-histograms" title="Permalink to this headline">¶</a></h3>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first">Histograms are collected <em>counts</em> of data organized into a set of predefined <em>bins</em></p>
+</li>
+<li><p class="first">When we say <em>data</em> we are not restricting it to be intensity values (as we saw in the previous Tutorial). The data collected can be whatever feature you find useful to describe your image.</p>
+</li>
+<li><p class="first">Let&#8217;s see an example. Imagine that a Matrix contains information of an image (i.e. intensity in the range <img class="math" src="../../../../../_images/math/8211bbffbf896765de6cf484eb9b36e9e8778cf1.png" alt="0-255"/>):</p>
+<img alt="../../../../../_images/Histogram_Calculation_Theory_Hist0.jpg" class="align-center" src="../../../../../_images/Histogram_Calculation_Theory_Hist0.jpg" />
+</li>
+<li><p class="first">What happens if we want to <em>count</em> this data in an organized way? Since we know that the <em>range</em> of information value for this case is 256 values, we can segment our range in subparts (called <strong>bins</strong>) like:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/13273dd42ab0362196b14ee3b0970f7f00a6b010.png" alt="\begin{array}{l}
+[0, 255] = { [0, 15] \cup [16, 31] \cup ....\cup [240,255] } \\
+range = { bin_{1} \cup bin_{2} \cup ....\cup bin_{n = 15} }
+\end{array}"/></p>
+</div><p>and we can keep count of the number of pixels that fall in the range of each <img class="math" src="../../../../../_images/math/cff1973e1ccdb1cb97c4b25b0b53487f6cda876d.png" alt="bin_{i}"/>. Applying this to the example above we get the image below ( axis x represents the bins and axis y the number of pixels in each of them).</p>
+<img alt="../../../../../_images/Histogram_Calculation_Theory_Hist1.jpg" class="align-center" src="../../../../../_images/Histogram_Calculation_Theory_Hist1.jpg" />
+</li>
+<li><p class="first">This was just a simple example of how an histogram works and why it is useful. An histogram can keep count not only of color intensities, but of whatever image features that we want to measure (i.e. gradients, directions, etc).</p>
+</li>
+<li><p class="first">Let&#8217;s identify some parts of the histogram:</p>
+<ol class="loweralpha simple">
+<li><strong>dims</strong>: The number of parameters you want to collect data of. In our example, <strong>dims = 1</strong> because we are only counting the intensity values of each pixel (in a greyscale image).</li>
+<li><strong>bins</strong>: It is the number of <strong>subdivisions</strong> in each dim. In our example, <strong>bins = 16</strong></li>
+<li><strong>range</strong>: The limits for the values to be measured. In this case: <strong>range = [0,255]</strong></li>
+</ol>
+</li>
+<li><p class="first">What if you want to count two features? In this case your resulting histogram would be a 3D plot (in which x and y would be <img class="math" src="../../../../../_images/math/bef119b7923430fc2b6f824860aa78664f299441.png" alt="bin_{x}"/> and <img class="math" src="../../../../../_images/math/a47b671f671fb1b2026df6b17895ef14fabce044.png" alt="bin_{y}"/> for each feature and z would be the number of counts for each combination of <img class="math" src="../../../../../_images/math/8682788955171ff53b0625f180a16dfc5db6f822.png" alt="(bin_{x}, bin_{y})"/>. The same would apply for more features (of course it gets trickier).</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="what-opencv-offers-you">
+<h3>What OpenCV offers you<a class="headerlink" href="#what-opencv-offers-you" title="Permalink to this headline">¶</a></h3>
+<p>For simple purposes, OpenCV implements the function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/histograms.html?highlight=calchist#calchist">calcHist</a>, which calculates the histogram of a set of arrays (usually images or image planes). It can operate with up to 32 dimensions. We will see it in the code below!</p>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first"><strong>What does this program do?</strong></p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Loads an image</li>
+<li>Splits the image into its R, G and B planes using the function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/operations_on_arrays.html?highlight=split#split">split</a></li>
+<li>Calculate the Histogram of each 1-channel plane by calling the function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/histograms.html?highlight=calchist#calchist">calcHist</a></li>
+<li>Plot the three histograms in a window</li>
+</ul>
+</div>
+</li>
+<li><p class="first"><strong>Downloadable code</strong>:
+Click <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/tutorial_code/Histograms_Matching/calcHist_Demo.cpp">here</a></p>
+</li>
+<li><p class="first"><strong>Code at glance:</strong></p>
+</li>
+</ul>
+</div>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;opencv2/highgui/highgui.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/imgproc/imgproc.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @function main</span>
+<span class="cm"> */</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">;</span>
+
+  <span class="c1">/// Load image</span>
+  <span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+
+  <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">src</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span>
+    <span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="c1">/// Separate the image in 3 places ( B, G and R )</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;</span> <span class="n">bgr_planes</span><span class="p">;</span>
+  <span class="n">split</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">bgr_planes</span> <span class="p">);</span>
+
+  <span class="c1">/// Establish the number of bins</span>
+  <span class="kt">int</span> <span class="n">histSize</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span>
+
+  <span class="c1">/// Set the ranges ( for B,G,R) )</span>
+  <span class="kt">float</span> <span class="n">range</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span> <span class="p">}</span> <span class="p">;</span>
+  <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">histRange</span> <span class="o">=</span> <span class="p">{</span> <span class="n">range</span> <span class="p">};</span>
+
+  <span class="kt">bool</span> <span class="n">uniform</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="kt">bool</span> <span class="n">accumulate</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+  <span class="n">Mat</span> <span class="n">b_hist</span><span class="p">,</span> <span class="n">g_hist</span><span class="p">,</span> <span class="n">r_hist</span><span class="p">;</span>
+
+  <span class="c1">/// Compute the histograms:</span>
+  <span class="n">calcHist</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">bgr_planes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">b_hist</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">histSize</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">histRange</span><span class="p">,</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">accumulate</span> <span class="p">);</span>
+  <span class="n">calcHist</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">bgr_planes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">g_hist</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">histSize</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">histRange</span><span class="p">,</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">accumulate</span> <span class="p">);</span>
+  <span class="n">calcHist</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">bgr_planes</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">r_hist</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">histSize</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">histRange</span><span class="p">,</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">accumulate</span> <span class="p">);</span>
+
+  <span class="c1">// Draw the histograms for B, G and R</span>
+  <span class="kt">int</span> <span class="n">hist_w</span> <span class="o">=</span> <span class="mi">512</span><span class="p">;</span> <span class="kt">int</span> <span class="n">hist_h</span> <span class="o">=</span> <span class="mi">400</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">bin_w</span> <span class="o">=</span> <span class="n">cvRound</span><span class="p">(</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="n">hist_w</span><span class="o">/</span><span class="n">histSize</span> <span class="p">);</span>
+
+  <span class="n">Mat</span> <span class="n">histImage</span><span class="p">(</span> <span class="n">hist_h</span><span class="p">,</span> <span class="n">hist_w</span><span class="p">,</span> <span class="n">CV_8UC3</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="p">);</span>
+
+  <span class="c1">/// Normalize the result to [ 0, histImage.rows ]</span>
+  <span class="n">normalize</span><span class="p">(</span><span class="n">b_hist</span><span class="p">,</span> <span class="n">b_hist</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">histImage</span><span class="p">.</span><span class="n">rows</span><span class="p">,</span> <span class="n">NORM_MINMAX</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+  <span class="n">normalize</span><span class="p">(</span><span class="n">g_hist</span><span class="p">,</span> <span class="n">g_hist</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">histImage</span><span class="p">.</span><span class="n">rows</span><span class="p">,</span> <span class="n">NORM_MINMAX</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+  <span class="n">normalize</span><span class="p">(</span><span class="n">r_hist</span><span class="p">,</span> <span class="n">r_hist</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">histImage</span><span class="p">.</span><span class="n">rows</span><span class="p">,</span> <span class="n">NORM_MINMAX</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+
+  <span class="c1">/// Draw for each channel</span>
+  <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">histSize</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+  <span class="p">{</span>
+      <span class="n">line</span><span class="p">(</span> <span class="n">histImage</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="n">bin_w</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">b_hist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="p">)</span> <span class="p">,</span>
+                       <span class="n">Point</span><span class="p">(</span> <span class="n">bin_w</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">b_hist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="p">),</span>
+                       <span class="n">Scalar</span><span class="p">(</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span>  <span class="p">);</span>
+      <span class="n">line</span><span class="p">(</span> <span class="n">histImage</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="n">bin_w</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">g_hist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="p">)</span> <span class="p">,</span>
+                       <span class="n">Point</span><span class="p">(</span> <span class="n">bin_w</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">g_hist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="p">),</span>
+                       <span class="n">Scalar</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span>  <span class="p">);</span>
+      <span class="n">line</span><span class="p">(</span> <span class="n">histImage</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="n">bin_w</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">r_hist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="p">)</span> <span class="p">,</span>
+                       <span class="n">Point</span><span class="p">(</span> <span class="n">bin_w</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">r_hist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="p">),</span>
+                       <span class="n">Scalar</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span>  <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">/// Display</span>
+  <span class="n">namedWindow</span><span class="p">(</span><span class="s">&quot;calcHist Demo&quot;</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+  <span class="n">imshow</span><span class="p">(</span><span class="s">&quot;calcHist Demo&quot;</span><span class="p">,</span> <span class="n">histImage</span> <span class="p">);</span>
+
+  <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Create the necessary matrices:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Load the source image</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+
+<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">src</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span>
+  <span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Separate the source image in its three R,G and B planes. For this we use the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/operations_on_arrays.html?highlight=split#split">split</a>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;</span> <span class="n">bgr_planes</span><span class="p">;</span>
+<span class="n">split</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">bgr_planes</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>our input is the image to be divided (this case with three channels) and the output is a vector of Mat )</p>
+</li>
+<li><p class="first">Now we are ready to start configuring the <strong>histograms</strong> for each plane. Since we are working with the B, G and R planes, we know that our values will range in the interval <img class="math" src="../../../../../_images/math/7e5ded5375850a711f7d2965125b2e6cffb03867.png" alt="[0,255]"/></p>
+<ol class="loweralpha">
+<li><p class="first">Establish number of bins (5, 10...):</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">int</span> <span class="n">histSize</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span> <span class="c1">//from 0 to 255</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Set the range of values (as we said, between 0 and 255 )</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">/// Set the ranges ( for B,G,R) )</span>
+<span class="kt">float</span> <span class="n">range</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span> <span class="p">}</span> <span class="p">;</span> <span class="c1">//the upper boundary is exclusive</span>
+<span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">histRange</span> <span class="o">=</span> <span class="p">{</span> <span class="n">range</span> <span class="p">};</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">We want our bins to have the same size (uniform) and to clear the histograms in the beginning, so:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">bool</span> <span class="n">uniform</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="kt">bool</span> <span class="n">accumulate</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Finally, we create the Mat objects to save our histograms. Creating 3 (one for each plane):</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">b_hist</span><span class="p">,</span> <span class="n">g_hist</span><span class="p">,</span> <span class="n">r_hist</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">We proceed to calculate the histograms by using the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/histograms.html?highlight=calchist#calchist">calcHist</a>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">/// Compute the histograms:</span>
+<span class="n">calcHist</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">bgr_planes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">b_hist</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">histSize</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">histRange</span><span class="p">,</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">accumulate</span> <span class="p">);</span>
+<span class="n">calcHist</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">bgr_planes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">g_hist</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">histSize</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">histRange</span><span class="p">,</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">accumulate</span> <span class="p">);</span>
+<span class="n">calcHist</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">bgr_planes</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">r_hist</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">histSize</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">histRange</span><span class="p">,</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">accumulate</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>where the arguments are:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li><strong>&amp;bgr_planes[0]:</strong> The source array(s)</li>
+<li><strong>1</strong>: The number of source arrays (in this case we are using 1. We can enter here also a list of arrays )</li>
+<li><strong>0</strong>: The channel (<em>dim</em>) to be measured. In this case it is just the intensity (each array is single-channel) so we just write 0.</li>
+<li><strong>Mat()</strong>: A mask to be used on the source array ( zeros indicating pixels to be ignored ). If not defined it is not used</li>
+<li><strong>b_hist</strong>: The Mat object where the histogram will be stored</li>
+<li><strong>1</strong>: The histogram dimensionality.</li>
+<li><strong>histSize:</strong> The number of bins per each used dimension</li>
+<li><strong>histRange:</strong> The range of values to be measured per each dimension</li>
+<li><strong>uniform</strong> and <strong>accumulate</strong>: The bin sizes are the same and the histogram is cleared at the beginning.</li>
+</ul>
+</div>
+</li>
+</ol>
+</li>
+<li><p class="first">Create an image to display the histograms:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// Draw the histograms for R, G and B</span>
+<span class="kt">int</span> <span class="n">hist_w</span> <span class="o">=</span> <span class="mi">512</span><span class="p">;</span> <span class="kt">int</span> <span class="n">hist_h</span> <span class="o">=</span> <span class="mi">400</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">bin_w</span> <span class="o">=</span> <span class="n">cvRound</span><span class="p">(</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="n">hist_w</span><span class="o">/</span><span class="n">histSize</span> <span class="p">);</span>
+
+<span class="n">Mat</span> <span class="nf">histImage</span><span class="p">(</span> <span class="n">hist_h</span><span class="p">,</span> <span class="n">hist_w</span><span class="p">,</span> <span class="n">CV_8UC3</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Notice that before drawing, we first <a class="reference external" href="http://docs.opencv.org/modules/core/doc/operations_on_arrays.html?highlight=normalize#normalize">normalize</a> the histogram  so its values fall in the range indicated by the parameters entered:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">/// Normalize the result to [ 0, histImage.rows ]</span>
+<span class="n">normalize</span><span class="p">(</span><span class="n">b_hist</span><span class="p">,</span> <span class="n">b_hist</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">histImage</span><span class="p">.</span><span class="n">rows</span><span class="p">,</span> <span class="n">NORM_MINMAX</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+<span class="n">normalize</span><span class="p">(</span><span class="n">g_hist</span><span class="p">,</span> <span class="n">g_hist</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">histImage</span><span class="p">.</span><span class="n">rows</span><span class="p">,</span> <span class="n">NORM_MINMAX</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+<span class="n">normalize</span><span class="p">(</span><span class="n">r_hist</span><span class="p">,</span> <span class="n">r_hist</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">histImage</span><span class="p">.</span><span class="n">rows</span><span class="p">,</span> <span class="n">NORM_MINMAX</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>this function receives these arguments:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li><strong>b_hist:</strong> Input array</li>
+<li><strong>b_hist:</strong> Output normalized array (can be the same)</li>
+<li><strong>0</strong> and**histImage.rows**: For this example, they are the lower and upper limits to normalize the values of <strong>r_hist</strong></li>
+<li><strong>NORM_MINMAX:</strong> Argument that indicates the type of normalization (as described above, it adjusts the values between the two limits set before)</li>
+<li><strong>-1:</strong> Implies that the output normalized array will be the same type as the input</li>
+<li><strong>Mat():</strong> Optional mask</li>
+</ul>
+</div>
+</li>
+<li><p class="first">Finally, observe that to access the bin (in this case in this 1D-Histogram):</p>
+<blockquote>
+<div><div class="highlight-cpp"><div class="highlight"><pre><span class="c1">/// Draw for each channel</span>
+<span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">histSize</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">line</span><span class="p">(</span> <span class="n">histImage</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="n">bin_w</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">b_hist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="p">)</span> <span class="p">,</span>
+                     <span class="n">Point</span><span class="p">(</span> <span class="n">bin_w</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">b_hist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="p">),</span>
+                     <span class="n">Scalar</span><span class="p">(</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span>  <span class="p">);</span>
+    <span class="n">line</span><span class="p">(</span> <span class="n">histImage</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="n">bin_w</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">g_hist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="p">)</span> <span class="p">,</span>
+                     <span class="n">Point</span><span class="p">(</span> <span class="n">bin_w</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">g_hist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="p">),</span>
+                     <span class="n">Scalar</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span>  <span class="p">);</span>
+    <span class="n">line</span><span class="p">(</span> <span class="n">histImage</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="n">bin_w</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">r_hist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="p">)</span> <span class="p">,</span>
+                     <span class="n">Point</span><span class="p">(</span> <span class="n">bin_w</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">r_hist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="p">),</span>
+                     <span class="n">Scalar</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span>  <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>we use the expression:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">b_hist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <img class="math" src="../../../../../_images/math/881d48e575544c8daaa1d83893dcde5f9f7562ec.png" alt="i"/> indicates the dimension. If it were a 2D-histogram we would use something like:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">b_hist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Finally we display our histograms and wait for the user to exit:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">namedWindow</span><span class="p">(</span><span class="s">&quot;calcHist Demo&quot;</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+<span class="n">imshow</span><span class="p">(</span><span class="s">&quot;calcHist Demo&quot;</span><span class="p">,</span> <span class="n">histImage</span> <span class="p">);</span>
+
+<span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="result">
+<h2>Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Using as input argument an image like the shown below:</p>
+<blockquote>
+<div><img alt="../../../../../_images/Histogram_Calculation_Original_Image.jpg" class="align-center" src="../../../../../_images/Histogram_Calculation_Original_Image.jpg" />
+</div></blockquote>
+</li>
+<li><p class="first">Produces the following histogram:</p>
+<blockquote>
+<div><img alt="../../../../../_images/Histogram_Calculation_Result.jpg" class="align-center" src="../../../../../_images/Histogram_Calculation_Result.jpg" />
+</div></blockquote>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Histogram Calculation</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a><ul>
+<li><a class="reference internal" href="#what-are-histograms">What are histograms?</a></li>
+<li><a class="reference internal" href="#what-opencv-offers-you">What OpenCV offers you</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#result">Result</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../histogram_equalization/histogram_equalization.html"
+                        title="previous chapter">Histogram Equalization</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../histogram_comparison/histogram_comparison.html"
+                        title="next chapter">Histogram Comparison</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../../_sources/doc/tutorials/imgproc/histograms/histogram_calculation/histogram_calculation.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../histogram_comparison/histogram_comparison.html" title="Histogram Comparison"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../histogram_equalization/histogram_equalization.html" title="Histogram Equalization"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" ><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Histograms &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="legacy. Deprecated stuff" href="legacy.html" />
+    <link rel="next" title="Planar Subdivisions (C API)" href="planar_subdivisions.html" />
+    <link rel="prev" title="Expectation Maximization" href="expectation_maximization.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="planar_subdivisions.html" title="Planar Subdivisions (C API)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="expectation_maximization.html" title="Expectation Maximization"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="legacy.html" accesskey="U">legacy. Deprecated stuff</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="histograms">
+<h1>Histograms<a class="headerlink" href="#histograms" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="calcpgh">
+<h2>CalcPGH<a class="headerlink" href="#calcpgh" title="Permalink to this headline">¶</a></h2>
+<p>Calculates a pair-wise geometrical histogram for a contour.</p>
+<dl class="cfunction">
+<dt id="void cvCalcPGH(const CvSeq* contour, CvHistogram* hist)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvCalcPGH</code><span class="sig-paren">(</span>const CvSeq* <strong>contour</strong>, CvHistogram* <strong>hist</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvCalcPGH(const CvSeq* contour, CvHistogram* hist)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>contour</strong> &#8211; Input contour. Currently, only integer point coordinates are allowed.</li>
+<li><strong>hist</strong> &#8211; Calculated histogram. It must be two-dimensional.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function calculates a 2D pair-wise geometrical histogram (PGH), described in <a class="reference internal" href="#iivarinen97" id="id1">[Iivarinen97]</a> for the contour. The algorithm considers every pair of contour
+edges. The angle between the edges and the minimum/maximum distances
+are determined for every pair. To do this, each of the edges in turn
+is taken as the base, while the function loops through all the other
+edges. When the base edge and any other edge are considered, the minimum
+and maximum distances from the points on the non-base edge and line of
+the base edge are selected. The angle between the edges defines the row
+of the histogram in which all the bins that correspond to the distance
+between the calculated minimum and maximum distances are incremented
+(that is, the histogram is transposed relatively to the definition in the original paper). The histogram can be used for contour matching.</p>
+<table class="docutils citation" frame="void" id="iivarinen97" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[Iivarinen97]</a></td><td>Jukka Iivarinen, Markus Peura, Jaakko Srel, and Ari Visa. <em>Comparison of Combined Shape Descriptors for Irregular Objects</em>, 8th British Machine Vision Conference, BMVC&#8216;97. <a class="reference external" href="http://www.cis.hut.fi/research/IA/paper/publications/bmvc97/bmvc97.html">http://www.cis.hut.fi/research/IA/paper/publications/bmvc97/bmvc97.html</a></td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="queryhistvalue-d">
+<h2>QueryHistValue*D<a class="headerlink" href="#queryhistvalue-d" title="Permalink to this headline">¶</a></h2>
+<p>Queries the value of the histogram bin.</p>
+<dl class="cfunction">
+<dt id="float cvQueryHistValue_1D(CvHistogram hist, int idx0)">
+<strong>C:</strong><code class="descname"> </code>float <code class="descname">cvQueryHistValue_1D</code><span class="sig-paren">(</span>CvHistogram <strong>hist</strong>, int <strong>idx0</strong><span class="sig-paren">)</span><a class="headerlink" href="#float cvQueryHistValue_1D(CvHistogram hist, int idx0)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="float cvQueryHistValue_2D(CvHistogram hist, int idx0, int idx1)">
+<strong>C:</strong><code class="descname"> </code>float <code class="descname">cvQueryHistValue_2D</code><span class="sig-paren">(</span>CvHistogram <strong>hist</strong>, int <strong>idx0</strong>, int <strong>idx1</strong><span class="sig-paren">)</span><a class="headerlink" href="#float cvQueryHistValue_2D(CvHistogram hist, int idx0, int idx1)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="float cvQueryHistValue_3D(CvHistogram hist, int idx0, int idx1, int idx2)">
+<strong>C:</strong><code class="descname"> </code>float <code class="descname">cvQueryHistValue_3D</code><span class="sig-paren">(</span>CvHistogram <strong>hist</strong>, int <strong>idx0</strong>, int <strong>idx1</strong>, int <strong>idx2</strong><span class="sig-paren">)</span><a class="headerlink" href="#float cvQueryHistValue_3D(CvHistogram hist, int idx0, int idx1, int idx2)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="float cvQueryHistValue_nD(CvHistogram hist, const int* idx)">
+<strong>C:</strong><code class="descname"> </code>float <code class="descname">cvQueryHistValue_nD</code><span class="sig-paren">(</span>CvHistogram <strong>hist</strong>, const int* <strong>idx</strong><span class="sig-paren">)</span><a class="headerlink" href="#float cvQueryHistValue_nD(CvHistogram hist, const int* idx)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.QueryHistValue_1D">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">QueryHistValue_1D</code><span class="sig-paren">(</span>hist, idx0<span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#cv.QueryHistValue_1D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.QueryHistValue_2D">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">QueryHistValue_2D</code><span class="sig-paren">(</span>hist, idx0, idx1<span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#cv.QueryHistValue_2D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.QueryHistValue_3D">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">QueryHistValue_3D</code><span class="sig-paren">(</span>hist, idx0, idx1, idx2<span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#cv.QueryHistValue_3D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.QueryHistValue_nD">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">QueryHistValue_nD</code><span class="sig-paren">(</span>hist, idx<span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#cv.QueryHistValue_nD" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hist</strong> &#8211; Histogram.</li>
+<li><strong>idx0</strong> &#8211; 0-th index.</li>
+<li><strong>idx1</strong> &#8211; 1-st index.</li>
+<li><strong>idx2</strong> &#8211; 2-nd index.</li>
+<li><strong>idx</strong> &#8211; Array of indices.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The macros return the value of the specified bin of the 1D, 2D, 3D, or N-D histogram. In case of a sparse histogram, the function returns 0. If the bin is not present in the histogram, no new bin is created.</p>
+</div>
+<div class="section" id="gethistvalue-d">
+<h2>GetHistValue_?D<a class="headerlink" href="#gethistvalue-d" title="Permalink to this headline">¶</a></h2>
+<p>Returns a pointer to the histogram bin.</p>
+<dl class="cfunction">
+<dt id="float cvGetHistValue_1D(CvHistogram hist, int idx0)">
+<strong>C:</strong><code class="descname"> </code>float <code class="descname">cvGetHistValue_1D</code><span class="sig-paren">(</span>CvHistogram <strong>hist</strong>, int <strong>idx0</strong><span class="sig-paren">)</span><a class="headerlink" href="#float cvGetHistValue_1D(CvHistogram hist, int idx0)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="float cvGetHistValue_2D(CvHistogram hist, int idx0, int idx1)">
+<strong>C:</strong><code class="descname"> </code>float <code class="descname">cvGetHistValue_2D</code><span class="sig-paren">(</span>CvHistogram <strong>hist</strong>, int <strong>idx0</strong>, int <strong>idx1</strong><span class="sig-paren">)</span><a class="headerlink" href="#float cvGetHistValue_2D(CvHistogram hist, int idx0, int idx1)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="float cvGetHistValue_3D(CvHistogram hist, int idx0, int idx1, int idx2)">
+<strong>C:</strong><code class="descname"> </code>float <code class="descname">cvGetHistValue_3D</code><span class="sig-paren">(</span>CvHistogram <strong>hist</strong>, int <strong>idx0</strong>, int <strong>idx1</strong>, int <strong>idx2</strong><span class="sig-paren">)</span><a class="headerlink" href="#float cvGetHistValue_3D(CvHistogram hist, int idx0, int idx1, int idx2)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="float cvGetHistValue_nD(CvHistogram hist, int idx)">
+<strong>C:</strong><code class="descname"> </code>float <code class="descname">cvGetHistValue_nD</code><span class="sig-paren">(</span>CvHistogram <strong>hist</strong>, int <strong>idx</strong><span class="sig-paren">)</span><a class="headerlink" href="#float cvGetHistValue_nD(CvHistogram hist, int idx)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hist</strong> &#8211; Histogram.</li>
+<li><strong>idx0</strong> &#8211; 0-th index.</li>
+<li><strong>idx1</strong> &#8211; 1-st index.</li>
+<li><strong>idx2</strong> &#8211; 2-nd index.</li>
+<li><strong>idx</strong> &#8211; Array of indices.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#define cvGetHistValue_1D( hist, idx0 )</span>
+    <span class="p">((</span><span class="kt">float</span><span class="o">*</span><span class="p">)(</span><span class="n">cvPtr1D</span><span class="p">(</span> <span class="p">(</span><span class="n">hist</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">bins</span><span class="p">,</span> <span class="p">(</span><span class="n">idx0</span><span class="p">),</span> <span class="mi">0</span> <span class="p">))</span>
+<span class="cp">#define cvGetHistValue_2D( hist, idx0, idx1 )</span>
+    <span class="p">((</span><span class="kt">float</span><span class="o">*</span><span class="p">)(</span><span class="n">cvPtr2D</span><span class="p">(</span> <span class="p">(</span><span class="n">hist</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">bins</span><span class="p">,</span> <span class="p">(</span><span class="n">idx0</span><span class="p">),</span> <span class="p">(</span><span class="n">idx1</span><span class="p">),</span> <span class="mi">0</span> <span class="p">)))</span>
+<span class="cp">#define cvGetHistValue_3D( hist, idx0, idx1, idx2 )</span>
+    <span class="p">((</span><span class="kt">float</span><span class="o">*</span><span class="p">)(</span><span class="n">cvPtr3D</span><span class="p">(</span> <span class="p">(</span><span class="n">hist</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">bins</span><span class="p">,</span> <span class="p">(</span><span class="n">idx0</span><span class="p">),</span> <span class="p">(</span><span class="n">idx1</span><span class="p">),</span> <span class="p">(</span><span class="n">idx2</span><span class="p">),</span> <span class="mi">0</span> <span class="p">)))</span>
+<span class="cp">#define cvGetHistValue_nD( hist, idx )</span>
+    <span class="p">((</span><span class="kt">float</span><span class="o">*</span><span class="p">)(</span><span class="n">cvPtrND</span><span class="p">(</span> <span class="p">(</span><span class="n">hist</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">bins</span><span class="p">,</span> <span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="mi">0</span> <span class="p">)))</span>
+</pre></div>
+</div>
+<p>The macros <code class="docutils literal"><span class="pre">GetHistValue</span></code> return a pointer to the specified bin of the 1D, 2D, 3D, or N-D histogram. In case of a sparse histogram, the function creates a new bin and sets it to 0, unless it exists already.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Histograms</a><ul>
+<li><a class="reference internal" href="#calcpgh">CalcPGH</a></li>
+<li><a class="reference internal" href="#queryhistvalue-d">QueryHistValue*D</a></li>
+<li><a class="reference internal" href="#gethistvalue-d">GetHistValue_?D</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="expectation_maximization.html"
+                        title="previous chapter">Expectation Maximization</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="planar_subdivisions.html"
+                        title="next chapter">Planar Subdivisions (C API)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/legacy/doc/histograms.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="planar_subdivisions.html" title="Planar Subdivisions (C API)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="expectation_maximization.html" title="Expectation Maximization"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="legacy.html" >legacy. Deprecated stuff</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

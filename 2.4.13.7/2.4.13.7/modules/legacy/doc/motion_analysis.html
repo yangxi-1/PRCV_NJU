@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Motion Analysis &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="legacy. Deprecated stuff" href="legacy.html" />
+    <link rel="next" title="Expectation Maximization" href="expectation_maximization.html" />
+    <link rel="prev" title="legacy. Deprecated stuff" href="legacy.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="expectation_maximization.html" title="Expectation Maximization"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="legacy.html" title="legacy. Deprecated stuff"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="legacy.html" accesskey="U">legacy. Deprecated stuff</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="motion-analysis">
+<h1>Motion Analysis<a class="headerlink" href="#motion-analysis" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="calcopticalflowbm">
+<h2>CalcOpticalFlowBM<a class="headerlink" href="#calcopticalflowbm" title="Permalink to this headline">¶</a></h2>
+<p>Calculates the optical flow for two images by using the block matching method.</p>
+<dl class="cfunction">
+<dt id="void cvCalcOpticalFlowBM(const CvArr* prev, const CvArr* curr, CvSize block_size, CvSize shift_size, CvSize max_range, int use_previous, CvArr* velx, CvArr* vely)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvCalcOpticalFlowBM</code><span class="sig-paren">(</span>const CvArr* <strong>prev</strong>, const CvArr* <strong>curr</strong>, CvSize <strong>block_size</strong>, CvSize <strong>shift_size</strong>, CvSize <strong>max_range</strong>, int <strong>use_previous</strong>, CvArr* <strong>velx</strong>, CvArr* <strong>vely</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvCalcOpticalFlowBM(const CvArr* prev, const CvArr* curr, CvSize block_size, CvSize shift_size, CvSize max_range, int use_previous, CvArr* velx, CvArr* vely)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CalcOpticalFlowBM">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CalcOpticalFlowBM</code><span class="sig-paren">(</span>prev, curr, blockSize, shiftSize, max_range, usePrevious, velx, vely<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.CalcOpticalFlowBM" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>prev</strong> &#8211; First image, 8-bit, single-channel</li>
+<li><strong>curr</strong> &#8211; Second image, 8-bit, single-channel</li>
+<li><strong>block_size</strong> &#8211; Size of basic blocks that are compared</li>
+<li><strong>shift_size</strong> &#8211; Block coordinate increments</li>
+<li><strong>max_range</strong> &#8211; Size of the scanned neighborhood in pixels around the block</li>
+<li><strong>use_previous</strong> &#8211; Flag that specifies whether to use the input velocity as initial approximations or not.</li>
+<li><strong>velx</strong> &#8211; <p>Horizontal component of the optical flow of</p>
+<div class="math">
+<p><img src="../../../_images/math/94f94bc9a0010942915a823eac271bd8b438642d.png" alt="\left \lfloor   \frac{\texttt{prev-&gt;width} - \texttt{block\_size.width}}{\texttt{shift\_size.width}}   \right \rfloor \times \left \lfloor   \frac{\texttt{prev-&gt;height} - \texttt{block\_size.height}}{\texttt{shift\_size.height}}   \right \rfloor"/></p>
+</div><p>size, 32-bit floating-point, single-channel</p>
+</li>
+<li><strong>vely</strong> &#8211; Vertical component of the optical flow of the same size  <code class="docutils literal"><span class="pre">velx</span></code> , 32-bit floating-point, single-channel</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function calculates the optical flow for overlapped blocks <code class="docutils literal"><span class="pre">block_size.width</span> <span class="pre">x</span> <span class="pre">block_size.height</span></code> pixels each, thus the velocity fields are smaller than the original images. For every block in  <code class="docutils literal"><span class="pre">prev</span></code>
+the functions tries to find a similar block in <code class="docutils literal"><span class="pre">curr</span></code> in some neighborhood of the original block or shifted by <code class="docutils literal"><span class="pre">(velx(x0,y0),</span> <span class="pre">vely(x0,y0))</span></code> block as has been calculated by previous function call (if <code class="docutils literal"><span class="pre">use_previous=1</span></code>)</p>
+</div>
+<div class="section" id="calcopticalflowhs">
+<h2>CalcOpticalFlowHS<a class="headerlink" href="#calcopticalflowhs" title="Permalink to this headline">¶</a></h2>
+<p>Calculates the optical flow for two images using Horn-Schunck algorithm.</p>
+<dl class="cfunction">
+<dt id="void cvCalcOpticalFlowHS(const CvArr* prev, const CvArr* curr, int use_previous, CvArr* velx, CvArr* vely, double lambda, CvTermCriteria criteria)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvCalcOpticalFlowHS</code><span class="sig-paren">(</span>const CvArr* <strong>prev</strong>, const CvArr* <strong>curr</strong>, int <strong>use_previous</strong>, CvArr* <strong>velx</strong>, CvArr* <strong>vely</strong>, double <strong>lambda</strong>, CvTermCriteria <strong>criteria</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvCalcOpticalFlowHS(const CvArr* prev, const CvArr* curr, int use_previous, CvArr* velx, CvArr* vely, double lambda, CvTermCriteria criteria)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CalcOpticalFlowHS">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CalcOpticalFlowHS</code><span class="sig-paren">(</span>prev, curr, usePrevious, velx, vely, lambda, criteria<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.CalcOpticalFlowHS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>prev</strong> &#8211; First image, 8-bit, single-channel</li>
+<li><strong>curr</strong> &#8211; Second image, 8-bit, single-channel</li>
+<li><strong>use_previous</strong> &#8211; Flag that specifies whether to use the input velocity as initial approximations or not.</li>
+<li><strong>velx</strong> &#8211; Horizontal component of the optical flow of the same size as input images, 32-bit floating-point, single-channel</li>
+<li><strong>vely</strong> &#8211; Vertical component of the optical flow of the same size as input images, 32-bit floating-point, single-channel</li>
+<li><strong>lambda</strong> &#8211; Smoothness weight. The larger it is, the smoother optical flow map you get.</li>
+<li><strong>criteria</strong> &#8211; Criteria of termination of velocity computing</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function computes the flow for every pixel of the first input image using the Horn and Schunck algorithm <a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#horn81" id="id1">[Horn81]</a>. The function is obsolete. To track sparse features, use <a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)" title="void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcOpticalFlowPyrLK()</span></code></a>. To track all the pixels, use <a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#void calcOpticalFlowFarneback(InputArray prev, InputArray next, InputOutputArray flow, double pyr_scale, int levels, int winsize, int iterations, int poly_n, double poly_sigma, int flags)" title="void calcOpticalFlowFarneback(InputArray prev, InputArray next, InputOutputArray flow, double pyr_scale, int levels, int winsize, int iterations, int poly_n, double poly_sigma, int flags)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcOpticalFlowFarneback()</span></code></a>.</p>
+</div>
+<div class="section" id="calcopticalflowlk">
+<h2>CalcOpticalFlowLK<a class="headerlink" href="#calcopticalflowlk" title="Permalink to this headline">¶</a></h2>
+<p>Calculates the optical flow for two images using Lucas-Kanade algorithm.</p>
+<dl class="cfunction">
+<dt id="void cvCalcOpticalFlowLK(const CvArr* prev, const CvArr* curr, CvSize win_size, CvArr* velx, CvArr* vely)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvCalcOpticalFlowLK</code><span class="sig-paren">(</span>const CvArr* <strong>prev</strong>, const CvArr* <strong>curr</strong>, CvSize <strong>win_size</strong>, CvArr* <strong>velx</strong>, CvArr* <strong>vely</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvCalcOpticalFlowLK(const CvArr* prev, const CvArr* curr, CvSize win_size, CvArr* velx, CvArr* vely)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CalcOpticalFlowLK">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CalcOpticalFlowLK</code><span class="sig-paren">(</span>prev, curr, winSize, velx, vely<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.CalcOpticalFlowLK" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>prev</strong> &#8211; First image, 8-bit, single-channel</li>
+<li><strong>curr</strong> &#8211; Second image, 8-bit, single-channel</li>
+<li><strong>win_size</strong> &#8211; Size of the averaging window used for grouping pixels</li>
+<li><strong>velx</strong> &#8211; Horizontal component of the optical flow of the same size as input images, 32-bit floating-point, single-channel</li>
+<li><strong>vely</strong> &#8211; Vertical component of the optical flow of the same size as input images, 32-bit floating-point, single-channel</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function computes the flow for every pixel of the first input image using the Lucas and Kanade algorithm <a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#lucas81" id="id2">[Lucas81]</a>. The function is obsolete. To track sparse features, use <a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)" title="void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcOpticalFlowPyrLK()</span></code></a>. To track all the pixels, use <a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#void calcOpticalFlowFarneback(InputArray prev, InputArray next, InputOutputArray flow, double pyr_scale, int levels, int winsize, int iterations, int poly_n, double poly_sigma, int flags)" title="void calcOpticalFlowFarneback(InputArray prev, InputArray next, InputOutputArray flow, double pyr_scale, int levels, int winsize, int iterations, int poly_n, double poly_sigma, int flags)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcOpticalFlowFarneback()</span></code></a>.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Motion Analysis</a><ul>
+<li><a class="reference internal" href="#calcopticalflowbm">CalcOpticalFlowBM</a></li>
+<li><a class="reference internal" href="#calcopticalflowhs">CalcOpticalFlowHS</a></li>
+<li><a class="reference internal" href="#calcopticalflowlk">CalcOpticalFlowLK</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="legacy.html"
+                        title="previous chapter">legacy. Deprecated stuff</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="expectation_maximization.html"
+                        title="next chapter">Expectation Maximization</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/legacy/doc/motion_analysis.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="expectation_maximization.html" title="Expectation Maximization"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="legacy.html" title="legacy. Deprecated stuff"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="legacy.html" >legacy. Deprecated stuff</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

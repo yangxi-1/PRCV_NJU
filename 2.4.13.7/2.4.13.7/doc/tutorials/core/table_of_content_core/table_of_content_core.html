@@ -1,0 +1,306 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>core module. The Core Functionality &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="OpenCV Tutorials" href="../../tutorials.html" />
+    <link rel="next" title="Mat - The Basic Image Container" href="../mat_the_basic_image_container/mat_the_basic_image_container.html" />
+    <link rel="prev" title="How to write a tutorial for OpenCV" href="../../introduction/how_to_write_a_tutorial/how_to_write_a_tutorial.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../mat_the_basic_image_container/mat_the_basic_image_container.html" title="Mat - The Basic Image Container"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../../introduction/how_to_write_a_tutorial/how_to_write_a_tutorial.html" title="How to write a tutorial for OpenCV"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" accesskey="U">OpenCV Tutorials</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="core-module-the-core-functionality">
+<span id="table-of-content-core"></span><h1><em>core</em> module. The Core Functionality<a class="headerlink" href="#core-module-the-core-functionality" title="Permalink to this headline">¶</a></h1>
+<p>Here you will learn the about the basic building blocks of the library. A must read and know for understanding how to manipulate the images on a pixel level.</p>
+<ul>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="13%" />
+<col width="87%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/matTheBasicImageStructure.jpg"><img alt="MatBasicIma" src="../../../../_images/matTheBasicImageStructure.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../mat_the_basic_image_container/mat_the_basic_image_container.html#matthebasicimagecontainer"><span>Mat - The Basic Image Container</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Bernát Gábor</p>
+<p class="last">You will learn how to store images in the memory and how to print out their content to the console.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="11%" />
+<col width="89%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/howToScanImages.jpg"><img alt="HowScanImag" src="../../../../_images/howToScanImages.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../how_to_scan_images/how_to_scan_images.html#howtoscanimagesopencv"><span>How to scan images, lookup tables and time measurement with OpenCV</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Bernát Gábor</p>
+<p class="last">You&#8217;ll find out how to scan images (go through each of the image pixels) with OpenCV. Bonus: time measurement with OpenCV.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="9%" />
+<col width="91%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/matMaskFilter2DOp.png"><img alt="HowFilterIm" src="../../../../_images/matMaskFilter2DOp.png" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../mat-mask-operations/mat-mask-operations.html#maskoperationsfilter"><span>Mask operations on matrices</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Bernát Gábor</p>
+<p class="last">You&#8217;ll find out how to scan images with neighbor access and use the <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html#filter2d">filter2D</a> function to apply kernel filters on images.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Adding_Images_Tutorial_Result_01.jpg"><img alt="Beginners_4" src="../../../../_images/Adding_Images_Tutorial_Result_01.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../adding_images/adding_images.html#adding-images"><span>Adding (blending) two images using OpenCV</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">We will learn how to blend two images!</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Basic_Linear_Transform_Tutorial_Result_01.jpg"><img alt="Bas_Lin_Tran" src="../../../../_images/Basic_Linear_Transform_Tutorial_Result_01.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../basic_linear_transform/basic_linear_transform.html#basic-linear-transform"><span>Changing the contrast and brightness of an image!</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">We will learn how to change our image appearance!</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Drawing_1_Tutorial_Result_0.jpg"><img alt="Beginners_6" src="../../../../_images/Drawing_1_Tutorial_Result_0.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../basic_geometric_drawing/basic_geometric_drawing.html#drawing-1"><span>Basic Drawing</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">We will learn how to draw simple geometry with OpenCV!</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Drawing_2_Tutorial_Result_71.jpg"><img alt="Beginners_7" src="../../../../_images/Drawing_2_Tutorial_Result_71.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../random_generator_and_text/random_generator_and_text.html#drawing-2"><span>Random generator and text with OpenCV</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">We will draw some <em>fancy-looking</em> stuff using OpenCV!</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="16%" />
+<col width="84%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/discrete_fourier_transform.png"><img alt="DiscFourTr" src="../../../../_images/discrete_fourier_transform.png" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../discrete_fourier_transform/discrete_fourier_transform.html#discretfouriertransform"><span>Discrete Fourier Transform</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Bernát Gábor</p>
+<p class="last">You will see how and why use the Discrete Fourier transformation with OpenCV.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="9%" />
+<col width="91%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/file_input_output_with_xml_yml.png"><img alt="FileIOXMLYAML" src="../../../../_images/file_input_output_with_xml_yml.png" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../file_input_output_with_xml_yml/file_input_output_with_xml_yml.html#fileinputoutputxmlyaml"><span>File Input and Output using XML and YAML files</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Bernát Gábor</p>
+<p class="last">You will see how to use the <a class="reference external" href="http://docs.opencv.org/modules/core/doc/xml_yaml_persistence.html#filestorage">FileStorage</a> data structure of OpenCV to write and read data to XML or YAML file format.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="6%" />
+<col width="94%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/interopOpenCV1.png"><img alt="InterOOpenCV1" src="../../../../_images/interopOpenCV1.png" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../interoperability_with_OpenCV_1/interoperability_with_OpenCV_1.html#interoperabilitywithopencv1"><span>Interoperability with OpenCV 1</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Bernát Gábor</p>
+<p class="last">Did you used OpenCV before its 2.0 version? Do you wanna know what happened with your library with 2.0? Don&#8217;t you know how to convert your old OpenCV programs to the new C++ interface? Look here to shed light on all this questions.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../../introduction/how_to_write_a_tutorial/how_to_write_a_tutorial.html"
+                        title="previous chapter">How to write a tutorial for OpenCV</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../mat_the_basic_image_container/mat_the_basic_image_container.html"
+                        title="next chapter">Mat - The Basic Image Container</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/core/table_of_content_core/table_of_content_core.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../mat_the_basic_image_container/mat_the_basic_image_container.html" title="Mat - The Basic Image Container"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../../introduction/how_to_write_a_tutorial/how_to_write_a_tutorial.html" title="How to write a tutorial for OpenCV"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

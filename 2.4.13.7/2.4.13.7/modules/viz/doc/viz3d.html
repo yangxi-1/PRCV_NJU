@@ -1,0 +1,1382 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Viz &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="viz. 3D Visualizer" href="viz.html" />
+    <link rel="next" title="Widget" href="widget.html" />
+    <link rel="prev" title="viz. 3D Visualizer" href="viz.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="widget.html" title="Widget"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="viz.html" title="viz. 3D Visualizer"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="viz.html" accesskey="U">viz. 3D Visualizer</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="viz">
+<h1>Viz<a class="headerlink" href="#viz" title="Permalink to this headline">¶</a></h1>
+<p>This section describes 3D visualization window as well as classes and methods
+that are used to interact with it.</p>
+<p>3D visualization window (see <a class="reference internal" href="#Viz3d" title="class Viz3d"><code class="xref ocv ocv-class docutils literal"><span class="pre">Viz3d</span></code></a>) is used to display widgets (see <a class="reference internal" href="widget.html#Widget" title="class Widget"><code class="xref ocv ocv-class docutils literal"><span class="pre">Widget</span></code></a>), and it provides
+several methods to interact with scene and widgets.</p>
+<div class="section" id="viz-maketransformtoglobal">
+<h2>viz::makeTransformToGlobal<a class="headerlink" href="#viz-maketransformtoglobal" title="Permalink to this headline">¶</a></h2>
+<p>Takes coordinate frame data and builds transform to global coordinate frame.</p>
+<dl class="function">
+<dt id="Affine3d viz::makeTransformToGlobal(const Vec3f&amp; axis_x, const Vec3f&amp; axis_y, const Vec3f&amp; axis_z, const Vec3f&amp; origin)">
+<strong>C++:</strong><code class="descname"> </code>Affine3d <code class="descclassname">viz::</code><code class="descname">makeTransformToGlobal</code><span class="sig-paren">(</span>const Vec3f&amp; <strong>axis_x</strong>, const Vec3f&amp; <strong>axis_y</strong>, const Vec3f&amp; <strong>axis_z</strong>, const Vec3f&amp; <strong>origin</strong>=Vec3f::all(0)<span class="sig-paren">)</span><a class="headerlink" href="#Affine3d viz::makeTransformToGlobal(const Vec3f& axis_x, const Vec3f& axis_y, const Vec3f& axis_z, const Vec3f& origin)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>axis_x</strong> &#8211; X axis vector in global coordinate frame.</li>
+<li><strong>axis_y</strong> &#8211; Y axis vector in global coordinate frame.</li>
+<li><strong>axis_z</strong> &#8211; Z axis vector in global coordinate frame.</li>
+<li><strong>origin</strong> &#8211; Origin of the coordinate frame in global coordinate frame.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function returns affine transform that describes transformation between global coordinate frame and a given coordinate frame.</p>
+</div>
+<div class="section" id="viz-makecamerapose">
+<h2>viz::makeCameraPose<a class="headerlink" href="#viz-makecamerapose" title="Permalink to this headline">¶</a></h2>
+<p>Constructs camera pose from position, focal_point and up_vector (see gluLookAt() for more infromation).</p>
+<dl class="function">
+<dt id="Affine3d makeCameraPose(const Vec3f&amp; position, const Vec3f&amp; focal_point, const Vec3f&amp; y_dir)">
+<strong>C++:</strong><code class="descname"> </code>Affine3d <code class="descname">makeCameraPose</code><span class="sig-paren">(</span>const Vec3f&amp; <strong>position</strong>, const Vec3f&amp; <strong>focal_point</strong>, const Vec3f&amp; <strong>y_dir</strong><span class="sig-paren">)</span><a class="headerlink" href="#Affine3d makeCameraPose(const Vec3f& position, const Vec3f& focal_point, const Vec3f& y_dir)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>position</strong> &#8211; Position of the camera in global coordinate frame.</li>
+<li><strong>focal_point</strong> &#8211; Focal point of the camera in global coordinate frame.</li>
+<li><strong>y_dir</strong> &#8211; Up vector of the camera in global coordinate frame.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function returns pose of the camera in global coordinate frame.</p>
+</div>
+<div class="section" id="viz-getwindowbyname">
+<h2>viz::getWindowByName<a class="headerlink" href="#viz-getwindowbyname" title="Permalink to this headline">¶</a></h2>
+<p>Retrieves a window by its name.</p>
+<dl class="function">
+<dt id="Viz3d getWindowByName(const String &amp;window_name)">
+<strong>C++:</strong><code class="descname"> </code>Viz3d <code class="descname">getWindowByName</code><span class="sig-paren">(</span>const String&amp; <strong>window_name</strong><span class="sig-paren">)</span><a class="headerlink" href="#Viz3d getWindowByName(const String &window_name)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>window_name</strong> &#8211; Name of the window that is to be retrieved.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function returns a <a class="reference internal" href="#Viz3d" title="class Viz3d"><code class="xref ocv ocv-class docutils literal"><span class="pre">Viz3d</span></code></a> object with the given name.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If the window with that name already exists, that window is returned. Otherwise, new window is created with the given name, and it is returned.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Window names are automatically prefixed by &#8220;Viz - &#8221; if it is not done by the user.</p>
+<div class="last highlight-cpp"><div class="highlight"><pre><span class="c1">/// window and window_2 are the same windows.</span>
+<span class="n">viz</span><span class="o">::</span><span class="n">Viz3d</span> <span class="n">window</span>   <span class="o">=</span> <span class="n">viz</span><span class="o">::</span><span class="n">getWindowByName</span><span class="p">(</span><span class="s">&quot;myWindow&quot;</span><span class="p">);</span>
+<span class="n">viz</span><span class="o">::</span><span class="n">Viz3d</span> <span class="n">window_2</span> <span class="o">=</span> <span class="n">viz</span><span class="o">::</span><span class="n">getWindowByName</span><span class="p">(</span><span class="s">&quot;Viz - myWindow&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="viz-isnan">
+<h2>viz::isNan<a class="headerlink" href="#viz-isnan" title="Permalink to this headline">¶</a></h2>
+<p>Checks <strong>float/double</strong> value for nan.</p>
+<blockquote>
+<div><dl class="function">
+<dt id="bool isNan(float x)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descname">isNan</code><span class="sig-paren">(</span>float <strong>x</strong><span class="sig-paren">)</span><a class="headerlink" href="#bool isNan(float x)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bool isNan(double x)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descname">isNan</code><span class="sig-paren">(</span>double <strong>x</strong><span class="sig-paren">)</span><a class="headerlink" href="#bool isNan(double x)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; return true if nan.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div></blockquote>
+<p>Checks <strong>vector</strong> for nan.</p>
+<blockquote>
+<div><dl class="function">
+<dt id="bool isNan(const Vec&lt;_Tp, cn&gt;&amp; v)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descname">isNan</code><span class="sig-paren">(</span>const Vec&lt;_Tp, cn&gt;&amp; <strong>v</strong><span class="sig-paren">)</span><a class="headerlink" href="#bool isNan(const Vec<_Tp, cn>& v)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>v</strong> &#8211; return true if <strong>any</strong> of the elements of the vector is <em>nan</em>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div></blockquote>
+<p>Checks <strong>point</strong> for nan</p>
+<blockquote>
+<div><dl class="function">
+<dt id="bool isNan(const Point3_&lt;_Tp&gt;&amp; p)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descname">isNan</code><span class="sig-paren">(</span>const Point3_&lt;_Tp&gt;&amp; <strong>p</strong><span class="sig-paren">)</span><a class="headerlink" href="#bool isNan(const Point3_<_Tp>& p)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>p</strong> &#8211; return true if <strong>any</strong> of the elements of the point is <em>nan</em>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div></blockquote>
+</div>
+<div class="section" id="viz-viz3d">
+<h2>viz::Viz3d<a class="headerlink" href="#viz-viz3d" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Viz3d">
+<em class="property">class </em><code class="descname">Viz3d</code><a class="headerlink" href="#Viz3d" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The Viz3d class represents a 3D visualizer window. This class is implicitly shared.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">Viz3d</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">typedef</span> <span class="n">cv</span><span class="o">::</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">Viz3d</span><span class="o">&gt;</span> <span class="n">Ptr</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">*</span><span class="n">KeyboardCallback</span><span class="p">)(</span><span class="k">const</span> <span class="n">KeyboardEvent</span><span class="o">&amp;</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span><span class="p">);</span>
+    <span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">*</span><span class="n">MouseCallback</span><span class="p">)(</span><span class="k">const</span> <span class="n">MouseEvent</span><span class="o">&amp;</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span><span class="p">);</span>
+
+    <span class="n">Viz3d</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">window_name</span> <span class="o">=</span> <span class="n">String</span><span class="p">());</span>
+    <span class="n">Viz3d</span><span class="p">(</span><span class="k">const</span> <span class="n">Viz3d</span><span class="o">&amp;</span><span class="p">);</span>
+    <span class="n">Viz3d</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Viz3d</span><span class="o">&amp;</span><span class="p">);</span>
+    <span class="o">~</span><span class="n">Viz3d</span><span class="p">();</span>
+
+    <span class="kt">void</span> <span class="nf">showWidget</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">,</span> <span class="k">const</span> <span class="n">Widget</span> <span class="o">&amp;</span><span class="n">widget</span><span class="p">,</span> <span class="k">const</span> <span class="n">Affine3d</span> <span class="o">&amp;</span><span class="n">pose</span> <span class="o">=</span> <span class="n">Affine3d</span><span class="o">::</span><span class="n">Identity</span><span class="p">());</span>
+    <span class="kt">void</span> <span class="nf">removeWidget</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">);</span>
+    <span class="n">Widget</span> <span class="nf">getWidget</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="nf">removeAllWidgets</span><span class="p">();</span>
+
+    <span class="kt">void</span> <span class="nf">setWidgetPose</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">,</span> <span class="k">const</span> <span class="n">Affine3d</span> <span class="o">&amp;</span><span class="n">pose</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">updateWidgetPose</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">,</span> <span class="k">const</span> <span class="n">Affine3d</span> <span class="o">&amp;</span><span class="n">pose</span><span class="p">);</span>
+    <span class="n">Affine3d</span> <span class="nf">getWidgetPose</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">showImage</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">image</span><span class="p">,</span> <span class="k">const</span> <span class="n">Size</span><span class="o">&amp;</span> <span class="n">window_size</span> <span class="o">=</span> <span class="n">Size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+
+    <span class="kt">void</span> <span class="nf">setCamera</span><span class="p">(</span><span class="k">const</span> <span class="n">Camera</span> <span class="o">&amp;</span><span class="n">camera</span><span class="p">);</span>
+    <span class="n">Camera</span> <span class="nf">getCamera</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="n">Affine3d</span> <span class="nf">getViewerPose</span><span class="p">();</span>
+    <span class="kt">void</span> <span class="nf">setViewerPose</span><span class="p">(</span><span class="k">const</span> <span class="n">Affine3d</span> <span class="o">&amp;</span><span class="n">pose</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">resetCameraViewpoint</span> <span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">resetCamera</span><span class="p">();</span>
+
+    <span class="kt">void</span> <span class="nf">convertToWindowCoordinates</span><span class="p">(</span><span class="k">const</span> <span class="n">Point3d</span> <span class="o">&amp;</span><span class="n">pt</span><span class="p">,</span> <span class="n">Point3d</span> <span class="o">&amp;</span><span class="n">window_coord</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">converTo3DRay</span><span class="p">(</span><span class="k">const</span> <span class="n">Point3d</span> <span class="o">&amp;</span><span class="n">window_coord</span><span class="p">,</span> <span class="n">Point3d</span> <span class="o">&amp;</span><span class="n">origin</span><span class="p">,</span> <span class="n">Vec3d</span> <span class="o">&amp;</span><span class="n">direction</span><span class="p">);</span>
+
+    <span class="n">Size</span> <span class="nf">getWindowSize</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="nf">setWindowSize</span><span class="p">(</span><span class="k">const</span> <span class="n">Size</span> <span class="o">&amp;</span><span class="n">window_size</span><span class="p">);</span>
+    <span class="n">String</span> <span class="nf">getWindowName</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="nf">saveScreenshot</span> <span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">file</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">setWindowPosition</span> <span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">setFullScreen</span> <span class="p">(</span><span class="kt">bool</span> <span class="n">mode</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">setBackgroundColor</span><span class="p">(</span><span class="k">const</span> <span class="n">Color</span><span class="o">&amp;</span> <span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">black</span><span class="p">());</span>
+
+    <span class="kt">void</span> <span class="nf">spin</span><span class="p">();</span>
+    <span class="kt">void</span> <span class="nf">spinOnce</span><span class="p">(</span><span class="kt">int</span> <span class="n">time</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">force_redraw</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+    <span class="kt">bool</span> <span class="nf">wasStopped</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">registerKeyboardCallback</span><span class="p">(</span><span class="n">KeyboardCallback</span> <span class="n">callback</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">cookie</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">registerMouseCallback</span><span class="p">(</span><span class="n">MouseCallback</span> <span class="n">callback</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">cookie</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">setRenderingProperty</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">,</span> <span class="kt">int</span> <span class="n">property</span><span class="p">,</span> <span class="kt">double</span> <span class="n">value</span><span class="p">);</span>
+    <span class="kt">double</span> <span class="nf">getRenderingProperty</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">,</span> <span class="kt">int</span> <span class="n">property</span><span class="p">);</span>
+
+
+    <span class="kt">void</span> <span class="nf">setRepresentation</span><span class="p">(</span><span class="kt">int</span> <span class="n">representation</span><span class="p">);</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/* hidden */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-viz3d-viz3d">
+<h2>viz::Viz3d::Viz3d<a class="headerlink" href="#viz-viz3d-viz3d" title="Permalink to this headline">¶</a></h2>
+<p>The constructors.</p>
+<dl class="function">
+<dt id="Viz3d::Viz3d(const String&amp; window_name)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">Viz3d::</code><code class="descname">Viz3d</code><span class="sig-paren">(</span>const String&amp; <strong>window_name</strong>=String()<span class="sig-paren">)</span><a class="headerlink" href="#Viz3d::Viz3d(const String& window_name)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>window_name</strong> &#8211; Name of the window.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-showwidget">
+<h2>viz::Viz3d::showWidget<a class="headerlink" href="#viz-viz3d-showwidget" title="Permalink to this headline">¶</a></h2>
+<p>Shows a widget in the window.</p>
+<dl class="function">
+<dt id="void Viz3d::showWidget(const String &amp;id, const Widget &amp;widget, const Affine3d &amp;pose)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">Viz3d::</code><code class="descname">showWidget</code><span class="sig-paren">(</span>const String&amp; <strong>id</strong>, const Widget&amp; <strong>widget</strong>, const Affine3d&amp; <strong>pose</strong>=Affine3d::Identity()<span class="sig-paren">)</span><a class="headerlink" href="#void Viz3d::showWidget(const String &id, const Widget &widget, const Affine3d &pose)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> &#8211; A unique id for the widget.</li>
+<li><strong>widget</strong> &#8211; The widget to be displayed in the window.</li>
+<li><strong>pose</strong> &#8211; Pose of the widget.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-removewidget">
+<h2>viz::Viz3d::removeWidget<a class="headerlink" href="#viz-viz3d-removewidget" title="Permalink to this headline">¶</a></h2>
+<p>Removes a widget from the window.</p>
+<dl class="function">
+<dt id="void removeWidget(const String &amp;id)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">removeWidget</code><span class="sig-paren">(</span>const String&amp; <strong>id</strong><span class="sig-paren">)</span><a class="headerlink" href="#void removeWidget(const String &id)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> &#8211; The id of the widget that will be removed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-getwidget">
+<h2>viz::Viz3d::getWidget<a class="headerlink" href="#viz-viz3d-getwidget" title="Permalink to this headline">¶</a></h2>
+<p>Retrieves a widget from the window. A widget is implicitly shared;
+that is, if the returned widget is modified, the changes will be
+immediately visible in the window.</p>
+<dl class="function">
+<dt id="Widget getWidget(const String &amp;id) const">
+<strong>C++:</strong><code class="descname"> </code>Widget <code class="descname">getWidget</code><span class="sig-paren">(</span>const String&amp; <strong>id</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#Widget getWidget(const String &id) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> &#8211; The id of the widget that will be returned.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-removeallwidgets">
+<h2>viz::Viz3d::removeAllWidgets<a class="headerlink" href="#viz-viz3d-removeallwidgets" title="Permalink to this headline">¶</a></h2>
+<p>Removes all widgets from the window.</p>
+<dl class="function">
+<dt id="void removeAllWidgets()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">removeAllWidgets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void removeAllWidgets()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-showimage">
+<h2>viz::Viz3d::showImage<a class="headerlink" href="#viz-viz3d-showimage" title="Permalink to this headline">¶</a></h2>
+<p>Removed all widgets and displays image scaled to whole window area.</p>
+<dl class="function">
+<dt id="void showImage(InputArray image, const Size&amp; window_size)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">showImage</code><span class="sig-paren">(</span>InputArray <strong>image</strong>, const Size&amp; <strong>window_size</strong>=Size(-1, -1)<span class="sig-paren">)</span><a class="headerlink" href="#void showImage(InputArray image, const Size& window_size)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Image to be displayed.</li>
+<li><strong>size</strong> &#8211; Size of Viz3d window. Default value means no change.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-setwidgetpose">
+<h2>viz::Viz3d::setWidgetPose<a class="headerlink" href="#viz-viz3d-setwidgetpose" title="Permalink to this headline">¶</a></h2>
+<p>Sets pose of a widget in the window.</p>
+<dl class="function">
+<dt id="void setWidgetPose(const String &amp;id, const Affine3d &amp;pose)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setWidgetPose</code><span class="sig-paren">(</span>const String&amp; <strong>id</strong>, const Affine3d&amp; <strong>pose</strong><span class="sig-paren">)</span><a class="headerlink" href="#void setWidgetPose(const String &id, const Affine3d &pose)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> &#8211; The id of the widget whose pose will be set.</li>
+<li><strong>pose</strong> &#8211; The new pose of the widget.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-updatewidgetpose">
+<h2>viz::Viz3d::updateWidgetPose<a class="headerlink" href="#viz-viz3d-updatewidgetpose" title="Permalink to this headline">¶</a></h2>
+<p>Updates pose of a widget in the window by pre-multiplying its current pose.</p>
+<dl class="function">
+<dt id="void updateWidgetPose(const String &amp;id, const Affine3d &amp;pose)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">updateWidgetPose</code><span class="sig-paren">(</span>const String&amp; <strong>id</strong>, const Affine3d&amp; <strong>pose</strong><span class="sig-paren">)</span><a class="headerlink" href="#void updateWidgetPose(const String &id, const Affine3d &pose)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> &#8211; The id of the widget whose pose will be updated.</li>
+<li><strong>pose</strong> &#8211; The pose that the current pose of the widget will be pre-multiplied by.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-getwidgetpose">
+<h2>viz::Viz3d::getWidgetPose<a class="headerlink" href="#viz-viz3d-getwidgetpose" title="Permalink to this headline">¶</a></h2>
+<p>Returns the current pose of a widget in the window.</p>
+<dl class="function">
+<dt id="Affine3d getWidgetPose(const String &amp;id) const">
+<strong>C++:</strong><code class="descname"> </code>Affine3d <code class="descname">getWidgetPose</code><span class="sig-paren">(</span>const String&amp; <strong>id</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#Affine3d getWidgetPose(const String &id) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> &#8211; The id of the widget whose pose will be returned.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-setcamera">
+<h2>viz::Viz3d::setCamera<a class="headerlink" href="#viz-viz3d-setcamera" title="Permalink to this headline">¶</a></h2>
+<p>Sets the intrinsic parameters of the viewer using Camera.</p>
+<dl class="function">
+<dt id="void setCamera(const Camera &amp;camera)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setCamera</code><span class="sig-paren">(</span>const Camera&amp; <strong>camera</strong><span class="sig-paren">)</span><a class="headerlink" href="#void setCamera(const Camera &camera)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>camera</strong> &#8211; Camera object wrapping intrinsinc parameters.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-getcamera">
+<h2>viz::Viz3d::getCamera<a class="headerlink" href="#viz-viz3d-getcamera" title="Permalink to this headline">¶</a></h2>
+<p>Returns a camera object that contains intrinsic parameters of the current viewer.</p>
+<dl class="function">
+<dt id="Camera getCamera() const">
+<strong>C++:</strong><code class="descname"> </code>Camera <code class="descname">getCamera</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#Camera getCamera() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-getviewerpose">
+<h2>viz::Viz3d::getViewerPose<a class="headerlink" href="#viz-viz3d-getviewerpose" title="Permalink to this headline">¶</a></h2>
+<p>Returns the current pose of the viewer.</p>
+<p>..ocv:function:: Affine3d getViewerPose()</p>
+</div>
+<div class="section" id="viz-viz3d-setviewerpose">
+<h2>viz::Viz3d::setViewerPose<a class="headerlink" href="#viz-viz3d-setviewerpose" title="Permalink to this headline">¶</a></h2>
+<p>Sets pose of the viewer.</p>
+<dl class="function">
+<dt id="void setViewerPose(const Affine3d &amp;pose)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setViewerPose</code><span class="sig-paren">(</span>const Affine3d&amp; <strong>pose</strong><span class="sig-paren">)</span><a class="headerlink" href="#void setViewerPose(const Affine3d &pose)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pose</strong> &#8211; The new pose of the viewer.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-resetcameraviewpoint">
+<h2>viz::Viz3d::resetCameraViewpoint<a class="headerlink" href="#viz-viz3d-resetcameraviewpoint" title="Permalink to this headline">¶</a></h2>
+<p>Resets camera viewpoint to a 3D widget in the scene.</p>
+<dl class="function">
+<dt id="void resetCameraViewpoint (const String &amp;id)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">resetCameraViewpoint</code><span class="sig-paren">(</span>const String&amp; <strong>id</strong><span class="sig-paren">)</span><a class="headerlink" href="#void resetCameraViewpoint (const String &id)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pose</strong> &#8211; Id of a 3D widget.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-resetcamera">
+<h2>viz::Viz3d::resetCamera<a class="headerlink" href="#viz-viz3d-resetcamera" title="Permalink to this headline">¶</a></h2>
+<p>Resets camera.</p>
+<dl class="function">
+<dt id="void resetCamera()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">resetCamera</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void resetCamera()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-converttowindowcoordinates">
+<h2>viz::Viz3d::convertToWindowCoordinates<a class="headerlink" href="#viz-viz3d-converttowindowcoordinates" title="Permalink to this headline">¶</a></h2>
+<p>Transforms a point in world coordinate system to window coordinate system.</p>
+<dl class="function">
+<dt id="void convertToWindowCoordinates(const Point3d &amp;pt, Point3d &amp;window_coord)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">convertToWindowCoordinates</code><span class="sig-paren">(</span>const Point3d&amp; <strong>pt</strong>, Point3d&amp; <strong>window_coord</strong><span class="sig-paren">)</span><a class="headerlink" href="#void convertToWindowCoordinates(const Point3d &pt, Point3d &window_coord)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pt</strong> &#8211; Point in world coordinate system.</li>
+<li><strong>window_coord</strong> &#8211; Output point in window coordinate system.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-converto3dray">
+<h2>viz::Viz3d::converTo3DRay<a class="headerlink" href="#viz-viz3d-converto3dray" title="Permalink to this headline">¶</a></h2>
+<p>Transforms a point in window coordinate system to a 3D ray in world coordinate system.</p>
+<dl class="function">
+<dt id="void converTo3DRay(const Point3d &amp;window_coord, Point3d &amp;origin, Vec3d &amp;direction)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">converTo3DRay</code><span class="sig-paren">(</span>const Point3d&amp; <strong>window_coord</strong>, Point3d&amp; <strong>origin</strong>, Vec3d&amp; <strong>direction</strong><span class="sig-paren">)</span><a class="headerlink" href="#void converTo3DRay(const Point3d &window_coord, Point3d &origin, Vec3d &direction)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>window_coord</strong> &#8211; Point in window coordinate system.</li>
+<li><strong>origin</strong> &#8211; Output origin of the ray.</li>
+<li><strong>direction</strong> &#8211; Output direction of the ray.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-getwindowsize">
+<h2>viz::Viz3d::getWindowSize<a class="headerlink" href="#viz-viz3d-getwindowsize" title="Permalink to this headline">¶</a></h2>
+<p>Returns the current size of the window.</p>
+<dl class="function">
+<dt id="Size getWindowSize() const">
+<strong>C++:</strong><code class="descname"> </code>Size <code class="descname">getWindowSize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#Size getWindowSize() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-setwindowsize">
+<h2>viz::Viz3d::setWindowSize<a class="headerlink" href="#viz-viz3d-setwindowsize" title="Permalink to this headline">¶</a></h2>
+<p>Sets the size of the window.</p>
+<dl class="function">
+<dt id="void setWindowSize(const Size &amp;window_size)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setWindowSize</code><span class="sig-paren">(</span>const Size&amp; <strong>window_size</strong><span class="sig-paren">)</span><a class="headerlink" href="#void setWindowSize(const Size &window_size)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>window_size</strong> &#8211; New size of the window.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-getwindowname">
+<h2>viz::Viz3d::getWindowName<a class="headerlink" href="#viz-viz3d-getwindowname" title="Permalink to this headline">¶</a></h2>
+<p>Returns the name of the window which has been set in the constructor.</p>
+<dl class="function">
+<dt id="String getWindowName() const">
+<strong>C++:</strong><code class="descname"> </code>String <code class="descname">getWindowName</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#String getWindowName() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-savescreenshot">
+<h2>viz::Viz3d::saveScreenshot<a class="headerlink" href="#viz-viz3d-savescreenshot" title="Permalink to this headline">¶</a></h2>
+<p>Saves screenshot of the current scene.</p>
+<dl class="function">
+<dt id="void saveScreenshot(const String &amp;file)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">saveScreenshot</code><span class="sig-paren">(</span>const String&amp; <strong>file</strong><span class="sig-paren">)</span><a class="headerlink" href="#void saveScreenshot(const String &file)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file</strong> &#8211; Name of the file.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-setwindowposition">
+<h2>viz::Viz3d::setWindowPosition<a class="headerlink" href="#viz-viz3d-setwindowposition" title="Permalink to this headline">¶</a></h2>
+<p>Sets the position of the window in the screen.</p>
+<dl class="function">
+<dt id="void setWindowPosition(int x, int y)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setWindowPosition</code><span class="sig-paren">(</span>int <strong>x</strong>, int <strong>y</strong><span class="sig-paren">)</span><a class="headerlink" href="#void setWindowPosition(int x, int y)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; x coordinate of the window</li>
+<li><strong>y</strong> &#8211; y coordinate of the window</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-setfullscreen">
+<h2>viz::Viz3d::setFullScreen<a class="headerlink" href="#viz-viz3d-setfullscreen" title="Permalink to this headline">¶</a></h2>
+<p>Sets or unsets full-screen rendering mode.</p>
+<dl class="function">
+<dt id="void setFullScreen(bool mode)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setFullScreen</code><span class="sig-paren">(</span>bool <strong>mode</strong><span class="sig-paren">)</span><a class="headerlink" href="#void setFullScreen(bool mode)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mode</strong> &#8211; If true, window will use full-screen mode.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-setbackgroundcolor">
+<h2>viz::Viz3d::setBackgroundColor<a class="headerlink" href="#viz-viz3d-setbackgroundcolor" title="Permalink to this headline">¶</a></h2>
+<p>Sets background color.</p>
+<dl class="function">
+<dt id="void setBackgroundColor(const Color&amp; color)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setBackgroundColor</code><span class="sig-paren">(</span>const Color&amp; <strong>color</strong>=Color::black()<span class="sig-paren">)</span><a class="headerlink" href="#void setBackgroundColor(const Color& color)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-spin">
+<h2>viz::Viz3d::spin<a class="headerlink" href="#viz-viz3d-spin" title="Permalink to this headline">¶</a></h2>
+<p>The window renders and starts the event loop.</p>
+<dl class="function">
+<dt id="void spin()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">spin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void spin()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-spinonce">
+<h2>viz::Viz3d::spinOnce<a class="headerlink" href="#viz-viz3d-spinonce" title="Permalink to this headline">¶</a></h2>
+<p>Starts the event loop for a given time.</p>
+<dl class="function">
+<dt id="void spinOnce(int time , bool force_redraw)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">spinOnce</code><span class="sig-paren">(</span>int <strong>time</strong>=1, bool <strong>force_redraw</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void spinOnce(int time , bool force_redraw)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>time</strong> &#8211; Amount of time in milliseconds for the event loop to keep running.</li>
+<li><strong>force_draw</strong> &#8211; If true, window renders.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-wasstopped">
+<h2>viz::Viz3d::wasStopped<a class="headerlink" href="#viz-viz3d-wasstopped" title="Permalink to this headline">¶</a></h2>
+<p>Returns whether the event loop has been stopped.</p>
+<dl class="function">
+<dt id="bool wasStopped()">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descname">wasStopped</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bool wasStopped()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-registerkeyboardcallback">
+<h2>viz::Viz3d::registerKeyboardCallback<a class="headerlink" href="#viz-viz3d-registerkeyboardcallback" title="Permalink to this headline">¶</a></h2>
+<p>Sets keyboard handler.</p>
+<dl class="function">
+<dt id="void registerKeyboardCallback(KeyboardCallback callback, void* cookie)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">registerKeyboardCallback</code><span class="sig-paren">(</span>KeyboardCallback <strong>callback</strong>, void* <strong>cookie</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#void registerKeyboardCallback(KeyboardCallback callback, void* cookie)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>callback</strong> &#8211; Keyboard callback <code class="docutils literal"><span class="pre">(void</span> <span class="pre">(*KeyboardCallbackFunction(const</span> <span class="pre">KeyboardEvent&amp;,</span> <span class="pre">void*))</span></code>.</li>
+<li><strong>cookie</strong> &#8211; The optional parameter passed to the callback.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-registermousecallback">
+<h2>viz::Viz3d::registerMouseCallback<a class="headerlink" href="#viz-viz3d-registermousecallback" title="Permalink to this headline">¶</a></h2>
+<p>Sets mouse handler.</p>
+<dl class="function">
+<dt id="void registerMouseCallback(MouseCallback callback, void* cookie)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">registerMouseCallback</code><span class="sig-paren">(</span>MouseCallback <strong>callback</strong>, void* <strong>cookie</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#void registerMouseCallback(MouseCallback callback, void* cookie)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>callback</strong> &#8211; Mouse callback <code class="docutils literal"><span class="pre">(void</span> <span class="pre">(*MouseCallback)(const</span> <span class="pre">MouseEvent&amp;,</span> <span class="pre">void*))</span></code>.</li>
+<li><strong>cookie</strong> &#8211; The optional parameter passed to the callback.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-setrenderingproperty">
+<h2>viz::Viz3d::setRenderingProperty<a class="headerlink" href="#viz-viz3d-setrenderingproperty" title="Permalink to this headline">¶</a></h2>
+<p>Sets rendering property of a widget.</p>
+<dl class="function">
+<dt id="void setRenderingProperty(const String &amp;id, int property, double value)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setRenderingProperty</code><span class="sig-paren">(</span>const String&amp; <strong>id</strong>, int <strong>property</strong>, double <strong>value</strong><span class="sig-paren">)</span><a class="headerlink" href="#void setRenderingProperty(const String &id, int property, double value)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> &#8211; Id of the widget.</li>
+<li><strong>property</strong> &#8211; Property that will be modified.</li>
+<li><strong>value</strong> &#8211; The new value of the property.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rendering property</strong> can be one of the following:</p>
+<ul>
+<li><p class="first"><strong>POINT_SIZE</strong></p>
+</li>
+<li><p class="first"><strong>OPACITY</strong></p>
+</li>
+<li><p class="first"><strong>LINE_WIDTH</strong></p>
+</li>
+<li><p class="first"><strong>FONT_SIZE</strong></p>
+</li>
+<li><dl class="first docutils">
+<dt><strong>REPRESENTATION</strong>: Expected values are</dt>
+<dd><ul class="first last simple">
+<li><strong>REPRESENTATION_POINTS</strong></li>
+<li><strong>REPRESENTATION_WIREFRAME</strong></li>
+<li><strong>REPRESENTATION_SURFACE</strong></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>IMMEDIATE_RENDERING</strong>:</dt>
+<dd><ul class="first last simple">
+<li>Turn on immediate rendering by setting the value to <code class="docutils literal"><span class="pre">1</span></code>.</li>
+<li>Turn off immediate rendering by setting the value to <code class="docutils literal"><span class="pre">0</span></code>.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>SHADING</strong>: Expected values are</dt>
+<dd><ul class="first last simple">
+<li><strong>SHADING_FLAT</strong></li>
+<li><strong>SHADING_GOURAUD</strong></li>
+<li><strong>SHADING_PHONG</strong></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-getrenderingproperty">
+<h2>viz::Viz3d::getRenderingProperty<a class="headerlink" href="#viz-viz3d-getrenderingproperty" title="Permalink to this headline">¶</a></h2>
+<p>Returns rendering property of a widget.</p>
+<dl class="function">
+<dt id="double getRenderingProperty(const String &amp;id, int property)">
+<strong>C++:</strong><code class="descname"> </code>double <code class="descname">getRenderingProperty</code><span class="sig-paren">(</span>const String&amp; <strong>id</strong>, int <strong>property</strong><span class="sig-paren">)</span><a class="headerlink" href="#double getRenderingProperty(const String &id, int property)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> &#8211; Id of the widget.</li>
+<li><strong>property</strong> &#8211; Property.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rendering property</strong> can be one of the following:</p>
+<ul>
+<li><p class="first"><strong>POINT_SIZE</strong></p>
+</li>
+<li><p class="first"><strong>OPACITY</strong></p>
+</li>
+<li><p class="first"><strong>LINE_WIDTH</strong></p>
+</li>
+<li><p class="first"><strong>FONT_SIZE</strong></p>
+</li>
+<li><dl class="first docutils">
+<dt><strong>REPRESENTATION</strong>: Expected values are</dt>
+<dd><ul class="first last simple">
+<li><strong>REPRESENTATION_POINTS</strong></li>
+<li><strong>REPRESENTATION_WIREFRAME</strong></li>
+<li><strong>REPRESENTATION_SURFACE</strong></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>IMMEDIATE_RENDERING</strong>:</dt>
+<dd><ul class="first last simple">
+<li>Turn on immediate rendering by setting the value to <code class="docutils literal"><span class="pre">1</span></code>.</li>
+<li>Turn off immediate rendering by setting the value to <code class="docutils literal"><span class="pre">0</span></code>.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>SHADING</strong>: Expected values are</dt>
+<dd><ul class="first last simple">
+<li><strong>SHADING_FLAT</strong></li>
+<li><strong>SHADING_GOURAUD</strong></li>
+<li><strong>SHADING_PHONG</strong></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-viz3d-setrepresentation">
+<h2>viz::Viz3d::setRepresentation<a class="headerlink" href="#viz-viz3d-setrepresentation" title="Permalink to this headline">¶</a></h2>
+<p>Sets geometry representation of the widgets to surface, wireframe or points.</p>
+<dl class="function">
+<dt id="void setRepresentation(int representation)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setRepresentation</code><span class="sig-paren">(</span>int <strong>representation</strong><span class="sig-paren">)</span><a class="headerlink" href="#void setRepresentation(int representation)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>representation</strong> &#8211; <p>Geometry representation which can be one of the following:</p>
+<ul>
+<li><strong>REPRESENTATION_POINTS</strong></li>
+<li><strong>REPRESENTATION_WIREFRAME</strong></li>
+<li><strong>REPRESENTATION_SURFACE</strong></li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-color">
+<h2>viz::Color<a class="headerlink" href="#viz-color" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Color">
+<em class="property">class </em><code class="descname">Color</code><a class="headerlink" href="#Color" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This class a represents BGR color.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">Color</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Scalar</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">Color</span><span class="p">();</span>
+    <span class="n">Color</span><span class="p">(</span><span class="kt">double</span> <span class="n">gray</span><span class="p">);</span>
+    <span class="n">Color</span><span class="p">(</span><span class="kt">double</span> <span class="n">blue</span><span class="p">,</span> <span class="kt">double</span> <span class="n">green</span><span class="p">,</span> <span class="kt">double</span> <span class="n">red</span><span class="p">);</span>
+
+    <span class="n">Color</span><span class="p">(</span><span class="k">const</span> <span class="n">Scalar</span><span class="o">&amp;</span> <span class="n">color</span><span class="p">);</span>
+
+    <span class="k">static</span> <span class="n">Color</span> <span class="nf">black</span><span class="p">();</span>
+    <span class="k">static</span> <span class="n">Color</span> <span class="nf">blue</span><span class="p">();</span>
+    <span class="k">static</span> <span class="n">Color</span> <span class="nf">green</span><span class="p">();</span>
+    <span class="k">static</span> <span class="n">Color</span> <span class="nf">cyan</span><span class="p">();</span>
+
+    <span class="k">static</span> <span class="n">Color</span> <span class="nf">red</span><span class="p">();</span>
+    <span class="k">static</span> <span class="n">Color</span> <span class="nf">magenta</span><span class="p">();</span>
+    <span class="k">static</span> <span class="n">Color</span> <span class="nf">yellow</span><span class="p">();</span>
+    <span class="k">static</span> <span class="n">Color</span> <span class="nf">white</span><span class="p">();</span>
+
+    <span class="k">static</span> <span class="n">Color</span> <span class="nf">gray</span><span class="p">();</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-mesh">
+<h2>viz::Mesh<a class="headerlink" href="#viz-mesh" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Mesh">
+<em class="property">class </em><code class="descname">Mesh</code><a class="headerlink" href="#Mesh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This class wraps mesh attributes, and it can load a mesh from a <code class="docutils literal"><span class="pre">ply</span></code> file.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">Mesh</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="n">Mat</span> <span class="n">cloud</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">normals</span><span class="p">;</span>
+
+    <span class="c1">//! Raw integer list of the form: (n,id1,id2,...,idn, n,id1,id2,...,idn, ...)</span>
+    <span class="c1">//! where n is the number of points in the poligon, and id is a zero-offset index into an associated cloud.</span>
+    <span class="n">Mat</span> <span class="n">polygons</span><span class="p">;</span>
+
+    <span class="c1">//! Loads mesh from a given ply file</span>
+    <span class="k">static</span> <span class="n">Mesh</span> <span class="nf">load</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">file</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-mesh-load">
+<h2>viz::Mesh::load<a class="headerlink" href="#viz-mesh-load" title="Permalink to this headline">¶</a></h2>
+<p>Loads a mesh from a <code class="docutils literal"><span class="pre">ply</span></code> file.</p>
+<dl class="function">
+<dt id="static Mesh load(const String&amp; file)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> Mesh <code class="descname">load</code><span class="sig-paren">(</span>const String&amp; <strong>file</strong><span class="sig-paren">)</span><a class="headerlink" href="#static Mesh load(const String& file)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file</strong> &#8211; File name (for no only PLY is supported)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-keyboardevent">
+<h2>viz::KeyboardEvent<a class="headerlink" href="#viz-keyboardevent" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="KeyboardEvent">
+<em class="property">class </em><code class="descname">KeyboardEvent</code><a class="headerlink" href="#KeyboardEvent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This class represents a keyboard event.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">KeyboardEvent</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">ALT</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">CTRL</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">SHIFT</span> <span class="o">=</span> <span class="mi">4</span> <span class="p">};</span>
+    <span class="k">enum</span> <span class="n">Action</span> <span class="p">{</span> <span class="n">KEY_UP</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">KEY_DOWN</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">};</span>
+
+    <span class="n">KeyboardEvent</span><span class="p">(</span><span class="n">Action</span> <span class="n">action</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">symbol</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">code</span><span class="p">,</span> <span class="kt">int</span> <span class="n">modifiers</span><span class="p">);</span>
+
+    <span class="n">Action</span> <span class="n">action</span><span class="p">;</span>
+    <span class="n">String</span> <span class="n">symbol</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">code</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">modifiers</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-keyboardevent-keyboardevent">
+<h2>viz::KeyboardEvent::KeyboardEvent<a class="headerlink" href="#viz-keyboardevent-keyboardevent" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a KeyboardEvent.</p>
+<dl class="function">
+<dt id="KeyboardEvent (Action action, const String&amp; symbol, unsigned char code, Modifiers modifiers)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">KeyboardEvent</code><span class="sig-paren">(</span>Action <strong>action</strong>, const String&amp; <strong>symbol</strong>, unsigned char <strong>code</strong>, Modifiers <strong>modifiers</strong><span class="sig-paren">)</span><a class="headerlink" href="#KeyboardEvent (Action action, const String& symbol, unsigned char code, Modifiers modifiers)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>action</strong> &#8211; Signals if key is pressed or released.</li>
+<li><strong>symbol</strong> &#8211; Name of the key.</li>
+<li><strong>code</strong> &#8211; Code of the key.</li>
+<li><strong>modifiers</strong> &#8211; Signals if <code class="docutils literal"><span class="pre">alt</span></code>, <code class="docutils literal"><span class="pre">ctrl</span></code> or <code class="docutils literal"><span class="pre">shift</span></code> are pressed or their combination.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-mouseevent">
+<h2>viz::MouseEvent<a class="headerlink" href="#viz-mouseevent" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="MouseEvent">
+<em class="property">class </em><code class="descname">MouseEvent</code><a class="headerlink" href="#MouseEvent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This class represents a mouse event.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">MouseEvent</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">enum</span> <span class="n">Type</span> <span class="p">{</span> <span class="n">MouseMove</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MouseButtonPress</span><span class="p">,</span> <span class="n">MouseButtonRelease</span><span class="p">,</span> <span class="n">MouseScrollDown</span><span class="p">,</span> <span class="n">MouseScrollUp</span><span class="p">,</span> <span class="n">MouseDblClick</span> <span class="p">}</span> <span class="p">;</span>
+    <span class="k">enum</span> <span class="n">MouseButton</span> <span class="p">{</span> <span class="n">NoButton</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">LeftButton</span><span class="p">,</span> <span class="n">MiddleButton</span><span class="p">,</span> <span class="n">RightButton</span><span class="p">,</span> <span class="n">VScroll</span> <span class="p">}</span> <span class="p">;</span>
+
+    <span class="n">MouseEvent</span><span class="p">(</span><span class="k">const</span> <span class="n">Type</span><span class="o">&amp;</span> <span class="n">type</span><span class="p">,</span> <span class="k">const</span> <span class="n">MouseButton</span><span class="o">&amp;</span> <span class="n">button</span><span class="p">,</span> <span class="k">const</span> <span class="n">Point</span><span class="o">&amp;</span> <span class="n">pointer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">modifiers</span><span class="p">);</span>
+
+    <span class="n">Type</span> <span class="n">type</span><span class="p">;</span>
+    <span class="n">MouseButton</span> <span class="n">button</span><span class="p">;</span>
+    <span class="n">Point</span> <span class="n">pointer</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">modifiers</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-mouseevent-mouseevent">
+<h2>viz::MouseEvent::MouseEvent<a class="headerlink" href="#viz-mouseevent-mouseevent" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a MouseEvent.</p>
+<dl class="function">
+<dt id="MouseEvent (const Type&amp; type, const MouseButton&amp; button, const Point&amp; p, Modifiers modifiers)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">MouseEvent</code><span class="sig-paren">(</span>const Type&amp; <strong>type</strong>, const MouseButton&amp; <strong>button</strong>, const Point&amp; <strong>p</strong>, Modifiers <strong>modifiers</strong><span class="sig-paren">)</span><a class="headerlink" href="#MouseEvent (const Type& type, const MouseButton& button, const Point& p, Modifiers modifiers)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>type</strong> &#8211; Type of the event. This can be <strong>MouseMove</strong>, <strong>MouseButtonPress</strong>, <strong>MouseButtonRelease</strong>, <strong>MouseScrollDown</strong>, <strong>MouseScrollUp</strong>, <strong>MouseDblClick</strong>.</li>
+<li><strong>button</strong> &#8211; Mouse button. This can be <strong>NoButton</strong>, <strong>LeftButton</strong>, <strong>MiddleButton</strong>, <strong>RightButton</strong>, <strong>VScroll</strong>.</li>
+<li><strong>p</strong> &#8211; Position of the event.</li>
+<li><strong>modifiers</strong> &#8211; Signals if <code class="docutils literal"><span class="pre">alt</span></code>, <code class="docutils literal"><span class="pre">ctrl</span></code> or <code class="docutils literal"><span class="pre">shift</span></code> are pressed or their combination.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-camera">
+<h2>viz::Camera<a class="headerlink" href="#viz-camera" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Camera">
+<em class="property">class </em><code class="descname">Camera</code><a class="headerlink" href="#Camera" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This class wraps intrinsic parameters of a camera. It provides several constructors
+that can extract the intrinsic parameters from <code class="docutils literal"><span class="pre">field</span> <span class="pre">of</span> <span class="pre">view</span></code>, <code class="docutils literal"><span class="pre">intrinsic</span> <span class="pre">matrix</span></code> and
+<code class="docutils literal"><span class="pre">projection</span> <span class="pre">matrix</span></code>.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">Camera</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">Camera</span><span class="p">(</span><span class="kt">double</span> <span class="n">f_x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">f_y</span><span class="p">,</span> <span class="kt">double</span> <span class="n">c_x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">c_y</span><span class="p">,</span> <span class="k">const</span> <span class="n">Size</span> <span class="o">&amp;</span><span class="n">window_size</span><span class="p">);</span>
+    <span class="n">Camera</span><span class="p">(</span><span class="k">const</span> <span class="n">Vec2d</span> <span class="o">&amp;</span><span class="n">fov</span><span class="p">,</span> <span class="k">const</span> <span class="n">Size</span> <span class="o">&amp;</span><span class="n">window_size</span><span class="p">);</span>
+    <span class="n">Camera</span><span class="p">(</span><span class="k">const</span> <span class="n">Matx33d</span> <span class="o">&amp;</span><span class="n">K</span><span class="p">,</span> <span class="k">const</span> <span class="n">Size</span> <span class="o">&amp;</span><span class="n">window_size</span><span class="p">);</span>
+    <span class="n">Camera</span><span class="p">(</span><span class="k">const</span> <span class="n">Matx44d</span> <span class="o">&amp;</span><span class="n">proj</span><span class="p">,</span> <span class="k">const</span> <span class="n">Size</span> <span class="o">&amp;</span><span class="n">window_size</span><span class="p">);</span>
+
+    <span class="kr">inline</span> <span class="k">const</span> <span class="n">Vec2d</span> <span class="o">&amp;</span> <span class="n">getClip</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kr">inline</span> <span class="kt">void</span> <span class="nf">setClip</span><span class="p">(</span><span class="k">const</span> <span class="n">Vec2d</span> <span class="o">&amp;</span><span class="n">clip</span><span class="p">);</span>
+
+    <span class="kr">inline</span> <span class="k">const</span> <span class="n">Size</span> <span class="o">&amp;</span> <span class="n">getWindowSize</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="nf">setWindowSize</span><span class="p">(</span><span class="k">const</span> <span class="n">Size</span> <span class="o">&amp;</span><span class="n">window_size</span><span class="p">);</span>
+
+    <span class="kr">inline</span> <span class="k">const</span> <span class="n">Vec2d</span> <span class="o">&amp;</span> <span class="n">getFov</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kr">inline</span> <span class="kt">void</span> <span class="nf">setFov</span><span class="p">(</span><span class="k">const</span> <span class="n">Vec2d</span> <span class="o">&amp;</span> <span class="n">fov</span><span class="p">);</span>
+
+    <span class="kr">inline</span> <span class="k">const</span> <span class="n">Vec2d</span> <span class="o">&amp;</span> <span class="n">getPrincipalPoint</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kr">inline</span> <span class="k">const</span> <span class="n">Vec2d</span> <span class="o">&amp;</span> <span class="n">getFocalLength</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">computeProjectionMatrix</span><span class="p">(</span><span class="n">Matx44d</span> <span class="o">&amp;</span><span class="n">proj</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="k">static</span> <span class="n">Camera</span> <span class="nf">KinectCamera</span><span class="p">(</span><span class="k">const</span> <span class="n">Size</span> <span class="o">&amp;</span><span class="n">window_size</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/* hidden */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-camera-camera">
+<h2>viz::Camera::Camera<a class="headerlink" href="#viz-camera-camera" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a Camera.</p>
+<dl class="function">
+<dt id="Camera(double f_x, double f_y, double c_x, double c_y, const Size &amp;window_size)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">Camera</code><span class="sig-paren">(</span>double <strong>f_x</strong>, double <strong>f_y</strong>, double <strong>c_x</strong>, double <strong>c_y</strong>, const Size&amp; <strong>window_size</strong><span class="sig-paren">)</span><a class="headerlink" href="#Camera(double f_x, double f_y, double c_x, double c_y, const Size &window_size)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>f_x</strong> &#8211; Horizontal focal length.</li>
+<li><strong>f_y</strong> &#8211; Vertical focal length.</li>
+<li><strong>c_x</strong> &#8211; x coordinate of the principal point.</li>
+<li><strong>c_y</strong> &#8211; y coordinate of the principal point.</li>
+<li><strong>window_size</strong> &#8211; Size of the window. This together with focal length and principal point determines the field of view.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="Camera(const Vec2d &amp;fov, const Size &amp;window_size)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">Camera</code><span class="sig-paren">(</span>const Vec2d&amp; <strong>fov</strong>, const Size&amp; <strong>window_size</strong><span class="sig-paren">)</span><a class="headerlink" href="#Camera(const Vec2d &fov, const Size &window_size)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fov</strong> &#8211; Field of view (horizontal, vertical)</li>
+<li><strong>window_size</strong> &#8211; Size of the window.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Principal point is at the center of the window by default.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Camera(const Matx33d &amp;K, const Size &amp;window_size)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">Camera</code><span class="sig-paren">(</span>const Matx33d&amp; <strong>K</strong>, const Size&amp; <strong>window_size</strong><span class="sig-paren">)</span><a class="headerlink" href="#Camera(const Matx33d &K, const Size &window_size)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>K</strong> &#8211; Intrinsic matrix of the camera.</li>
+<li><strong>window_size</strong> &#8211; Size of the window. This together with intrinsic matrix determines the field of view.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="Camera(const Matx44d &amp;proj, const Size &amp;window_size)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">Camera</code><span class="sig-paren">(</span>const Matx44d&amp; <strong>proj</strong>, const Size&amp; <strong>window_size</strong><span class="sig-paren">)</span><a class="headerlink" href="#Camera(const Matx44d &proj, const Size &window_size)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>proj</strong> &#8211; Projection matrix of the camera.</li>
+<li><strong>window_size</strong> &#8211; Size of the window. This together with projection matrix determines the field of view.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-camera-computeprojectionmatrix">
+<h2>viz::Camera::computeProjectionMatrix<a class="headerlink" href="#viz-camera-computeprojectionmatrix" title="Permalink to this headline">¶</a></h2>
+<p>Computes projection matrix using intrinsic parameters of the camera.</p>
+<dl class="function">
+<dt id="void computeProjectionMatrix(Matx44d &amp;proj) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">computeProjectionMatrix</code><span class="sig-paren">(</span>Matx44d&amp; <strong>proj</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void computeProjectionMatrix(Matx44d &proj) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>proj</strong> &#8211; Output projection matrix.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-camera-kinectcamera">
+<h2>viz::Camera::KinectCamera<a class="headerlink" href="#viz-camera-kinectcamera" title="Permalink to this headline">¶</a></h2>
+<p>Creates a Kinect Camera.</p>
+<dl class="function">
+<dt id="static Camera KinectCamera(const Size &amp;window_size)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> Camera <code class="descname">KinectCamera</code><span class="sig-paren">(</span>const Size&amp; <strong>window_size</strong><span class="sig-paren">)</span><a class="headerlink" href="#static Camera KinectCamera(const Size &window_size)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>window_size</strong> &#8211; Size of the window. This together with intrinsic matrix of a Kinect Camera determines the field of view.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Viz</a><ul>
+<li><a class="reference internal" href="#viz-maketransformtoglobal">viz::makeTransformToGlobal</a></li>
+<li><a class="reference internal" href="#viz-makecamerapose">viz::makeCameraPose</a></li>
+<li><a class="reference internal" href="#viz-getwindowbyname">viz::getWindowByName</a></li>
+<li><a class="reference internal" href="#viz-isnan">viz::isNan</a></li>
+<li><a class="reference internal" href="#viz-viz3d">viz::Viz3d</a></li>
+<li><a class="reference internal" href="#viz-viz3d-viz3d">viz::Viz3d::Viz3d</a></li>
+<li><a class="reference internal" href="#viz-viz3d-showwidget">viz::Viz3d::showWidget</a></li>
+<li><a class="reference internal" href="#viz-viz3d-removewidget">viz::Viz3d::removeWidget</a></li>
+<li><a class="reference internal" href="#viz-viz3d-getwidget">viz::Viz3d::getWidget</a></li>
+<li><a class="reference internal" href="#viz-viz3d-removeallwidgets">viz::Viz3d::removeAllWidgets</a></li>
+<li><a class="reference internal" href="#viz-viz3d-showimage">viz::Viz3d::showImage</a></li>
+<li><a class="reference internal" href="#viz-viz3d-setwidgetpose">viz::Viz3d::setWidgetPose</a></li>
+<li><a class="reference internal" href="#viz-viz3d-updatewidgetpose">viz::Viz3d::updateWidgetPose</a></li>
+<li><a class="reference internal" href="#viz-viz3d-getwidgetpose">viz::Viz3d::getWidgetPose</a></li>
+<li><a class="reference internal" href="#viz-viz3d-setcamera">viz::Viz3d::setCamera</a></li>
+<li><a class="reference internal" href="#viz-viz3d-getcamera">viz::Viz3d::getCamera</a></li>
+<li><a class="reference internal" href="#viz-viz3d-getviewerpose">viz::Viz3d::getViewerPose</a></li>
+<li><a class="reference internal" href="#viz-viz3d-setviewerpose">viz::Viz3d::setViewerPose</a></li>
+<li><a class="reference internal" href="#viz-viz3d-resetcameraviewpoint">viz::Viz3d::resetCameraViewpoint</a></li>
+<li><a class="reference internal" href="#viz-viz3d-resetcamera">viz::Viz3d::resetCamera</a></li>
+<li><a class="reference internal" href="#viz-viz3d-converttowindowcoordinates">viz::Viz3d::convertToWindowCoordinates</a></li>
+<li><a class="reference internal" href="#viz-viz3d-converto3dray">viz::Viz3d::converTo3DRay</a></li>
+<li><a class="reference internal" href="#viz-viz3d-getwindowsize">viz::Viz3d::getWindowSize</a></li>
+<li><a class="reference internal" href="#viz-viz3d-setwindowsize">viz::Viz3d::setWindowSize</a></li>
+<li><a class="reference internal" href="#viz-viz3d-getwindowname">viz::Viz3d::getWindowName</a></li>
+<li><a class="reference internal" href="#viz-viz3d-savescreenshot">viz::Viz3d::saveScreenshot</a></li>
+<li><a class="reference internal" href="#viz-viz3d-setwindowposition">viz::Viz3d::setWindowPosition</a></li>
+<li><a class="reference internal" href="#viz-viz3d-setfullscreen">viz::Viz3d::setFullScreen</a></li>
+<li><a class="reference internal" href="#viz-viz3d-setbackgroundcolor">viz::Viz3d::setBackgroundColor</a></li>
+<li><a class="reference internal" href="#viz-viz3d-spin">viz::Viz3d::spin</a></li>
+<li><a class="reference internal" href="#viz-viz3d-spinonce">viz::Viz3d::spinOnce</a></li>
+<li><a class="reference internal" href="#viz-viz3d-wasstopped">viz::Viz3d::wasStopped</a></li>
+<li><a class="reference internal" href="#viz-viz3d-registerkeyboardcallback">viz::Viz3d::registerKeyboardCallback</a></li>
+<li><a class="reference internal" href="#viz-viz3d-registermousecallback">viz::Viz3d::registerMouseCallback</a></li>
+<li><a class="reference internal" href="#viz-viz3d-setrenderingproperty">viz::Viz3d::setRenderingProperty</a></li>
+<li><a class="reference internal" href="#viz-viz3d-getrenderingproperty">viz::Viz3d::getRenderingProperty</a></li>
+<li><a class="reference internal" href="#viz-viz3d-setrepresentation">viz::Viz3d::setRepresentation</a></li>
+<li><a class="reference internal" href="#viz-color">viz::Color</a></li>
+<li><a class="reference internal" href="#viz-mesh">viz::Mesh</a></li>
+<li><a class="reference internal" href="#viz-mesh-load">viz::Mesh::load</a></li>
+<li><a class="reference internal" href="#viz-keyboardevent">viz::KeyboardEvent</a></li>
+<li><a class="reference internal" href="#viz-keyboardevent-keyboardevent">viz::KeyboardEvent::KeyboardEvent</a></li>
+<li><a class="reference internal" href="#viz-mouseevent">viz::MouseEvent</a></li>
+<li><a class="reference internal" href="#viz-mouseevent-mouseevent">viz::MouseEvent::MouseEvent</a></li>
+<li><a class="reference internal" href="#viz-camera">viz::Camera</a></li>
+<li><a class="reference internal" href="#viz-camera-camera">viz::Camera::Camera</a></li>
+<li><a class="reference internal" href="#viz-camera-computeprojectionmatrix">viz::Camera::computeProjectionMatrix</a></li>
+<li><a class="reference internal" href="#viz-camera-kinectcamera">viz::Camera::KinectCamera</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="viz.html"
+                        title="previous chapter">viz. 3D Visualizer</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="widget.html"
+                        title="next chapter">Widget</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/viz/doc/viz3d.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="widget.html" title="Widget"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="viz.html" title="viz. 3D Visualizer"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="viz.html" >viz. 3D Visualizer</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,590 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Support Vector Machines for Non-Linearly Separable Data &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="ml module. Machine Learning" href="../table_of_content_ml/table_of_content_ml.html" />
+    <link rel="next" title="gpu module. GPU-Accelerated Computer Vision" href="../../gpu/table_of_content_gpu/table_of_content_gpu.html" />
+    <link rel="prev" title="Introduction to Support Vector Machines" href="../introduction_to_svm/introduction_to_svm.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../gpu/table_of_content_gpu/table_of_content_gpu.html" title="gpu module. GPU-Accelerated Computer Vision"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../introduction_to_svm/introduction_to_svm.html" title="Introduction to Support Vector Machines"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_ml/table_of_content_ml.html" accesskey="U"><em>ml</em> module. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="support-vector-machines-for-non-linearly-separable-data">
+<span id="nonlinearsvms"></span><h1>Support Vector Machines for Non-Linearly Separable Data<a class="headerlink" href="#support-vector-machines-for-non-linearly-separable-data" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Define the optimization problem for SVMs when it is not possible to separate linearly the training data.</li>
+<li>How to configure the parameters in <a class="reference external" href="http://docs.opencv.org/modules/ml/doc/support_vector_machines.html#cvsvmparams">CvSVMParams</a> to adapt your SVM for this class of problems.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
+<p>Why is it interesting to extend the SVM optimation problem in order to handle non-linearly separable training data? Most of the applications in which SVMs are used in computer vision require a more powerful tool than a simple linear classifier. This stems from the fact that in these tasks <strong>the training data can be rarely separated using an hyperplane</strong>.
+Consider one of these tasks, for example, face detection. The training data in this case is composed by a set of images that are faces and another set of images that are non-faces (<em>every other thing in the world except from faces</em>). This training data is too complex so as to find a representation of each sample (<em>feature vector</em>) that could make the whole set of faces linearly separable from the whole set of non-faces.</p>
+</div>
+<div class="section" id="extension-of-the-optimization-problem">
+<h2>Extension of the Optimization Problem<a class="headerlink" href="#extension-of-the-optimization-problem" title="Permalink to this headline">¶</a></h2>
+<p>Remember that using SVMs we obtain a separating hyperplane. Therefore, since the training data is now non-linearly separable, we must admit that the hyperplane found will misclassify some of the samples. This <em>misclassification</em> is a new variable in the optimization that must be taken into account. The new model has to include both the old requirement of finding the hyperplane that gives the biggest margin and the new one of generalizing the training data correctly by not allowing too many classification errors.
+We start here from the formulation of the optimization problem of finding the hyperplane which maximizes the <strong>margin</strong> (this is explained in the <a class="reference internal" href="../introduction_to_svm/introduction_to_svm.html#introductiontosvms"><span>previous tutorial</span></a>):</p>
+<div class="math">
+<p><img src="../../../../_images/math/45ff053c9b0f68d5f3b0ad22dc7429f86b448fc6.png" alt="\min_{\beta, \beta_{0}} L(\beta) = \frac{1}{2}||\beta||^{2} \text{ subject to } y_{i}(\beta^{T} x_{i} + \beta_{0}) \geq 1 \text{ } \forall i"/></p>
+</div><p>There are multiple ways in which this model can be modified so it takes into account the misclassification errors. For example, one could think of minimizing the same quantity plus a constant times the number of misclassification errors in the training data, i.e.:</p>
+<div class="math">
+<p><img src="../../../../_images/math/31ce7b1bdc7a70a0cb36442ec54fc58b3bcf613a.png" alt="\min ||\beta||^{2} + C \text{(\# misclassication errors)}"/></p>
+</div><p>However, this one is not a very good solution since, among some other reasons, we do not distinguish between samples that are misclassified with a small distance to their appropriate decision region or samples that are not. Therefore, a better solution will take into account the <em>distance of the misclassified samples to their correct decision regions</em>, i.e.:</p>
+<div class="math">
+<p><img src="../../../../_images/math/0f327bd04d2713fbd224ff96a81950cc378604bc.png" alt="\min ||\beta||^{2} + C \text{(distance of misclassified samples to their correct regions)}"/></p>
+</div><p>For each sample of the training data a new parameter <img class="math" src="../../../../_images/math/92b3e8f75e88c15b0cb84244188de0d5242855e4.png" alt="\xi_{i}"/> is defined. Each one of these parameters contains the distance from its corresponding training sample to their correct decision region. The following picture shows non-linearly separable training data from two classes, a separating hyperplane and the distances to their correct regions of the samples that are misclassified.</p>
+<img alt="Samples misclassified and their distances to their correct regions" class="align-center" src="../../../../_images/sample-errors-dist.png" />
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Only the distances of the samples that are misclassified are shown in the picture. The distances of the rest of the samples are zero since they lay already in their correct decision region. The red and blue lines that appear on the picture are the margins to each one of the decision regions. It is very <strong>important</strong> to realize that each of the <img class="math" src="../../../../_images/math/92b3e8f75e88c15b0cb84244188de0d5242855e4.png" alt="\xi_{i}"/> goes from a misclassified training sample to the margin of its appropriate region. Finally, the new formulation for the optimization problem is:</p>
+</div>
+<div class="math">
+<p><img src="../../../../_images/math/818e72d5e043970fca808a40688437bc50f67a01.png" alt="\min_{\beta, \beta_{0}} L(\beta) = ||\beta||^{2} + C \sum_{i} {\xi_{i}} \text{ subject to } y_{i}(\beta^{T} x_{i} + \beta_{0}) \geq 1 - \xi_{i} \text{ and } \xi_{i} \geq 0 \text{ } \forall i"/></p>
+</div><p>How should the parameter C be chosen? It is obvious that the answer to this question depends on how the training data is distributed. Although there is no general answer, it is useful to take into account these rules:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Large values of C give solutions with <em>less misclassification errors</em> but a <em>smaller margin</em>. Consider that in this case it is expensive to make misclassification errors. Since the aim of the optimization is to minimize the argument, few misclassifications errors are allowed.</li>
+<li>Small values of C give solutions with <em>bigger margin</em> and <em>more classification errors</em>. In this case the minimization does not consider that much the term of the sum so it focuses more on finding a hyperplane with big margin.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="source-code">
+<h2>Source Code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h2>
+<p>You may also find the source code and these video file in the <code class="file docutils literal"><span class="pre">samples/cpp/tutorial_code/gpu/non_linear_svms/non_linear_svms</span></code> folder of the OpenCV source library or <a class="reference download internal" href="../../../../_downloads/non_linear_svms.cpp" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">it</span> <span class="pre">from</span> <span class="pre">here</span></code></a>.</p>
+<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;opencv2/core/core.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;opencv2/ml/ml.hpp&gt;</span><span class="cp"></span>
+
+<span class="cp">#define NTRAINING_SAMPLES   100         </span><span class="c1">// Number of training samples per class</span>
+<span class="cp">#define FRAC_LINEAR_SEP     0.9f        </span><span class="c1">// Fraction of samples which compose the linear separable part</span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// Data for visual representation</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">WIDTH</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span> <span class="n">HEIGHT</span> <span class="o">=</span> <span class="mi">512</span><span class="p">;</span>
+    <span class="n">Mat</span> <span class="n">I</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span><span class="n">HEIGHT</span><span class="p">,</span> <span class="n">WIDTH</span><span class="p">,</span> <span class="n">CV_8UC3</span><span class="p">);</span>
+
+    <span class="c1">//--------------------- 1. Set up training data randomly ---------------------------------------</span>
+    <span class="n">Mat</span> <span class="n">trainData</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">NTRAINING_SAMPLES</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">CV_32FC1</span><span class="p">);</span>
+    <span class="n">Mat</span> <span class="n">labels</span>   <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">NTRAINING_SAMPLES</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">CV_32FC1</span><span class="p">);</span>
+
+    <span class="n">RNG</span> <span class="n">rng</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span> <span class="c1">// Random value generation class</span>
+
+    <span class="c1">// Set up the linearly separable part of the training data</span>
+    <span class="kt">int</span> <span class="n">nLinearSamples</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">FRAC_LINEAR_SEP</span> <span class="o">*</span> <span class="n">NTRAINING_SAMPLES</span><span class="p">);</span>
+
+    <span class="c1">// Generate random points for the class 1</span>
+    <span class="n">Mat</span> <span class="n">trainClass</span> <span class="o">=</span> <span class="n">trainData</span><span class="p">.</span><span class="n">rowRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nLinearSamples</span><span class="p">);</span>
+    <span class="c1">// The x coordinate of the points is in [0, 0.4)</span>
+    <span class="n">Mat</span> <span class="n">c</span> <span class="o">=</span> <span class="n">trainClass</span><span class="p">.</span><span class="n">colRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">rng</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">RNG</span><span class="o">::</span><span class="n">UNIFORM</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span><span class="mf">0.4</span> <span class="o">*</span> <span class="n">WIDTH</span><span class="p">));</span>
+    <span class="c1">// The y coordinate of the points is in [0, 1)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">trainClass</span><span class="p">.</span><span class="n">colRange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+    <span class="n">rng</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">RNG</span><span class="o">::</span><span class="n">UNIFORM</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span><span class="n">HEIGHT</span><span class="p">));</span>
+
+    <span class="c1">// Generate random points for the class 2</span>
+    <span class="n">trainClass</span> <span class="o">=</span> <span class="n">trainData</span><span class="p">.</span><span class="n">rowRange</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">NTRAINING_SAMPLES</span><span class="o">-</span><span class="n">nLinearSamples</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">NTRAINING_SAMPLES</span><span class="p">);</span>
+    <span class="c1">// The x coordinate of the points is in [0.6, 1]</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">trainClass</span><span class="p">.</span><span class="n">colRange</span><span class="p">(</span><span class="mi">0</span> <span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">rng</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">RNG</span><span class="o">::</span><span class="n">UNIFORM</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mf">0.6</span><span class="o">*</span><span class="n">WIDTH</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span><span class="n">WIDTH</span><span class="p">));</span>
+    <span class="c1">// The y coordinate of the points is in [0, 1)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">trainClass</span><span class="p">.</span><span class="n">colRange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+    <span class="n">rng</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">RNG</span><span class="o">::</span><span class="n">UNIFORM</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span><span class="n">HEIGHT</span><span class="p">));</span>
+
+    <span class="c1">//------------------ Set up the non-linearly separable part of the training data ---------------</span>
+
+    <span class="c1">// Generate random points for the classes 1 and 2</span>
+    <span class="n">trainClass</span> <span class="o">=</span> <span class="n">trainData</span><span class="p">.</span><span class="n">rowRange</span><span class="p">(</span>  <span class="n">nLinearSamples</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">NTRAINING_SAMPLES</span><span class="o">-</span><span class="n">nLinearSamples</span><span class="p">);</span>
+    <span class="c1">// The x coordinate of the points is in [0.4, 0.6)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">trainClass</span><span class="p">.</span><span class="n">colRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">rng</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">RNG</span><span class="o">::</span><span class="n">UNIFORM</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mf">0.4</span><span class="o">*</span><span class="n">WIDTH</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span><span class="mf">0.6</span><span class="o">*</span><span class="n">WIDTH</span><span class="p">));</span>
+    <span class="c1">// The y coordinate of the points is in [0, 1)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">trainClass</span><span class="p">.</span><span class="n">colRange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+    <span class="n">rng</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">RNG</span><span class="o">::</span><span class="n">UNIFORM</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span><span class="n">HEIGHT</span><span class="p">));</span>
+
+    <span class="c1">//------------------------- Set up the labels for the classes ---------------------------------</span>
+    <span class="n">labels</span><span class="p">.</span><span class="n">rowRange</span><span class="p">(</span>                <span class="mi">0</span><span class="p">,</span>   <span class="n">NTRAINING_SAMPLES</span><span class="p">).</span><span class="n">setTo</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>  <span class="c1">// Class 1</span>
+    <span class="n">labels</span><span class="p">.</span><span class="n">rowRange</span><span class="p">(</span><span class="n">NTRAINING_SAMPLES</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">NTRAINING_SAMPLES</span><span class="p">).</span><span class="n">setTo</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>  <span class="c1">// Class 2</span>
+
+    <span class="c1">//------------------------ 2. Set up the support vector machines parameters --------------------</span>
+    <span class="n">CvSVMParams</span> <span class="n">params</span><span class="p">;</span>
+    <span class="n">params</span><span class="p">.</span><span class="n">svm_type</span>    <span class="o">=</span> <span class="n">SVM</span><span class="o">::</span><span class="n">C_SVC</span><span class="p">;</span>
+    <span class="n">params</span><span class="p">.</span><span class="n">C</span>           <span class="o">=</span> <span class="mf">0.1</span><span class="p">;</span>
+    <span class="n">params</span><span class="p">.</span><span class="n">kernel_type</span> <span class="o">=</span> <span class="n">SVM</span><span class="o">::</span><span class="n">LINEAR</span><span class="p">;</span>
+    <span class="n">params</span><span class="p">.</span><span class="n">term_crit</span>   <span class="o">=</span> <span class="n">TermCriteria</span><span class="p">(</span><span class="n">CV_TERMCRIT_ITER</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="mf">1e7</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">);</span>
+
+    <span class="c1">//------------------------ 3. Train the svm ----------------------------------------------------</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Starting training process&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">CvSVM</span> <span class="n">svm</span><span class="p">;</span>
+    <span class="n">svm</span><span class="p">.</span><span class="n">train</span><span class="p">(</span><span class="n">trainData</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">params</span><span class="p">);</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Finished training process&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+    <span class="c1">//------------------------ 4. Show the decision regions ----------------------------------------</span>
+    <span class="n">Vec3b</span> <span class="n">green</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">blue</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">I</span><span class="p">.</span><span class="n">rows</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">I</span><span class="p">.</span><span class="n">cols</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Mat</span> <span class="n">sampleMat</span> <span class="o">=</span> <span class="p">(</span><span class="n">Mat_</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>
+            <span class="kt">float</span> <span class="n">response</span> <span class="o">=</span> <span class="n">svm</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">sampleMat</span><span class="p">);</span>
+
+            <span class="k">if</span>      <span class="p">(</span><span class="n">response</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>    <span class="n">I</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">Vec3b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>  <span class="o">=</span> <span class="n">green</span><span class="p">;</span>
+            <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">response</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>    <span class="n">I</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">Vec3b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>  <span class="o">=</span> <span class="n">blue</span><span class="p">;</span>
+        <span class="p">}</span>
+
+    <span class="c1">//----------------------- 5. Show the training data --------------------------------------------</span>
+    <span class="kt">int</span> <span class="n">thick</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">lineType</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">;</span>
+    <span class="c1">// Class 1</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">NTRAINING_SAMPLES</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">px</span> <span class="o">=</span> <span class="n">trainData</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+        <span class="n">py</span> <span class="o">=</span> <span class="n">trainData</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+        <span class="n">circle</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">px</span><span class="p">,</span>  <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">py</span> <span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">thick</span><span class="p">,</span> <span class="n">lineType</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="c1">// Class 2</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">NTRAINING_SAMPLES</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span><span class="mi">2</span><span class="o">*</span><span class="n">NTRAINING_SAMPLES</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">px</span> <span class="o">=</span> <span class="n">trainData</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+        <span class="n">py</span> <span class="o">=</span> <span class="n">trainData</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+        <span class="n">circle</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">px</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">py</span> <span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">thick</span><span class="p">,</span> <span class="n">lineType</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">//------------------------- 6. Show support vectors --------------------------------------------</span>
+    <span class="n">thick</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="n">lineType</span>  <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">x</span>     <span class="o">=</span> <span class="n">svm</span><span class="p">.</span><span class="n">get_support_vector_count</span><span class="p">();</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">v</span> <span class="o">=</span> <span class="n">svm</span><span class="p">.</span><span class="n">get_support_vector</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+        <span class="n">circle</span><span class="p">(</span> <span class="n">I</span><span class="p">,</span>  <span class="n">Point</span><span class="p">(</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">6</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span> <span class="n">thick</span><span class="p">,</span> <span class="n">lineType</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">imwrite</span><span class="p">(</span><span class="s">&quot;result.png&quot;</span><span class="p">,</span> <span class="n">I</span><span class="p">);</span>                      <span class="c1">// save the Image</span>
+    <span class="n">imshow</span><span class="p">(</span><span class="s">&quot;SVM for Non-Linear Training Data&quot;</span><span class="p">,</span> <span class="n">I</span><span class="p">);</span> <span class="c1">// show it to the user</span>
+    <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><strong>Set up the training data</strong></li>
+</ol>
+<blockquote>
+<div><p>The training data of this exercise is formed by a set of labeled 2D-points that belong to one of two different classes. To make the exercise more appealing, the training data is generated randomly using a uniform probability density functions (PDFs). We have divided the generation of the training data into two main parts. In the first part we generate data for both classes that is linearly separable.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// Generate random points for the class 1</span>
+<span class="n">Mat</span> <span class="n">trainClass</span> <span class="o">=</span> <span class="n">trainData</span><span class="p">.</span><span class="n">rowRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nLinearSamples</span><span class="p">);</span>
+<span class="c1">// The x coordinate of the points is in [0, 0.4)</span>
+<span class="n">Mat</span> <span class="n">c</span> <span class="o">=</span> <span class="n">trainClass</span><span class="p">.</span><span class="n">colRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="n">rng</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">RNG</span><span class="o">::</span><span class="n">UNIFORM</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span><span class="mf">0.4</span> <span class="o">*</span> <span class="n">WIDTH</span><span class="p">));</span>
+<span class="c1">// The y coordinate of the points is in [0, 1)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">trainClass</span><span class="p">.</span><span class="n">colRange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+<span class="n">rng</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">RNG</span><span class="o">::</span><span class="n">UNIFORM</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span><span class="n">HEIGHT</span><span class="p">));</span>
+<span class="c1">// Generate random points for the class 2</span>
+<span class="n">trainClass</span> <span class="o">=</span> <span class="n">trainData</span><span class="p">.</span><span class="n">rowRange</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">NTRAINING_SAMPLES</span><span class="o">-</span><span class="n">nLinearSamples</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">NTRAINING_SAMPLES</span><span class="p">);</span>
+<span class="c1">// The x coordinate of the points is in [0.6, 1]</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">trainClass</span><span class="p">.</span><span class="n">colRange</span><span class="p">(</span><span class="mi">0</span> <span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="n">rng</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">RNG</span><span class="o">::</span><span class="n">UNIFORM</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mf">0.6</span><span class="o">*</span><span class="n">WIDTH</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span><span class="n">WIDTH</span><span class="p">));</span>
+<span class="c1">// The y coordinate of the points is in [0, 1)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">trainClass</span><span class="p">.</span><span class="n">colRange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+<span class="n">rng</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">RNG</span><span class="o">::</span><span class="n">UNIFORM</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span><span class="n">HEIGHT</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>In the second part we create data for both classes that is non-linearly separable, data that overlaps.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// Generate random points for the classes 1 and 2</span>
+<span class="n">trainClass</span> <span class="o">=</span> <span class="n">trainData</span><span class="p">.</span><span class="n">rowRange</span><span class="p">(</span>  <span class="n">nLinearSamples</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">NTRAINING_SAMPLES</span><span class="o">-</span><span class="n">nLinearSamples</span><span class="p">);</span>
+<span class="c1">// The x coordinate of the points is in [0.4, 0.6)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">trainClass</span><span class="p">.</span><span class="n">colRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">rng</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">RNG</span><span class="o">::</span><span class="n">UNIFORM</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mf">0.4</span><span class="o">*</span><span class="n">WIDTH</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span><span class="mf">0.6</span><span class="o">*</span><span class="n">WIDTH</span><span class="p">));</span>
+<span class="c1">// The y coordinate of the points is in [0, 1)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">trainClass</span><span class="p">.</span><span class="n">colRange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+<span class="n">rng</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">RNG</span><span class="o">::</span><span class="n">UNIFORM</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span><span class="n">HEIGHT</span><span class="p">));</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><strong>Set up SVM&#8217;s parameters</strong></li>
+</ol>
+<blockquote>
+<div><div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">In the previous tutorial <a class="reference internal" href="../introduction_to_svm/introduction_to_svm.html#introductiontosvms"><span>Introduction to Support Vector Machines</span></a> there is an explanation of the atributes of the class <a class="reference external" href="http://docs.opencv.org/modules/ml/doc/support_vector_machines.html#cvsvmparams">CvSVMParams</a> that we configure here before training the SVM.</p>
+</div>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">CvSVMParams</span> <span class="n">params</span><span class="p">;</span>
+<span class="n">params</span><span class="p">.</span><span class="n">svm_type</span>    <span class="o">=</span> <span class="n">SVM</span><span class="o">::</span><span class="n">C_SVC</span><span class="p">;</span>
+<span class="n">params</span><span class="p">.</span><span class="n">C</span>              <span class="o">=</span> <span class="mf">0.1</span><span class="p">;</span>
+<span class="n">params</span><span class="p">.</span><span class="n">kernel_type</span> <span class="o">=</span> <span class="n">SVM</span><span class="o">::</span><span class="n">LINEAR</span><span class="p">;</span>
+<span class="n">params</span><span class="p">.</span><span class="n">term_crit</span>   <span class="o">=</span> <span class="n">TermCriteria</span><span class="p">(</span><span class="n">CV_TERMCRIT_ITER</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="mf">1e7</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>There are just two differences between the configuration we do here and the one that was done in the <a class="reference internal" href="../introduction_to_svm/introduction_to_svm.html#introductiontosvms"><span>previous tutorial</span></a> that we use as reference.</p>
+<ul>
+<li><dl class="first docutils">
+<dt><em>CvSVM::C_SVC</em>. We chose here a small value of this parameter in order not to punish too much the misclassification errors in the optimization. The idea of doing this stems from the will of obtaining a solution close to the one intuitively expected. However, we recommend to get a better insight of the problem by making adjustments to this parameter.</dt>
+<dd><div class="first last admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Here there are just very few points in the overlapping region between classes, giving a smaller value to <strong>FRAC_LINEAR_SEP</strong> the density of points can be incremented and the impact of the parameter <strong>CvSVM::C_SVC</strong> explored deeply.</p>
+</div>
+</dd>
+</dl>
+</li>
+<li><p class="first"><em>Termination Criteria of the algorithm</em>. The maximum number of iterations has to be increased considerably in order to solve correctly a problem with non-linearly separable training data. In particular, we have increased in five orders of magnitude this value.</p>
+</li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li><strong>Train the SVM</strong></li>
+</ol>
+<blockquote>
+<div><p>We call the method <a class="reference external" href="http://docs.opencv.org/modules/ml/doc/support_vector_machines.html#cvsvm-train">CvSVM::train</a> to build the SVM model. Watch out that the training process may take a quite long time. Have patiance when your run the program.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">CvSVM</span> <span class="n">svm</span><span class="p">;</span>
+<span class="n">svm</span><span class="p">.</span><span class="n">train</span><span class="p">(</span><span class="n">trainData</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">params</span><span class="p">);</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="4">
+<li><strong>Show the Decision Regions</strong></li>
+</ol>
+<blockquote>
+<div><p>The method <a class="reference external" href="http://docs.opencv.org/modules/ml/doc/support_vector_machines.html#cvsvm-predict">CvSVM::predict</a> is used to classify an input sample using a trained SVM. In this example we have used this method in order to color the space depending on the prediction done by the SVM. In other words, an image is traversed interpreting its pixels as points of the Cartesian plane. Each of the points is colored depending on the class predicted by the SVM; in dark green if it is the class with label 1 and in dark blue if it is the class with label 2.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Vec3b</span> <span class="nf">green</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">blue</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">I</span><span class="p">.</span><span class="n">rows</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">I</span><span class="p">.</span><span class="n">cols</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+     <span class="p">{</span>
+          <span class="n">Mat</span> <span class="n">sampleMat</span> <span class="o">=</span> <span class="p">(</span><span class="n">Mat_</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>
+          <span class="kt">float</span> <span class="n">response</span> <span class="o">=</span> <span class="n">svm</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">sampleMat</span><span class="p">);</span>
+          <span class="k">if</span>      <span class="p">(</span><span class="n">response</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>    <span class="n">I</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">Vec3b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>  <span class="o">=</span> <span class="n">green</span><span class="p">;</span>
+          <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">response</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>    <span class="n">I</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">Vec3b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>  <span class="o">=</span> <span class="n">blue</span><span class="p">;</span>
+     <span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="5">
+<li><strong>Show the training data</strong></li>
+</ol>
+<blockquote>
+<div><p>The method <a class="reference external" href="http://docs.opencv.org/modules/core/doc/drawing_functions.html#circle">circle</a> is used to show the samples that compose the training data. The samples of the class labeled with 1 are shown in light green and in light blue the samples of the class labeled with 2.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">int</span> <span class="n">thick</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">lineType</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+<span class="kt">float</span> <span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">;</span>
+<span class="c1">// Class 1</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">NTRAINING_SAMPLES</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="p">{</span>
+     <span class="n">px</span> <span class="o">=</span> <span class="n">trainData</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+     <span class="n">py</span> <span class="o">=</span> <span class="n">trainData</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+     <span class="n">circle</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">px</span><span class="p">,</span>  <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">py</span> <span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">thick</span><span class="p">,</span> <span class="n">lineType</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// Class 2</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">NTRAINING_SAMPLES</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span><span class="mi">2</span><span class="o">*</span><span class="n">NTRAINING_SAMPLES</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="p">{</span>
+     <span class="n">px</span> <span class="o">=</span> <span class="n">trainData</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+     <span class="n">py</span> <span class="o">=</span> <span class="n">trainData</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+     <span class="n">circle</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">px</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">py</span> <span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">thick</span><span class="p">,</span> <span class="n">lineType</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="6">
+<li><strong>Support vectors</strong></li>
+</ol>
+<blockquote>
+<div><p>We use here a couple of methods to obtain information about the support vectors. The method <a class="reference external" href="http://docs.opencv.org/modules/ml/doc/support_vector_machines.html#cvsvm-get-support-vector">CvSVM::get_support_vector_count</a> outputs the total number of support vectors used in the problem and with the method <a class="reference external" href="http://docs.opencv.org/modules/ml/doc/support_vector_machines.html#cvsvm-get-support-vector">CvSVM::get_support_vector</a> we obtain each of the support vectors using an index. We have used this methods here to find the training examples that are support vectors and highlight them.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">thick</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="n">lineType</span>  <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">x</span>     <span class="o">=</span> <span class="n">svm</span><span class="p">.</span><span class="n">get_support_vector_count</span><span class="p">();</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="p">{</span>
+     <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">v</span> <span class="o">=</span> <span class="n">svm</span><span class="p">.</span><span class="n">get_support_vector</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+     <span class="n">circle</span><span class="p">(</span>     <span class="n">I</span><span class="p">,</span>  <span class="n">Point</span><span class="p">(</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">6</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span> <span class="n">thick</span><span class="p">,</span> <span class="n">lineType</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>The code opens an image and shows the training examples of both classes. The points of one class are represented with light green and light blue ones are used for the other class.</li>
+<li>The SVM is trained and used to classify all the pixels of the image. This results in a division of the image in a blue region and a green region. The boundary between both regions is the separating hyperplane. Since the training data is non-linearly separable, it can be seen that some of the examples of both classes are misclassified; some green points lay on the blue region and some blue points lay on the green one.</li>
+<li>Finally the support vectors are shown using gray rings around the training examples.</li>
+</ul>
+</div>
+<a class="reference internal image-reference" href="../../../../_images/result1.png"><img alt="Training data and decision regions given by the SVM" class="align-center" src="../../../../_images/result1.png" style="width: 300pt;" /></a>
+<p>You may observe a runtime instance of this on the <a class="reference external" href="https://www.youtube.com/watch?v=vFv2yPcSo-Q">YouTube here</a>.</p>
+<div align="center">
+<iframe title="Support Vector Machines for Non-Linearly Separable Data" width="560" height="349" src="https://www.youtube.com/embed/vFv2yPcSo-Q?rel=0&loop=1" frameborder="0" allowfullscreen align="middle"></iframe>
+</div></div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Support Vector Machines for Non-Linearly Separable Data</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#motivation">Motivation</a></li>
+<li><a class="reference internal" href="#extension-of-the-optimization-problem">Extension of the Optimization Problem</a></li>
+<li><a class="reference internal" href="#source-code">Source Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#results">Results</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../introduction_to_svm/introduction_to_svm.html"
+                        title="previous chapter">Introduction to Support Vector Machines</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../gpu/table_of_content_gpu/table_of_content_gpu.html"
+                        title="next chapter"><em>gpu</em> module. GPU-Accelerated Computer Vision</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/ml/non_linear_svms/non_linear_svms.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../gpu/table_of_content_gpu/table_of_content_gpu.html" title="gpu module. GPU-Accelerated Computer Vision"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../introduction_to_svm/introduction_to_svm.html" title="Introduction to Support Vector Machines"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_ml/table_of_content_ml.html" ><em>ml</em> module. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

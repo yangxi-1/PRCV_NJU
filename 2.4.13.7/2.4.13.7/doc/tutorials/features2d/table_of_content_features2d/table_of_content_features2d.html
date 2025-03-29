@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>feature2d module. 2D Features framework &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="OpenCV Tutorials" href="../../tutorials.html" />
+    <link rel="next" title="Feature Description" href="../feature_description/feature_description.html" />
+    <link rel="prev" title="Camera calibration With OpenCV" href="../../calib3d/camera_calibration/camera_calibration.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../feature_description/feature_description.html" title="Feature Description"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../../calib3d/camera_calibration/camera_calibration.html" title="Camera calibration With OpenCV"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" accesskey="U">OpenCV Tutorials</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="feature2d-module-2d-features-framework">
+<span id="table-of-content-feature2d"></span><h1><em>feature2d</em> module. 2D Features framework<a class="headerlink" href="#feature2d-module-2d-features-framework" title="Permalink to this headline">¶</a></h1>
+<p>Learn about how to use the feature points  detectors, descriptors and matching framework found inside OpenCV.</p>
+<ul>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="19%" />
+<col width="81%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Harris_Detector_Cover.jpg"><img alt="Harris" src="../../../../_images/Harris_Detector_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../trackingmotion/harris_detector/harris_detector.html#harris-detector"><span>Harris corner detector</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Why is it a good idea to track corners? We learn to use the Harris method to detect corners</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="24%" />
+<col width="76%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Shi_Tomasi_Detector_Cover.jpg"><img alt="ShiTomasi" src="../../../../_images/Shi_Tomasi_Detector_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../trackingmotion/good_features_to_track/good_features_to_track.html#good-features-to-track"><span>Shi-Tomasi corner detector</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we use an improved method to detect corners more accuratelyI</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="19%" />
+<col width="81%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Generic_Corner_Detector_Cover.jpg"><img alt="GenericCorner" src="../../../../_images/Generic_Corner_Detector_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../trackingmotion/generic_corner_detector/generic_corner_detector.html#generic-corner-detector"><span>Creating yor own corner detector</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Here you will learn how to use OpenCV functions to make your personalized corner detector!</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Corner_Subpixeles_Cover.jpg"><img alt="Subpixel" src="../../../../_images/Corner_Subpixeles_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../trackingmotion/corner_subpixeles/corner_subpixeles.html#corner-subpixeles"><span>Detecting corners location in subpixeles</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Is pixel resolution enough? Here we learn a simple method to improve our accuracy.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="23%" />
+<col width="77%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Feature_Detection_Tutorial_Cover.jpg"><img alt="FeatureDetect" src="../../../../_images/Feature_Detection_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../feature_detection/feature_detection.html#feature-detection"><span>Feature Detection</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">In this tutorial, you will use <em>features2d</em> to detect interest points.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Feature_Description_Tutorial_Cover.jpg"><img alt="FeatureDescript" src="../../../../_images/Feature_Description_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../feature_description/feature_description.html#feature-description"><span>Feature Description</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">In this tutorial, you will use <em>features2d</em> to calculate feature vectors.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Feature_Flann_Matcher_Tutorial_Cover.jpg"><img alt="FeatureFlann" src="../../../../_images/Feature_Flann_Matcher_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../feature_flann_matcher/feature_flann_matcher.html#feature-flann-matcher"><span>Feature Matching with FLANN</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">In this tutorial, you will use the FLANN library to make a fast matching.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="19%" />
+<col width="81%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Feature_Homography_Tutorial_Cover.jpg"><img alt="FeatureHomo" src="../../../../_images/Feature_Homography_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../feature_homography/feature_homography.html#feature-homography"><span>Features2D + Homography to find a known object</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">In this tutorial, you will use <em>features2d</em> and <em>calib3d</em> to detect an object in a scene.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="18%" />
+<col width="82%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/detection_of_planar_objects.png"><img alt="DetectPlanar" src="../../../../_images/detection_of_planar_objects.png" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../detection_of_planar_objects/detection_of_planar_objects.html#detectionofplanarobjects"><span>Detection of planar objects</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Victor Eruhimov</p>
+<p class="last">You will use <em>features2d</em> and <em>calib3d</em> modules for detecting known planar objects in scenes.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../../calib3d/camera_calibration/camera_calibration.html"
+                        title="previous chapter">Camera calibration With OpenCV</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../feature_description/feature_description.html"
+                        title="next chapter">Feature Description</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/features2d/table_of_content_features2d/table_of_content_features2d.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../feature_description/feature_description.html" title="Feature Description"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../../calib3d/camera_calibration/camera_calibration.html" title="Camera calibration With OpenCV"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

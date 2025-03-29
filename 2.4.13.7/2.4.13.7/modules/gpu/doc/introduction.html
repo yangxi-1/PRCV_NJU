@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GPU Module Introduction &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="gpu. GPU-accelerated Computer Vision" href="gpu.html" />
+    <link rel="next" title="Initalization and Information" href="initalization_and_information.html" />
+    <link rel="prev" title="gpu. GPU-accelerated Computer Vision" href="gpu.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="initalization_and_information.html" title="Initalization and Information"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="gpu.html" title="gpu. GPU-accelerated Computer Vision"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="gpu.html" accesskey="U">gpu. GPU-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="gpu-module-introduction">
+<h1>GPU Module Introduction<a class="headerlink" href="#gpu-module-introduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="general-information">
+<h2>General Information<a class="headerlink" href="#general-information" title="Permalink to this headline">¶</a></h2>
+<p>The OpenCV GPU module is a set of classes and functions to utilize GPU computational capabilities. It is implemented using NVIDIA* CUDA* Runtime API and supports only NVIDIA GPUs. The OpenCV GPU module includes utility functions, low-level vision primitives, and high-level algorithms. The utility functions and low-level primitives provide a powerful infrastructure for developing fast vision algorithms taking advantage of GPU whereas the high-level functionality includes some state-of-the-art algorithms (such as stereo correspondence, face and people detectors, and others) ready to be used by the application developers.</p>
+<p>The GPU module is designed as a host-level API. This means that if you have pre-compiled OpenCV GPU binaries, you are not required to have the CUDA Toolkit installed or write any extra code to make use of the GPU.</p>
+<p>The OpenCV GPU module is designed for ease of use and does not require any knowledge of CUDA. Though, such a knowledge will certainly be useful to handle non-trivial cases or achieve the highest performance. It is helpful to understand the cost of various operations, what the GPU does, what the preferred data formats are, and so on. The GPU module is an effective instrument for quick implementation of GPU-accelerated computer vision algorithms. However, if your algorithm involves many simple operations, then, for the best possible performance, you may still need to write your own kernels to avoid extra write and read operations on the intermediate results.</p>
+<p>To enable CUDA support, configure OpenCV using <code class="docutils literal"><span class="pre">CMake</span></code> with <code class="docutils literal"><span class="pre">WITH_CUDA=ON</span></code> . When the flag is set and if CUDA is installed, the full-featured OpenCV GPU module is built. Otherwise, the module is still built but at runtime all functions from the module throw
+<a class="reference internal" href="../../core/doc/utility_and_system_functions_and_macros.html#Exception : public std::exception" title="class Exception : public std::exception"><code class="xref ocv ocv-class docutils literal"><span class="pre">Exception</span></code></a> with <code class="docutils literal"><span class="pre">CV_GpuNotSupported</span></code> error code, except for
+<a class="reference internal" href="initalization_and_information.html#int gpu::getCudaEnabledDeviceCount()" title="int gpu::getCudaEnabledDeviceCount()"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::getCudaEnabledDeviceCount()</span></code></a>. The latter function returns zero GPU count in this case. Building OpenCV without CUDA support does not perform device code compilation, so it does not require the CUDA Toolkit installed. Therefore, using the
+<a class="reference internal" href="initalization_and_information.html#int gpu::getCudaEnabledDeviceCount()" title="int gpu::getCudaEnabledDeviceCount()"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::getCudaEnabledDeviceCount()</span></code></a> function, you can implement a high-level algorithm that will detect GPU presence at runtime and choose an appropriate implementation (CPU or GPU) accordingly.</p>
+</div>
+<div class="section" id="compilation-for-different-nvidia-platforms">
+<h2>Compilation for Different NVIDIA* Platforms<a class="headerlink" href="#compilation-for-different-nvidia-platforms" title="Permalink to this headline">¶</a></h2>
+<p>NVIDIA* compiler enables generating binary code (cubin and fatbin) and intermediate code (PTX). Binary code often implies a specific GPU architecture and generation, so the compatibility with other GPUs is not guaranteed. PTX is targeted for a virtual platform that is defined entirely by the set of capabilities or features. Depending on the selected virtual platform, some of the instructions are emulated or disabled, even if the real hardware supports all the features.</p>
+<p>At the first call, the PTX code is compiled to binary code for the particular GPU using a JIT compiler. When the target GPU has a compute capability (CC) lower than the PTX code, JIT fails.
+By default, the OpenCV GPU module includes:</p>
+<ul class="simple">
+<li>Binaries for compute capabilities 1.3 and 2.0 (controlled by <code class="docutils literal"><span class="pre">CUDA_ARCH_BIN</span></code>     in <code class="docutils literal"><span class="pre">CMake</span></code>)</li>
+<li>PTX code for compute capabilities 1.1 and 1.3 (controlled by <code class="docutils literal"><span class="pre">CUDA_ARCH_PTX</span></code>     in <code class="docutils literal"><span class="pre">CMake</span></code>)</li>
+</ul>
+<p>This means that for devices with CC 1.3 and 2.0 binary images are ready to run. For all newer platforms, the PTX code for 1.3 is JIT&#8217;ed to a binary image. For devices with CC 1.1 and 1.2, the PTX for 1.1 is JIT&#8217;ed. For devices with CC 1.0, no code is available and the functions throw
+<a class="reference internal" href="../../core/doc/utility_and_system_functions_and_macros.html#Exception : public std::exception" title="class Exception : public std::exception"><code class="xref ocv ocv-class docutils literal"><span class="pre">Exception</span></code></a>. For platforms where JIT compilation is performed first, the run is slow.</p>
+<p>On a GPU with CC 1.0, you can still compile the GPU module and most of the functions will run flawlessly. To achieve this, add &#8220;1.0&#8221; to the list of binaries, for example, <code class="docutils literal"><span class="pre">CUDA_ARCH_BIN=&quot;1.0</span> <span class="pre">1.3</span> <span class="pre">2.0&quot;</span></code> . The functions that cannot be run on CC 1.0 GPUs throw an exception.</p>
+<p>You can always determine at runtime whether the OpenCV GPU-built binaries (or PTX code) are compatible with your GPU. The function
+<a class="reference internal" href="initalization_and_information.html#bool gpu::DeviceInfo::isCompatible()" title="bool gpu::DeviceInfo::isCompatible()"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::DeviceInfo::isCompatible()</span></code></a> returns the compatibility status (true/false).</p>
+</div>
+<div class="section" id="utilizing-multiple-gpus">
+<h2>Utilizing Multiple GPUs<a class="headerlink" href="#utilizing-multiple-gpus" title="Permalink to this headline">¶</a></h2>
+<p>In the current version, each of the OpenCV GPU algorithms can use only a single GPU. So, to utilize multiple GPUs, you have to manually distribute the work between GPUs.
+Switching active devie can be done using <a class="reference internal" href="initalization_and_information.html#void gpu::setDevice(int device)" title="void gpu::setDevice(int device)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::setDevice()</span></code></a> function.  For more details please read Cuda C Programming Guide.</p>
+<p>While developing algorithms for multiple GPUs, note a data passing overhead. For primitive functions and small images, it can be significant, which may eliminate all the advantages of having multiple GPUs. But for high-level algorithms, consider using multi-GPU acceleration. For example, the Stereo Block Matching algorithm has been successfully parallelized using the following algorithm:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Split each image of the stereo pair into two horizontal overlapping stripes.</li>
+<li>Process each pair of stripes (from the left and right images) on a separate Fermi* GPU.</li>
+<li>Merge the results into a single disparity map.</li>
+</ol>
+</div></blockquote>
+<p>With this algorithm, a dual GPU gave a 180
+%
+performance increase comparing to the single Fermi GPU. For a source code example, see
+<a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/gpu/">https://github.com/opencv/opencv/tree/master/samples/gpu/</a>.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">GPU Module Introduction</a><ul>
+<li><a class="reference internal" href="#general-information">General Information</a></li>
+<li><a class="reference internal" href="#compilation-for-different-nvidia-platforms">Compilation for Different NVIDIA* Platforms</a></li>
+<li><a class="reference internal" href="#utilizing-multiple-gpus">Utilizing Multiple GPUs</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="gpu.html"
+                        title="previous chapter">gpu. GPU-accelerated Computer Vision</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="initalization_and_information.html"
+                        title="next chapter">Initalization and Information</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/gpu/doc/introduction.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="initalization_and_information.html" title="Initalization and Information"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="gpu.html" title="gpu. GPU-accelerated Computer Vision"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="gpu.html" >gpu. GPU-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Changing the contrast and brightness of an image! &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="core module. The Core Functionality" href="../table_of_content_core/table_of_content_core.html" />
+    <link rel="next" title="Basic Drawing" href="../basic_geometric_drawing/basic_geometric_drawing.html" />
+    <link rel="prev" title="Adding (blending) two images using OpenCV" href="../adding_images/adding_images.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../basic_geometric_drawing/basic_geometric_drawing.html" title="Basic Drawing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../adding_images/adding_images.html" title="Adding (blending) two images using OpenCV"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_core/table_of_content_core.html" accesskey="U"><em>core</em> module. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="changing-the-contrast-and-brightness-of-an-image">
+<span id="basic-linear-transform"></span><h1>Changing the contrast and brightness of an image!<a class="headerlink" href="#changing-the-contrast-and-brightness-of-an-image" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Access pixel values</li>
+<li>Initialize a matrix with zeros</li>
+<li>Learn what <a class="reference external" href="http://docs.opencv.org/modules/core/doc/utility_and_system_functions_and_macros.html?highlight=saturate_cast#saturate-cast">saturate_cast</a> does and why it is useful</li>
+<li>Get some cool info about pixel transformations</li>
+</ul>
+</div>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The explanation below belongs to the book <a class="reference external" href="http://szeliski.org/Book/">Computer Vision: Algorithms and Applications</a>  by Richard Szeliski</p>
+</div>
+<div class="section" id="image-processing">
+<h3>Image Processing<a class="headerlink" href="#image-processing" title="Permalink to this headline">¶</a></h3>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>A general image processing operator is a function that takes one or more input images and produces an output image.</li>
+<li>Image transforms can be seen as:<ul>
+<li>Point operators (pixel transforms)</li>
+<li>Neighborhood (area-based) operators</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="pixel-transforms">
+<h4>Pixel Transforms<a class="headerlink" href="#pixel-transforms" title="Permalink to this headline">¶</a></h4>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>In this kind of image processing transform, each output pixel&#8217;s value depends on only the corresponding input pixel value (plus, potentially, some globally collected information or parameters).</li>
+<li>Examples of such operators include <em>brightness and contrast adjustments</em> as well as color correction and transformations.</li>
+</ul>
+</div>
+<div class="section" id="brightness-and-contrast-adjustments">
+<h5>Brightness and contrast adjustments<a class="headerlink" href="#brightness-and-contrast-adjustments" title="Permalink to this headline">¶</a></h5>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first">Two commonly used point processes are <em>multiplication</em> and <em>addition</em> with a constant:</p>
+<div class="math">
+<p><img src="../../../../_images/math/1cf35d5ecefb47335d30f1f88986e249a78c64b3.png" alt="g(x) = \alpha f(x) + \beta"/></p>
+</div></li>
+<li><p class="first">The parameters <img class="math" src="../../../../_images/math/7d5ae2a77d29805aa5318ac83f3135b1970ec2ac.png" alt="\alpha &gt; 0"/> and <img class="math" src="../../../../_images/math/247b5ce2e487d3610db5ce3e3d8cc882c38ab8db.png" alt="\beta"/> are often called the <em>gain</em> and <em>bias</em> parameters; sometimes these parameters are said to control <em>contrast</em> and <em>brightness</em> respectively.</p>
+</li>
+<li><p class="first">You can think of <img class="math" src="../../../../_images/math/fdbf5babf170c4dec21a36d374c420bc863f3805.png" alt="f(x)"/> as the source image pixels and <img class="math" src="../../../../_images/math/a2485355b246d2edd3311f7599ce221536709f0e.png" alt="g(x)"/> as the output image pixels. Then, more conveniently we can write the expression as:</p>
+<div class="math">
+<p><img src="../../../../_images/math/f6d592906bb86fc4fb04475adbfbd644dd9e37ca.png" alt="g(i,j) = \alpha \cdot f(i,j) + \beta"/></p>
+</div><p>where <img class="math" src="../../../../_images/math/881d48e575544c8daaa1d83893dcde5f9f7562ec.png" alt="i"/> and <img class="math" src="../../../../_images/math/5f5e79faefe563a8e06dd887610959b1955fe806.png" alt="j"/> indicates that the pixel is located in the <em>i-th</em> row and <em>j-th</em> column.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>The following code performs the operation <img class="math" src="../../../../_images/math/f696c5b32dad45e492aa61ce5a10df9606944f1d.png" alt="g(i,j) = \alpha \cdot f(i,j) + \beta"/> :</li>
+</ul>
+</div>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&lt;cv.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;highgui.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="kt">double</span> <span class="n">alpha</span><span class="p">;</span> <span class="cm">/**&lt; Simple contrast control */</span>
+<span class="kt">int</span> <span class="n">beta</span><span class="p">;</span>  <span class="cm">/**&lt; Simple brightness control */</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+ <span class="c1">/// Read image given by user</span>
+ <span class="n">Mat</span> <span class="n">image</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">);</span>
+ <span class="n">Mat</span> <span class="n">new_image</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span> <span class="n">image</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">image</span><span class="p">.</span><span class="n">type</span><span class="p">()</span> <span class="p">);</span>
+
+ <span class="c1">/// Initialize values</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot; Basic Linear Transforms &quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;-------------------------&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;* Enter the alpha value [1.0-3.0]: &quot;</span><span class="p">;</span><span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">alpha</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;* Enter the beta value [0-100]: &quot;</span><span class="p">;</span> <span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">beta</span><span class="p">;</span>
+
+ <span class="c1">/// Do the operation new_image(i,j) = alpha*image(i,j) + beta</span>
+ <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">image</span><span class="p">.</span><span class="n">rows</span><span class="p">;</span> <span class="n">y</span><span class="o">++</span> <span class="p">)</span>
+    <span class="p">{</span> <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">image</span><span class="p">.</span><span class="n">cols</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span> <span class="p">)</span>
+         <span class="p">{</span> <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">c</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="n">c</span><span class="o">++</span> <span class="p">)</span>
+              <span class="p">{</span>
+      <span class="n">new_image</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">Vec3b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="p">)[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span>
+         <span class="n">saturate_cast</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">(</span> <span class="n">alpha</span><span class="o">*</span><span class="p">(</span> <span class="n">image</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">Vec3b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="p">)[</span><span class="n">c</span><span class="p">]</span> <span class="p">)</span> <span class="o">+</span> <span class="n">beta</span> <span class="p">);</span>
+             <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="p">}</span>
+
+ <span class="c1">/// Create Windows</span>
+ <span class="n">namedWindow</span><span class="p">(</span><span class="s">&quot;Original Image&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+ <span class="n">namedWindow</span><span class="p">(</span><span class="s">&quot;New Image&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+
+ <span class="c1">/// Show stuff</span>
+ <span class="n">imshow</span><span class="p">(</span><span class="s">&quot;Original Image&quot;</span><span class="p">,</span> <span class="n">image</span><span class="p">);</span>
+ <span class="n">imshow</span><span class="p">(</span><span class="s">&quot;New Image&quot;</span><span class="p">,</span> <span class="n">new_image</span><span class="p">);</span>
+
+ <span class="c1">/// Wait until user press some key</span>
+ <span class="n">waitKey</span><span class="p">();</span>
+ <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">We begin by creating parameters to save <img class="math" src="../../../../_images/math/69777408db155ee0fca9cc9dee60a269df6d1f96.png" alt="\alpha"/> and <img class="math" src="../../../../_images/math/247b5ce2e487d3610db5ce3e3d8cc882c38ab8db.png" alt="\beta"/> to be entered by the user:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">double</span> <span class="n">alpha</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">beta</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">We load an image using <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html?highlight=imread#imread">imread</a> and save it in a Mat object:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">image</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Now, since we will make some transformations to this image, we need a new Mat object to store it. Also, we want this to have the following features:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Initial pixel values equal to zero</li>
+<li>Same size and type as the original image</li>
+</ul>
+</div>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">new_image</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span> <span class="n">image</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">image</span><span class="p">.</span><span class="n">type</span><span class="p">()</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>We observe that <a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html?highlight=zeros#mat-zeros">Mat::zeros</a> returns a Matlab-style zero initializer based on <em>image.size()</em> and <em>image.type()</em></p>
+</li>
+<li><p class="first">Now, to perform the operation <img class="math" src="../../../../_images/math/f696c5b32dad45e492aa61ce5a10df9606944f1d.png" alt="g(i,j) = \alpha \cdot f(i,j) + \beta"/> we will access to each pixel in image. Since we are operating with BGR images, we will have three values per pixel (B, G and R), so we will also access them separately. Here is the piece of code:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">image</span><span class="p">.</span><span class="n">rows</span><span class="p">;</span> <span class="n">y</span><span class="o">++</span> <span class="p">)</span>
+   <span class="p">{</span> <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">image</span><span class="p">.</span><span class="n">cols</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span> <span class="p">)</span>
+        <span class="p">{</span> <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">c</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="n">c</span><span class="o">++</span> <span class="p">)</span>
+             <span class="p">{</span> <span class="n">new_image</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">Vec3b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="p">)[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span>
+                         <span class="n">saturate_cast</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">(</span> <span class="n">alpha</span><span class="o">*</span><span class="p">(</span> <span class="n">image</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">Vec3b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="p">)[</span><span class="n">c</span><span class="p">]</span> <span class="p">)</span> <span class="o">+</span> <span class="n">beta</span> <span class="p">);</span> <span class="p">}</span>
+   <span class="p">}</span>
+   <span class="p">}</span>
+</pre></div>
+</div>
+<p>Notice the following:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>To access each pixel in the images we are using this syntax: <em>image.at&lt;Vec3b&gt;(y,x)[c]</em> where <em>y</em> is the row, <em>x</em> is the column and <em>c</em> is R, G or B (0, 1 or 2).</li>
+<li>Since the operation <img class="math" src="../../../../_images/math/4219ee4e703bedf885569c6d29303b7c1c1ce760.png" alt="\alpha \cdot p(i,j) + \beta"/> can give values out of range or not integers (if <img class="math" src="../../../../_images/math/69777408db155ee0fca9cc9dee60a269df6d1f96.png" alt="\alpha"/> is float), we use <a class="reference external" href="http://docs.opencv.org/modules/core/doc/utility_and_system_functions_and_macros.html?highlight=saturate_cast#saturate-cast">saturate_cast</a> to make sure the values are valid.</li>
+</ul>
+</div>
+</li>
+<li><p class="first">Finally, we create windows and show the images, the usual way.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">namedWindow</span><span class="p">(</span><span class="s">&quot;Original Image&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="n">namedWindow</span><span class="p">(</span><span class="s">&quot;New Image&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+
+<span class="n">imshow</span><span class="p">(</span><span class="s">&quot;Original Image&quot;</span><span class="p">,</span> <span class="n">image</span><span class="p">);</span>
+<span class="n">imshow</span><span class="p">(</span><span class="s">&quot;New Image&quot;</span><span class="p">,</span> <span class="n">new_image</span><span class="p">);</span>
+
+<span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Instead of using the <strong>for</strong> loops to access each pixel, we could have simply used this command:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">image</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">new_image</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">);</span>
+</pre></div>
+</div>
+<p class="last">where <a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html#mat-convertto">convertTo</a> would effectively perform <em>new_image = a*image + beta</em>. However, we wanted to show you how to access each pixel. In any case, both methods give the same result but convertTo is more optimized and works a lot faster.</p>
+</div>
+</div>
+<div class="section" id="result">
+<h2>Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Running our code and using <img class="math" src="../../../../_images/math/c67d71e2ade76ef12dc273c159a0fb68db49b087.png" alt="\alpha = 2.2"/> and <img class="math" src="../../../../_images/math/4bf2bf4518c94d8907d31decbf2fec88cc1958b2.png" alt="\beta = 50"/></p>
+<div class="highlight-bash"><div class="highlight"><pre>$ ./BasicLinearTransforms lena.jpg
+Basic Linear Transforms
+-------------------------
+* Enter the alpha value <span class="o">[</span>1.0-3.0<span class="o">]</span>: 2.2
+* Enter the beta value <span class="o">[</span>0-100<span class="o">]</span>: 50
+</pre></div>
+</div>
+</li>
+<li><p class="first">We get this:</p>
+</li>
+</ul>
+<img alt="Basic Linear Transform - Final Result" class="align-center" src="../../../../_images/Basic_Linear_Transform_Tutorial_Result_0.jpg" />
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Changing the contrast and brightness of an image!</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a><ul>
+<li><a class="reference internal" href="#image-processing">Image Processing</a><ul>
+<li><a class="reference internal" href="#pixel-transforms">Pixel Transforms</a><ul>
+<li><a class="reference internal" href="#brightness-and-contrast-adjustments">Brightness and contrast adjustments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#result">Result</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../adding_images/adding_images.html"
+                        title="previous chapter">Adding (blending) two images using OpenCV</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../basic_geometric_drawing/basic_geometric_drawing.html"
+                        title="next chapter">Basic Drawing</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/core/basic_linear_transform/basic_linear_transform.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../basic_geometric_drawing/basic_geometric_drawing.html" title="Basic Drawing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../adding_images/adding_images.html" title="Adding (blending) two images using OpenCV"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_core/table_of_content_core.html" ><em>core</em> module. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

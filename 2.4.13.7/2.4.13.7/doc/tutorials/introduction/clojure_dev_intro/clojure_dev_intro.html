@@ -1,0 +1,778 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction to OpenCV Development with Clojure &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="Introduction to OpenCV" href="../table_of_content_introduction/table_of_content_introduction.html" />
+    <link rel="next" title="Introduction into Android Development" href="../android_binary_package/android_dev_intro.html" />
+    <link rel="prev" title="Using OpenCV Java with Eclipse" href="../java_eclipse/java_eclipse.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../android_binary_package/android_dev_intro.html" title="Introduction into Android Development"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../java_eclipse/java_eclipse.html" title="Using OpenCV Java with Eclipse"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_introduction/table_of_content_introduction.html" accesskey="U">Introduction to OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="introduction-to-opencv-development-with-clojure">
+<span id="clojure-dev-intro"></span><h1>Introduction to OpenCV Development with Clojure<a class="headerlink" href="#introduction-to-opencv-development-with-clojure" title="Permalink to this headline">¶</a></h1>
+<p>As of OpenCV 2.4.4, OpenCV supports desktop Java development using
+nearly the same interface as for Android development.</p>
+<p><a class="reference external" href="http://clojure.org/">Clojure</a> is a contemporary LISP dialect hosted
+by the Java Virtual Machine and it offers a complete interoperability
+with the underlying JVM. This means that we should even be able to use
+the Clojure REPL (Read Eval Print Loop) as and interactive programmable
+interface to the underlying OpenCV engine.</p>
+<div class="section" id="what-we-ll-do-in-this-tutorial">
+<h2>What we&#8217;ll do in this tutorial<a class="headerlink" href="#what-we-ll-do-in-this-tutorial" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial will help you in setting up a basic Clojure environment
+for interactively learning OpenCV within the fully programmable
+CLojure REPL.</p>
+<div class="section" id="tutorial-source-code">
+<h3>Tutorial source code<a class="headerlink" href="#tutorial-source-code" title="Permalink to this headline">¶</a></h3>
+<p>You can find a runnable source code of the sample in the
+<code class="file docutils literal"><span class="pre">samples/java/clojure/simple-sample</span></code> folder of the OpenCV
+repository. After having installed OpenCV and Clojure as explained in
+the tutorial, issue the following command to run the sample from the
+command line.</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>cd path/to/samples/java/clojure/simple-sample
+lein run
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="preamble">
+<h2>Preamble<a class="headerlink" href="#preamble" title="Permalink to this headline">¶</a></h2>
+<p>For detailed instruction on installing OpenCV with desktop Java support
+refer to the <a class="reference external" href="http://docs.opencv.org/2.4.4-beta/doc/tutorials/introduction/desktop_java/java_dev_intro.html">corresponding tutorial</a>.</p>
+<p>If you are in hurry, here is a minimum quick start guide to install
+OpenCV on Mac OS X:</p>
+<blockquote>
+<div>NOTE 1: I&#8217;m assuming you already installed
+<a class="reference external" href="https://developer.apple.com/xcode/">xcode</a>,
+<a class="reference external" href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">jdk</a>
+and <a class="reference external" href="http://www.cmake.org/cmake/resources/software.html">Cmake</a>.</div></blockquote>
+<div class="code bash highlight-python"><div class="highlight"><pre>cd ~/
+mkdir opt
+git clone https://github.com/opencv/opencv.git
+cd opencv
+git checkout 2.4
+mkdir build
+cd build
+cmake -DBUILD_SHARED_LIBS=OFF ..
+...
+...
+make -j8
+# optional
+# make install
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-leiningen">
+<h2>Install Leiningen<a class="headerlink" href="#install-leiningen" title="Permalink to this headline">¶</a></h2>
+<p>Once you installed OpenCV with desktop java support the only other
+requirement is to install
+<a class="reference external" href="https://github.com/technomancy/leiningen">Leiningeng</a> which allows
+you to manage the entire life cycle of your CLJ projects.</p>
+<p>The available <a class="reference external" href="https://github.com/technomancy/leiningen#installation">installation guide</a> is very easy to be followed:</p>
+<ol class="arabic simple">
+<li><a class="reference external" href="https://raw.github.com/technomancy/leiningen/stable/bin/lein">Download the script</a></li>
+<li>Place it on your <code class="docutils literal"><span class="pre">$PATH</span></code> (cf. <code class="docutils literal"><span class="pre">~/bin</span></code> is a good choice if it is
+on your <code class="docutils literal"><span class="pre">path</span></code>.)</li>
+<li>Set the script to be executable. (i.e. <code class="docutils literal"><span class="pre">chmod</span> <span class="pre">755</span> <span class="pre">~/bin/lein</span></code>).</li>
+</ol>
+<p>If you work on Windows, follow <a class="reference external" href="https://github.com/technomancy/leiningen#windows">this instruction</a></p>
+<p>You now have both the OpenCV library and a fully installed basic Clojure
+environment. What is now needed is to configure the Clojure environment
+to interact with the OpenCV library.</p>
+</div>
+<div class="section" id="install-the-localrepo-leiningen-plugin">
+<h2>Install the localrepo Leiningen plugin<a class="headerlink" href="#install-the-localrepo-leiningen-plugin" title="Permalink to this headline">¶</a></h2>
+<p>The set of commands (tasks in Leiningen parlance) natively supported by
+Leiningen can be very easily extended by various plugins. One of them is
+the <a class="reference external" href="https://github.com/kumarshantanu/lein-localrepo">lein-localrepo</a>
+plugin which allows to install any jar lib as an artifact in the local
+maven repository of your machine (typically in the <code class="docutils literal"><span class="pre">~/.m2/repository</span></code>
+directory of your username).</p>
+<p>We&#8217;re going to use this <code class="docutils literal"><span class="pre">lein</span></code> plugin to add to the local maven
+repository the opencv components needed by Java and Clojure to use the
+opencv lib.</p>
+<p>Generally speaking, if you want to use a plugin on project base only, it
+can be added directly to a CLJ project created by <code class="docutils literal"><span class="pre">lein</span></code>.</p>
+<p>Instead, when you want a plugin to be available to any CLJ project in
+your username space, you can add it to the <code class="docutils literal"><span class="pre">profiles.clj</span></code> in the
+<code class="docutils literal"><span class="pre">~/.lein/</span></code> directory.</p>
+<p>The <code class="docutils literal"><span class="pre">lein-localrepo</span></code> plugin will be useful to me in other CLJ
+projects where I need to call native libs wrapped by a Java interface.
+So I decide to make it available to any CLJ project:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>mkdir ~/.lein
+</pre></div>
+</div>
+<p>Create a file named <code class="docutils literal"><span class="pre">profiles.clj</span></code> in the <code class="docutils literal"><span class="pre">~/.lein</span></code> directory and
+copy into it the following content:</p>
+<div class="code clojure highlight-python"><div class="highlight"><pre>{:user {:plugins [[lein-localrepo &quot;0.5.2&quot;]]}}
+</pre></div>
+</div>
+<p>Here we&#8217;re saying that the version release <code class="docutils literal"><span class="pre">&quot;0.5.2&quot;</span></code> of the
+<code class="docutils literal"><span class="pre">lein-localrepo</span></code> plugin will be available to the <code class="docutils literal"><span class="pre">:user</span></code> profile for
+any CLJ project created by <code class="docutils literal"><span class="pre">lein</span></code>.</p>
+<p>You do not need to do anything else to install the plugin because it
+will be automatically downloaded from a remote repository the very first
+time you issue any <code class="docutils literal"><span class="pre">lein</span></code> task.</p>
+</div>
+<div class="section" id="install-the-java-specific-libs-as-local-repository">
+<h2>Install the java specific libs as local repository<a class="headerlink" href="#install-the-java-specific-libs-as-local-repository" title="Permalink to this headline">¶</a></h2>
+<p>If you followed the standard documentation for installing OpenCV on your
+computer, you should find the following two libs under the directory
+where you built OpenCV:</p>
+<ul class="simple">
+<li>the <code class="docutils literal"><span class="pre">build/bin/opencv-247.jar</span></code> java lib</li>
+<li>the <code class="docutils literal"><span class="pre">build/lib/libopencv_java247.dylib</span></code> native lib (or <code class="docutils literal"><span class="pre">.so</span></code> in
+you built OpenCV a GNU/Linux OS)</li>
+</ul>
+<p>They are the only opencv libs needed by the JVM to interact with OpenCV.</p>
+<div class="section" id="take-apart-the-needed-opencv-libs">
+<h3>Take apart the needed opencv libs<a class="headerlink" href="#take-apart-the-needed-opencv-libs" title="Permalink to this headline">¶</a></h3>
+<p>Create a new directory to store in the above two libs. Start by copying
+into it the <code class="docutils literal"><span class="pre">opencv-247.jar</span></code> lib.</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>cd ~/opt
+mkdir clj-opencv
+cd clj-opencv
+cp ~/opt/opencv/build/bin/opencv-247.jar .
+</pre></div>
+</div>
+<p>First lib done.</p>
+<p>Now, to be able to add the <code class="docutils literal"><span class="pre">libopencv_java247.dylib</span></code> shared native lib
+to the local maven repository, we first need to package it as a jar
+file.</p>
+<p>The native lib has to be copied into a directories layout which mimics
+the names of your operating system and architecture. I&#8217;m using a Mac OS
+X with a X86 64 bit architecture. So my layout will be the following:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>mkdir -p native/macosx/x86_64
+</pre></div>
+</div>
+<p>Copy into the <code class="docutils literal"><span class="pre">x86_64</span></code> directory the <code class="docutils literal"><span class="pre">libopencv_java247.dylib</span></code> lib.</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>cp ~/opt/opencv/build/lib/libopencv_java247.dylib native/macosx/x86_64/
+</pre></div>
+</div>
+<p>If you&#8217;re running OpenCV from a different OS/Architecture pair, here
+is a summary of the mapping you can choose from.</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>OS
+
+Mac OS X -&gt; macosx
+Windows  -&gt; windows
+Linux    -&gt; linux
+SunOS    -&gt; solaris
+
+Architectures
+
+amd64    -&gt; x86_64
+x86_64   -&gt; x86_64
+x86      -&gt; x86
+i386     -&gt; x86
+arm      -&gt; arm
+sparc    -&gt; sparc
+</pre></div>
+</div>
+</div>
+<div class="section" id="package-the-native-lib-as-a-jar">
+<h3>Package the native lib as a jar<a class="headerlink" href="#package-the-native-lib-as-a-jar" title="Permalink to this headline">¶</a></h3>
+<p>Next you need to package the native lib in a jar file by using the
+<code class="docutils literal"><span class="pre">jar</span></code> command to create a new jar file from a directory.</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>jar -cMf opencv-native-247.jar native
+</pre></div>
+</div>
+<p>Note that ehe <code class="docutils literal"><span class="pre">M</span></code> option instructs the <code class="docutils literal"><span class="pre">jar</span></code> command to not create
+a MANIFEST file for the artifact.</p>
+<p>Your directories layout should look like the following:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>tree
+.
+|__ native
+|   |__ macosx
+|       |__ x86_64
+|           |__ libopencv_java247.dylib
+|
+|__ opencv-247.jar
+|__ opencv-native-247.jar
+
+3 directories, 3 files
+</pre></div>
+</div>
+</div>
+<div class="section" id="locally-install-the-jars">
+<h3>Locally install the jars<a class="headerlink" href="#locally-install-the-jars" title="Permalink to this headline">¶</a></h3>
+<p>We are now ready to add the two jars as artifacts to the local maven
+repository with the help of the <code class="docutils literal"><span class="pre">lein-localrepo</span></code> plugin.</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>lein localrepo install opencv-247.jar opencv/opencv 2.4.7
+</pre></div>
+</div>
+<p>Here the <code class="docutils literal"><span class="pre">localrepo</span> <span class="pre">install</span></code> task creates the <code class="docutils literal"><span class="pre">2.4.7.</span></code> release of
+the <code class="docutils literal"><span class="pre">opencv/opencv</span></code> maven artifact from the <code class="docutils literal"><span class="pre">opencv-247.jar</span></code> lib and
+then installs it into the local maven repository. The <code class="docutils literal"><span class="pre">opencv/opencv</span></code>
+artifact will then be available to any maven compliant project
+(Leiningen is internally based on maven).</p>
+<p>Do the same thing with the native lib previously wrapped in a new jar
+file.</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>lein localrepo install opencv-native-247.jar opencv/opencv-native 2.4.7
+</pre></div>
+</div>
+<p>Note that the groupId, <code class="docutils literal"><span class="pre">opencv</span></code>, of the two artifacts is the same. We
+are now ready to create a new CLJ project to start interacting with
+OpenCV.</p>
+</div>
+<div class="section" id="create-a-project">
+<h3>Create a project<a class="headerlink" href="#create-a-project" title="Permalink to this headline">¶</a></h3>
+<p>Create a new CLJ project by using the <code class="docutils literal"><span class="pre">lein</span> <span class="pre">new</span></code> task from the
+terminal.</p>
+<div class="code bash highlight-python"><div class="highlight"><pre># cd in the directory where you work with your development projects (e.g. ~/devel)
+lein new simple-sample
+Generating a project called simple-sample based on the &#39;default&#39; template.
+To see other templates (app, lein plugin, etc), try `lein help new`.
+</pre></div>
+</div>
+<p>The above task creates the following <code class="docutils literal"><span class="pre">simple-sample</span></code> directories
+layout:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>tree simple-sample/
+simple-sample/
+|__ LICENSE
+|__ README.md
+|__ doc
+|   |__ intro.md
+|
+|__ project.clj
+|__ resources
+|__ src
+|   |__ simple_sample
+|       |__ core.clj
+|__ test
+    |__ simple_sample
+        |__ core_test.clj
+
+6 directories, 6 files
+</pre></div>
+</div>
+<p>We need to add the two <code class="docutils literal"><span class="pre">opencv</span></code> artifacts as dependencies of the newly
+created project. Open the <code class="docutils literal"><span class="pre">project.clj</span></code> and modify its dependencies
+section as follows:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>(defproject simple-sample &quot;0.1.0-SNAPSHOT&quot;
+  :description &quot;FIXME: write description&quot;
+  :url &quot;http://example.com/FIXME&quot;
+  :license {:name &quot;Eclipse Public License&quot;
+            :url &quot;http://www.eclipse.org/legal/epl-v10.html&quot;}
+  :dependencies [[org.clojure/clojure &quot;1.5.1&quot;]
+                 [opencv/opencv &quot;2.4.7&quot;] ; added line
+                 [opencv/opencv-native &quot;2.4.7&quot;]]) ;added line
+</pre></div>
+</div>
+<p>Note that The Clojure Programming Language is a jar artifact too. This
+is why Clojure is called an hosted language.</p>
+<p>To verify that everything went right issue the <code class="docutils literal"><span class="pre">lein</span> <span class="pre">deps</span></code> task. The
+very first time you run a <code class="docutils literal"><span class="pre">lein</span></code> task it will take sometime to
+download all the required dependencies before executing the task
+itself.</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>cd simple-sample
+lein deps
+...
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">deps</span></code> task reads and merges from the <code class="docutils literal"><span class="pre">project.clj</span></code> and the
+<code class="docutils literal"><span class="pre">~/.lein/profiles.clj</span></code> files all the dependencies of the
+<code class="docutils literal"><span class="pre">simple-sample</span></code> project and verifies if they have already been
+cached in the local maven repository. If the task returns without
+messages about not being able to retrieve the two new artifacts your
+installation is correct, otherwise go back and double check that you
+did everything right.</p>
+</div>
+<div class="section" id="repling-with-opencv">
+<h3>REPLing with OpenCV<a class="headerlink" href="#repling-with-opencv" title="Permalink to this headline">¶</a></h3>
+<p>Now <code class="docutils literal"><span class="pre">cd</span></code> in the <code class="docutils literal"><span class="pre">simple-sample</span></code> directory and issue the following
+<code class="docutils literal"><span class="pre">lein</span></code> task:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>cd simple-sample
+lein repl
+...
+...
+nREPL server started on port 50907 on host 127.0.0.1
+REPL-y 0.3.0
+Clojure 1.5.1
+    Docs: (doc function-name-here)
+          (find-doc &quot;part-of-name-here&quot;)
+  Source: (source function-name-here)
+ Javadoc: (javadoc java-object-or-class-here)
+    Exit: Control+D or (exit) or (quit)
+ Results: Stored in vars *1, *2, *3, an exception in *e
+
+user=&gt;
+</pre></div>
+</div>
+<p>You can immediately interact with the REPL by issuing any CLJ expression
+to be evaluated.</p>
+<div class="code clojure highlight-python"><div class="highlight"><pre>user=&gt; (+ 41 1)
+42
+user=&gt; (println &quot;Hello, OpenCV!&quot;)
+Hello, OpenCV!
+nil
+user=&gt; (defn foo [] (str &quot;bar&quot;))
+#&#39;user/foo
+user=&gt; (foo)
+&quot;bar&quot;
+</pre></div>
+</div>
+<p>When ran from the home directory of a lein based project, even if the
+<code class="docutils literal"><span class="pre">lein</span> <span class="pre">repl</span></code> task automatically loads all the project dependencies, you
+still need to load the opencv native library to be able to interact with
+the OpenCV.</p>
+<div class="code clojure highlight-python"><div class="highlight"><pre>user=&gt; (clojure.lang.RT/loadLibrary org.opencv.core.Core/NATIVE_LIBRARY_NAME)
+nil
+</pre></div>
+</div>
+<p>Then you can start interacting with OpenCV by just referencing the fully
+qualified names of its classes.</p>
+<blockquote>
+<div>NOTE 2: <a class="reference external" href="http://docs.opencv.org/java/">Here</a> you can find the
+full OpenCV Java API.</div></blockquote>
+<div class="code clojure highlight-python"><div class="highlight"><pre>user=&gt; (org.opencv.core.Point. 0 0)
+#&lt;Point {0.0, 0.0}&gt;
+</pre></div>
+</div>
+<p>Here we created a two dimensions opencv <code class="docutils literal"><span class="pre">Point</span></code> instance. Even if all
+the java packages included within the java interface to OpenCV are
+immediately available from the CLJ REPL, it&#8217;s very annoying to prefix
+the <code class="docutils literal"><span class="pre">Point.</span></code> instance constructors with the fully qualified package
+name.</p>
+<p>Fortunately CLJ offer a very easy way to overcome this annoyance by
+directly importing the <code class="docutils literal"><span class="pre">Point</span></code> class.</p>
+<div class="code clojure highlight-python"><div class="highlight"><pre>user=&gt; (import &#39;org.opencv.core.Point)
+org.opencv.core.Point
+user=&gt; (def p1 (Point. 0 0))
+#&#39;user/p1
+user=&gt; p1
+#&lt;Point {0.0, 0.0}&gt;
+user=&gt; (def p2 (Point. 100 100))
+#&#39;user/p2
+</pre></div>
+</div>
+<p>We can even inspect the class of an instance and verify if the value of
+a symbol is an instance of a <code class="docutils literal"><span class="pre">Point</span></code> java class.</p>
+<div class="code clojure highlight-python"><div class="highlight"><pre>user=&gt; (class p1)
+org.opencv.core.Point
+user=&gt; (instance? org.opencv.core.Point p1)
+true
+</pre></div>
+</div>
+<p>If we now want to use the opencv <code class="docutils literal"><span class="pre">Rect</span></code> class to create a rectangle,
+we again have to fully qualify its constructor even if it leaves in
+the same <code class="docutils literal"><span class="pre">org.opencv.core</span></code> package of the <code class="docutils literal"><span class="pre">Point</span></code> class.</p>
+<div class="code clojure highlight-python"><div class="highlight"><pre>user=&gt; (org.opencv.core.Rect. p1 p2)
+#&lt;Rect {0, 0, 100x100}&gt;
+</pre></div>
+</div>
+<p>Again, the CLJ importing facilities is very handy and let you to map
+more symbols in one shot.</p>
+<div class="code clojure highlight-python"><div class="highlight"><pre>user=&gt; (import &#39;[org.opencv.core Point Rect Size])
+org.opencv.core.Size
+user=&gt; (def r1 (Rect. p1 p2))
+#&#39;user/r1
+user=&gt; r1
+#&lt;Rect {0, 0, 100x100}&gt;
+user=&gt; (class r1)
+org.opencv.core.Rect
+user=&gt; (instance? org.opencv.core.Rect r1)
+true
+user=&gt; (Size. 100 100)
+#&lt;Size 100x100&gt;
+user=&gt; (def sq-100 (Size. 100 100))
+#&#39;user/sq-100
+user=&gt; (class sq-100)
+org.opencv.core.Size
+user=&gt; (instance? org.opencv.core.Size sq-100)
+true
+</pre></div>
+</div>
+<p>Obviously you can call methods on instances as well.</p>
+<div class="code clojure highlight-python"><div class="highlight"><pre>user=&gt; (.area r1)
+10000.0
+user=&gt; (.area sq-100)
+10000.0
+</pre></div>
+</div>
+<p>Or modify the value of a member field.</p>
+<div class="code clojure highlight-python"><div class="highlight"><pre>user=&gt; (set! (.x p1) 10)
+10
+user=&gt; p1
+#&lt;Point {10.0, 0.0}&gt;
+user=&gt; (set! (.width sq-100) 10)
+10
+user=&gt; (set! (.height sq-100) 10)
+10
+user=&gt; (.area sq-100)
+100.0
+</pre></div>
+</div>
+<p>If you find yourself not remembering a OpenCV class behavior, the
+REPL gives you the opportunity to easily search the corresponding
+javadoc documention:</p>
+<div class="code clojure highlight-python"><div class="highlight"><pre>user=&gt; (javadoc Rect)
+&quot;http://www.google.com/search?btnI=I%27m%20Feeling%20Lucky&amp;q=allinurl:org/opencv/core/Rect.html&quot;
+</pre></div>
+</div>
+</div>
+<div class="section" id="mimic-the-opencv-java-tutorial-sample-in-the-repl">
+<h3>Mimic the OpenCV Java Tutorial Sample in the REPL<a class="headerlink" href="#mimic-the-opencv-java-tutorial-sample-in-the-repl" title="Permalink to this headline">¶</a></h3>
+<p>Let&#8217;s now try to port to Clojure the <a class="reference external" href="http://docs.opencv.org/2.4.4-beta/doc/tutorials/introduction/desktop_java/java_dev_intro.html">opencv java tutorial sample</a>.
+Instead of writing it in a source file we&#8217;re going to evaluate it at the
+REPL.</p>
+<p>Following is the original Java source code of the cited sample.</p>
+<div class="code java highlight-python"><div class="highlight"><pre>import org.opencv.core.Mat;
+import org.opencv.core.CvType;
+import org.opencv.core.Scalar;
+
+class SimpleSample {
+
+  static{ System.loadLibrary(&quot;opencv_java244&quot;); }
+
+  public static void main(String[] args) {
+    Mat m = new Mat(5, 10, CvType.CV_8UC1, new Scalar(0));
+    System.out.println(&quot;OpenCV Mat: &quot; + m);
+    Mat mr1 = m.row(1);
+    mr1.setTo(new Scalar(1));
+    Mat mc5 = m.col(5);
+    mc5.setTo(new Scalar(5));
+    System.out.println(&quot;OpenCV Mat data:\n&quot; + m.dump());
+  }
+
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="add-injections-to-the-project">
+<h3>Add injections to the project<a class="headerlink" href="#add-injections-to-the-project" title="Permalink to this headline">¶</a></h3>
+<p>Before start coding, we&#8217;d like to eliminate the boring need of
+interactively loading the native opencv lib any time we start a new REPL
+to interact with it.</p>
+<p>First, stop the REPL by evaluating the <code class="docutils literal"><span class="pre">(exit)</span></code> expression at the REPL
+prompt.</p>
+<div class="code clojure highlight-python"><div class="highlight"><pre>user=&gt; (exit)
+Bye for now!
+</pre></div>
+</div>
+<p>Then open your <code class="docutils literal"><span class="pre">project.clj</span></code> file and edit it as follows:</p>
+<div class="code clojure highlight-python"><div class="highlight"><pre>(defproject simple-sample &quot;0.1.0-SNAPSHOT&quot;
+  ...
+  :injections [(clojure.lang.RT/loadLibrary org.opencv.core.Core/NATIVE_LIBRARY_NAME)])
+</pre></div>
+</div>
+<p>Here we&#8217;re saying to load the opencv native lib anytime we run the REPL
+in such a way that we have not anymore to remember to manually do it.</p>
+<p>Rerun the <code class="docutils literal"><span class="pre">lein</span> <span class="pre">repl</span></code> task</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>lein repl
+nREPL server started on port 51645 on host 127.0.0.1
+REPL-y 0.3.0
+Clojure 1.5.1
+    Docs: (doc function-name-here)
+          (find-doc &quot;part-of-name-here&quot;)
+  Source: (source function-name-here)
+ Javadoc: (javadoc java-object-or-class-here)
+    Exit: Control+D or (exit) or (quit)
+ Results: Stored in vars *1, *2, *3, an exception in *e
+
+user=&gt;
+</pre></div>
+</div>
+<p>Import the interested OpenCV java interfaces.</p>
+<div class="code clojure highlight-python"><div class="highlight"><pre>user=&gt; (import &#39;[org.opencv.core Mat CvType Scalar])
+org.opencv.core.Scalar
+</pre></div>
+</div>
+<p>We&#8217;re going to mimic almost verbatim the original OpenCV java tutorial
+to:</p>
+<ul class="simple">
+<li>create a 5x10 matrix with all its elements intialized to 0</li>
+<li>change the value of every element of the second row to 1</li>
+<li>change the value of every element of the 6th column to 5</li>
+<li>print the content of the obtained matrix</li>
+</ul>
+<div class="code clojure highlight-python"><div class="highlight"><pre>user=&gt; (def m (Mat. 5 10 CvType/CV_8UC1 (Scalar. 0 0)))
+#&#39;user/m
+user=&gt; (def mr1 (.row m 1))
+#&#39;user/mr1
+user=&gt; (.setTo mr1 (Scalar. 1 0))
+#&lt;Mat Mat [ 1*10*CV_8UC1, isCont=true, isSubmat=true, nativeObj=0x7fc9dac49880, dataAddr=0x7fc9d9c98d5a ]&gt;
+user=&gt; (def mc5 (.col m 5))
+#&#39;user/mc5
+user=&gt; (.setTo mc5 (Scalar. 5 0))
+#&lt;Mat Mat [ 5*1*CV_8UC1, isCont=false, isSubmat=true, nativeObj=0x7fc9d9c995a0, dataAddr=0x7fc9d9c98d55 ]&gt;
+user=&gt; (println (.dump m))
+[0, 0, 0, 0, 0, 5, 0, 0, 0, 0;
+  1, 1, 1, 1, 1, 5, 1, 1, 1, 1;
+  0, 0, 0, 0, 0, 5, 0, 0, 0, 0;
+  0, 0, 0, 0, 0, 5, 0, 0, 0, 0;
+  0, 0, 0, 0, 0, 5, 0, 0, 0, 0]
+nil
+</pre></div>
+</div>
+<p>If you are accustomed to a functional language all those abused and
+mutating nouns are going to irritate your preference for verbs. Even
+if the CLJ interop syntax is very handy and complete, there is still
+an impedance mismatch between any OOP language and any FP language
+(bein Scala a mixed paradigms programming language).</p>
+<p>To exit the REPL type <code class="docutils literal"><span class="pre">(exit)</span></code>, <code class="docutils literal"><span class="pre">ctr-D</span></code> or <code class="docutils literal"><span class="pre">(quit)</span></code> at the REPL
+prompt.</p>
+<div class="code clojure highlight-python"><div class="highlight"><pre>user=&gt; (exit)
+Bye for now!
+</pre></div>
+</div>
+</div>
+<div class="section" id="interactively-load-and-blur-an-image">
+<h3>Interactively load and blur an image<a class="headerlink" href="#interactively-load-and-blur-an-image" title="Permalink to this headline">¶</a></h3>
+<p>In the next sample you will learn how to interactively load and blur and
+image from the REPL by using the following OpenCV methods:</p>
+<ul class="simple">
+<li>the <code class="docutils literal"><span class="pre">imread</span></code> static method from the <code class="docutils literal"><span class="pre">Highgui</span></code> class to read an
+image from a file</li>
+<li>the <code class="docutils literal"><span class="pre">imwrite</span></code> static method from the <code class="docutils literal"><span class="pre">Highgui</span></code> class to write an
+image to a file</li>
+<li>the <code class="docutils literal"><span class="pre">GaussianBlur</span></code> static method from the <code class="docutils literal"><span class="pre">Imgproc</span></code> class to
+apply to blur the original image</li>
+</ul>
+<p>We&#8217;re also going to use the <code class="docutils literal"><span class="pre">Mat</span></code> class which is returned from the
+<code class="docutils literal"><span class="pre">imread</span></code> method and accpeted as the main argument to both the
+<code class="docutils literal"><span class="pre">GaussianBlur</span></code> and the <code class="docutils literal"><span class="pre">imwrite</span></code> methods.</p>
+</div>
+<div class="section" id="add-an-image-to-the-project">
+<h3>Add an image to the project<a class="headerlink" href="#add-an-image-to-the-project" title="Permalink to this headline">¶</a></h3>
+<p>First we want to add an image file to a newly create directory for
+storing static resources of the project.</p>
+<img alt="Original Image" class="align-center" src="../../../../_images/lena.png" />
+<div class="code bash highlight-python"><div class="highlight"><pre>mkdir -p resources/images
+cp ~/opt/opencv/doc/tutorials/introduction/desktop_java/images/lena.png resource/images/
+</pre></div>
+</div>
+</div>
+<div class="section" id="read-the-image">
+<h3>Read the image<a class="headerlink" href="#read-the-image" title="Permalink to this headline">¶</a></h3>
+<p>Now launch the REPL as usual and start by importing all the OpenCV
+classes we&#8217;re going to use:</p>
+<div class="code clojure highlight-python"><div class="highlight"><pre>lein repl
+nREPL server started on port 50624 on host 127.0.0.1
+REPL-y 0.3.0
+Clojure 1.5.1
+    Docs: (doc function-name-here)
+          (find-doc &quot;part-of-name-here&quot;)
+  Source: (source function-name-here)
+ Javadoc: (javadoc java-object-or-class-here)
+    Exit: Control+D or (exit) or (quit)
+ Results: Stored in vars *1, *2, *3, an exception in *e
+
+user=&gt; (import &#39;[org.opencv.core Mat Size CvType]
+               &#39;[org.opencv.highgui Highgui]
+               &#39;[org.opencv.imgproc Imgproc])
+org.opencv.imgproc.Imgproc
+</pre></div>
+</div>
+<p>Now read the image from the <code class="docutils literal"><span class="pre">resources/images/lena.png</span></code> file.</p>
+<div class="code clojure highlight-python"><div class="highlight"><pre>user=&gt; (def lena (Highgui/imread &quot;resources/images/lena.png&quot;))
+#&#39;user/lena
+user=&gt; lena
+#&lt;Mat Mat [ 512*512*CV_8UC3, isCont=true, isSubmat=false, nativeObj=0x7f9ab3054c40, dataAddr=0x19fea9010 ]&gt;
+</pre></div>
+</div>
+<p>As you see, by simply evaluating the <code class="docutils literal"><span class="pre">lena</span></code> symbol we know that
+<code class="docutils literal"><span class="pre">lena.png</span></code> is a <code class="docutils literal"><span class="pre">512x512</span></code> matrix of <code class="docutils literal"><span class="pre">CV_8UC3</span></code> elements type. Let&#8217;s
+create a new <code class="docutils literal"><span class="pre">Mat</span></code> instance of the same dimensions and elements type.</p>
+<div class="code clojure highlight-python"><div class="highlight"><pre>user=&gt; (def blurred (Mat. 512 512 CvType/CV_8UC3))
+#&#39;user/blurred
+user=&gt;
+</pre></div>
+</div>
+<p>Now apply a <code class="docutils literal"><span class="pre">GaussianBlur</span></code> filter using <code class="docutils literal"><span class="pre">lena</span></code> as the source matrix
+and <code class="docutils literal"><span class="pre">blurred</span></code> as the destination matrix.</p>
+<div class="code clojure highlight-python"><div class="highlight"><pre>user=&gt; (Imgproc/GaussianBlur lena blurred (Size. 5 5) 3 3)
+nil
+</pre></div>
+</div>
+<p>As a last step just save the <code class="docutils literal"><span class="pre">blurred</span></code> matrix in a new image file.</p>
+<div class="code clojure highlight-python"><div class="highlight"><pre>user=&gt; (Highgui/imwrite &quot;resources/images/blurred.png&quot; blurred)
+true
+user=&gt; (exit)
+Bye for now!
+</pre></div>
+</div>
+<p>Following is the new blurred image of Lena.</p>
+<img alt="Blurred Image" class="align-center" src="../../../../_images/blurred.png" />
+</div>
+</div>
+<div class="section" id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial only introduces the very basic environment set up to be
+able to interact with OpenCV in a CLJ REPL.</p>
+<p>I recommend any Clojure newbie to read the <a class="reference external" href="http://clojure.org/java_interop">Clojure Java Interop chapter</a> to get all you need to know
+to interoperate with any plain java lib that has not been wrapped in
+Clojure to make it usable in a more idiomatic and functional way within
+Clojure.</p>
+<p>The OpenCV Java API does not wrap the <code class="docutils literal"><span class="pre">highgui</span></code> module
+functionalities depending on <code class="docutils literal"><span class="pre">Qt</span></code> (e.g. <code class="docutils literal"><span class="pre">namedWindow</span></code> and
+<code class="docutils literal"><span class="pre">imshow</span></code>. If you want to create windows and show images into them
+while interacting with OpenCV from the REPL, at the moment you&#8217;re left
+at your own. You could use Java Swing to fill the gap.</p>
+<div class="section" id="license">
+<h3>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h3>
+<p>Copyright © 2013 Giacomo (Mimmo) Cosenza aka Magomimmo</p>
+<p>Distributed under the BSD 3-clause License, the same of OpenCV.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction to OpenCV Development with Clojure</a><ul>
+<li><a class="reference internal" href="#what-we-ll-do-in-this-tutorial">What we&#8217;ll do in this tutorial</a><ul>
+<li><a class="reference internal" href="#tutorial-source-code">Tutorial source code</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#preamble">Preamble</a></li>
+<li><a class="reference internal" href="#install-leiningen">Install Leiningen</a></li>
+<li><a class="reference internal" href="#install-the-localrepo-leiningen-plugin">Install the localrepo Leiningen plugin</a></li>
+<li><a class="reference internal" href="#install-the-java-specific-libs-as-local-repository">Install the java specific libs as local repository</a><ul>
+<li><a class="reference internal" href="#take-apart-the-needed-opencv-libs">Take apart the needed opencv libs</a></li>
+<li><a class="reference internal" href="#package-the-native-lib-as-a-jar">Package the native lib as a jar</a></li>
+<li><a class="reference internal" href="#locally-install-the-jars">Locally install the jars</a></li>
+<li><a class="reference internal" href="#create-a-project">Create a project</a></li>
+<li><a class="reference internal" href="#repling-with-opencv">REPLing with OpenCV</a></li>
+<li><a class="reference internal" href="#mimic-the-opencv-java-tutorial-sample-in-the-repl">Mimic the OpenCV Java Tutorial Sample in the REPL</a></li>
+<li><a class="reference internal" href="#add-injections-to-the-project">Add injections to the project</a></li>
+<li><a class="reference internal" href="#interactively-load-and-blur-an-image">Interactively load and blur an image</a></li>
+<li><a class="reference internal" href="#add-an-image-to-the-project">Add an image to the project</a></li>
+<li><a class="reference internal" href="#read-the-image">Read the image</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#next-steps">Next Steps</a><ul>
+<li><a class="reference internal" href="#license">License</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../java_eclipse/java_eclipse.html"
+                        title="previous chapter">Using OpenCV Java with Eclipse</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../android_binary_package/android_dev_intro.html"
+                        title="next chapter">Introduction into Android Development</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/introduction/clojure_dev_intro/clojure_dev_intro.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../android_binary_package/android_dev_intro.html" title="Introduction into Android Development"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../java_eclipse/java_eclipse.html" title="Using OpenCV Java with Eclipse"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_introduction/table_of_content_introduction.html" >Introduction to OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

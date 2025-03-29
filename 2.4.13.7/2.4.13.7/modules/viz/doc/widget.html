@@ -1,0 +1,2082 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Widget &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="viz. 3D Visualizer" href="viz.html" />
+    <link rel="next" title="OpenCV4Android Reference" href="../../../platforms/android/refman.html" />
+    <link rel="prev" title="Viz" href="viz3d.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../platforms/android/refman.html" title="OpenCV4Android Reference"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="viz3d.html" title="Viz"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="viz.html" accesskey="U">viz. 3D Visualizer</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="widget">
+<h1>Widget<a class="headerlink" href="#widget" title="Permalink to this headline">¶</a></h1>
+<p>In this section, the widget framework is explained. Widgets represent
+2D or 3D objects, varying from simple ones such as lines to complex one such as
+point clouds and meshes.</p>
+<p>Widgets are <strong>implicitly shared</strong>. Therefore, one can add a widget to the scene,
+and modify the widget without re-adding the widget.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="p">...</span>
+<span class="c1">/// Create a cloud widget</span>
+<span class="n">viz</span><span class="o">::</span><span class="n">WCloud</span> <span class="n">cw</span><span class="p">(</span><span class="n">cloud</span><span class="p">,</span> <span class="n">viz</span><span class="o">::</span><span class="n">Color</span><span class="o">::</span><span class="n">red</span><span class="p">());</span>
+<span class="c1">/// Display it in a window</span>
+<span class="n">myWindow</span><span class="p">.</span><span class="n">showWidget</span><span class="p">(</span><span class="s">&quot;CloudWidget1&quot;</span><span class="p">,</span> <span class="n">cw</span><span class="p">);</span>
+<span class="c1">/// Modify it, and it will be modified in the window.</span>
+<span class="n">cw</span><span class="p">.</span><span class="n">setColor</span><span class="p">(</span><span class="n">viz</span><span class="o">::</span><span class="n">Color</span><span class="o">::</span><span class="n">yellow</span><span class="p">());</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<div class="section" id="viz-widget">
+<h2>viz::Widget<a class="headerlink" href="#viz-widget" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Widget">
+<em class="property">class </em><code class="descname">Widget</code><a class="headerlink" href="#Widget" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class of all widgets. Widget is implicitly shared.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">Widget</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">Widget</span><span class="p">();</span>
+    <span class="n">Widget</span><span class="p">(</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&amp;</span> <span class="n">other</span><span class="p">);</span>
+    <span class="n">Widget</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&amp;</span> <span class="n">other</span><span class="p">);</span>
+    <span class="o">~</span><span class="n">Widget</span><span class="p">();</span>
+
+    <span class="c1">//! Create a widget directly from ply file</span>
+    <span class="k">static</span> <span class="n">Widget</span> <span class="nf">fromPlyFile</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">file_name</span><span class="p">);</span>
+
+    <span class="c1">//! Rendering properties of this particular widget</span>
+    <span class="kt">void</span> <span class="nf">setRenderingProperty</span><span class="p">(</span><span class="kt">int</span> <span class="n">property</span><span class="p">,</span> <span class="kt">double</span> <span class="n">value</span><span class="p">);</span>
+    <span class="kt">double</span> <span class="nf">getRenderingProperty</span><span class="p">(</span><span class="kt">int</span> <span class="n">property</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">//! Casting between widgets</span>
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">_W</span><span class="o">&gt;</span> <span class="n">_W</span> <span class="n">cast</span><span class="p">();</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/* hidden */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-widget-fromplyfile">
+<h2>viz::Widget::fromPlyFile<a class="headerlink" href="#viz-widget-fromplyfile" title="Permalink to this headline">¶</a></h2>
+<p>Creates a widget from ply file.</p>
+<dl class="function">
+<dt id="static Widget fromPlyFile(const String &amp;file_name)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> Widget <code class="descname">fromPlyFile</code><span class="sig-paren">(</span>const String&amp; <strong>file_name</strong><span class="sig-paren">)</span><a class="headerlink" href="#static Widget fromPlyFile(const String &file_name)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> &#8211; Ply file name.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-widget-setrenderingproperty">
+<h2>viz::Widget::setRenderingProperty<a class="headerlink" href="#viz-widget-setrenderingproperty" title="Permalink to this headline">¶</a></h2>
+<p>Sets rendering property of the widget.</p>
+<dl class="function">
+<dt id="void setRenderingProperty(int property, double value)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setRenderingProperty</code><span class="sig-paren">(</span>int <strong>property</strong>, double <strong>value</strong><span class="sig-paren">)</span><a class="headerlink" href="#void setRenderingProperty(int property, double value)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>property</strong> &#8211; Property that will be modified.</li>
+<li><strong>value</strong> &#8211; The new value of the property.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rendering property</strong> can be one of the following:</p>
+<ul>
+<li><p class="first"><strong>POINT_SIZE</strong></p>
+</li>
+<li><p class="first"><strong>OPACITY</strong></p>
+</li>
+<li><p class="first"><strong>LINE_WIDTH</strong></p>
+</li>
+<li><p class="first"><strong>FONT_SIZE</strong></p>
+</li>
+<li><dl class="first docutils">
+<dt><strong>REPRESENTATION</strong>: Expected values are</dt>
+<dd><ul class="first last simple">
+<li><strong>REPRESENTATION_POINTS</strong></li>
+<li><strong>REPRESENTATION_WIREFRAME</strong></li>
+<li><strong>REPRESENTATION_SURFACE</strong></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>IMMEDIATE_RENDERING</strong>:</dt>
+<dd><ul class="first last simple">
+<li>Turn on immediate rendering by setting the value to <code class="docutils literal"><span class="pre">1</span></code>.</li>
+<li>Turn off immediate rendering by setting the value to <code class="docutils literal"><span class="pre">0</span></code>.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>SHADING</strong>: Expected values are</dt>
+<dd><ul class="first last simple">
+<li><strong>SHADING_FLAT</strong></li>
+<li><strong>SHADING_GOURAUD</strong></li>
+<li><strong>SHADING_PHONG</strong></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-widget-getrenderingproperty">
+<h2>viz::Widget::getRenderingProperty<a class="headerlink" href="#viz-widget-getrenderingproperty" title="Permalink to this headline">¶</a></h2>
+<p>Returns rendering property of the widget.</p>
+<dl class="function">
+<dt id="double getRenderingProperty(int property) const">
+<strong>C++:</strong><code class="descname"> </code>double <code class="descname">getRenderingProperty</code><span class="sig-paren">(</span>int <strong>property</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#double getRenderingProperty(int property) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>property</strong> &#8211; Property.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rendering property</strong> can be one of the following:</p>
+<ul>
+<li><p class="first"><strong>POINT_SIZE</strong></p>
+</li>
+<li><p class="first"><strong>OPACITY</strong></p>
+</li>
+<li><p class="first"><strong>LINE_WIDTH</strong></p>
+</li>
+<li><p class="first"><strong>FONT_SIZE</strong></p>
+</li>
+<li><dl class="first docutils">
+<dt><strong>REPRESENTATION</strong>: Expected values are</dt>
+<dd><ul class="first last simple">
+<li><strong>REPRESENTATION_POINTS</strong></li>
+<li><strong>REPRESENTATION_WIREFRAME</strong></li>
+<li><strong>REPRESENTATION_SURFACE</strong></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>IMMEDIATE_RENDERING</strong>:</dt>
+<dd><ul class="first last simple">
+<li>Turn on immediate rendering by setting the value to <code class="docutils literal"><span class="pre">1</span></code>.</li>
+<li>Turn off immediate rendering by setting the value to <code class="docutils literal"><span class="pre">0</span></code>.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>SHADING</strong>: Expected values are</dt>
+<dd><ul class="first last simple">
+<li><strong>SHADING_FLAT</strong></li>
+<li><strong>SHADING_GOURAUD</strong></li>
+<li><strong>SHADING_PHONG</strong></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-widget-cast">
+<h2>viz::Widget::cast<a class="headerlink" href="#viz-widget-cast" title="Permalink to this headline">¶</a></h2>
+<p>Casts a widget to another.</p>
+<dl class="function">
+<dt id="template&lt;typename _W&gt; _W cast()">
+<strong>C++:</strong><code class="descname"> </code>template&lt;typename _W&gt; _W <code class="descname">cast</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#template<typename _W> _W cast()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// Create a sphere widget</span>
+<span class="n">viz</span><span class="o">::</span><span class="n">WSphere</span> <span class="n">sw</span><span class="p">(</span><span class="n">Point3f</span><span class="p">(</span><span class="mf">0.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">),</span> <span class="mf">0.5f</span><span class="p">);</span>
+<span class="c1">// Cast sphere widget to cloud widget</span>
+<span class="n">viz</span><span class="o">::</span><span class="n">WCloud</span> <span class="n">cw</span> <span class="o">=</span> <span class="n">sw</span><span class="p">.</span><span class="n">cast</span><span class="o">&lt;</span><span class="n">viz</span><span class="o">::</span><span class="n">WCloud</span><span class="o">&gt;</span><span class="p">();</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">3D Widgets can only be cast to 3D Widgets. 2D Widgets can only be cast to 2D Widgets.</p>
+</div>
+</div>
+<div class="section" id="viz-widgetaccessor">
+<h2>viz::WidgetAccessor<a class="headerlink" href="#viz-widgetaccessor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WidgetAccessor">
+<em class="property">class </em><code class="descname">WidgetAccessor</code><a class="headerlink" href="#WidgetAccessor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This class is for users who want to develop their own widgets using VTK library API.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">CV_EXPORTS</span> <span class="n">WidgetAccessor</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="n">vtkSmartPointer</span><span class="o">&lt;</span><span class="n">vtkProp</span><span class="o">&gt;</span> <span class="n">getProp</span><span class="p">(</span><span class="k">const</span> <span class="n">Widget</span> <span class="o">&amp;</span><span class="n">widget</span><span class="p">);</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">setProp</span><span class="p">(</span><span class="n">Widget</span> <span class="o">&amp;</span><span class="n">widget</span><span class="p">,</span> <span class="n">vtkSmartPointer</span><span class="o">&lt;</span><span class="n">vtkProp</span><span class="o">&gt;</span> <span class="n">prop</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-widgetaccessor-getprop">
+<h2>viz::WidgetAccessor::getProp<a class="headerlink" href="#viz-widgetaccessor-getprop" title="Permalink to this headline">¶</a></h2>
+<p>Returns <code class="docutils literal"><span class="pre">vtkProp</span></code> of a given widget.</p>
+<dl class="function">
+<dt id="static vtkSmartPointer&lt;vtkProp&gt; getProp(const Widget &amp;widget)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> vtkSmartPointer&lt;vtkProp&gt; <code class="descname">getProp</code><span class="sig-paren">(</span>const Widget&amp; <strong>widget</strong><span class="sig-paren">)</span><a class="headerlink" href="#static vtkSmartPointer<vtkProp> getProp(const Widget &widget)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>widget</strong> &#8211; Widget whose <code class="docutils literal"><span class="pre">vtkProp</span></code> is to be returned.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>vtkProp has to be down cast appropriately to be modified.</p>
+<div class="last highlight-cpp"><div class="highlight"><pre><span class="n">vtkActor</span> <span class="o">*</span> <span class="n">actor</span> <span class="o">=</span> <span class="n">vtkActor</span><span class="o">::</span><span class="n">SafeDownCast</span><span class="p">(</span><span class="n">viz</span><span class="o">::</span><span class="n">WidgetAccessor</span><span class="o">::</span><span class="n">getProp</span><span class="p">(</span><span class="n">widget</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="viz-widgetaccessor-setprop">
+<h2>viz::WidgetAccessor::setProp<a class="headerlink" href="#viz-widgetaccessor-setprop" title="Permalink to this headline">¶</a></h2>
+<p>Sets <code class="docutils literal"><span class="pre">vtkProp</span></code> of a given widget.</p>
+<dl class="function">
+<dt id="static void setProp(Widget &amp;widget, vtkSmartPointer&lt;vtkProp&gt; prop)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> void <code class="descname">setProp</code><span class="sig-paren">(</span>Widget&amp; <strong>widget</strong>, vtkSmartPointer&lt;vtkProp&gt; <strong>prop</strong><span class="sig-paren">)</span><a class="headerlink" href="#static void setProp(Widget &widget, vtkSmartPointer<vtkProp> prop)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>widget</strong> &#8211; Widget whose <code class="docutils literal"><span class="pre">vtkProp</span></code> is to be set.</li>
+<li><strong>prop</strong> &#8211; A <code class="docutils literal"><span class="pre">vtkProp</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-widget3d">
+<h2>viz::Widget3D<a class="headerlink" href="#viz-widget3d" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Widget3D">
+<em class="property">class </em><code class="descname">Widget3D</code><a class="headerlink" href="#Widget3D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class of all 3D widgets.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">Widget3D</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">Widget3D</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="c1">//! widget position manipulation, i.e. place where it is rendered.</span>
+    <span class="kt">void</span> <span class="n">setPose</span><span class="p">(</span><span class="k">const</span> <span class="n">Affine3d</span> <span class="o">&amp;</span><span class="n">pose</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">updatePose</span><span class="p">(</span><span class="k">const</span> <span class="n">Affine3d</span> <span class="o">&amp;</span><span class="n">pose</span><span class="p">);</span>
+    <span class="n">Affine3d</span> <span class="nf">getPose</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">//! updates internal widget data, i.e. points, normals, etc.</span>
+    <span class="kt">void</span> <span class="nf">applyTransform</span><span class="p">(</span><span class="k">const</span> <span class="n">Affine3d</span> <span class="o">&amp;</span><span class="n">transform</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">setColor</span><span class="p">(</span><span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span><span class="p">);</span>
+
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-widget3d-setpose">
+<h2>viz::Widget3D::setPose<a class="headerlink" href="#viz-widget3d-setpose" title="Permalink to this headline">¶</a></h2>
+<p>Sets pose of the widget.</p>
+<dl class="function">
+<dt id="void setPose(const Affine3d &amp;pose)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setPose</code><span class="sig-paren">(</span>const Affine3d&amp; <strong>pose</strong><span class="sig-paren">)</span><a class="headerlink" href="#void setPose(const Affine3d &pose)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pose</strong> &#8211; The new pose of the widget.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-widget3d-updatewidgetpose">
+<h2>viz::Widget3D::updateWidgetPose<a class="headerlink" href="#viz-widget3d-updatewidgetpose" title="Permalink to this headline">¶</a></h2>
+<p>Updates pose of the widget by pre-multiplying its current pose.</p>
+<dl class="function">
+<dt id="void updateWidgetPose(const Affine3d &amp;pose)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">updateWidgetPose</code><span class="sig-paren">(</span>const Affine3d&amp; <strong>pose</strong><span class="sig-paren">)</span><a class="headerlink" href="#void updateWidgetPose(const Affine3d &pose)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pose</strong> &#8211; The pose that the current pose of the widget will be pre-multiplied by.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-widget3d-getpose">
+<h2>viz::Widget3D::getPose<a class="headerlink" href="#viz-widget3d-getpose" title="Permalink to this headline">¶</a></h2>
+<p>Returns the current pose of the widget.</p>
+<dl class="function">
+<dt id="Affine3d getWidgetPose() const">
+<strong>C++:</strong><code class="descname"> </code>Affine3d <code class="descname">getWidgetPose</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#Affine3d getWidgetPose() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="viz-widget3d-applytransform">
+<h2>viz::Widget3D::applyTransform<a class="headerlink" href="#viz-widget3d-applytransform" title="Permalink to this headline">¶</a></h2>
+<p>Transforms internal widget data (i.e. points, normals) using the given transform.</p>
+<dl class="function">
+<dt id="void applyTransform(const Affine3d &amp;transform)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">applyTransform</code><span class="sig-paren">(</span>const Affine3d&amp; <strong>transform</strong><span class="sig-paren">)</span><a class="headerlink" href="#void applyTransform(const Affine3d &transform)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>transform</strong> &#8211; Specified transformation to apply.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-widget3d-setcolor">
+<h2>viz::Widget3D::setColor<a class="headerlink" href="#viz-widget3d-setcolor" title="Permalink to this headline">¶</a></h2>
+<p>Sets the color of the widget.</p>
+<dl class="function">
+<dt id="void setColor(const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setColor</code><span class="sig-paren">(</span>const Color&amp; <strong>color</strong><span class="sig-paren">)</span><a class="headerlink" href="#void setColor(const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>color</strong> &#8211; color of type <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-widget2d">
+<h2>viz::Widget2D<a class="headerlink" href="#viz-widget2d" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Widget2D">
+<em class="property">class </em><code class="descname">Widget2D</code><a class="headerlink" href="#Widget2D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class of all 2D widgets.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">Widget2D</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">Widget2D</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="kt">void</span> <span class="n">setColor</span><span class="p">(</span><span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-widget2d-setcolor">
+<h2>viz::Widget2D::setColor<a class="headerlink" href="#viz-widget2d-setcolor" title="Permalink to this headline">¶</a></h2>
+<p>Sets the color of the widget.</p>
+<dl class="function">
+<dt>
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setColor</code><span class="sig-paren">(</span>const Color&amp; <strong>color</strong><span class="sig-paren">)</span></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>color</strong> &#8211; color of type <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wline">
+<h2>viz::WLine<a class="headerlink" href="#viz-wline" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WLine">
+<em class="property">class </em><code class="descname">WLine</code><a class="headerlink" href="#WLine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget defines a finite line.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WLine</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">WLine</span><span class="p">(</span><span class="k">const</span> <span class="n">Point3f</span> <span class="o">&amp;</span><span class="n">pt1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Point3f</span> <span class="o">&amp;</span><span class="n">pt2</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wline-wline">
+<h2>viz::WLine::WLine<a class="headerlink" href="#viz-wline-wline" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a WLine.</p>
+<dl class="function">
+<dt id="WLine(const Point3f &amp;pt1, const Point3f &amp;pt2, const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WLine</code><span class="sig-paren">(</span>const Point3f&amp; <strong>pt1</strong>, const Point3f&amp; <strong>pt2</strong>, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WLine(const Point3f &pt1, const Point3f &pt2, const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pt1</strong> &#8211; Start point of the line.</li>
+<li><strong>pt2</strong> &#8211; End point of the line.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the line.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wplane">
+<h2>viz::WPlane<a class="headerlink" href="#viz-wplane" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WPlane">
+<em class="property">class </em><code class="descname">WPlane</code><a class="headerlink" href="#WPlane" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget defines a finite plane.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WPlane</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">//! created default plane with center point at origin and normal oriented along z-axis</span>
+    <span class="n">WPlane</span><span class="p">(</span><span class="k">const</span> <span class="n">Size2d</span><span class="o">&amp;</span> <span class="n">size</span> <span class="o">=</span> <span class="n">Size2d</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+
+    <span class="c1">//! repositioned plane</span>
+    <span class="n">WPlane</span><span class="p">(</span><span class="k">const</span> <span class="n">Point3d</span><span class="o">&amp;</span> <span class="n">center</span><span class="p">,</span> <span class="k">const</span> <span class="n">Vec3d</span><span class="o">&amp;</span> <span class="n">normal</span><span class="p">,</span> <span class="k">const</span> <span class="n">Vec3d</span><span class="o">&amp;</span> <span class="n">new_plane_yaxis</span><span class="p">,</span><span class="k">const</span> <span class="n">Size2d</span><span class="o">&amp;</span> <span class="n">size</span> <span class="o">=</span> <span class="n">Size2d</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wplane-wplane">
+<h2>viz::WPlane::WPlane<a class="headerlink" href="#viz-wplane-wplane" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a default plane with center point at origin and normal oriented along z-axis.</p>
+<dl class="function">
+<dt id="WPlane(const Size2d&amp; size , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WPlane</code><span class="sig-paren">(</span>const Size2d&amp; <strong>size</strong>=Size2d(1.0, 1.0), const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WPlane(const Size2d& size , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>size</strong> &#8211; Size of the plane</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the plane.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="id1">
+<h2>viz::WPlane::WPlane<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a repositioned plane</p>
+<dl class="function">
+<dt id="WPlane(const Point3d&amp; center, const Vec3d&amp; normal, const Vec3d&amp; new_yaxis,const Size2d&amp; size , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WPlane</code><span class="sig-paren">(</span>const Point3d&amp; <strong>center</strong>, const Vec3d&amp; <strong>normal</strong>, const Vec3d&amp; <strong>new_yaxis</strong>, const Size2d&amp; <strong>size</strong>=Size2d(1.0, 1.0), const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WPlane(const Point3d& center, const Vec3d& normal, const Vec3d& new_yaxis,const Size2d& size , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>center</strong> &#8211; Center of the plane</li>
+<li><strong>normal</strong> &#8211; Plane normal orientation</li>
+<li><strong>new_yaxis</strong> &#8211; Up-vector. New orientation of plane y-axis.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the plane.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wsphere">
+<h2>viz::WSphere<a class="headerlink" href="#viz-wsphere" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WSphere">
+<em class="property">class </em><code class="descname">WSphere</code><a class="headerlink" href="#WSphere" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget defines a sphere.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WSphere</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">WSphere</span><span class="p">(</span><span class="k">const</span> <span class="n">cv</span><span class="o">::</span><span class="n">Point3f</span> <span class="o">&amp;</span><span class="n">center</span><span class="p">,</span> <span class="kt">double</span> <span class="n">radius</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sphere_resolution</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">())</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wsphere-wsphere">
+<h2>viz::WSphere::WSphere<a class="headerlink" href="#viz-wsphere-wsphere" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a WSphere.</p>
+<dl class="function">
+<dt id="WSphere(const cv::Point3f &amp;center, double radius, int sphere_resolution , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WSphere</code><span class="sig-paren">(</span>const cv::Point3f&amp; <strong>center</strong>, double <strong>radius</strong>, int <strong>sphere_resolution</strong>=10, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WSphere(const cv::Point3f &center, double radius, int sphere_resolution , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>center</strong> &#8211; Center of the sphere.</li>
+<li><strong>radius</strong> &#8211; Radius of the sphere.</li>
+<li><strong>sphere_resolution</strong> &#8211; Resolution of the sphere.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the sphere.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-warrow">
+<h2>viz::WArrow<a class="headerlink" href="#viz-warrow" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WArrow">
+<em class="property">class </em><code class="descname">WArrow</code><a class="headerlink" href="#WArrow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget defines an arrow.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WArrow</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">WArrow</span><span class="p">(</span><span class="k">const</span> <span class="n">Point3f</span><span class="o">&amp;</span> <span class="n">pt1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Point3f</span><span class="o">&amp;</span> <span class="n">pt2</span><span class="p">,</span> <span class="kt">double</span> <span class="n">thickness</span> <span class="o">=</span> <span class="mf">0.03</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-warrow-warrow">
+<h2>viz::WArrow::WArrow<a class="headerlink" href="#viz-warrow-warrow" title="Permalink to this headline">¶</a></h2>
+<p>Constructs an WArrow.</p>
+<dl class="function">
+<dt id="WArrow(const Point3f&amp; pt1, const Point3f&amp; pt2, double thickness , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WArrow</code><span class="sig-paren">(</span>const Point3f&amp; <strong>pt1</strong>, const Point3f&amp; <strong>pt2</strong>, double <strong>thickness</strong>=0.03, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WArrow(const Point3f& pt1, const Point3f& pt2, double thickness , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pt1</strong> &#8211; Start point of the arrow.</li>
+<li><strong>pt2</strong> &#8211; End point of the arrow.</li>
+<li><strong>thickness</strong> &#8211; Thickness of the arrow. Thickness of arrow head is also adjusted accordingly.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the arrow.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Arrow head is located at the end point of the arrow.</p>
+</div>
+<div class="section" id="viz-wcircle">
+<h2>viz::WCircle<a class="headerlink" href="#viz-wcircle" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WCircle">
+<em class="property">class </em><code class="descname">WCircle</code><a class="headerlink" href="#WCircle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget defines a circle.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WCircle</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">//! creates default planar circle centred at origin with plane normal along z-axis</span>
+    <span class="n">WCircle</span><span class="p">(</span><span class="kt">double</span> <span class="n">radius</span><span class="p">,</span> <span class="kt">double</span> <span class="n">thickness</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+
+    <span class="c1">//! creates repositioned circle</span>
+    <span class="n">WCircle</span><span class="p">(</span><span class="kt">double</span> <span class="n">radius</span><span class="p">,</span> <span class="k">const</span> <span class="n">Point3d</span><span class="o">&amp;</span> <span class="n">center</span><span class="p">,</span> <span class="k">const</span> <span class="n">Vec3d</span><span class="o">&amp;</span> <span class="n">normal</span><span class="p">,</span> <span class="kt">double</span> <span class="n">thickness</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wcircle-wcircle">
+<h2>viz::WCircle::WCircle<a class="headerlink" href="#viz-wcircle-wcircle" title="Permalink to this headline">¶</a></h2>
+<p>Constructs default planar circle centred at origin with plane normal along z-axis</p>
+<dl class="function">
+<dt id="WCircle(double radius, double thickness , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WCircle</code><span class="sig-paren">(</span>double <strong>radius</strong>, double <strong>thickness</strong>=0.01, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WCircle(double radius, double thickness , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>radius</strong> &#8211; Radius of the circle.</li>
+<li><strong>thickness</strong> &#8211; Thickness of the circle.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the circle.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="id2">
+<h2>viz::WCircle::WCircle<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>Constructs repositioned planar circle.</p>
+<dl class="function">
+<dt id="WCircle(double radius, const Point3d&amp; center, const Vec3d&amp; normal, double thickness , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WCircle</code><span class="sig-paren">(</span>double <strong>radius</strong>, const Point3d&amp; <strong>center</strong>, const Vec3d&amp; <strong>normal</strong>, double <strong>thickness</strong>=0.01, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WCircle(double radius, const Point3d& center, const Vec3d& normal, double thickness , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>radius</strong> &#8211; Radius of the circle.</li>
+<li><strong>center</strong> &#8211; Center of the circle.</li>
+<li><strong>normal</strong> &#8211; Normal of the plane in which the circle lies.</li>
+<li><strong>thickness</strong> &#8211; Thickness of the circle.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the circle.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wcone">
+<h2>viz::WCone<a class="headerlink" href="#viz-wcone" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WCone">
+<em class="property">class </em><code class="descname">WCone</code><a class="headerlink" href="#WCone" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget defines a cone.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WCone</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">//! create default cone, oriented along x-axis with center of its base located at origin</span>
+    <span class="n">WCone</span><span class="p">(</span><span class="kt">double</span> <span class="n">length</span><span class="p">,</span> <span class="kt">double</span> <span class="n">radius</span><span class="p">,</span> <span class="kt">int</span> <span class="n">resolution</span> <span class="o">=</span> <span class="mf">6.0</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+
+    <span class="c1">//! creates repositioned cone</span>
+    <span class="n">WCone</span><span class="p">(</span><span class="kt">double</span> <span class="n">radius</span><span class="p">,</span> <span class="k">const</span> <span class="n">Point3d</span><span class="o">&amp;</span> <span class="n">center</span><span class="p">,</span> <span class="k">const</span> <span class="n">Point3d</span><span class="o">&amp;</span> <span class="n">tip</span><span class="p">,</span> <span class="kt">int</span> <span class="n">resolution</span> <span class="o">=</span> <span class="mf">6.0</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wcone-wcone">
+<h2>viz::WCone::WCone<a class="headerlink" href="#viz-wcone-wcone" title="Permalink to this headline">¶</a></h2>
+<p>Constructs default cone oriented along x-axis with center of its base located at origin</p>
+<dl class="function">
+<dt id="WCone(double length, double radius, int resolution , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WCone</code><span class="sig-paren">(</span>double <strong>length</strong>, double <strong>radius</strong>, int <strong>resolution</strong>=6.0, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WCone(double length, double radius, int resolution , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>length</strong> &#8211; Length of the cone.</li>
+<li><strong>radius</strong> &#8211; Radius of the cone.</li>
+<li><strong>resolution</strong> &#8211; Resolution of the cone.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the cone.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="id3">
+<h2>viz::WCone::WCone<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>Constructs repositioned planar cone.</p>
+<dl class="function">
+<dt id="WCone(double radius, const Point3d&amp; center, const Point3d&amp; tip, int resolution , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WCone</code><span class="sig-paren">(</span>double <strong>radius</strong>, const Point3d&amp; <strong>center</strong>, const Point3d&amp; <strong>tip</strong>, int <strong>resolution</strong>=6.0, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WCone(double radius, const Point3d& center, const Point3d& tip, int resolution , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>radius</strong> &#8211; Radius of the cone.</li>
+<li><strong>center</strong> &#8211; Center of the cone base.</li>
+<li><strong>tip</strong> &#8211; Tip of the cone.</li>
+<li><strong>resolution</strong> &#8211; Resolution of the cone.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the cone.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wcylinder">
+<h2>viz::WCylinder<a class="headerlink" href="#viz-wcylinder" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WCylinder">
+<em class="property">class </em><code class="descname">WCylinder</code><a class="headerlink" href="#WCylinder" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget defines a cylinder.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WCylinder</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">WCylinder</span><span class="p">(</span><span class="k">const</span> <span class="n">Point3d</span><span class="o">&amp;</span> <span class="n">axis_point1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Point3d</span><span class="o">&amp;</span> <span class="n">axis_point2</span><span class="p">,</span> <span class="kt">double</span> <span class="n">radius</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numsides</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wcylinder-wcylinder">
+<h2>viz::WCylinder::WCylinder<a class="headerlink" href="#viz-wcylinder-wcylinder" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a WCylinder.</p>
+<dl class="function">
+<dt id="WCylinder(const Point3f&amp; pt_on_axis, const Point3f&amp; axis_direction, double radius, int numsides , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WCylinder</code><span class="sig-paren">(</span>const Point3f&amp; <strong>pt_on_axis</strong>, const Point3f&amp; <strong>axis_direction</strong>, double <strong>radius</strong>, int <strong>numsides</strong>=30, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WCylinder(const Point3f& pt_on_axis, const Point3f& axis_direction, double radius, int numsides , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>axis_point1</strong> &#8211; A point1 on the axis of the cylinder.</li>
+<li><strong>axis_point2</strong> &#8211; A point2 on the axis of the cylinder.</li>
+<li><strong>radius</strong> &#8211; Radius of the cylinder.</li>
+<li><strong>numsides</strong> &#8211; Resolution of the cylinder.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the cylinder.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wcube">
+<h2>viz::WCube<a class="headerlink" href="#viz-wcube" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WCube">
+<em class="property">class </em><code class="descname">WCube</code><a class="headerlink" href="#WCube" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget defines a cube.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WCube</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">WCube</span><span class="p">(</span><span class="k">const</span> <span class="n">Point3f</span><span class="o">&amp;</span> <span class="n">pt_min</span><span class="p">,</span> <span class="k">const</span> <span class="n">Point3f</span><span class="o">&amp;</span> <span class="n">pt_max</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">wire_frame</span> <span class="o">=</span> <span class="nb">true</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wcube-wcube">
+<h2>viz::WCube::WCube<a class="headerlink" href="#viz-wcube-wcube" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a WCube.</p>
+<dl class="function">
+<dt id="WCube(const Point3f&amp; pt_min, const Point3f&amp; pt_max, bool wire_frame , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WCube</code><span class="sig-paren">(</span>const Point3f&amp; <strong>pt_min</strong>, const Point3f&amp; <strong>pt_max</strong>, bool <strong>wire_frame</strong>=true, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WCube(const Point3f& pt_min, const Point3f& pt_max, bool wire_frame , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pt_min</strong> &#8211; Specifies minimum point of the bounding box.</li>
+<li><strong>pt_max</strong> &#8211; Specifies maximum point of the bounding box.</li>
+<li><strong>wire_frame</strong> &#8211; If true, cube is represented as wireframe.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the cube.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<img alt="Cube Widget" class="align-center" src="../../../_images/cube_widget.png" />
+</div>
+<div class="section" id="viz-wcoordinatesystem">
+<h2>viz::WCoordinateSystem<a class="headerlink" href="#viz-wcoordinatesystem" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WCoordinateSystem">
+<em class="property">class </em><code class="descname">WCoordinateSystem</code><a class="headerlink" href="#WCoordinateSystem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget represents a coordinate system.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WCoordinateSystem</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">WCoordinateSystem</span><span class="p">(</span><span class="kt">double</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wcoordinatesystem-wcoordinatesystem">
+<h2>viz::WCoordinateSystem::WCoordinateSystem<a class="headerlink" href="#viz-wcoordinatesystem-wcoordinatesystem" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a WCoordinateSystem.</p>
+<dl class="function">
+<dt id="WCoordinateSystem(double scale)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WCoordinateSystem</code><span class="sig-paren">(</span>double <strong>scale</strong>=1.0<span class="sig-paren">)</span><a class="headerlink" href="#WCoordinateSystem(double scale)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>scale</strong> &#8211; Determines the size of the axes.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wpolyline">
+<h2>viz::WPolyLine<a class="headerlink" href="#viz-wpolyline" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WPolyLine">
+<em class="property">class </em><code class="descname">WPolyLine</code><a class="headerlink" href="#WPolyLine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget defines a poly line.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WPolyLine</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">WPolyLine</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">points</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wpolyline-wpolyline">
+<h2>viz::WPolyLine::WPolyLine<a class="headerlink" href="#viz-wpolyline-wpolyline" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a WPolyLine.</p>
+<dl class="function">
+<dt id="WPolyLine(InputArray points, const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WPolyLine</code><span class="sig-paren">(</span>InputArray <strong>points</strong>, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WPolyLine(InputArray points, const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>points</strong> &#8211; Point set.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the poly line.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wgrid">
+<h2>viz::WGrid<a class="headerlink" href="#viz-wgrid" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WGrid">
+<em class="property">class </em><code class="descname">WGrid</code><a class="headerlink" href="#WGrid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget defines a grid.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WGrid</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">//! Creates grid at the origin and normal oriented along z-axis</span>
+    <span class="n">WGrid</span><span class="p">(</span><span class="k">const</span> <span class="n">Vec2i</span> <span class="o">&amp;</span><span class="n">cells</span> <span class="o">=</span> <span class="n">Vec2i</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="k">const</span> <span class="n">Vec2d</span> <span class="o">&amp;</span><span class="n">cells_spacing</span> <span class="o">=</span> <span class="n">Vec2d</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+
+    <span class="c1">//! Creates repositioned grid</span>
+    <span class="n">WGrid</span><span class="p">(</span><span class="k">const</span> <span class="n">Point3d</span><span class="o">&amp;</span> <span class="n">center</span><span class="p">,</span> <span class="k">const</span> <span class="n">Vec3d</span><span class="o">&amp;</span> <span class="n">normal</span><span class="p">,</span> <span class="k">const</span> <span class="n">Vec3d</span><span class="o">&amp;</span> <span class="n">new_yaxis</span><span class="p">,</span>
+          <span class="k">const</span> <span class="n">Vec2i</span> <span class="o">&amp;</span><span class="n">cells</span> <span class="o">=</span> <span class="n">Vec2i</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="k">const</span> <span class="n">Vec2d</span> <span class="o">&amp;</span><span class="n">cells_spacing</span> <span class="o">=</span> <span class="n">Vec2d</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wgrid-wgrid">
+<h2>viz::WGrid::WGrid<a class="headerlink" href="#viz-wgrid-wgrid" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a WGrid.</p>
+<dl class="function">
+<dt id="WGrid(const Vec2i &amp;cells , const Vec2d &amp;cells_spacing , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WGrid</code><span class="sig-paren">(</span>const Vec2i&amp; <strong>cells</strong>=Vec2i::all(10), const Vec2d&amp; <strong>cells_spacing</strong>=Vec2d::all(1.0), const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WGrid(const Vec2i &cells , const Vec2d &cells_spacing , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cells</strong> &#8211; Number of cell columns and rows, respectively.</li>
+<li><strong>cells_spacing</strong> &#8211; Size of each cell, respectively.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the grid.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wtext3d">
+<h2>viz::WText3D<a class="headerlink" href="#viz-wtext3d" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WText3D">
+<em class="property">class </em><code class="descname">WText3D</code><a class="headerlink" href="#WText3D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget represents 3D text. The text always faces the camera.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WText3D</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">WText3D</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">text</span><span class="p">,</span> <span class="k">const</span> <span class="n">Point3f</span> <span class="o">&amp;</span><span class="n">position</span><span class="p">,</span> <span class="kt">double</span> <span class="n">text_scale</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">face_camera</span> <span class="o">=</span> <span class="nb">true</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+
+    <span class="kt">void</span> <span class="nf">setText</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">text</span><span class="p">);</span>
+    <span class="n">String</span> <span class="nf">getText</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wtext3d-wtext3d">
+<h2>viz::WText3D::WText3D<a class="headerlink" href="#viz-wtext3d-wtext3d" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a WText3D.</p>
+<dl class="function">
+<dt id="WText3D(const String &amp;text, const Point3f &amp;position, double text_scale , bool face_camera , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WText3D</code><span class="sig-paren">(</span>const String&amp; <strong>text</strong>, const Point3f&amp; <strong>position</strong>, double <strong>text_scale</strong>=1.0, bool <strong>face_camera</strong>=true, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WText3D(const String &text, const Point3f &position, double text_scale , bool face_camera , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>text</strong> &#8211; Text content of the widget.</li>
+<li><strong>position</strong> &#8211; Position of the text.</li>
+<li><strong>text_scale</strong> &#8211; Size of the text.</li>
+<li><strong>face_camera</strong> &#8211; If true, text always faces the camera.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the text.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wtext3d-settext">
+<h2>viz::WText3D::setText<a class="headerlink" href="#viz-wtext3d-settext" title="Permalink to this headline">¶</a></h2>
+<p>Sets the text content of the widget.</p>
+<dl class="function">
+<dt id="void setText(const String &amp;text)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setText</code><span class="sig-paren">(</span>const String&amp; <strong>text</strong><span class="sig-paren">)</span><a class="headerlink" href="#void setText(const String &text)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>text</strong> &#8211; Text content of the widget.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wtext3d-gettext">
+<h2>viz::WText3D::getText<a class="headerlink" href="#viz-wtext3d-gettext" title="Permalink to this headline">¶</a></h2>
+<p>Returns the current text content of the widget.</p>
+<dl class="function">
+<dt id="String getText() const">
+<strong>C++:</strong><code class="descname"> </code>String <code class="descname">getText</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#String getText() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="viz-wtext">
+<h2>viz::WText<a class="headerlink" href="#viz-wtext" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WText">
+<em class="property">class </em><code class="descname">WText</code><a class="headerlink" href="#WText" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 2D Widget represents text overlay.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WText</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget2D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">WText</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">text</span><span class="p">,</span> <span class="k">const</span> <span class="n">Point2i</span> <span class="o">&amp;</span><span class="n">pos</span><span class="p">,</span> <span class="kt">int</span> <span class="n">font_size</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+
+    <span class="kt">void</span> <span class="nf">setText</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">text</span><span class="p">);</span>
+    <span class="n">String</span> <span class="nf">getText</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wtext-wtext">
+<h2>viz::WText::WText<a class="headerlink" href="#viz-wtext-wtext" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a WText.</p>
+<dl class="function">
+<dt id="WText(const String &amp;text, const Point2i &amp;pos, int font_size , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WText</code><span class="sig-paren">(</span>const String&amp; <strong>text</strong>, const Point2i&amp; <strong>pos</strong>, int <strong>font_size</strong>=10, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WText(const String &text, const Point2i &pos, int font_size , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>text</strong> &#8211; Text content of the widget.</li>
+<li><strong>pos</strong> &#8211; Position of the text.</li>
+<li><strong>font_size</strong> &#8211; Font size.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the text.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wtext-settext">
+<h2>viz::WText::setText<a class="headerlink" href="#viz-wtext-settext" title="Permalink to this headline">¶</a></h2>
+<p>Sets the text content of the widget.</p>
+<dl class="function">
+<dt>
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setText</code><span class="sig-paren">(</span>const String&amp; <strong>text</strong><span class="sig-paren">)</span></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>text</strong> &#8211; Text content of the widget.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wtext-gettext">
+<h2>viz::WText::getText<a class="headerlink" href="#viz-wtext-gettext" title="Permalink to this headline">¶</a></h2>
+<p>Returns the current text content of the widget.</p>
+<dl class="function">
+<dt>
+<strong>C++:</strong><code class="descname"> </code>String <code class="descname">getText</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="viz-wimageoverlay">
+<h2>viz::WImageOverlay<a class="headerlink" href="#viz-wimageoverlay" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WImageOverlay">
+<em class="property">class </em><code class="descname">WImageOverlay</code><a class="headerlink" href="#WImageOverlay" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 2D Widget represents an image overlay.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WImageOverlay</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget2D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">WImageOverlay</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">image</span><span class="p">,</span> <span class="k">const</span> <span class="n">Rect</span> <span class="o">&amp;</span><span class="n">rect</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">setImage</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">image</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wimageoverlay-wimageoverlay">
+<h2>viz::WImageOverlay::WImageOverlay<a class="headerlink" href="#viz-wimageoverlay-wimageoverlay" title="Permalink to this headline">¶</a></h2>
+<p>Constructs an WImageOverlay.</p>
+<dl class="function">
+<dt id="WImageOverlay(InputArray image, const Rect &amp;rect)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WImageOverlay</code><span class="sig-paren">(</span>InputArray <strong>image</strong>, const Rect&amp; <strong>rect</strong><span class="sig-paren">)</span><a class="headerlink" href="#WImageOverlay(InputArray image, const Rect &rect)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; BGR or Gray-Scale image.</li>
+<li><strong>rect</strong> &#8211; Image is scaled and positioned based on rect.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wimageoverlay-setimage">
+<h2>viz::WImageOverlay::setImage<a class="headerlink" href="#viz-wimageoverlay-setimage" title="Permalink to this headline">¶</a></h2>
+<p>Sets the image content of the widget.</p>
+<dl class="function">
+<dt id="void setImage(InputArray image)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setImage</code><span class="sig-paren">(</span>InputArray <strong>image</strong><span class="sig-paren">)</span><a class="headerlink" href="#void setImage(InputArray image)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; BGR or Gray-Scale image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wimage3d">
+<h2>viz::WImage3D<a class="headerlink" href="#viz-wimage3d" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WImage3D">
+<em class="property">class </em><code class="descname">WImage3D</code><a class="headerlink" href="#WImage3D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget represents an image in 3D space.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WImage3D</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">//! Creates 3D image at the origin</span>
+    <span class="n">WImage3D</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">image</span><span class="p">,</span> <span class="k">const</span> <span class="n">Size2d</span> <span class="o">&amp;</span><span class="n">size</span><span class="p">);</span>
+    <span class="c1">//! Creates 3D image at a given position, pointing in the direction of the normal, and having the up_vector orientation</span>
+    <span class="n">WImage3D</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">image</span><span class="p">,</span> <span class="k">const</span> <span class="n">Size2d</span> <span class="o">&amp;</span><span class="n">size</span><span class="p">,</span> <span class="k">const</span> <span class="n">Vec3d</span> <span class="o">&amp;</span><span class="n">position</span><span class="p">,</span> <span class="k">const</span> <span class="n">Vec3d</span> <span class="o">&amp;</span><span class="n">normal</span><span class="p">,</span> <span class="k">const</span> <span class="n">Vec3d</span> <span class="o">&amp;</span><span class="n">up_vector</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">setImage</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">image</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wimage3d-wimage3d">
+<h2>viz::WImage3D::WImage3D<a class="headerlink" href="#viz-wimage3d-wimage3d" title="Permalink to this headline">¶</a></h2>
+<p>Constructs an WImage3D.</p>
+<dl class="function">
+<dt id="WImage3D(InputArray image, const Size2d &amp;size)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WImage3D</code><span class="sig-paren">(</span>InputArray <strong>image</strong>, const Size2d&amp; <strong>size</strong><span class="sig-paren">)</span><a class="headerlink" href="#WImage3D(InputArray image, const Size2d &size)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; BGR or Gray-Scale image.</li>
+<li><strong>size</strong> &#8211; Size of the image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="WImage3D(InputArray image, const Size2d &amp;size, const Vec3d &amp;position, const Vec3d &amp;normal, const Vec3d &amp;up_vector)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WImage3D</code><span class="sig-paren">(</span>InputArray <strong>image</strong>, const Size2d&amp; <strong>size</strong>, const Vec3d&amp; <strong>position</strong>, const Vec3d&amp; <strong>normal</strong>, const Vec3d&amp; <strong>up_vector</strong><span class="sig-paren">)</span><a class="headerlink" href="#WImage3D(InputArray image, const Size2d &size, const Vec3d &position, const Vec3d &normal, const Vec3d &up_vector)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>position</strong> &#8211; Position of the image.</li>
+<li><strong>normal</strong> &#8211; Normal of the plane that represents the image.</li>
+<li><strong>up_vector</strong> &#8211; Determines orientation of the image.</li>
+<li><strong>image</strong> &#8211; BGR or Gray-Scale image.</li>
+<li><strong>size</strong> &#8211; Size of the image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wimage3d-setimage">
+<h2>viz::WImage3D::setImage<a class="headerlink" href="#viz-wimage3d-setimage" title="Permalink to this headline">¶</a></h2>
+<p>Sets the image content of the widget.</p>
+<dl class="function">
+<dt>
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setImage</code><span class="sig-paren">(</span>InputArray <strong>image</strong><span class="sig-paren">)</span></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; BGR or Gray-Scale image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wcameraposition">
+<h2>viz::WCameraPosition<a class="headerlink" href="#viz-wcameraposition" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WCameraPosition">
+<em class="property">class </em><code class="descname">WCameraPosition</code><a class="headerlink" href="#WCameraPosition" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget represents camera position in a scene by its axes or viewing frustum.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WCameraPosition</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">//! Creates camera coordinate frame (axes) at the origin</span>
+    <span class="n">WCameraPosition</span><span class="p">(</span><span class="kt">double</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">);</span>
+    <span class="c1">//! Creates frustum based on the intrinsic marix K at the origin</span>
+    <span class="n">WCameraPosition</span><span class="p">(</span><span class="k">const</span> <span class="n">Matx33d</span> <span class="o">&amp;</span><span class="n">K</span><span class="p">,</span> <span class="kt">double</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+    <span class="c1">//! Creates frustum based on the field of view at the origin</span>
+    <span class="n">WCameraPosition</span><span class="p">(</span><span class="k">const</span> <span class="n">Vec2d</span> <span class="o">&amp;</span><span class="n">fov</span><span class="p">,</span> <span class="kt">double</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+    <span class="c1">//! Creates frustum and display given image at the far plane</span>
+    <span class="n">WCameraPosition</span><span class="p">(</span><span class="k">const</span> <span class="n">Matx33d</span> <span class="o">&amp;</span><span class="n">K</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">image</span><span class="p">,</span> <span class="kt">double</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+    <span class="c1">//! Creates frustum and display given image at the far plane</span>
+    <span class="n">WCameraPosition</span><span class="p">(</span><span class="k">const</span> <span class="n">Vec2d</span> <span class="o">&amp;</span><span class="n">fov</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">image</span><span class="p">,</span> <span class="kt">double</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wcameraposition-wcameraposition">
+<h2>viz::WCameraPosition::WCameraPosition<a class="headerlink" href="#viz-wcameraposition-wcameraposition" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a WCameraPosition.</p>
+<ul>
+<li><p class="first"><strong>Display camera coordinate frame.</strong></p>
+<blockquote>
+<div><dl class="function">
+<dt id="WCameraPosition(double scale)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WCameraPosition</code><span class="sig-paren">(</span>double <strong>scale</strong>=1.0<span class="sig-paren">)</span><a class="headerlink" href="#WCameraPosition(double scale)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates camera coordinate frame at the origin.</p>
+</dd></dl>
+
+<img alt="Camera coordinate frame" class="align-center" src="../../../_images/cpw1.png" />
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Display the viewing frustum.</strong></p>
+<blockquote>
+<div><dl class="function">
+<dt id="WCameraPosition(const Matx33d &amp;K, double scale , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WCameraPosition</code><span class="sig-paren">(</span>const Matx33d&amp; <strong>K</strong>, double <strong>scale</strong>=1.0, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WCameraPosition(const Matx33d &K, double scale , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>K</strong> &#8211; Intrinsic matrix of the camera.</li>
+<li><strong>scale</strong> &#8211; Scale of the frustum.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the frustum.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Creates viewing frustum of the camera based on its intrinsic matrix K.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="WCameraPosition(const Vec2d &amp;fov, double scale , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WCameraPosition</code><span class="sig-paren">(</span>const Vec2d&amp; <strong>fov</strong>, double <strong>scale</strong>=1.0, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WCameraPosition(const Vec2d &fov, double scale , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fov</strong> &#8211; Field of view of the camera (horizontal, vertical).</li>
+<li><strong>scale</strong> &#8211; Scale of the frustum.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the frustum.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Creates viewing frustum of the camera based on its field of view fov.</p>
+</dd></dl>
+
+<img alt="Camera viewing frustum" class="align-center" src="../../../_images/cpw2.png" />
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Display image on the far plane of the viewing frustum.</strong></p>
+<blockquote>
+<div><dl class="function">
+<dt id="WCameraPosition(const Matx33d &amp;K, InputArray image, double scale , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WCameraPosition</code><span class="sig-paren">(</span>const Matx33d&amp; <strong>K</strong>, InputArray <strong>image</strong>, double <strong>scale</strong>=1.0, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WCameraPosition(const Matx33d &K, InputArray image, double scale , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>K</strong> &#8211; Intrinsic matrix of the camera.</li>
+<li><strong>img</strong> &#8211; BGR or Gray-Scale image that is going to be displayed on the far plane of the frustum.</li>
+<li><strong>scale</strong> &#8211; Scale of the frustum and image.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the frustum.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Creates viewing frustum of the camera based on its intrinsic matrix K, and displays image on the far end plane.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="WCameraPosition(const Vec2d &amp;fov, InputArray image, double scale , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WCameraPosition</code><span class="sig-paren">(</span>const Vec2d&amp; <strong>fov</strong>, InputArray <strong>image</strong>, double <strong>scale</strong>=1.0, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WCameraPosition(const Vec2d &fov, InputArray image, double scale , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fov</strong> &#8211; Field of view of the camera (horizontal, vertical).</li>
+<li><strong>img</strong> &#8211; BGR or Gray-Scale image that is going to be displayed on the far plane of the frustum.</li>
+<li><strong>scale</strong> &#8211; Scale of the frustum and image.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the frustum.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Creates viewing frustum of the camera based on its intrinsic matrix K, and displays image on the far end plane.</p>
+</dd></dl>
+
+<img alt="Camera viewing frustum with image" class="align-center" src="../../../_images/cpw3.png" />
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="viz-wtrajectory">
+<h2>viz::WTrajectory<a class="headerlink" href="#viz-wtrajectory" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WTrajectory">
+<em class="property">class </em><code class="descname">WTrajectory</code><a class="headerlink" href="#WTrajectory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget represents a trajectory.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WTrajectory</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">enum</span> <span class="p">{</span><span class="n">FRAMES</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">PATH</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">BOTH</span> <span class="o">=</span> <span class="n">FRAMES</span> <span class="o">+</span> <span class="n">PATH</span><span class="p">};</span>
+
+    <span class="c1">//! Displays trajectory of the given path either by coordinate frames or polyline</span>
+    <span class="n">WTrajectory</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">path</span><span class="p">,</span> <span class="kt">int</span> <span class="n">display_mode</span> <span class="o">=</span> <span class="n">WTrajectory</span><span class="o">::</span><span class="n">PATH</span><span class="p">,</span> <span class="kt">double</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">(),;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wtrajectory-wtrajectory">
+<h2>viz::WTrajectory::WTrajectory<a class="headerlink" href="#viz-wtrajectory-wtrajectory" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a WTrajectory.</p>
+<dl class="function">
+<dt id="WTrajectory(InputArray path, int display_mode , double scale , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WTrajectory</code><span class="sig-paren">(</span>InputArray <strong>path</strong>, int <strong>display_mode</strong>=WTrajectory::PATH, double <strong>scale</strong>=1.0, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WTrajectory(InputArray path, int display_mode , double scale , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path</strong> &#8211; List of poses on a trajectory. Takes std::vector&lt;Affine&lt;T&gt;&gt; with T == [float | double]</li>
+<li><strong>display_mode</strong> &#8211; Display mode. This can be PATH, FRAMES, and BOTH.</li>
+<li><strong>scale</strong> &#8211; Scale of the frames. Polyline is not affected.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the polyline that represents path. Frames are not affected.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Displays trajectory of the given path as follows:</p>
+<ul class="simple">
+<li>PATH : Displays a poly line that represents the path.</li>
+<li>FRAMES : Displays coordinate frames at each pose.</li>
+<li>PATH &amp; FRAMES : Displays both poly line and coordinate frames.</li>
+</ul>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wtrajectoryfrustums">
+<h2>viz::WTrajectoryFrustums<a class="headerlink" href="#viz-wtrajectoryfrustums" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WTrajectoryFrustums">
+<em class="property">class </em><code class="descname">WTrajectoryFrustums</code><a class="headerlink" href="#WTrajectoryFrustums" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget represents a trajectory.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WTrajectoryFrustums</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">//! Displays trajectory of the given path by frustums</span>
+    <span class="n">WTrajectoryFrustums</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">path</span><span class="p">,</span> <span class="k">const</span> <span class="n">Matx33d</span> <span class="o">&amp;</span><span class="n">K</span><span class="p">,</span> <span class="kt">double</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+    <span class="c1">//! Displays trajectory of the given path by frustums</span>
+    <span class="n">WTrajectoryFrustums</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">path</span><span class="p">,</span> <span class="k">const</span> <span class="n">Vec2d</span> <span class="o">&amp;</span><span class="n">fov</span><span class="p">,</span> <span class="kt">double</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wtrajectoryfrustums-wtrajectoryfrustums">
+<h2>viz::WTrajectoryFrustums::WTrajectoryFrustums<a class="headerlink" href="#viz-wtrajectoryfrustums-wtrajectoryfrustums" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a WTrajectoryFrustums.</p>
+<dl class="function">
+<dt id="WTrajectoryFrustums(const std::vector&lt;Affine3d&gt; &amp;path, const Matx33d &amp;K, double scale , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WTrajectoryFrustums</code><span class="sig-paren">(</span>const std::vector&lt;Affine3d&gt;&amp; <strong>path</strong>, const Matx33d&amp; <strong>K</strong>, double <strong>scale</strong>=1.0, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WTrajectoryFrustums(const std::vector<Affine3d> &path, const Matx33d &K, double scale , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path</strong> &#8211; List of poses on a trajectory. Takes std::vector&lt;Affine&lt;T&gt;&gt; with T == [float | double]</li>
+<li><strong>K</strong> &#8211; Intrinsic matrix of the camera.</li>
+<li><strong>scale</strong> &#8211; Scale of the frustums.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the frustums.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Displays frustums at each pose of the trajectory.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="WTrajectoryFrustums(const std::vector&lt;Affine3d&gt; &amp;path, const Vec2d &amp;fov, double scale , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WTrajectoryFrustums</code><span class="sig-paren">(</span>const std::vector&lt;Affine3d&gt;&amp; <strong>path</strong>, const Vec2d&amp; <strong>fov</strong>, double <strong>scale</strong>=1.0, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WTrajectoryFrustums(const std::vector<Affine3d> &path, const Vec2d &fov, double scale , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path</strong> &#8211; List of poses on a trajectory. Takes std::vector&lt;Affine&lt;T&gt;&gt; with T == [float | double]</li>
+<li><strong>fov</strong> &#8211; Field of view of the camera (horizontal, vertical).</li>
+<li><strong>scale</strong> &#8211; Scale of the frustums.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the frustums.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Displays frustums at each pose of the trajectory.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wtrajectoryspheres">
+<h2>viz::WTrajectorySpheres<a class="headerlink" href="#viz-wtrajectoryspheres" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WTrajectorySpheres">
+<em class="property">class </em><code class="descname">WTrajectorySpheres</code><a class="headerlink" href="#WTrajectorySpheres" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget represents a trajectory using spheres and lines, where spheres represent the positions of the camera, and lines
+represent the direction from previous position to the current.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WTrajectorySpheres</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">WTrajectorySpheres</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">path</span><span class="p">,</span> <span class="kt">double</span> <span class="n">line_length</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span> <span class="kt">double</span> <span class="n">radius</span> <span class="o">=</span> <span class="mf">0.007</span><span class="p">,</span>
+                           <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">from</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">red</span><span class="p">(),</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">to</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wtrajectoryspheres-wtrajectoryspheres">
+<h2>viz::WTrajectorySpheres::WTrajectorySpheres<a class="headerlink" href="#viz-wtrajectoryspheres-wtrajectoryspheres" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a WTrajectorySpheres.</p>
+<dl class="function">
+<dt id="WTrajectorySpheres(InputArray path, double line_length , double radius , const Color &amp;from , const Color &amp;to)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WTrajectorySpheres</code><span class="sig-paren">(</span>InputArray <strong>path</strong>, double <strong>line_length</strong>=0.05, double <strong>radius</strong>=0.007, const Color&amp; <strong>from</strong>=Color::red(), const Color&amp; <strong>to</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WTrajectorySpheres(InputArray path, double line_length , double radius , const Color &from , const Color &to)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path</strong> &#8211; List of poses on a trajectory. Takes std::vector&lt;Affine&lt;T&gt;&gt; with T == [float | double]</li>
+<li><strong>line_length</strong> &#8211; Max length of the lines which point to previous position</li>
+<li><strong>sphere_radius</strong> &#8211; Radius of the spheres.</li>
+<li><strong>from</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> for first sphere.</li>
+<li><strong>to</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> for last sphere. Intermediate spheres will have interpolated color.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wcloud">
+<h2>viz::WCloud<a class="headerlink" href="#viz-wcloud" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WCloud">
+<em class="property">class </em><code class="descname">WCloud</code><a class="headerlink" href="#WCloud" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget defines a point cloud.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WCloud</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">//! Each point in cloud is mapped to a color in colors</span>
+    <span class="n">WCloud</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">cloud</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">colors</span><span class="p">);</span>
+    <span class="c1">//! All points in cloud have the same color</span>
+    <span class="n">WCloud</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">cloud</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+    <span class="c1">//! Each point in cloud is mapped to a color in colors, normals are used for shading</span>
+    <span class="n">WCloud</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">cloud</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">colors</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">normals</span><span class="p">);</span>
+    <span class="c1">//! All points in cloud have the same color, normals are used for shading</span>
+    <span class="n">WCloud</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">cloud</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">normals</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wcloud-wcloud">
+<h2>viz::WCloud::WCloud<a class="headerlink" href="#viz-wcloud-wcloud" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a WCloud.</p>
+<dl class="function">
+<dt id="WCloud(InputArray cloud, InputArray colors)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WCloud</code><span class="sig-paren">(</span>InputArray <strong>cloud</strong>, InputArray <strong>colors</strong><span class="sig-paren">)</span><a class="headerlink" href="#WCloud(InputArray cloud, InputArray colors)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cloud</strong> &#8211; Set of points which can be of type: <code class="docutils literal"><span class="pre">CV_32FC3</span></code>, <code class="docutils literal"><span class="pre">CV_32FC4</span></code>, <code class="docutils literal"><span class="pre">CV_64FC3</span></code>, <code class="docutils literal"><span class="pre">CV_64FC4</span></code>.</li>
+<li><strong>colors</strong> &#8211; Set of colors. It has to be of the same size with cloud.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Points in the cloud belong to mask when they are set to (NaN, NaN, NaN).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="WCloud(InputArray cloud, const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WCloud</code><span class="sig-paren">(</span>InputArray <strong>cloud</strong>, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WCloud(InputArray cloud, const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cloud</strong> &#8211; Set of points which can be of type: <code class="docutils literal"><span class="pre">CV_32FC3</span></code>, <code class="docutils literal"><span class="pre">CV_32FC4</span></code>, <code class="docutils literal"><span class="pre">CV_64FC3</span></code>, <code class="docutils literal"><span class="pre">CV_64FC4</span></code>.</li>
+<li><strong>color</strong> &#8211; A single <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> for the whole cloud.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Points in the cloud belong to mask when they are set to (NaN, NaN, NaN).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="WCloud(InputArray cloud, InputArray colors, InputArray normals)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WCloud</code><span class="sig-paren">(</span>InputArray <strong>cloud</strong>, InputArray <strong>colors</strong>, InputArray <strong>normals</strong><span class="sig-paren">)</span><a class="headerlink" href="#WCloud(InputArray cloud, InputArray colors, InputArray normals)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cloud</strong> &#8211; Set of points which can be of type: <code class="docutils literal"><span class="pre">CV_32FC3</span></code>, <code class="docutils literal"><span class="pre">CV_32FC4</span></code>, <code class="docutils literal"><span class="pre">CV_64FC3</span></code>, <code class="docutils literal"><span class="pre">CV_64FC4</span></code>.</li>
+<li><strong>colors</strong> &#8211; Set of colors. It has to be of the same size with cloud.</li>
+<li><strong>normals</strong> &#8211; Normals for each point in cloud. Size and type should match with the cloud parameter.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Points in the cloud belong to mask when they are set to (NaN, NaN, NaN).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="WCloud(InputArray cloud, const Color &amp;color, InputArray normals)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WCloud</code><span class="sig-paren">(</span>InputArray <strong>cloud</strong>, const Color&amp; <strong>color</strong>, InputArray <strong>normals</strong><span class="sig-paren">)</span><a class="headerlink" href="#WCloud(InputArray cloud, const Color &color, InputArray normals)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cloud</strong> &#8211; Set of points which can be of type: <code class="docutils literal"><span class="pre">CV_32FC3</span></code>, <code class="docutils literal"><span class="pre">CV_32FC4</span></code>, <code class="docutils literal"><span class="pre">CV_64FC3</span></code>, <code class="docutils literal"><span class="pre">CV_64FC4</span></code>.</li>
+<li><strong>color</strong> &#8211; A single <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> for the whole cloud.</li>
+<li><strong>normals</strong> &#8211; Normals for each point in cloud. Size and type should match with the cloud parameter.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Points in the cloud belong to mask when they are set to (NaN, NaN, NaN).</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In case there are four channels in the cloud, fourth channel is ignored.</p>
+</div>
+</div>
+<div class="section" id="viz-wcloudcollection">
+<h2>viz::WCloudCollection<a class="headerlink" href="#viz-wcloudcollection" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WCloudCollection">
+<em class="property">class </em><code class="descname">WCloudCollection</code><a class="headerlink" href="#WCloudCollection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget defines a collection of clouds.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WCloudCollection</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">WCloudCollection</span><span class="p">();</span>
+
+    <span class="c1">//! Each point in cloud is mapped to a color in colors</span>
+    <span class="kt">void</span> <span class="nf">addCloud</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">cloud</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">colors</span><span class="p">,</span> <span class="k">const</span> <span class="n">Affine3d</span> <span class="o">&amp;</span><span class="n">pose</span> <span class="o">=</span> <span class="n">Affine3d</span><span class="o">::</span><span class="n">Identity</span><span class="p">());</span>
+    <span class="c1">//! All points in cloud have the same color</span>
+    <span class="kt">void</span> <span class="nf">addCloud</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">cloud</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">(),</span> <span class="n">Affine3d</span> <span class="o">&amp;</span><span class="n">pose</span> <span class="o">=</span> <span class="n">Affine3d</span><span class="o">::</span><span class="n">Identity</span><span class="p">());</span>
+    <span class="c1">//! Repacks internal structure to single cloud</span>
+    <span class="kt">void</span> <span class="nf">finalize</span><span class="p">();</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wcloudcollection-wcloudcollection">
+<h2>viz::WCloudCollection::WCloudCollection<a class="headerlink" href="#viz-wcloudcollection-wcloudcollection" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a WCloudCollection.</p>
+<dl class="function">
+<dt id="WCloudCollection()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WCloudCollection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#WCloudCollection()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="viz-wcloudcollection-addcloud">
+<h2>viz::WCloudCollection::addCloud<a class="headerlink" href="#viz-wcloudcollection-addcloud" title="Permalink to this headline">¶</a></h2>
+<p>Adds a cloud to the collection.</p>
+<dl class="function">
+<dt id="void addCloud(InputArray cloud, InputArray colors, const Affine3d &amp;pose)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">addCloud</code><span class="sig-paren">(</span>InputArray <strong>cloud</strong>, InputArray <strong>colors</strong>, const Affine3d&amp; <strong>pose</strong>=Affine3d::Identity()<span class="sig-paren">)</span><a class="headerlink" href="#void addCloud(InputArray cloud, InputArray colors, const Affine3d &pose)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cloud</strong> &#8211; Point set which can be of type: <code class="docutils literal"><span class="pre">CV_32FC3</span></code>, <code class="docutils literal"><span class="pre">CV_32FC4</span></code>, <code class="docutils literal"><span class="pre">CV_64FC3</span></code>, <code class="docutils literal"><span class="pre">CV_64FC4</span></code>.</li>
+<li><strong>colors</strong> &#8211; Set of colors. It has to be of the same size with cloud.</li>
+<li><strong>pose</strong> &#8211; Pose of the cloud.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Points in the cloud belong to mask when they are set to (NaN, NaN, NaN).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="void addCloud(InputArray cloud, const Color &amp;color , const Affine3d &amp;pose)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">addCloud</code><span class="sig-paren">(</span>InputArray <strong>cloud</strong>, const Color&amp; <strong>color</strong>=Color::white(), const Affine3d&amp; <strong>pose</strong>=Affine3d::Identity()<span class="sig-paren">)</span><a class="headerlink" href="#void addCloud(InputArray cloud, const Color &color , const Affine3d &pose)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cloud</strong> &#8211; Point set which can be of type: <code class="docutils literal"><span class="pre">CV_32FC3</span></code>, <code class="docutils literal"><span class="pre">CV_32FC4</span></code>, <code class="docutils literal"><span class="pre">CV_64FC3</span></code>, <code class="docutils literal"><span class="pre">CV_64FC4</span></code>.</li>
+<li><strong>colors</strong> &#8211; A single <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> for the whole cloud.</li>
+<li><strong>pose</strong> &#8211; Pose of the cloud.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Points in the cloud belong to mask when they are set to (NaN, NaN, NaN).</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In case there are four channels in the cloud, fourth channel is ignored.</p>
+</div>
+</div>
+<div class="section" id="viz-wcloudcollection-finalize">
+<h2>viz::WCloudCollection::finalize<a class="headerlink" href="#viz-wcloudcollection-finalize" title="Permalink to this headline">¶</a></h2>
+<p>Finalizes cloud data by repacking to single cloud. Useful for large cloud collections to reduce memory usage</p>
+<dl class="function">
+<dt id="void finalize()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">finalize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void finalize()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="viz-wcloudnormals">
+<h2>viz::WCloudNormals<a class="headerlink" href="#viz-wcloudnormals" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WCloudNormals">
+<em class="property">class </em><code class="descname">WCloudNormals</code><a class="headerlink" href="#WCloudNormals" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget represents normals of a point cloud.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WCloudNormals</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">WCloudNormals</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">cloud</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">normals</span><span class="p">,</span> <span class="kt">int</span> <span class="n">level</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="kt">double</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">0.02f</span><span class="p">,</span> <span class="k">const</span> <span class="n">Color</span> <span class="o">&amp;</span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">());</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wcloudnormals-wcloudnormals">
+<h2>viz::WCloudNormals::WCloudNormals<a class="headerlink" href="#viz-wcloudnormals-wcloudnormals" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a WCloudNormals.</p>
+<dl class="function">
+<dt id="WCloudNormals(InputArray cloud, InputArray normals, int level , double scale , const Color &amp;color)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WCloudNormals</code><span class="sig-paren">(</span>InputArray <strong>cloud</strong>, InputArray <strong>normals</strong>, int <strong>level</strong>=100, double <strong>scale</strong>=0.02f, const Color&amp; <strong>color</strong>=Color::white()<span class="sig-paren">)</span><a class="headerlink" href="#WCloudNormals(InputArray cloud, InputArray normals, int level , double scale , const Color &color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cloud</strong> &#8211; Point set which can be of type: <code class="docutils literal"><span class="pre">CV_32FC3</span></code>, <code class="docutils literal"><span class="pre">CV_32FC4</span></code>, <code class="docutils literal"><span class="pre">CV_64FC3</span></code>, <code class="docutils literal"><span class="pre">CV_64FC4</span></code>.</li>
+<li><strong>normals</strong> &#8211; A set of normals that has to be of same type with cloud.</li>
+<li><strong>level</strong> &#8211; Display only every <code class="docutils literal"><span class="pre">level</span></code> th normal.</li>
+<li><strong>scale</strong> &#8211; Scale of the arrows that represent normals.</li>
+<li><strong>color</strong> &#8211; <a class="reference internal" href="viz3d.html#Color" title="class Color"><code class="xref ocv ocv-class docutils literal"><span class="pre">Color</span></code></a> of the arrows that represent normals.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In case there are four channels in the cloud, fourth channel is ignored.</p>
+</div>
+</div>
+<div class="section" id="viz-wmesh">
+<h2>viz::WMesh<a class="headerlink" href="#viz-wmesh" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WMesh">
+<em class="property">class </em><code class="descname">WMesh</code><a class="headerlink" href="#WMesh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This 3D Widget defines a mesh.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WMesh</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">WMesh</span><span class="p">(</span><span class="k">const</span> <span class="n">Mesh</span> <span class="o">&amp;</span><span class="n">mesh</span><span class="p">);</span>
+    <span class="n">WMesh</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">cloud</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">polygons</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">colors</span> <span class="o">=</span> <span class="n">noArray</span><span class="p">(),</span> <span class="n">InputArray</span> <span class="n">normals</span> <span class="o">=</span> <span class="n">noArray</span><span class="p">());</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wmesh-wmesh">
+<h2>viz::WMesh::WMesh<a class="headerlink" href="#viz-wmesh-wmesh" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a WMesh.</p>
+<dl class="function">
+<dt id="WMesh(const Mesh &amp;mesh)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WMesh</code><span class="sig-paren">(</span>const Mesh&amp; <strong>mesh</strong><span class="sig-paren">)</span><a class="headerlink" href="#WMesh(const Mesh &mesh)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mesh</strong> &#8211; <a class="reference internal" href="viz3d.html#Mesh" title="class Mesh"><code class="xref ocv ocv-class docutils literal"><span class="pre">Mesh</span></code></a> object that will be displayed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="WMesh(InputArray cloud, InputArray polygons, InputArray colors , InputArray normals)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WMesh</code><span class="sig-paren">(</span>InputArray <strong>cloud</strong>, InputArray <strong>polygons</strong>, InputArray <strong>colors</strong>=noArray(), InputArray <strong>normals</strong>=noArray()<span class="sig-paren">)</span><a class="headerlink" href="#WMesh(InputArray cloud, InputArray polygons, InputArray colors , InputArray normals)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cloud</strong> &#8211; Points of the mesh object.</li>
+<li><strong>polygons</strong> &#8211; Points of the mesh object.</li>
+<li><strong>colors</strong> &#8211; Point colors.</li>
+<li><strong>normals</strong> &#8211; Point normals.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wwidgetmerger">
+<h2>viz::WWidgetMerger<a class="headerlink" href="#viz-wwidgetmerger" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="WWidgetMerger">
+<em class="property">class </em><code class="descname">WWidgetMerger</code><a class="headerlink" href="#WWidgetMerger" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This class allows to merge several widgets to single one. It has quite limited functionality and can&#8217;t merge widgets with different attributes. For instance,
+if widgetA has color array and widgetB has only global color defined, then result of merge won&#8217;t have color at all. The class is suitable for merging large amount of similar widgets.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">WWidgetMerger</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Widget3D</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">WWidgetMerger</span><span class="p">();</span>
+
+    <span class="c1">//! Add widget to merge with optional position change</span>
+    <span class="kt">void</span> <span class="nf">addWidget</span><span class="p">(</span><span class="k">const</span> <span class="n">Widget3D</span><span class="o">&amp;</span> <span class="n">widget</span><span class="p">,</span> <span class="k">const</span> <span class="n">Affine3d</span> <span class="o">&amp;</span><span class="n">pose</span> <span class="o">=</span> <span class="n">Affine3d</span><span class="o">::</span><span class="n">Identity</span><span class="p">());</span>
+
+    <span class="c1">//! Repacks internal structure to single widget</span>
+    <span class="kt">void</span> <span class="nf">finalize</span><span class="p">();</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viz-wwidgetmerger-wwidgetmerger">
+<h2>viz::WWidgetMerger::WWidgetMerger<a class="headerlink" href="#viz-wwidgetmerger-wwidgetmerger" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a WWidgetMerger.</p>
+<dl class="function">
+<dt id="WWidgetMerger()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">WWidgetMerger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#WWidgetMerger()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="viz-wwidgetmerger-addcloud">
+<h2>viz::WWidgetMerger::addCloud<a class="headerlink" href="#viz-wwidgetmerger-addcloud" title="Permalink to this headline">¶</a></h2>
+<p>Adds a cloud to the collection.</p>
+<dl class="function">
+<dt id="void addWidget(const Widget3D&amp; widget, const Affine3d &amp;pose)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">addWidget</code><span class="sig-paren">(</span>const Widget3D&amp; <strong>widget</strong>, const Affine3d&amp; <strong>pose</strong>=Affine3d::Identity()<span class="sig-paren">)</span><a class="headerlink" href="#void addWidget(const Widget3D& widget, const Affine3d &pose)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>widget</strong> &#8211; Widget to merge.</li>
+<li><strong>pose</strong> &#8211; Pose of the widget.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viz-wwidgetmerger-finalize">
+<h2>viz::WWidgetMerger::finalize<a class="headerlink" href="#viz-wwidgetmerger-finalize" title="Permalink to this headline">¶</a></h2>
+<p>Finalizes merger data and constructs final merged widget</p>
+<dl class="function">
+<dt>
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">finalize</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Widget</a><ul>
+<li><a class="reference internal" href="#viz-widget">viz::Widget</a></li>
+<li><a class="reference internal" href="#viz-widget-fromplyfile">viz::Widget::fromPlyFile</a></li>
+<li><a class="reference internal" href="#viz-widget-setrenderingproperty">viz::Widget::setRenderingProperty</a></li>
+<li><a class="reference internal" href="#viz-widget-getrenderingproperty">viz::Widget::getRenderingProperty</a></li>
+<li><a class="reference internal" href="#viz-widget-cast">viz::Widget::cast</a></li>
+<li><a class="reference internal" href="#viz-widgetaccessor">viz::WidgetAccessor</a></li>
+<li><a class="reference internal" href="#viz-widgetaccessor-getprop">viz::WidgetAccessor::getProp</a></li>
+<li><a class="reference internal" href="#viz-widgetaccessor-setprop">viz::WidgetAccessor::setProp</a></li>
+<li><a class="reference internal" href="#viz-widget3d">viz::Widget3D</a></li>
+<li><a class="reference internal" href="#viz-widget3d-setpose">viz::Widget3D::setPose</a></li>
+<li><a class="reference internal" href="#viz-widget3d-updatewidgetpose">viz::Widget3D::updateWidgetPose</a></li>
+<li><a class="reference internal" href="#viz-widget3d-getpose">viz::Widget3D::getPose</a></li>
+<li><a class="reference internal" href="#viz-widget3d-applytransform">viz::Widget3D::applyTransform</a></li>
+<li><a class="reference internal" href="#viz-widget3d-setcolor">viz::Widget3D::setColor</a></li>
+<li><a class="reference internal" href="#viz-widget2d">viz::Widget2D</a></li>
+<li><a class="reference internal" href="#viz-widget2d-setcolor">viz::Widget2D::setColor</a></li>
+<li><a class="reference internal" href="#viz-wline">viz::WLine</a></li>
+<li><a class="reference internal" href="#viz-wline-wline">viz::WLine::WLine</a></li>
+<li><a class="reference internal" href="#viz-wplane">viz::WPlane</a></li>
+<li><a class="reference internal" href="#viz-wplane-wplane">viz::WPlane::WPlane</a></li>
+<li><a class="reference internal" href="#id1">viz::WPlane::WPlane</a></li>
+<li><a class="reference internal" href="#viz-wsphere">viz::WSphere</a></li>
+<li><a class="reference internal" href="#viz-wsphere-wsphere">viz::WSphere::WSphere</a></li>
+<li><a class="reference internal" href="#viz-warrow">viz::WArrow</a></li>
+<li><a class="reference internal" href="#viz-warrow-warrow">viz::WArrow::WArrow</a></li>
+<li><a class="reference internal" href="#viz-wcircle">viz::WCircle</a></li>
+<li><a class="reference internal" href="#viz-wcircle-wcircle">viz::WCircle::WCircle</a></li>
+<li><a class="reference internal" href="#id2">viz::WCircle::WCircle</a></li>
+<li><a class="reference internal" href="#viz-wcone">viz::WCone</a></li>
+<li><a class="reference internal" href="#viz-wcone-wcone">viz::WCone::WCone</a></li>
+<li><a class="reference internal" href="#id3">viz::WCone::WCone</a></li>
+<li><a class="reference internal" href="#viz-wcylinder">viz::WCylinder</a></li>
+<li><a class="reference internal" href="#viz-wcylinder-wcylinder">viz::WCylinder::WCylinder</a></li>
+<li><a class="reference internal" href="#viz-wcube">viz::WCube</a></li>
+<li><a class="reference internal" href="#viz-wcube-wcube">viz::WCube::WCube</a></li>
+<li><a class="reference internal" href="#viz-wcoordinatesystem">viz::WCoordinateSystem</a></li>
+<li><a class="reference internal" href="#viz-wcoordinatesystem-wcoordinatesystem">viz::WCoordinateSystem::WCoordinateSystem</a></li>
+<li><a class="reference internal" href="#viz-wpolyline">viz::WPolyLine</a></li>
+<li><a class="reference internal" href="#viz-wpolyline-wpolyline">viz::WPolyLine::WPolyLine</a></li>
+<li><a class="reference internal" href="#viz-wgrid">viz::WGrid</a></li>
+<li><a class="reference internal" href="#viz-wgrid-wgrid">viz::WGrid::WGrid</a></li>
+<li><a class="reference internal" href="#viz-wtext3d">viz::WText3D</a></li>
+<li><a class="reference internal" href="#viz-wtext3d-wtext3d">viz::WText3D::WText3D</a></li>
+<li><a class="reference internal" href="#viz-wtext3d-settext">viz::WText3D::setText</a></li>
+<li><a class="reference internal" href="#viz-wtext3d-gettext">viz::WText3D::getText</a></li>
+<li><a class="reference internal" href="#viz-wtext">viz::WText</a></li>
+<li><a class="reference internal" href="#viz-wtext-wtext">viz::WText::WText</a></li>
+<li><a class="reference internal" href="#viz-wtext-settext">viz::WText::setText</a></li>
+<li><a class="reference internal" href="#viz-wtext-gettext">viz::WText::getText</a></li>
+<li><a class="reference internal" href="#viz-wimageoverlay">viz::WImageOverlay</a></li>
+<li><a class="reference internal" href="#viz-wimageoverlay-wimageoverlay">viz::WImageOverlay::WImageOverlay</a></li>
+<li><a class="reference internal" href="#viz-wimageoverlay-setimage">viz::WImageOverlay::setImage</a></li>
+<li><a class="reference internal" href="#viz-wimage3d">viz::WImage3D</a></li>
+<li><a class="reference internal" href="#viz-wimage3d-wimage3d">viz::WImage3D::WImage3D</a></li>
+<li><a class="reference internal" href="#viz-wimage3d-setimage">viz::WImage3D::setImage</a></li>
+<li><a class="reference internal" href="#viz-wcameraposition">viz::WCameraPosition</a></li>
+<li><a class="reference internal" href="#viz-wcameraposition-wcameraposition">viz::WCameraPosition::WCameraPosition</a></li>
+<li><a class="reference internal" href="#viz-wtrajectory">viz::WTrajectory</a></li>
+<li><a class="reference internal" href="#viz-wtrajectory-wtrajectory">viz::WTrajectory::WTrajectory</a></li>
+<li><a class="reference internal" href="#viz-wtrajectoryfrustums">viz::WTrajectoryFrustums</a></li>
+<li><a class="reference internal" href="#viz-wtrajectoryfrustums-wtrajectoryfrustums">viz::WTrajectoryFrustums::WTrajectoryFrustums</a></li>
+<li><a class="reference internal" href="#viz-wtrajectoryspheres">viz::WTrajectorySpheres</a></li>
+<li><a class="reference internal" href="#viz-wtrajectoryspheres-wtrajectoryspheres">viz::WTrajectorySpheres::WTrajectorySpheres</a></li>
+<li><a class="reference internal" href="#viz-wcloud">viz::WCloud</a></li>
+<li><a class="reference internal" href="#viz-wcloud-wcloud">viz::WCloud::WCloud</a></li>
+<li><a class="reference internal" href="#viz-wcloudcollection">viz::WCloudCollection</a></li>
+<li><a class="reference internal" href="#viz-wcloudcollection-wcloudcollection">viz::WCloudCollection::WCloudCollection</a></li>
+<li><a class="reference internal" href="#viz-wcloudcollection-addcloud">viz::WCloudCollection::addCloud</a></li>
+<li><a class="reference internal" href="#viz-wcloudcollection-finalize">viz::WCloudCollection::finalize</a></li>
+<li><a class="reference internal" href="#viz-wcloudnormals">viz::WCloudNormals</a></li>
+<li><a class="reference internal" href="#viz-wcloudnormals-wcloudnormals">viz::WCloudNormals::WCloudNormals</a></li>
+<li><a class="reference internal" href="#viz-wmesh">viz::WMesh</a></li>
+<li><a class="reference internal" href="#viz-wmesh-wmesh">viz::WMesh::WMesh</a></li>
+<li><a class="reference internal" href="#viz-wwidgetmerger">viz::WWidgetMerger</a></li>
+<li><a class="reference internal" href="#viz-wwidgetmerger-wwidgetmerger">viz::WWidgetMerger::WWidgetMerger</a></li>
+<li><a class="reference internal" href="#viz-wwidgetmerger-addcloud">viz::WWidgetMerger::addCloud</a></li>
+<li><a class="reference internal" href="#viz-wwidgetmerger-finalize">viz::WWidgetMerger::finalize</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="viz3d.html"
+                        title="previous chapter">Viz</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../../platforms/android/refman.html"
+                        title="next chapter">OpenCV4Android Reference</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/viz/doc/widget.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../platforms/android/refman.html" title="OpenCV4Android Reference"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="viz3d.html" title="Viz"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="viz.html" >viz. 3D Visualizer</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

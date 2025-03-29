@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Install Callback Interface &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="Android OpenCV Manager" href="index.html" />
+    <link rel="next" title="Java API" href="../../java.html" />
+    <link rel="prev" title="Loader Callback Interface" href="LoaderCallbackInterface.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../java.html" title="Java API"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="LoaderCallbackInterface.html" title="Loader Callback Interface"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV4Android Reference</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Android OpenCV Manager</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="install-callback-interface">
+<h1>Install Callback Interface<a class="headerlink" href="#install-callback-interface" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="InstallCallbackInterface">
+<em class="property">class </em><code class="descname">InstallCallbackInterface</code><a class="headerlink" href="#InstallCallbackInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback interface for package installation or update.</p>
+</dd></dl>
+
+<div class="section" id="string-getpackagename">
+<h2>String getPackageName()<a class="headerlink" href="#string-getpackagename" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt>
+<code class="descname">String getPackageName()</code></dt>
+<dd><p>Get name of a package to be installed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string;</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">returns package name, i.e. &#8220;OpenCV Manager Service&#8221; or &#8220;OpenCV library&#8221;.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="void-install">
+<h2>void install()<a class="headerlink" href="#void-install" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt>
+<code class="descname">void install()</code></dt>
+<dd><p>Installation of package has been approved.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="void-cancel">
+<h2>void cancel()<a class="headerlink" href="#void-cancel" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt>
+<code class="descname">void cancel()</code></dt>
+<dd><p>Installation of package has been cancelled.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="void-wait-install">
+<h2>void wait_install()<a class="headerlink" href="#void-wait-install" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt>
+<code class="descname">void wait_install()</code></dt>
+<dd><p>Wait for package installation.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Install Callback Interface</a><ul>
+<li><a class="reference internal" href="#string-getpackagename">String getPackageName()</a></li>
+<li><a class="reference internal" href="#void-install">void install()</a></li>
+<li><a class="reference internal" href="#void-cancel">void cancel()</a></li>
+<li><a class="reference internal" href="#void-wait-install">void wait_install()</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="LoaderCallbackInterface.html"
+                        title="previous chapter">Loader Callback Interface</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../java.html"
+                        title="next chapter">Java API</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/platforms/android/service/doc/InstallCallbackInterface.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../java.html" title="Java API"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="LoaderCallbackInterface.html" title="Loader Callback Interface"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV4Android Reference</a> &raquo;</li>
+          <li><a href="index.html" >Android OpenCV Manager</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

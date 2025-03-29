@@ -1,0 +1,593 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Planar Subdivisions (C API) &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="legacy. Deprecated stuff" href="legacy.html" />
+    <link rel="next" title="Feature Detection and Description" href="feature_detection_and_description.html" />
+    <link rel="prev" title="Histograms" href="histograms.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="feature_detection_and_description.html" title="Feature Detection and Description"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="histograms.html" title="Histograms"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="legacy.html" accesskey="U">legacy. Deprecated stuff</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="planar-subdivisions-c-api">
+<h1>Planar Subdivisions (C API)<a class="headerlink" href="#planar-subdivisions-c-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cvsubdiv2d">
+<h2>CvSubdiv2D<a class="headerlink" href="#cvsubdiv2d" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvSubdiv2D">
+<em class="property">struct </em><code class="descname">CvSubdiv2D</code><a class="headerlink" href="#CvSubdiv2D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Planar subdivision.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cp">#define CV_SUBDIV2D_FIELDS()    \</span>
+<span class="cp">    CV_GRAPH_FIELDS()           \</span>
+<span class="cp">    int  quad_edges;            \</span>
+<span class="cp">    int  is_geometry_valid;     \</span>
+<span class="cp">    CvSubdiv2DEdge recent_edge; \</span>
+<span class="cp">    CvPoint2D32f  topleft;      \</span>
+<span class="cp">    CvPoint2D32f  bottomright;</span>
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">CvSubdiv2D</span>
+<span class="p">{</span>
+    <span class="n">CV_SUBDIV2D_FIELDS</span><span class="p">()</span>
+<span class="p">}</span>
+<span class="n">CvSubdiv2D</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Planar subdivision is the subdivision of a plane into a set of
+non-overlapped regions (facets) that cover the whole plane. The above
+structure describes a subdivision built on a 2D point set, where the points
+are linked together and form a planar graph, which, together with a few
+edges connecting the exterior subdivision points (namely, convex hull points)
+with infinity, subdivides a plane into facets by its edges.</p>
+<p>For every subdivision, there is a dual subdivision in which facets and
+points (subdivision vertices) swap their roles. This means that a facet is
+treated as a vertex (called a virtual point below) of the dual subdivision and
+the original subdivision vertices become facets. In the figure below, the
+original subdivision is marked with solid lines and dual subdivision -
+with dotted lines.</p>
+<img alt="../../../_images/subdiv.png" src="../../../_images/subdiv.png" />
+<p>OpenCV subdivides a plane into triangles using the Delaunay&#8217;s
+algorithm. Subdivision is built iteratively starting from a dummy
+triangle that includes all the subdivision points for sure. In this
+case, the dual subdivision is a Voronoi diagram of the input 2D point set. The
+subdivisions can be used for the 3D piece-wise transformation of a plane,
+morphing, fast location of points on the plane, building special graphs
+(such as NNG,RNG), and so forth.</p>
+</div>
+<div class="section" id="cvquadedge2d">
+<h2>CvQuadEdge2D<a class="headerlink" href="#cvquadedge2d" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvQuadEdge2D">
+<em class="property">struct </em><code class="descname">CvQuadEdge2D</code><a class="headerlink" href="#CvQuadEdge2D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Quad-edge of a planar subdivision.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* one of edges within quad-edge, lower 2 bits is index (0..3)</span>
+<span class="cm">   and upper bits are quad-edge pointer */</span>
+<span class="k">typedef</span> <span class="kt">long</span> <span class="n">CvSubdiv2DEdge</span><span class="p">;</span>
+
+<span class="cm">/* quad-edge structure fields */</span>
+<span class="cp">#define CV_QUADEDGE2D_FIELDS()     \</span>
+<span class="cp">    int flags;                     \</span>
+<span class="cp">    struct CvSubdiv2DPoint* pt[4]; \</span>
+<span class="cp">    CvSubdiv2DEdge  next[4];</span>
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">CvQuadEdge2D</span>
+<span class="p">{</span>
+    <span class="n">CV_QUADEDGE2D_FIELDS</span><span class="p">()</span>
+<span class="p">}</span>
+<span class="n">CvQuadEdge2D</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Quad-edge is a basic element of a subdivision containing four edges (e, eRot, reversed e, and reversed eRot):</p>
+<img alt="../../../_images/quadedge.png" src="../../../_images/quadedge.png" />
+</div>
+<div class="section" id="cvsubdiv2dpoint">
+<h2>CvSubdiv2DPoint<a class="headerlink" href="#cvsubdiv2dpoint" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvSubdiv2DPoint">
+<em class="property">struct </em><code class="descname">CvSubdiv2DPoint</code><a class="headerlink" href="#CvSubdiv2DPoint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Point of an original or dual subdivision.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cp">#define CV_SUBDIV2D_POINT_FIELDS()\</span>
+<span class="cp">    int            flags;      \</span>
+<span class="cp">    CvSubdiv2DEdge first;      \</span>
+<span class="cp">    CvPoint2D32f   pt;         \</span>
+<span class="cp">    int id;</span>
+
+<span class="cp">#define CV_SUBDIV2D_VIRTUAL_POINT_FLAG (1 &lt;&lt; 30)</span>
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">CvSubdiv2DPoint</span>
+<span class="p">{</span>
+    <span class="n">CV_SUBDIV2D_POINT_FIELDS</span><span class="p">()</span>
+<span class="p">}</span>
+<span class="n">CvSubdiv2DPoint</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul>
+<li><dl class="first docutils">
+<dt>id</dt>
+<dd><p class="first last">This integer can be used to index auxiliary data associated with each vertex of the planar subdivision.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="calcsubdivvoronoi2d">
+<h2>CalcSubdivVoronoi2D<a class="headerlink" href="#calcsubdivvoronoi2d" title="Permalink to this headline">¶</a></h2>
+<p>Calculates the coordinates of the Voronoi diagram cells.</p>
+<dl class="cfunction">
+<dt id="void cvCalcSubdivVoronoi2D(CvSubdiv2D* subdiv)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvCalcSubdivVoronoi2D</code><span class="sig-paren">(</span>CvSubdiv2D* <strong>subdiv</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvCalcSubdivVoronoi2D(CvSubdiv2D* subdiv)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CalcSubdivVoronoi2D">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CalcSubdivVoronoi2D</code><span class="sig-paren">(</span>subdiv<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.CalcSubdivVoronoi2D" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>subdiv</strong> &#8211; Delaunay subdivision, in which all the points are already added.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function calculates the coordinates
+of virtual points. All virtual points corresponding to a vertex of the
+original subdivision form (when connected together) a boundary of the Voronoi
+cell at that point.</p>
+</div>
+<div class="section" id="clearsubdivvoronoi2d">
+<h2>ClearSubdivVoronoi2D<a class="headerlink" href="#clearsubdivvoronoi2d" title="Permalink to this headline">¶</a></h2>
+<p>Removes all virtual points.</p>
+<dl class="cfunction">
+<dt id="void cvClearSubdivVoronoi2D(CvSubdiv2D* subdiv)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvClearSubdivVoronoi2D</code><span class="sig-paren">(</span>CvSubdiv2D* <strong>subdiv</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvClearSubdivVoronoi2D(CvSubdiv2D* subdiv)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.ClearSubdivVoronoi2D">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">ClearSubdivVoronoi2D</code><span class="sig-paren">(</span>subdiv<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.ClearSubdivVoronoi2D" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>subdiv</strong> &#8211; Delaunay subdivision.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function removes all of the virtual points. It
+is called internally in
+<a class="reference internal" href="#void cvCalcSubdivVoronoi2D(CvSubdiv2D* subdiv)" title="void cvCalcSubdivVoronoi2D(CvSubdiv2D* subdiv)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CalcSubdivVoronoi2D()</span></code></a>
+if the subdivision
+was modified after the previous call to the function.</p>
+</div>
+<div class="section" id="createsubdivdelaunay2d">
+<h2>CreateSubdivDelaunay2D<a class="headerlink" href="#createsubdivdelaunay2d" title="Permalink to this headline">¶</a></h2>
+<p>Creates an empty Delaunay triangulation.</p>
+<dl class="cfunction">
+<dt id="CvSubdiv2D* cvCreateSubdivDelaunay2D(CvRect rect, CvMemStorage* storage)">
+<strong>C:</strong><code class="descname"> </code>CvSubdiv2D* <code class="descname">cvCreateSubdivDelaunay2D</code><span class="sig-paren">(</span>CvRect <strong>rect</strong>, CvMemStorage* <strong>storage</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvSubdiv2D* cvCreateSubdivDelaunay2D(CvRect rect, CvMemStorage* storage)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CreateSubdivDelaunay2D">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CreateSubdivDelaunay2D</code><span class="sig-paren">(</span>rect, storage<span class="sig-paren">)</span> &rarr; CvSubdiv2D<a class="headerlink" href="#cv.CreateSubdivDelaunay2D" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>rect</strong> &#8211; Rectangle that includes all of the 2D points that are to be added to the subdivision.</li>
+<li><strong>storage</strong> &#8211; Container for the subdivision.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function creates an empty Delaunay
+subdivision where 2D points can be added using the function
+<a class="reference internal" href="#CvSubdiv2DPoint* cvSubdivDelaunay2DInsert(CvSubdiv2D* subdiv, CvPoint2D32f pt)" title="CvSubdiv2DPoint* cvSubdivDelaunay2DInsert(CvSubdiv2D* subdiv, CvPoint2D32f pt)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">SubdivDelaunay2DInsert()</span></code></a>
+. All of the points to be added must be within
+the specified rectangle, otherwise a runtime error is raised.</p>
+<p>Note that the triangulation is a single large triangle that covers the given rectangle.  Hence the three vertices of this triangle are outside the rectangle
+<code class="docutils literal"><span class="pre">rect</span></code>
+.</p>
+</div>
+<div class="section" id="findnearestpoint2d">
+<h2>FindNearestPoint2D<a class="headerlink" href="#findnearestpoint2d" title="Permalink to this headline">¶</a></h2>
+<p>Finds the subdivision vertex closest to the given point.</p>
+<dl class="cfunction">
+<dt id="CvSubdiv2DPoint* cvFindNearestPoint2D(CvSubdiv2D* subdiv, CvPoint2D32f pt)">
+<strong>C:</strong><code class="descname"> </code>CvSubdiv2DPoint* <code class="descname">cvFindNearestPoint2D</code><span class="sig-paren">(</span>CvSubdiv2D* <strong>subdiv</strong>, CvPoint2D32f <strong>pt</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvSubdiv2DPoint* cvFindNearestPoint2D(CvSubdiv2D* subdiv, CvPoint2D32f pt)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.FindNearestPoint2D">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">FindNearestPoint2D</code><span class="sig-paren">(</span>subdiv, pt<span class="sig-paren">)</span> &rarr; point<a class="headerlink" href="#cv.FindNearestPoint2D" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>subdiv</strong> &#8211; Delaunay or another subdivision.</li>
+<li><strong>pt</strong> &#8211; Input point.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function is another function that
+locates the input point within the subdivision. It finds the subdivision vertex that
+is the closest to the input point. It is not necessarily one of vertices
+of the facet containing the input point, though the facet (located using
+<a class="reference internal" href="#CvSubdiv2DPointLocation cvSubdiv2DLocate(CvSubdiv2D* subdiv, CvPoint2D32f pt, CvSubdiv2DEdge* edge, CvSubdiv2DPoint** vertex)" title="CvSubdiv2DPointLocation cvSubdiv2DLocate(CvSubdiv2D* subdiv, CvPoint2D32f pt, CvSubdiv2DEdge* edge, CvSubdiv2DPoint** vertex)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">Subdiv2DLocate()</span></code></a>
+) is used as a starting
+point. The function returns a pointer to the found subdivision vertex.</p>
+</div>
+<div class="section" id="subdiv2dedgedst">
+<h2>Subdiv2DEdgeDst<a class="headerlink" href="#subdiv2dedgedst" title="Permalink to this headline">¶</a></h2>
+<p>Returns the edge destination.</p>
+<dl class="cfunction">
+<dt id="CvSubdiv2DPoint* cvSubdiv2DEdgeDst(CvSubdiv2DEdge edge)">
+<strong>C:</strong><code class="descname"> </code>CvSubdiv2DPoint* <code class="descname">cvSubdiv2DEdgeDst</code><span class="sig-paren">(</span>CvSubdiv2DEdge <strong>edge</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvSubdiv2DPoint* cvSubdiv2DEdgeDst(CvSubdiv2DEdge edge)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Subdiv2DEdgeDst">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Subdiv2DEdgeDst</code><span class="sig-paren">(</span>edge<span class="sig-paren">)</span> &rarr; point<a class="headerlink" href="#cv.Subdiv2DEdgeDst" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>edge</strong> &#8211; Subdivision edge (not a quad-edge).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns the edge destination. The
+returned pointer may be NULL if the edge is from a dual subdivision and
+the virtual point coordinates are not calculated yet. The virtual points
+can be calculated using the function
+<a class="reference internal" href="#void cvCalcSubdivVoronoi2D(CvSubdiv2D* subdiv)" title="void cvCalcSubdivVoronoi2D(CvSubdiv2D* subdiv)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CalcSubdivVoronoi2D()</span></code></a>.</p>
+</div>
+<div class="section" id="subdiv2dgetedge">
+<h2>Subdiv2DGetEdge<a class="headerlink" href="#subdiv2dgetedge" title="Permalink to this headline">¶</a></h2>
+<p>Returns one of the edges related to the given edge.</p>
+<dl class="cfunction">
+<dt id="CvSubdiv2DEdge cvSubdiv2DGetEdge(CvSubdiv2DEdge edge, CvNextEdgeType type)">
+<strong>C:</strong><code class="descname"> </code>CvSubdiv2DEdge <code class="descname">cvSubdiv2DGetEdge</code><span class="sig-paren">(</span>CvSubdiv2DEdge <strong>edge</strong>, CvNextEdgeType <strong>type</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvSubdiv2DEdge cvSubdiv2DGetEdge(CvSubdiv2DEdge edge, CvNextEdgeType type)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Subdiv2DGetEdge">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Subdiv2DGetEdge</code><span class="sig-paren">(</span>edge, type<span class="sig-paren">)</span> &rarr; CvSubdiv2DEdge<a class="headerlink" href="#cv.Subdiv2DGetEdge" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>edge</strong> &#8211; Subdivision edge (not a quad-edge).</li>
+<li><strong>type</strong> &#8211; <p>Parameter specifying which of the related edges to return. The following values are possible:</p>
+<ul>
+<li><strong>CV_NEXT_AROUND_ORG</strong> next around the edge origin ( <code class="docutils literal"><span class="pre">eOnext</span></code>  on the picture below if  <code class="docutils literal"><span class="pre">e</span></code>  is the input edge)</li>
+<li><strong>CV_NEXT_AROUND_DST</strong> next around the edge vertex ( <code class="docutils literal"><span class="pre">eDnext</span></code> )</li>
+<li><strong>CV_PREV_AROUND_ORG</strong> previous around the edge origin (reversed  <code class="docutils literal"><span class="pre">eRnext</span></code> )</li>
+<li><strong>CV_PREV_AROUND_DST</strong> previous around the edge destination (reversed  <code class="docutils literal"><span class="pre">eLnext</span></code> )</li>
+<li><strong>CV_NEXT_AROUND_LEFT</strong> next around the left facet ( <code class="docutils literal"><span class="pre">eLnext</span></code> )</li>
+<li><strong>CV_NEXT_AROUND_RIGHT</strong> next around the right facet ( <code class="docutils literal"><span class="pre">eRnext</span></code> )</li>
+<li><strong>CV_PREV_AROUND_LEFT</strong> previous around the left facet (reversed  <code class="docutils literal"><span class="pre">eOnext</span></code> )</li>
+<li><strong>CV_PREV_AROUND_RIGHT</strong> previous around the right facet (reversed  <code class="docutils literal"><span class="pre">eDnext</span></code> )</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<img alt="../../../_images/quadedge.png" src="../../../_images/quadedge.png" />
+<p>The function returns one of the edges related to the input edge.</p>
+</div>
+<div class="section" id="subdiv2dnextedge">
+<h2>Subdiv2DNextEdge<a class="headerlink" href="#subdiv2dnextedge" title="Permalink to this headline">¶</a></h2>
+<p>Returns next edge around the edge origin.</p>
+<dl class="cfunction">
+<dt id="CvSubdiv2DEdge cvSubdiv2DNextEdge(CvSubdiv2DEdge edge)">
+<strong>C:</strong><code class="descname"> </code>CvSubdiv2DEdge <code class="descname">cvSubdiv2DNextEdge</code><span class="sig-paren">(</span>CvSubdiv2DEdge <strong>edge</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvSubdiv2DEdge cvSubdiv2DNextEdge(CvSubdiv2DEdge edge)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Subdiv2DNextEdge">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Subdiv2DNextEdge</code><span class="sig-paren">(</span>edge<span class="sig-paren">)</span> &rarr; CvSubdiv2DEdge<a class="headerlink" href="#cv.Subdiv2DNextEdge" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>edge</strong> &#8211; Subdivision edge (not a quad-edge).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns the next edge around the edge origin:
+<code class="docutils literal"><span class="pre">eOnext</span></code>
+on the picture above if
+<code class="docutils literal"><span class="pre">e</span></code>
+is the input edge).</p>
+</div>
+<div class="section" id="subdiv2dlocate">
+<h2>Subdiv2DLocate<a class="headerlink" href="#subdiv2dlocate" title="Permalink to this headline">¶</a></h2>
+<p>Returns the location of a point within a Delaunay triangulation.</p>
+<dl class="cfunction">
+<dt id="CvSubdiv2DPointLocation cvSubdiv2DLocate(CvSubdiv2D* subdiv, CvPoint2D32f pt, CvSubdiv2DEdge* edge, CvSubdiv2DPoint** vertex)">
+<strong>C:</strong><code class="descname"> </code>CvSubdiv2DPointLocation <code class="descname">cvSubdiv2DLocate</code><span class="sig-paren">(</span>CvSubdiv2D* <strong>subdiv</strong>, CvPoint2D32f <strong>pt</strong>, CvSubdiv2DEdge* <strong>edge</strong>, CvSubdiv2DPoint** <strong>vertex</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#CvSubdiv2DPointLocation cvSubdiv2DLocate(CvSubdiv2D* subdiv, CvPoint2D32f pt, CvSubdiv2DEdge* edge, CvSubdiv2DPoint** vertex)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Subdiv2DLocate">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Subdiv2DLocate</code><span class="sig-paren">(</span>subdiv, pt) -&gt; (loc, where<span class="sig-paren">)</span><a class="headerlink" href="#cv.Subdiv2DLocate" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>subdiv</strong> &#8211; Delaunay or another subdivision.</li>
+<li><strong>pt</strong> &#8211; Point to locate.</li>
+<li><strong>edge</strong> &#8211; Output edge that the point belongs to or is located to the right of it.</li>
+<li><strong>vertex</strong> &#8211; Optional output vertex double pointer the input point coincides with.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function locates the input point within the subdivision. There are five cases:</p>
+<ul class="simple">
+<li>The point falls into some facet. The function returns
+<code class="docutils literal"><span class="pre">CV_PTLOC_INSIDE</span></code>
+and
+<code class="docutils literal"><span class="pre">*edge</span></code>
+will contain one of edges of the facet.</li>
+<li>The point falls onto the edge. The function returns
+<code class="docutils literal"><span class="pre">CV_PTLOC_ON_EDGE</span></code>
+and
+<code class="docutils literal"><span class="pre">*edge</span></code>
+will contain this edge.</li>
+<li>The point coincides with one of the subdivision vertices. The function returns
+<code class="docutils literal"><span class="pre">CV_PTLOC_VERTEX</span></code>
+and
+<code class="docutils literal"><span class="pre">*vertex</span></code>
+will contain a pointer to the vertex.</li>
+<li>The point is outside the subdivision reference rectangle. The function returns
+<code class="docutils literal"><span class="pre">CV_PTLOC_OUTSIDE_RECT</span></code>
+and no pointers are filled.</li>
+<li>One of input arguments is invalid. A runtime error is raised or, if silent or &#8220;parent&#8221; error processing mode is selected,
+<code class="docutils literal"><span class="pre">CV_PTLOC_ERROR</span></code>
+is returnd.</li>
+</ul>
+</div>
+<div class="section" id="subdiv2drotateedge">
+<h2>Subdiv2DRotateEdge<a class="headerlink" href="#subdiv2drotateedge" title="Permalink to this headline">¶</a></h2>
+<p>Returns another edge of the same quad-edge.</p>
+<dl class="cfunction">
+<dt id="CvSubdiv2DEdge cvSubdiv2DRotateEdge(CvSubdiv2DEdge edge, int rotate)">
+<strong>C:</strong><code class="descname"> </code>CvSubdiv2DEdge <code class="descname">cvSubdiv2DRotateEdge</code><span class="sig-paren">(</span>CvSubdiv2DEdge <strong>edge</strong>, int <strong>rotate</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvSubdiv2DEdge cvSubdiv2DRotateEdge(CvSubdiv2DEdge edge, int rotate)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Subdiv2DRotateEdge">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Subdiv2DRotateEdge</code><span class="sig-paren">(</span>edge, rotate<span class="sig-paren">)</span> &rarr; CvSubdiv2DEdge<a class="headerlink" href="#cv.Subdiv2DRotateEdge" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>edge</strong> &#8211; Subdivision edge (not a quad-edge).</li>
+<li><strong>rotate</strong> &#8211; <p>Parameter specifying which of the edges of the same quad-edge as the input one to return. The following values are possible:</p>
+<ul>
+<li><strong>0</strong> the input edge ( <code class="docutils literal"><span class="pre">e</span></code>  on the picture below if  <code class="docutils literal"><span class="pre">e</span></code>  is the input edge)</li>
+<li><strong>1</strong> the rotated edge ( <code class="docutils literal"><span class="pre">eRot</span></code> )</li>
+<li><strong>2</strong> the reversed edge (reversed  <code class="docutils literal"><span class="pre">e</span></code>  (in green))</li>
+<li><strong>3</strong> the reversed rotated edge (reversed  <code class="docutils literal"><span class="pre">eRot</span></code>  (in green))</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns one of the edges of the same quad-edge as the input edge.</p>
+</div>
+<div class="section" id="subdivdelaunay2dinsert">
+<h2>SubdivDelaunay2DInsert<a class="headerlink" href="#subdivdelaunay2dinsert" title="Permalink to this headline">¶</a></h2>
+<p>Inserts a single point into a Delaunay triangulation.</p>
+<dl class="cfunction">
+<dt id="CvSubdiv2DPoint* cvSubdivDelaunay2DInsert(CvSubdiv2D* subdiv, CvPoint2D32f pt)">
+<strong>C:</strong><code class="descname"> </code>CvSubdiv2DPoint* <code class="descname">cvSubdivDelaunay2DInsert</code><span class="sig-paren">(</span>CvSubdiv2D* <strong>subdiv</strong>, CvPoint2D32f <strong>pt</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvSubdiv2DPoint* cvSubdivDelaunay2DInsert(CvSubdiv2D* subdiv, CvPoint2D32f pt)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.SubdivDelaunay2DInsert">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">SubdivDelaunay2DInsert</code><span class="sig-paren">(</span>subdiv, pt<span class="sig-paren">)</span> &rarr; point<a class="headerlink" href="#cv.SubdivDelaunay2DInsert" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>subdiv</strong> &#8211; Delaunay subdivision created by the function  <a class="reference internal" href="#CvSubdiv2D* cvCreateSubdivDelaunay2D(CvRect rect, CvMemStorage* storage)" title="CvSubdiv2D* cvCreateSubdivDelaunay2D(CvRect rect, CvMemStorage* storage)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CreateSubdivDelaunay2D()</span></code></a>.</li>
+<li><strong>pt</strong> &#8211; Inserted point.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function inserts a single point into a subdivision and modifies the subdivision topology appropriately. If a point with the same coordinates exists already, no new point is added. The function returns a pointer to the allocated point. No virtual point coordinates are calculated at this stage.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Planar Subdivisions (C API)</a><ul>
+<li><a class="reference internal" href="#cvsubdiv2d">CvSubdiv2D</a></li>
+<li><a class="reference internal" href="#cvquadedge2d">CvQuadEdge2D</a></li>
+<li><a class="reference internal" href="#cvsubdiv2dpoint">CvSubdiv2DPoint</a></li>
+<li><a class="reference internal" href="#calcsubdivvoronoi2d">CalcSubdivVoronoi2D</a></li>
+<li><a class="reference internal" href="#clearsubdivvoronoi2d">ClearSubdivVoronoi2D</a></li>
+<li><a class="reference internal" href="#createsubdivdelaunay2d">CreateSubdivDelaunay2D</a></li>
+<li><a class="reference internal" href="#findnearestpoint2d">FindNearestPoint2D</a></li>
+<li><a class="reference internal" href="#subdiv2dedgedst">Subdiv2DEdgeDst</a></li>
+<li><a class="reference internal" href="#subdiv2dgetedge">Subdiv2DGetEdge</a></li>
+<li><a class="reference internal" href="#subdiv2dnextedge">Subdiv2DNextEdge</a></li>
+<li><a class="reference internal" href="#subdiv2dlocate">Subdiv2DLocate</a></li>
+<li><a class="reference internal" href="#subdiv2drotateedge">Subdiv2DRotateEdge</a></li>
+<li><a class="reference internal" href="#subdivdelaunay2dinsert">SubdivDelaunay2DInsert</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="histograms.html"
+                        title="previous chapter">Histograms</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="feature_detection_and_description.html"
+                        title="next chapter">Feature Detection and Description</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/legacy/doc/planar_subdivisions.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="feature_detection_and_description.html" title="Feature Detection and Description"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="histograms.html" title="Histograms"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="legacy.html" >legacy. Deprecated stuff</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

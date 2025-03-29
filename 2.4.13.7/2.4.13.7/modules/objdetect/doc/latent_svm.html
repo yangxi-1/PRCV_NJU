@@ -1,0 +1,559 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Latent SVM &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="objdetect. Object Detection" href="objdetect.html" />
+    <link rel="next" title="ml. Machine Learning" href="../../ml/doc/ml.html" />
+    <link rel="prev" title="Cascade Classification" href="cascade_classification.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../ml/doc/ml.html" title="ml. Machine Learning"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cascade_classification.html" title="Cascade Classification"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="objdetect.html" accesskey="U">objdetect. Object Detection</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="latent-svm">
+<h1>Latent SVM<a class="headerlink" href="#latent-svm" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="discriminatively-trained-part-based-models-for-object-detection">
+<h2>Discriminatively Trained Part Based Models for Object Detection<a class="headerlink" href="#discriminatively-trained-part-based-models-for-object-detection" title="Permalink to this headline">¶</a></h2>
+<p>The object detector described below has been initially proposed by
+P.F. Felzenszwalb in <a class="reference internal" href="#felzenszwalb2010" id="id1">[Felzenszwalb2010]</a>.  It is based on a
+Dalal-Triggs detector that uses a single filter on histogram of
+oriented gradients (HOG) features to represent an object category.
+This detector uses a sliding window approach, where a filter is
+applied at all positions and scales of an image. The first
+innovation is enriching the Dalal-Triggs model using a
+star-structured part-based model defined by a &#8220;root&#8221; filter
+(analogous to the Dalal-Triggs filter) plus a set of parts filters
+and associated deformation models. The score of one of star models
+at a particular position and scale within an image is the score of
+the root filter at the given location plus the sum over parts of the
+maximum, over placements of that part, of the part filter score on
+its location minus a deformation cost easuring the deviation of the
+part from its ideal location relative to the root. Both root and
+part filter scores are defined by the dot product between a filter
+(a set of weights) and a subwindow of a feature pyramid computed
+from the input image. Another improvement is a representation of the
+class of models by a mixture of star models. The score of a mixture
+model at a particular position and scale is the maximum over
+components, of the score of that component model at the given
+location.</p>
+<p>In OpenCV there are C implementation of Latent SVM and C++ wrapper of it.
+C version is the structure <a class="reference internal" href="#CvObjectDetection" title="struct CvObjectDetection"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvObjectDetection</span></code></a> and a set of functions
+working with this structure (see <a class="reference internal" href="#CvLatentSvmDetector* cvLoadLatentSvmDetector(const char* filename)" title="CvLatentSvmDetector* cvLoadLatentSvmDetector(const char* filename)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cvLoadLatentSvmDetector()</span></code></a>,
+<a class="reference internal" href="#void cvReleaseLatentSvmDetector(CvLatentSvmDetector** detector)" title="void cvReleaseLatentSvmDetector(CvLatentSvmDetector** detector)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cvReleaseLatentSvmDetector()</span></code></a>, <a class="reference internal" href="#CvSeq* cvLatentSvmDetectObjects(IplImage* image, CvLatentSvmDetector* detector, CvMemStorage* storage, float overlap_threshold, int numThreads)" title="CvSeq* cvLatentSvmDetectObjects(IplImage* image, CvLatentSvmDetector* detector, CvMemStorage* storage, float overlap_threshold, int numThreads)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cvLatentSvmDetectObjects()</span></code></a>).
+C++ version is the class <a class="reference internal" href="#LatentSvmDetector" title="class LatentSvmDetector"><code class="xref ocv ocv-class docutils literal"><span class="pre">LatentSvmDetector</span></code></a> and has slightly different
+functionality in contrast with C version - it supports loading and detection
+of several models.</p>
+<p>There are two examples of Latent SVM usage: <code class="docutils literal"><span class="pre">samples/c/latentsvmdetect.cpp</span></code>
+and <code class="docutils literal"><span class="pre">samples/cpp/latentsvm_multidetect.cpp</span></code>.</p>
+</div>
+<div class="section" id="cvlsvmfilterposition">
+<h2>CvLSVMFilterPosition<a class="headerlink" href="#cvlsvmfilterposition" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvLSVMFilterPosition">
+<em class="property">struct </em><code class="descname">CvLSVMFilterPosition</code><a class="headerlink" href="#CvLSVMFilterPosition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Structure describes the position of the filter in the feature pyramid.</p>
+<dl class="member">
+<dt id="unsigned int l">
+unsigned int <code class="descname">l</code><a class="headerlink" href="#unsigned int l" title="Permalink to this definition">¶</a></dt>
+<dd><p>level in the feature pyramid</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="unsigned int x">
+unsigned int <code class="descname">x</code><a class="headerlink" href="#unsigned int x" title="Permalink to this definition">¶</a></dt>
+<dd><p>x-coordinate in level l</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="unsigned int y">
+unsigned int <code class="descname">y</code><a class="headerlink" href="#unsigned int y" title="Permalink to this definition">¶</a></dt>
+<dd><p>y-coordinate in level l</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="cvlsvmfilterobject">
+<h2>CvLSVMFilterObject<a class="headerlink" href="#cvlsvmfilterobject" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvLSVMFilterObject">
+<em class="property">struct </em><code class="descname">CvLSVMFilterObject</code><a class="headerlink" href="#CvLSVMFilterObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Description of the filter, which corresponds to the part of the object.</p>
+<dl class="member">
+<dt id="CvLSVMFilterPosition V">
+CvLSVMFilterPosition <code class="descname">V</code><a class="headerlink" href="#CvLSVMFilterPosition V" title="Permalink to this definition">¶</a></dt>
+<dd><p>ideal (penalty = 0) position of the partial filter
+from the root filter position (V_i in the paper)</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float fineFunction[4]">
+float <code class="descname">fineFunction[4]</code><a class="headerlink" href="#float fineFunction[4]" title="Permalink to this definition">¶</a></dt>
+<dd><p>vector describes penalty function (d_i in the paper)
+pf[0] * x + pf[1] * y + pf[2] * x^2 + pf[3] * y^2</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int sizeX">
+int <code class="descname">sizeX</code><a class="headerlink" href="#int sizeX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="member">
+<dt id="int sizeY">
+int <code class="descname">sizeY</code><a class="headerlink" href="#int sizeY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rectangular map (sizeX x sizeY),
+every cell stores feature vector (dimension = p)</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int numFeatures">
+int <code class="descname">numFeatures</code><a class="headerlink" href="#int numFeatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of features</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float *H">
+float* <code class="descname">H</code><a class="headerlink" href="#float *H" title="Permalink to this definition">¶</a></dt>
+<dd><p>matrix of feature vectors to set and get
+feature vectors (i,j) used formula H[(j * sizeX + i) * p + k],
+where k - component of feature vector in cell (i, j)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="cvlatentsvmdetector">
+<h2>CvLatentSvmDetector<a class="headerlink" href="#cvlatentsvmdetector" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvLatentSvmDetector">
+<em class="property">struct </em><code class="descname">CvLatentSvmDetector</code><a class="headerlink" href="#CvLatentSvmDetector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Structure contains internal representation of trained Latent SVM detector.</p>
+<dl class="member">
+<dt id="int num_filters">
+int <code class="descname">num_filters</code><a class="headerlink" href="#int num_filters" title="Permalink to this definition">¶</a></dt>
+<dd><p>total number of filters (root plus part) in model</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int num_components">
+int <code class="descname">num_components</code><a class="headerlink" href="#int num_components" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of components in model</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int* num_part_filters">
+int* <code class="descname">num_part_filters</code><a class="headerlink" href="#int* num_part_filters" title="Permalink to this definition">¶</a></dt>
+<dd><p>array containing number of part filters for each component</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="CvLSVMFilterObject** filters">
+CvLSVMFilterObject** <code class="descname">filters</code><a class="headerlink" href="#CvLSVMFilterObject** filters" title="Permalink to this definition">¶</a></dt>
+<dd><p>root and part filters for all model components</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float* b">
+float* <code class="descname">b</code><a class="headerlink" href="#float* b" title="Permalink to this definition">¶</a></dt>
+<dd><p>biases for all model components</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float score_threshold">
+float <code class="descname">score_threshold</code><a class="headerlink" href="#float score_threshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>confidence level threshold</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="cvobjectdetection">
+<h2>CvObjectDetection<a class="headerlink" href="#cvobjectdetection" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvObjectDetection">
+<em class="property">struct </em><code class="descname">CvObjectDetection</code><a class="headerlink" href="#CvObjectDetection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Structure contains the bounding box and confidence level for detected object.</p>
+<dl class="member">
+<dt id="CvRect rect">
+CvRect <code class="descname">rect</code><a class="headerlink" href="#CvRect rect" title="Permalink to this definition">¶</a></dt>
+<dd><p>bounding box for a detected object</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float score">
+float <code class="descname">score</code><a class="headerlink" href="#float score" title="Permalink to this definition">¶</a></dt>
+<dd><p>confidence level</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="cvloadlatentsvmdetector">
+<h2>cvLoadLatentSvmDetector<a class="headerlink" href="#cvloadlatentsvmdetector" title="Permalink to this headline">¶</a></h2>
+<p>Loads trained detector from a file.</p>
+<dl class="function">
+<dt id="CvLatentSvmDetector* cvLoadLatentSvmDetector(const char* filename)">
+<strong>C++:</strong><code class="descname"> </code>CvLatentSvmDetector* <code class="descname">cvLoadLatentSvmDetector</code><span class="sig-paren">(</span>const char* <strong>filename</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvLatentSvmDetector* cvLoadLatentSvmDetector(const char* filename)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; Name of the file containing the description of a trained detector</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cvreleaselatentsvmdetector">
+<h2>cvReleaseLatentSvmDetector<a class="headerlink" href="#cvreleaselatentsvmdetector" title="Permalink to this headline">¶</a></h2>
+<p>Release memory allocated for CvLatentSvmDetector structure.</p>
+<dl class="function">
+<dt id="void cvReleaseLatentSvmDetector(CvLatentSvmDetector** detector)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">cvReleaseLatentSvmDetector</code><span class="sig-paren">(</span>CvLatentSvmDetector** <strong>detector</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvReleaseLatentSvmDetector(CvLatentSvmDetector** detector)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>detector</strong> &#8211; CvLatentSvmDetector structure to be released</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cvlatentsvmdetectobjects">
+<h2>cvLatentSvmDetectObjects<a class="headerlink" href="#cvlatentsvmdetectobjects" title="Permalink to this headline">¶</a></h2>
+<p>Find rectangular regions in the given image that are likely to contain objects
+and corresponding confidence levels.</p>
+<dl class="function">
+<dt id="CvSeq* cvLatentSvmDetectObjects(IplImage* image, CvLatentSvmDetector* detector, CvMemStorage* storage, float overlap_threshold, int numThreads)">
+<strong>C++:</strong><code class="descname"> </code>CvSeq* <code class="descname">cvLatentSvmDetectObjects</code><span class="sig-paren">(</span>IplImage* <strong>image</strong>, CvLatentSvmDetector* <strong>detector</strong>, CvMemStorage* <strong>storage</strong>, float <strong>overlap_threshold</strong>=0.5f, int <strong>numThreads</strong>=-1 <span class="sig-paren">)</span><a class="headerlink" href="#CvSeq* cvLatentSvmDetectObjects(IplImage* image, CvLatentSvmDetector* detector, CvMemStorage* storage, float overlap_threshold, int numThreads)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; image</li>
+<li><strong>detector</strong> &#8211; LatentSVM detector in internal representation</li>
+<li><strong>storage</strong> &#8211; Memory storage to store the resultant sequence of the object candidate rectangles</li>
+<li><strong>overlap_threshold</strong> &#8211; Threshold for the non-maximum suppression algorithm</li>
+<li><strong>numThreads</strong> &#8211; Number of threads used in parallel version of the algorithm</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="latentsvmdetector">
+<h2>LatentSvmDetector<a class="headerlink" href="#latentsvmdetector" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="LatentSvmDetector">
+<em class="property">class </em><code class="descname">LatentSvmDetector</code><a class="headerlink" href="#LatentSvmDetector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This is a C++ wrapping class of Latent SVM. It contains internal representation of several
+trained Latent SVM detectors (models) and a set of methods to load the detectors and detect objects
+using them.</p>
+</div>
+<div class="section" id="latentsvmdetector-objectdetection">
+<h2>LatentSvmDetector::ObjectDetection<a class="headerlink" href="#latentsvmdetector-objectdetection" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="LatentSvmDetector::ObjectDetection">
+<em class="property">struct </em><code class="descclassname">LatentSvmDetector::</code><code class="descname">ObjectDetection</code><a class="headerlink" href="#LatentSvmDetector::ObjectDetection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Structure contains the detection information.</p>
+<dl class="member">
+<dt id="Rect rect">
+Rect <code class="descname">rect</code><a class="headerlink" href="#Rect rect" title="Permalink to this definition">¶</a></dt>
+<dd><p>bounding box for a detected object</p>
+</dd></dl>
+
+<dl class="member">
+<dt>
+float <code class="descname">score</code></dt>
+<dd><p>confidence level</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int classID">
+int <code class="descname">classID</code><a class="headerlink" href="#int classID" title="Permalink to this definition">¶</a></dt>
+<dd><p>class (model or detector) ID that detect an object</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="latentsvmdetector-latentsvmdetector">
+<h2>LatentSvmDetector::LatentSvmDetector<a class="headerlink" href="#latentsvmdetector-latentsvmdetector" title="Permalink to this headline">¶</a></h2>
+<p>Two types of constructors.</p>
+<dl class="function">
+<dt id="LatentSvmDetector::LatentSvmDetector()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">LatentSvmDetector::</code><code class="descname">LatentSvmDetector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#LatentSvmDetector::LatentSvmDetector()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="LatentSvmDetector::LatentSvmDetector(const vector&lt;string&gt;&amp; filenames, const vector&lt;string&gt;&amp; classNames)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">LatentSvmDetector::</code><code class="descname">LatentSvmDetector</code><span class="sig-paren">(</span>const vector&lt;string&gt;&amp; <strong>filenames</strong>, const vector&lt;string&gt;&amp; <strong>classNames</strong>=vector&lt;string&gt;()<span class="sig-paren">)</span><a class="headerlink" href="#LatentSvmDetector::LatentSvmDetector(const vector<string>& filenames, const vector<string>& classNames)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filenames</strong> &#8211; A set of filenames storing the trained detectors (models). Each file contains one model. See examples of such files here /opencv_extra/testdata/cv/latentsvmdetector/models_VOC2007/.</li>
+<li><strong>classNames</strong> &#8211; A set of trained models names. If it&#8217;s empty then the name of each model will be constructed from the name of file containing the model. E.g. the model stored in &#8220;/home/user/cat.xml&#8221; will get the name &#8220;cat&#8221;.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="id2">
+<h2>LatentSvmDetector::~LatentSvmDetector<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>Destructor.</p>
+<dl class="function">
+<dt id="LatentSvmDetector::~LatentSvmDetector()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">LatentSvmDetector::</code><code class="descname">~LatentSvmDetector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#LatentSvmDetector::~LatentSvmDetector()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="latentsvmdetector-clear">
+<h2>LatentSvmDetector::~clear<a class="headerlink" href="#latentsvmdetector-clear" title="Permalink to this headline">¶</a></h2>
+<p>Clear all trained models and their names stored in an class object.</p>
+<dl class="function">
+<dt id="void LatentSvmDetector::clear()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">LatentSvmDetector::</code><code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void LatentSvmDetector::clear()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="latentsvmdetector-load">
+<h2>LatentSvmDetector::load<a class="headerlink" href="#latentsvmdetector-load" title="Permalink to this headline">¶</a></h2>
+<p>Load the trained models from given <code class="docutils literal"><span class="pre">.xml</span></code> files and return <code class="docutils literal"><span class="pre">true</span></code> if at least one model was loaded.</p>
+<dl class="function">
+<dt id="bool LatentSvmDetector::load(const vector&lt;string&gt;&amp; filenames, const vector&lt;string&gt;&amp; classNames)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">LatentSvmDetector::</code><code class="descname">load</code><span class="sig-paren">(</span>const vector&lt;string&gt;&amp; <strong>filenames</strong>, const vector&lt;string&gt;&amp; <strong>classNames</strong>=vector&lt;string&gt;() <span class="sig-paren">)</span><a class="headerlink" href="#bool LatentSvmDetector::load(const vector<string>& filenames, const vector<string>& classNames)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filenames</strong> &#8211; A set of filenames storing the trained detectors (models). Each file contains one model. See examples of such files here /opencv_extra/testdata/cv/latentsvmdetector/models_VOC2007/.</li>
+<li><strong>classNames</strong> &#8211; A set of trained models names. If it&#8217;s empty then the name of each model will be constructed from the name of file containing the model. E.g. the model stored in &#8220;/home/user/cat.xml&#8221; will get the name &#8220;cat&#8221;.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="latentsvmdetector-detect">
+<h2>LatentSvmDetector::detect<a class="headerlink" href="#latentsvmdetector-detect" title="Permalink to this headline">¶</a></h2>
+<p>Find rectangular regions in the given image that are likely to contain objects of loaded classes (models)
+and corresponding confidence levels.</p>
+<dl class="function">
+<dt id="void LatentSvmDetector::detect(const Mat&amp; image, vector&lt;ObjectDetection&gt;&amp; objectDetections, float overlapThreshold, int numThreads)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">LatentSvmDetector::</code><code class="descname">detect</code><span class="sig-paren">(</span>const Mat&amp; <strong>image</strong>, vector&lt;ObjectDetection&gt;&amp; <strong>objectDetections</strong>, float <strong>overlapThreshold</strong>=0.5f, int <strong>numThreads</strong>=-1 <span class="sig-paren">)</span><a class="headerlink" href="#void LatentSvmDetector::detect(const Mat& image, vector<ObjectDetection>& objectDetections, float overlapThreshold, int numThreads)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; An image.</li>
+<li><strong>objectDetections</strong> &#8211; The detections: rectangulars, scores and class IDs.</li>
+<li><strong>overlapThreshold</strong> &#8211; Threshold for the non-maximum suppression algorithm.</li>
+<li><strong>numThreads</strong> &#8211; Number of threads used in parallel version of the algorithm.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="latentsvmdetector-getclassnames">
+<h2>LatentSvmDetector::getClassNames<a class="headerlink" href="#latentsvmdetector-getclassnames" title="Permalink to this headline">¶</a></h2>
+<p>Return the class (model) names that were passed in constructor or method <code class="docutils literal"><span class="pre">load</span></code> or extracted from models filenames in those methods.</p>
+<dl class="function">
+<dt id="const vector&lt;string&gt;&amp; LatentSvmDetector::getClassNames() const">
+<strong>C++:</strong><code class="descname"> </code>const vector&lt;string&gt;&amp; <code class="descclassname">LatentSvmDetector::</code><code class="descname">getClassNames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#const vector<string>& LatentSvmDetector::getClassNames() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="latentsvmdetector-getclasscount">
+<h2>LatentSvmDetector::getClassCount<a class="headerlink" href="#latentsvmdetector-getclasscount" title="Permalink to this headline">¶</a></h2>
+<p>Return a count of loaded models (classes).</p>
+<dl class="function">
+<dt id="size_t LatentSvmDetector::getClassCount() const">
+<strong>C++:</strong><code class="descname"> </code>size_t <code class="descclassname">LatentSvmDetector::</code><code class="descname">getClassCount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#size_t LatentSvmDetector::getClassCount() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<table class="docutils citation" frame="void" id="felzenszwalb2010" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[Felzenszwalb2010]</a></td><td>Felzenszwalb, P. F. and Girshick, R. B. and McAllester, D. and Ramanan, D. <em>Object Detection with Discriminatively Trained Part Based Models</em>. PAMI, vol. 32, no. 9, pp. 1627-1645, September 2010</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Latent SVM</a><ul>
+<li><a class="reference internal" href="#discriminatively-trained-part-based-models-for-object-detection">Discriminatively Trained Part Based Models for Object Detection</a></li>
+<li><a class="reference internal" href="#cvlsvmfilterposition">CvLSVMFilterPosition</a></li>
+<li><a class="reference internal" href="#cvlsvmfilterobject">CvLSVMFilterObject</a></li>
+<li><a class="reference internal" href="#cvlatentsvmdetector">CvLatentSvmDetector</a></li>
+<li><a class="reference internal" href="#cvobjectdetection">CvObjectDetection</a></li>
+<li><a class="reference internal" href="#cvloadlatentsvmdetector">cvLoadLatentSvmDetector</a></li>
+<li><a class="reference internal" href="#cvreleaselatentsvmdetector">cvReleaseLatentSvmDetector</a></li>
+<li><a class="reference internal" href="#cvlatentsvmdetectobjects">cvLatentSvmDetectObjects</a></li>
+<li><a class="reference internal" href="#latentsvmdetector">LatentSvmDetector</a></li>
+<li><a class="reference internal" href="#latentsvmdetector-objectdetection">LatentSvmDetector::ObjectDetection</a></li>
+<li><a class="reference internal" href="#latentsvmdetector-latentsvmdetector">LatentSvmDetector::LatentSvmDetector</a></li>
+<li><a class="reference internal" href="#id2">LatentSvmDetector::~LatentSvmDetector</a></li>
+<li><a class="reference internal" href="#latentsvmdetector-clear">LatentSvmDetector::~clear</a></li>
+<li><a class="reference internal" href="#latentsvmdetector-load">LatentSvmDetector::load</a></li>
+<li><a class="reference internal" href="#latentsvmdetector-detect">LatentSvmDetector::detect</a></li>
+<li><a class="reference internal" href="#latentsvmdetector-getclassnames">LatentSvmDetector::getClassNames</a></li>
+<li><a class="reference internal" href="#latentsvmdetector-getclasscount">LatentSvmDetector::getClassCount</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cascade_classification.html"
+                        title="previous chapter">Cascade Classification</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../ml/doc/ml.html"
+                        title="next chapter">ml. Machine Learning</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/objdetect/doc/latent_svm.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../ml/doc/ml.html" title="ml. Machine Learning"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cascade_classification.html" title="Cascade Classification"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="objdetect.html" >objdetect. Object Detection</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

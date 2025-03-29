@@ -1,0 +1,336 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Matrix Reductions &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="ocl. OpenCL-accelerated Computer Vision" href="ocl.html" />
+    <link rel="next" title="Image Filtering" href="image_filtering.html" />
+    <link rel="prev" title="Operations on Matrics" href="operations_on_matrices.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="image_filtering.html" title="Image Filtering"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="operations_on_matrices.html" title="Operations on Matrics"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" accesskey="U">ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="matrix-reductions">
+<h1>Matrix Reductions<a class="headerlink" href="#matrix-reductions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ocl-abssum">
+<h2>ocl::absSum<a class="headerlink" href="#ocl-abssum" title="Permalink to this headline">¶</a></h2>
+<p>Returns the sum of absolute values for matrix elements.</p>
+<dl class="function">
+<dt id="Scalar ocl::absSum(const oclMat &amp;m)">
+<strong>C++:</strong><code class="descname"> </code>Scalar <code class="descclassname">ocl::</code><code class="descname">absSum</code><span class="sig-paren">(</span>const oclMat&amp; <strong>m</strong><span class="sig-paren">)</span><a class="headerlink" href="#Scalar ocl::absSum(const oclMat &m)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>m</strong> &#8211; The Source image of all depth.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Counts the abs sum of matrix elements for each channel. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-countnonzero">
+<h2>ocl::countNonZero<a class="headerlink" href="#ocl-countnonzero" title="Permalink to this headline">¶</a></h2>
+<p>Returns the number of non-zero elements in src</p>
+<dl class="function">
+<dt id="int ocl::countNonZero(const oclMat &amp;src)">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">ocl::</code><code class="descname">countNonZero</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong><span class="sig-paren">)</span><a class="headerlink" href="#int ocl::countNonZero(const oclMat &src)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Single-channel array</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Counts non-zero array elements. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-min">
+<h2>ocl::min<a class="headerlink" href="#ocl-min" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="void ocl::min(const oclMat &amp;src1, const oclMat &amp;src2, oclMat &amp;dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">min</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, const oclMat&amp; <strong>src2</strong>, oclMat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::min(const oclMat &src1, const oclMat &src2, oclMat &dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; the first input array.</li>
+<li><strong>src2</strong> &#8211; the second input array, must be the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>dst</strong> &#8211; the destination array, it will have the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Computes element-wise minima of two arrays. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-max">
+<h2>ocl::max<a class="headerlink" href="#ocl-max" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="void ocl::max(const oclMat &amp;src1, const oclMat &amp;src2, oclMat &amp;dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">max</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src1</strong>, const oclMat&amp; <strong>src2</strong>, oclMat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::max(const oclMat &src1, const oclMat &src2, oclMat &dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; the first input array.</li>
+<li><strong>src2</strong> &#8211; the second input array, must be the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+<li><strong>dst</strong> &#8211; the destination array, it will have the same size and same type as <code class="docutils literal"><span class="pre">src1</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Computes element-wise maxima of two arrays. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-minmax">
+<h2>ocl::minMax<a class="headerlink" href="#ocl-minmax" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::minMax(const oclMat &amp;src, double *minVal, double *maxVal , const oclMat &amp;mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">minMax</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, double* <strong>minVal</strong>, double* <strong>maxVal</strong>=0, const oclMat&amp; <strong>mask</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::minMax(const oclMat &src, double *minVal, double *maxVal , const oclMat &mask)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Single-channel array</li>
+<li><strong>minVal</strong> &#8211; Pointer to returned minimum value, should not be NULL</li>
+<li><strong>maxVal</strong> &#8211; Pointer to returned maximum value, should not be NULL</li>
+<li><strong>mask</strong> &#8211; The optional mask used to select a sub-array</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Finds global minimum and maximum in a whole array or sub-array. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-minmaxloc">
+<h2>ocl::minMaxLoc<a class="headerlink" href="#ocl-minmaxloc" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::minMaxLoc(const oclMat &amp;src, double *minVal, double *maxVal , Point *minLoc , Point *maxLoc ,const oclMat &amp;mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">minMaxLoc</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, double* <strong>minVal</strong>, double* <strong>maxVal</strong>=0, Point* <strong>minLoc</strong>=0, Point* <strong>maxLoc</strong>=0, const oclMat&amp; <strong>mask</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::minMaxLoc(const oclMat &src, double *minVal, double *maxVal , Point *minLoc , Point *maxLoc ,const oclMat &mask)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Single-channel array</li>
+<li><strong>minVal</strong> &#8211; Pointer to returned minimum value, should not be NULL</li>
+<li><strong>maxVal</strong> &#8211; Pointer to returned maximum value, should not be NULL</li>
+<li><strong>minLoc</strong> &#8211; Pointer to returned minimum location (in 2D case), should not be NULL</li>
+<li><strong>maxLoc</strong> &#8211; Pointer to returned maximum location (in 2D case) should not be NULL</li>
+<li><strong>mask</strong> &#8211; The optional mask used to select a sub-array</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The functions minMaxLoc find minimum and maximum element values and their positions. The extremums are searched across the whole array, or, if mask is not an empty array, in the specified array region. The functions do not work with multi-channel arrays.</p>
+</div>
+<div class="section" id="ocl-sqrsum">
+<h2>ocl::sqrSum<a class="headerlink" href="#ocl-sqrsum" title="Permalink to this headline">¶</a></h2>
+<p>Returns the squared sum of matrix elements for each channel</p>
+<dl class="function">
+<dt id="Scalar ocl::sqrSum(const oclMat &amp;m)">
+<strong>C++:</strong><code class="descname"> </code>Scalar <code class="descclassname">ocl::</code><code class="descname">sqrSum</code><span class="sig-paren">(</span>const oclMat&amp; <strong>m</strong><span class="sig-paren">)</span><a class="headerlink" href="#Scalar ocl::sqrSum(const oclMat &m)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>m</strong> &#8211; The Source image of all depth.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Counts the squared sum of matrix elements for each channel. Supports all data types.</p>
+</div>
+<div class="section" id="ocl-sum">
+<h2>ocl::sum<a class="headerlink" href="#ocl-sum" title="Permalink to this headline">¶</a></h2>
+<p>Returns the sum of matrix elements for each channel</p>
+<dl class="function">
+<dt id="Scalar ocl::sum(const oclMat &amp;m)">
+<strong>C++:</strong><code class="descname"> </code>Scalar <code class="descclassname">ocl::</code><code class="descname">sum</code><span class="sig-paren">(</span>const oclMat&amp; <strong>m</strong><span class="sig-paren">)</span><a class="headerlink" href="#Scalar ocl::sum(const oclMat &m)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>m</strong> &#8211; The Source image of all depth.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Counts the sum of matrix elements for each channel.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Matrix Reductions</a><ul>
+<li><a class="reference internal" href="#ocl-abssum">ocl::absSum</a></li>
+<li><a class="reference internal" href="#ocl-countnonzero">ocl::countNonZero</a></li>
+<li><a class="reference internal" href="#ocl-min">ocl::min</a></li>
+<li><a class="reference internal" href="#ocl-max">ocl::max</a></li>
+<li><a class="reference internal" href="#ocl-minmax">ocl::minMax</a></li>
+<li><a class="reference internal" href="#ocl-minmaxloc">ocl::minMaxLoc</a></li>
+<li><a class="reference internal" href="#ocl-sqrsum">ocl::sqrSum</a></li>
+<li><a class="reference internal" href="#ocl-sum">ocl::sum</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="operations_on_matrices.html"
+                        title="previous chapter">Operations on Matrics</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="image_filtering.html"
+                        title="next chapter">Image Filtering</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/ocl/doc/matrix_reductions.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="image_filtering.html" title="Image Filtering"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="operations_on_matrices.html" title="Operations on Matrics"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" >ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

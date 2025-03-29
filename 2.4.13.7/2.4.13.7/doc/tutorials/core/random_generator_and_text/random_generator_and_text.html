@@ -1,0 +1,387 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Random generator and text with OpenCV &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="core module. The Core Functionality" href="../table_of_content_core/table_of_content_core.html" />
+    <link rel="next" title="Discrete Fourier Transform" href="../discrete_fourier_transform/discrete_fourier_transform.html" />
+    <link rel="prev" title="Basic Drawing" href="../basic_geometric_drawing/basic_geometric_drawing.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../discrete_fourier_transform/discrete_fourier_transform.html" title="Discrete Fourier Transform"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../basic_geometric_drawing/basic_geometric_drawing.html" title="Basic Drawing"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_core/table_of_content_core.html" accesskey="U"><em>core</em> module. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="random-generator-and-text-with-opencv">
+<span id="drawing-2"></span><h1>Random generator and text with OpenCV<a class="headerlink" href="#random-generator-and-text-with-opencv" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goals">
+<h2>Goals<a class="headerlink" href="#goals" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Use the <em>Random Number generator class</em> (<a class="reference external" href="http://docs.opencv.org/modules/core/doc/operations_on_arrays.html?highlight=rng#rng">RNG</a>) and how to get a random number from a uniform distribution.</li>
+<li>Display text on an OpenCV window by using the function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/drawing_functions.html#puttext">putText</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>In the previous tutorial (<a class="reference internal" href="../basic_geometric_drawing/basic_geometric_drawing.html#drawing-1"><span>Basic Drawing</span></a>) we drew diverse geometric figures, giving as input parameters such as coordinates (in the form of <a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html#point">Points</a>), color, thickness, etc. You might have noticed that we gave specific values for these arguments.</li>
+<li>In this tutorial, we intend to use <em>random</em> values for the drawing parameters. Also, we intend to populate our image with a big number of geometric figures. Since we will be initializing them in a random fashion, this process will be automatic and made by using <em>loops</em> .</li>
+<li>This code is in your OpenCV sample folder. Otherwise you can grab it from <a class="reference external" href="https://github.com/opencv/opencv/blob/2.4/samples/cpp/tutorial_code/core/Matrix/Drawing_2.cpp">here</a> .</li>
+</ul>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Let&#8217;s start by checking out the <em>main</em> function. We observe that first thing we do is creating a <em>Random Number Generator</em> object (RNG):</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">RNG</span> <span class="nf">rng</span><span class="p">(</span> <span class="mh">0xFFFFFFFF</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>RNG implements a random number generator. In this example, <em>rng</em> is a RNG element initialized with the value <em>0xFFFFFFFF</em></p>
+</li>
+<li><p class="first">Then we create a matrix initialized to <em>zeros</em> (which means that it will appear as black), specifying its height, width and its type:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">/// Initialize a matrix filled with zeros</span>
+<span class="n">Mat</span> <span class="n">image</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span> <span class="n">window_height</span><span class="p">,</span> <span class="n">window_width</span><span class="p">,</span> <span class="n">CV_8UC3</span> <span class="p">);</span>
+
+<span class="c1">/// Show it in a window during DELAY ms</span>
+<span class="n">imshow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">image</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Then we proceed to draw crazy stuff. After taking a look at the code, you can see that it is mainly divided in 8 sections, defined as functions:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">/// Now, let&#39;s draw some lines</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Drawing_Random_Lines</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">rng</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="c1">/// Go on drawing, this time nice rectangles</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Drawing_Random_Rectangles</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">rng</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="c1">/// Draw some ellipses</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Drawing_Random_Ellipses</span><span class="p">(</span> <span class="n">image</span><span class="p">,</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">rng</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="c1">/// Now some polylines</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Drawing_Random_Polylines</span><span class="p">(</span> <span class="n">image</span><span class="p">,</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">rng</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="c1">/// Draw filled polygons</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Drawing_Random_Filled_Polygons</span><span class="p">(</span> <span class="n">image</span><span class="p">,</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">rng</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="c1">/// Draw circles</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Drawing_Random_Circles</span><span class="p">(</span> <span class="n">image</span><span class="p">,</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">rng</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="c1">/// Display text in random positions</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Displaying_Random_Text</span><span class="p">(</span> <span class="n">image</span><span class="p">,</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">rng</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="c1">/// Displaying the big end!</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Displaying_Big_End</span><span class="p">(</span> <span class="n">image</span><span class="p">,</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">rng</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>All of these functions follow the same pattern, so we will analyze only a couple of them, since the same explanation applies for all.</p>
+</li>
+<li><p class="first">Checking out the function <strong>Drawing_Random_Lines</strong>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">int</span> <span class="nf">Drawing_Random_Lines</span><span class="p">(</span> <span class="n">Mat</span> <span class="n">image</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">RNG</span> <span class="n">rng</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="kt">int</span> <span class="n">lineType</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+  <span class="n">Point</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">;</span>
+
+  <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">NUMBER</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+  <span class="p">{</span>
+   <span class="n">pt1</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span> <span class="n">x_1</span><span class="p">,</span> <span class="n">x_2</span> <span class="p">);</span>
+   <span class="n">pt1</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span> <span class="n">y_1</span><span class="p">,</span> <span class="n">y_2</span> <span class="p">);</span>
+   <span class="n">pt2</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span> <span class="n">x_1</span><span class="p">,</span> <span class="n">x_2</span> <span class="p">);</span>
+   <span class="n">pt2</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span> <span class="n">y_1</span><span class="p">,</span> <span class="n">y_2</span> <span class="p">);</span>
+
+   <span class="n">line</span><span class="p">(</span> <span class="n">image</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="n">randomColor</span><span class="p">(</span><span class="n">rng</span><span class="p">),</span> <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="mi">8</span> <span class="p">);</span>
+   <span class="n">imshow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">image</span> <span class="p">);</span>
+   <span class="k">if</span><span class="p">(</span> <span class="n">waitKey</span><span class="p">(</span> <span class="n">DELAY</span> <span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">)</span>
+   <span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We can observe the following:</p>
+<ul>
+<li><p class="first">The <em>for</em> loop will repeat <strong>NUMBER</strong> times. Since the function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/drawing_functions.html#line">line</a> is inside this loop, that means that <strong>NUMBER</strong> lines will be generated.</p>
+</li>
+<li><p class="first">The line extremes are given by <em>pt1</em> and <em>pt2</em>. For <em>pt1</em> we can see that:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">pt1</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span> <span class="n">x_1</span><span class="p">,</span> <span class="n">x_2</span> <span class="p">);</span>
+<span class="n">pt1</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span> <span class="n">y_1</span><span class="p">,</span> <span class="n">y_2</span> <span class="p">);</span>
+</pre></div>
+</div>
+<ul>
+<li><p class="first">We know that <strong>rng</strong> is a <em>Random number generator</em> object. In the code above we are calling <strong>rng.uniform(a,b)</strong>. This generates a randomly uniformed distribution between the values <strong>a</strong> and <strong>b</strong> (inclusive in <strong>a</strong>, exclusive in <strong>b</strong>).</p>
+</li>
+<li><p class="first">From the explanation above, we deduce that the extremes <em>pt1</em> and <em>pt2</em> will be random values, so the lines positions will be quite impredictable, giving a nice visual effect (check out the Result section below).</p>
+</li>
+<li><p class="first">As another observation, we notice that in the <a class="reference external" href="http://docs.opencv.org/modules/core/doc/drawing_functions.html#line">line</a> arguments, for the <em>color</em> input we enter:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">randomColor</span><span class="p">(</span><span class="n">rng</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Let&#8217;s check the function implementation:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">static</span> <span class="n">Scalar</span> <span class="nf">randomColor</span><span class="p">(</span> <span class="n">RNG</span><span class="o">&amp;</span> <span class="n">rng</span> <span class="p">)</span>
+  <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">icolor</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span><span class="p">)</span> <span class="n">rng</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">Scalar</span><span class="p">(</span> <span class="n">icolor</span><span class="o">&amp;</span><span class="mi">255</span><span class="p">,</span> <span class="p">(</span><span class="n">icolor</span><span class="o">&gt;&gt;</span><span class="mi">8</span><span class="p">)</span><span class="o">&amp;</span><span class="mi">255</span><span class="p">,</span> <span class="p">(</span><span class="n">icolor</span><span class="o">&gt;&gt;</span><span class="mi">16</span><span class="p">)</span><span class="o">&amp;</span><span class="mi">255</span> <span class="p">);</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+<p>As we can see, the return value is an <em>Scalar</em> with 3 randomly initialized values, which are used as the <em>R</em>, <em>G</em> and <em>B</em> parameters for the line color. Hence, the color of the lines will be random too!</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p class="first">The explanation above applies for the other functions generating circles, ellipses, polygons, etc. The parameters such as <em>center</em> and <em>vertices</em> are also generated randomly.</p>
+</li>
+<li><p class="first">Before finishing, we also should take a look at the functions <em>Display_Random_Text</em> and <em>Displaying_Big_End</em>, since they both have a few interesting features:</p>
+</li>
+<li><p class="first"><strong>Display_Random_Text:</strong></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">int</span> <span class="nf">Displaying_Random_Text</span><span class="p">(</span> <span class="n">Mat</span> <span class="n">image</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">RNG</span> <span class="n">rng</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="kt">int</span> <span class="n">lineType</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+
+  <span class="k">for</span> <span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">NUMBER</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">Point</span> <span class="n">org</span><span class="p">;</span>
+    <span class="n">org</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">x_1</span><span class="p">,</span> <span class="n">x_2</span><span class="p">);</span>
+    <span class="n">org</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">y_1</span><span class="p">,</span> <span class="n">y_2</span><span class="p">);</span>
+
+    <span class="n">putText</span><span class="p">(</span> <span class="n">image</span><span class="p">,</span> <span class="s">&quot;Testing text rendering&quot;</span><span class="p">,</span> <span class="n">org</span><span class="p">,</span> <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">8</span><span class="p">),</span>
+             <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span><span class="o">*</span><span class="mf">0.05</span><span class="o">+</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">randomColor</span><span class="p">(</span><span class="n">rng</span><span class="p">),</span> <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">lineType</span><span class="p">);</span>
+
+    <span class="n">imshow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">image</span> <span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">waitKey</span><span class="p">(</span><span class="n">DELAY</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">)</span>
+      <span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Everything looks familiar but the expression:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">putText</span><span class="p">(</span> <span class="n">image</span><span class="p">,</span> <span class="s">&quot;Testing text rendering&quot;</span><span class="p">,</span> <span class="n">org</span><span class="p">,</span> <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">8</span><span class="p">),</span>
+         <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span><span class="o">*</span><span class="mf">0.05</span><span class="o">+</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">randomColor</span><span class="p">(</span><span class="n">rng</span><span class="p">),</span> <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">lineType</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>So, what does the function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/drawing_functions.html#puttext">putText</a> do? In our example:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Draws the text <strong>&#8220;Testing text rendering&#8221;</strong> in <strong>image</strong></li>
+<li>The bottom-left corner of the text will be located in the Point <strong>org</strong></li>
+<li>The font type is a random integer value in the range: <img class="math" src="../../../../_images/math/54b2c57bdfcb9e208447ce75e9b2430373e6b13e.png" alt="[0, 8&gt;"/>.</li>
+<li>The scale of the font is denoted by the expression <strong>rng.uniform(0, 100)x0.05 + 0.1</strong> (meaning its range is: <img class="math" src="../../../../_images/math/d3ed58fc3eb57d4c9a7d97e883fc6e3260838b78.png" alt="[0.1, 5.1&gt;"/>)</li>
+<li>The text color is random (denoted by <strong>randomColor(rng)</strong>)</li>
+<li>The text thickness ranges between 1 and 10, as specified by <strong>rng.uniform(1,10)</strong></li>
+</ul>
+</div>
+<p>As a result, we will get (analagously to the other drawing functions) <strong>NUMBER</strong> texts over our image, in random locations.</p>
+</li>
+<li><p class="first"><strong>Displaying_Big_End</strong></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">int</span> <span class="nf">Displaying_Big_End</span><span class="p">(</span> <span class="n">Mat</span> <span class="n">image</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">RNG</span> <span class="n">rng</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">Size</span> <span class="n">textsize</span> <span class="o">=</span> <span class="n">getTextSize</span><span class="p">(</span><span class="s">&quot;OpenCV forever!&quot;</span><span class="p">,</span> <span class="n">CV_FONT_HERSHEY_COMPLEX</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="n">Point</span> <span class="n">org</span><span class="p">((</span><span class="n">window_width</span> <span class="o">-</span> <span class="n">textsize</span><span class="p">.</span><span class="n">width</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="n">window_height</span> <span class="o">-</span> <span class="n">textsize</span><span class="p">.</span><span class="n">height</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>
+  <span class="kt">int</span> <span class="n">lineType</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+
+  <span class="n">Mat</span> <span class="n">image2</span><span class="p">;</span>
+
+  <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">255</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span> <span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">image2</span> <span class="o">=</span> <span class="n">image</span> <span class="o">-</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="n">putText</span><span class="p">(</span> <span class="n">image2</span><span class="p">,</span> <span class="s">&quot;OpenCV forever!&quot;</span><span class="p">,</span> <span class="n">org</span><span class="p">,</span> <span class="n">CV_FONT_HERSHEY_COMPLEX</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>
+           <span class="n">Scalar</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">5</span><span class="p">,</span> <span class="n">lineType</span> <span class="p">);</span>
+
+    <span class="n">imshow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">image2</span> <span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">waitKey</span><span class="p">(</span><span class="n">DELAY</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">)</span>
+      <span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Besides the function <strong>getTextSize</strong> (which gets the size of the argument text), the new operation we can observe is inside the <em>foor</em> loop:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">image2</span> <span class="o">=</span> <span class="n">image</span> <span class="o">-</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>So, <strong>image2</strong> is the substraction of <strong>image</strong> and <strong>Scalar::all(i)</strong>. In fact, what happens here is that every pixel of <strong>image2</strong> will be the result of substracting every pixel of <strong>image</strong> minus the value of <strong>i</strong> (remember that for each pixel we are considering three values such as R, G and B, so each of them will be affected)</p>
+</li>
+</ol>
+<blockquote>
+<div>Also remember that the substraction operation <em>always</em> performs internally a <strong>saturate</strong> operation, which means that the result obtained will always be inside the allowed range (no negative and between 0 and 255 for our example).</div></blockquote>
+</div>
+<div class="section" id="result">
+<h2>Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h2>
+<p>As you just saw in the Code section, the program will sequentially execute diverse drawing functions, which will produce:</p>
+<ol class="arabic">
+<li><p class="first">First a random set of <em>NUMBER</em> lines will appear on screen such as it can be seen in this screenshot:</p>
+<img alt="Drawing Tutorial 2 - Final Result 0" class="align-center" src="../../../../_images/Drawing_2_Tutorial_Result_0.jpg" />
+</li>
+<li><p class="first">Then, a new set of figures, these time <em>rectangles</em> will follow.</p>
+</li>
+<li><p class="first">Now some ellipses will appear, each of them with random position, size, thickness and arc length:</p>
+<img alt="Drawing Tutorial 2 - Final Result 2" class="align-center" src="../../../../_images/Drawing_2_Tutorial_Result_2.jpg" />
+</li>
+<li><p class="first">Now, <em>polylines</em> with 03 segments will appear on screen, again in random configurations.</p>
+<img alt="Drawing Tutorial 2 - Final Result 3" class="align-center" src="../../../../_images/Drawing_2_Tutorial_Result_3.jpg" />
+</li>
+<li><p class="first">Filled polygons (in this example triangles) will follow.</p>
+</li>
+<li><p class="first">The last geometric figure to appear: circles!</p>
+<img alt="Drawing Tutorial 2 - Final Result 5" class="align-center" src="../../../../_images/Drawing_2_Tutorial_Result_5.jpg" />
+</li>
+<li><p class="first">Near the end, the text <em>&#8220;Testing Text Rendering&#8221;</em> will appear in a variety of fonts, sizes, colors and positions.</p>
+</li>
+<li><p class="first">And the big end (which by the way expresses a big truth too):</p>
+<img alt="Drawing Tutorial 2 - Final Result 7" class="align-center" src="../../../../_images/Drawing_2_Tutorial_Result_7.jpg" />
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Random generator and text with OpenCV</a><ul>
+<li><a class="reference internal" href="#goals">Goals</a></li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#result">Result</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../basic_geometric_drawing/basic_geometric_drawing.html"
+                        title="previous chapter">Basic Drawing</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../discrete_fourier_transform/discrete_fourier_transform.html"
+                        title="next chapter">Discrete Fourier Transform</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/core/random_generator_and_text/random_generator_and_text.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../discrete_fourier_transform/discrete_fourier_transform.html" title="Discrete Fourier Transform"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../basic_geometric_drawing/basic_geometric_drawing.html" title="Basic Drawing"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_core/table_of_content_core.html" ><em>core</em> module. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

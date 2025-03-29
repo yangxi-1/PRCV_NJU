@@ -1,0 +1,316 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Hough Circle Transform &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../../index.html" />
+    <link rel="up" title="imgproc module. Image Processing" href="../../table_of_content_imgproc/table_of_content_imgproc.html" />
+    <link rel="next" title="Remapping" href="../remap/remap.html" />
+    <link rel="prev" title="Hough Line Transform" href="../hough_lines/hough_lines.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../remap/remap.html" title="Remapping"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../hough_lines/hough_lines.html" title="Hough Line Transform"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" accesskey="U"><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="hough-circle-transform">
+<span id="hough-circle"></span><h1>Hough Circle Transform<a class="headerlink" href="#hough-circle-transform" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<ul class="simple">
+<li>Use the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/feature_detection.html?highlight=houghcircles#houghcircles">HoughCircles</a> to detect circles in an image.</li>
+</ul>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>Hough Circle Transform<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">The Hough Circle Transform works in a <em>roughly</em> analogous way to the Hough Line Transform explained in the previous tutorial.</p>
+</li>
+<li><p class="first">In the line detection case, a line was defined by two parameters <img class="math" src="../../../../../_images/math/4d6681db5f775c0e52d9a977a226b149b9c69996.png" alt="(r, \theta)"/>. In the circle case, we need three parameters to define a circle:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/b33c689179d81dce481e944f6797c37c47c9befb.png" alt="C : ( x_{center}, y_{center}, r )"/></p>
+</div><p>where <img class="math" src="../../../../../_images/math/36892a924cce6d80cd51033dbdf0e8029d55d4ab.png" alt="(x_{center}, y_{center})"/> define the center position (gree point) and <img class="math" src="../../../../../_images/math/ad87c26146d46be66f1d2433d2d19bb0669f939c.png" alt="r"/> is the radius, which allows us to completely define a circle, as it can be seen below:</p>
+<img alt="Result of detecting circles with Hough Transform" class="align-center" src="../../../../../_images/Hough_Circle_Tutorial_Theory_0.jpg" />
+</li>
+<li><p class="first">For sake of efficiency, OpenCV implements a detection method slightly trickier than the standard Hough Transform: <em>The Hough gradient method</em>. For more details, please check the book <em>Learning OpenCV</em> or your favorite Computer Vision bibliography</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><strong>What does this program do?</strong><ul>
+<li>Loads an image and blur it to reduce the noise</li>
+<li>Applies the <em>Hough Circle Transform</em> to the blurred image .</li>
+<li>Display the detected circle in a window.</li>
+</ul>
+</li>
+<li>The sample code that we will explain can be downloaded from <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/houghcircles.cpp">here</a>. A slightly fancier version (which shows both Hough standard and probabilistic with trackbars for changing the threshold values) can be found <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/tutorial_code/ImgTrans/HoughCircle_Demo.cpp">here</a>.</li>
+</ol>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;opencv2/highgui/highgui.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/imgproc/imgproc.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="cm">/** @function main */</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">src_gray</span><span class="p">;</span>
+
+  <span class="c1">/// Read the image</span>
+  <span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+
+  <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">src</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span>
+    <span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="c1">/// Convert it to gray</span>
+  <span class="n">cvtColor</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">CV_BGR2GRAY</span> <span class="p">);</span>
+
+  <span class="c1">/// Reduce the noise so we avoid false circle detection</span>
+  <span class="n">GaussianBlur</span><span class="p">(</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span> <span class="p">);</span>
+
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">Vec3f</span><span class="o">&gt;</span> <span class="n">circles</span><span class="p">;</span>
+
+  <span class="c1">/// Apply the Hough Transform to find the circles</span>
+  <span class="n">HoughCircles</span><span class="p">(</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">circles</span><span class="p">,</span> <span class="n">CV_HOUGH_GRADIENT</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">src_gray</span><span class="p">.</span><span class="n">rows</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+
+  <span class="c1">/// Draw the circles detected</span>
+  <span class="k">for</span><span class="p">(</span> <span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">circles</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+  <span class="p">{</span>
+      <span class="n">Point</span> <span class="n">center</span><span class="p">(</span><span class="n">cvRound</span><span class="p">(</span><span class="n">circles</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">circles</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]));</span>
+      <span class="kt">int</span> <span class="n">radius</span> <span class="o">=</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">circles</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]);</span>
+      <span class="c1">// circle center</span>
+      <span class="n">circle</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+      <span class="c1">// circle outline</span>
+      <span class="n">circle</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+   <span class="p">}</span>
+
+  <span class="c1">/// Show your results</span>
+  <span class="n">namedWindow</span><span class="p">(</span> <span class="s">&quot;Hough Circle Transform Demo&quot;</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+  <span class="n">imshow</span><span class="p">(</span> <span class="s">&quot;Hough Circle Transform Demo&quot;</span><span class="p">,</span> <span class="n">src</span> <span class="p">);</span>
+
+  <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Load an image</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+
+<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">src</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span>
+  <span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Convert it to grayscale:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">cvtColor</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">CV_BGR2GRAY</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Apply a Gaussian blur to reduce noise and avoid false circle detection:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">GaussianBlur</span><span class="p">(</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Proceed to apply Hough Circle Transform:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vec3f</span><span class="o">&gt;</span> <span class="n">circles</span><span class="p">;</span>
+
+<span class="n">HoughCircles</span><span class="p">(</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">circles</span><span class="p">,</span> <span class="n">CV_HOUGH_GRADIENT</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">src_gray</span><span class="p">.</span><span class="n">rows</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>with the arguments:</p>
+<ul class="simple">
+<li><em>src_gray</em>: Input image (grayscale)</li>
+<li><em>circles</em>: A vector that stores sets of 3 values: <img class="math" src="../../../../../_images/math/3de1a4986d63a9d48777626dc52ad188dd49471f.png" alt="x_{c}, y_{c}, r"/> for each detected circle.</li>
+<li><em>CV_HOUGH_GRADIENT</em>: Define the detection method. Currently this is the only one available in OpenCV</li>
+<li><em>dp = 1</em>: The inverse ratio of resolution</li>
+<li><em>min_dist = src_gray.rows/8</em>: Minimum distance between detected centers</li>
+<li><em>param_1 = 200</em>: Upper threshold for the internal Canny edge detector</li>
+<li><em>param_2</em> = 100*: Threshold for center detection.</li>
+<li><em>min_radius = 0</em>: Minimum radio to be detected. If unknown, put zero as default.</li>
+<li><em>max_radius = 0</em>: Maximum radius to be detected. If unknown, put zero as default</li>
+</ul>
+</li>
+<li><p class="first">Draw the detected circles:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">for</span><span class="p">(</span> <span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">circles</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+<span class="p">{</span>
+   <span class="n">Point</span> <span class="n">center</span><span class="p">(</span><span class="n">cvRound</span><span class="p">(</span><span class="n">circles</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">circles</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]));</span>
+   <span class="kt">int</span> <span class="n">radius</span> <span class="o">=</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">circles</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]);</span>
+   <span class="c1">// circle center</span>
+   <span class="n">circle</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+   <span class="c1">// circle outline</span>
+   <span class="n">circle</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+<p>You can see that we will draw the circle(s) on red and the center(s) with a small green dot</p>
+</li>
+<li><p class="first">Display the detected circle(s):</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">namedWindow</span><span class="p">(</span> <span class="s">&quot;Hough Circle Transform Demo&quot;</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+<span class="n">imshow</span><span class="p">(</span> <span class="s">&quot;Hough Circle Transform Demo&quot;</span><span class="p">,</span> <span class="n">src</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Wait for the user to exit the program</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="result">
+<h2>Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h2>
+<p>The result of running the code above with a test image is shown below:</p>
+<img alt="Result of detecting circles with Hough Transform" class="align-center" src="../../../../../_images/Hough_Circle_Tutorial_Result.jpg" />
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Hough Circle Transform</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a><ul>
+<li><a class="reference internal" href="#id1">Hough Circle Transform</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#result">Result</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../hough_lines/hough_lines.html"
+                        title="previous chapter">Hough Line Transform</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../remap/remap.html"
+                        title="next chapter">Remapping</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../../_sources/doc/tutorials/imgproc/imgtrans/hough_circle/hough_circle.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../remap/remap.html" title="Remapping"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../hough_lines/hough_lines.html" title="Hough Line Transform"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" ><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

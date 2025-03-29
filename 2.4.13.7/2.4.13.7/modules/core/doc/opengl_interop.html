@@ -1,0 +1,970 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>OpenGL interoperability &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="core. The Core Functionality" href="core.html" />
+    <link rel="next" title="imgproc. Image Processing" href="../../imgproc/doc/imgproc.html" />
+    <link rel="prev" title="Utility and System Functions and Macros" href="utility_and_system_functions_and_macros.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../imgproc/doc/imgproc.html" title="imgproc. Image Processing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="utility_and_system_functions_and_macros.html" title="Utility and System Functions and Macros"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="core.html" accesskey="U">core. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="opengl-interoperability">
+<h1>OpenGL interoperability<a class="headerlink" href="#opengl-interoperability" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="general-information">
+<h2>General Information<a class="headerlink" href="#general-information" title="Permalink to this headline">¶</a></h2>
+<p>This section describes OpenGL interoperability.</p>
+<p>To enable OpenGL support, configure OpenCV using <code class="docutils literal"><span class="pre">CMake</span></code> with <code class="docutils literal"><span class="pre">WITH_OPENGL=ON</span></code> .
+Currently OpenGL is supported only with WIN32, GTK and Qt backends on Windows and Linux (MacOS and Android are not supported).
+For GTK backend <code class="docutils literal"><span class="pre">gtkglext-1.0</span></code> library is required.</p>
+<p>To use OpenGL functionality you should first create OpenGL context (window or frame buffer).
+You can do this with <a class="reference internal" href="../../highgui/doc/user_interface.html#void namedWindow(const string&amp; winname, int flags)" title="void namedWindow(const string&amp; winname, int flags)"><code class="xref ocv ocv-func docutils literal"><span class="pre">namedWindow()</span></code></a> function or with other OpenGL toolkit (GLUT, for example).</p>
+</div>
+<div class="section" id="ogl-buffer">
+<h2>ogl::Buffer<a class="headerlink" href="#ogl-buffer" title="Permalink to this headline">¶</a></h2>
+<p>Smart pointer for OpenGL buffer object with reference counting.</p>
+<dl class="class">
+<dt id="ogl::Buffer">
+<em class="property">class </em><code class="descclassname">ogl::</code><code class="descname">Buffer</code><a class="headerlink" href="#ogl::Buffer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Buffer Objects are OpenGL objects that store an array of unformatted memory allocated by the OpenGL context.
+These can be used to store vertex data, pixel data retrieved from images or the framebuffer, and a variety of other things.</p>
+<p><code class="docutils literal"><span class="pre">ogl::Buffer</span></code> has interface similar with <a class="reference internal" href="basic_structures.html#Mat" title="class Mat"><code class="xref ocv ocv-class docutils literal"><span class="pre">Mat</span></code></a> interface and represents 2D array memory.</p>
+<p><code class="docutils literal"><span class="pre">ogl::Buffer</span></code> supports memory transfers between host and device and also can be mapped to CUDA memory.</p>
+</div>
+<div class="section" id="ogl-buffer-target">
+<h2>ogl::Buffer::Target<a class="headerlink" href="#ogl-buffer-target" title="Permalink to this headline">¶</a></h2>
+<p>The target defines how you intend to use the buffer object.</p>
+<dl class="enum">
+<dt id="ogl::Buffer::Target">
+<strong>C++:</strong><code class="descname"> </code><em class="property">enum </em><code class="descclassname">ogl::Buffer::</code><code class="descname">Target</code><a class="headerlink" href="#ogl::Buffer::Target" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="emember">
+<dt id="ARRAY_BUFFER">
+<code class="descname">ARRAY_BUFFER</code><a class="headerlink" href="#ARRAY_BUFFER" title="Permalink to this definition">¶</a></dt>
+<dd><p>The buffer will be used as a source for vertex data.</p>
+</dd></dl>
+
+<dl class="emember">
+<dt id="ELEMENT_ARRAY_BUFFER">
+<code class="descname">ELEMENT_ARRAY_BUFFER</code><a class="headerlink" href="#ELEMENT_ARRAY_BUFFER" title="Permalink to this definition">¶</a></dt>
+<dd><p>The buffer will be used for indices (in <code class="docutils literal"><span class="pre">glDrawElements</span></code> or <a class="reference internal" href="#void ogl::render(const Texture2D&amp; tex, Rect_&lt;double&gt; wndRect , Rect_&lt;double&gt; texRect)" title="void ogl::render(const Texture2D&amp; tex, Rect_&lt;double&gt; wndRect , Rect_&lt;double&gt; texRect)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ogl::render()</span></code></a>, for example).</p>
+</dd></dl>
+
+<dl class="emember">
+<dt id="PIXEL_PACK_BUFFER">
+<code class="descname">PIXEL_PACK_BUFFER</code><a class="headerlink" href="#PIXEL_PACK_BUFFER" title="Permalink to this definition">¶</a></dt>
+<dd><p>The buffer will be used for reading from OpenGL textures.</p>
+</dd></dl>
+
+<dl class="emember">
+<dt id="PIXEL_UNPACK_BUFFER">
+<code class="descname">PIXEL_UNPACK_BUFFER</code><a class="headerlink" href="#PIXEL_UNPACK_BUFFER" title="Permalink to this definition">¶</a></dt>
+<dd><p>The buffer will be used for writing to OpenGL textures.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="ogl-buffer-buffer">
+<h2>ogl::Buffer::Buffer<a class="headerlink" href="#ogl-buffer-buffer" title="Permalink to this headline">¶</a></h2>
+<p>The constructors.</p>
+<dl class="function">
+<dt id="ogl::Buffer::Buffer()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ogl::Buffer::</code><code class="descname">Buffer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ogl::Buffer::Buffer()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ogl::Buffer::Buffer(int arows, int acols, int atype, unsigned int abufId, bool autoRelease)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ogl::Buffer::</code><code class="descname">Buffer</code><span class="sig-paren">(</span>int <strong>arows</strong>, int <strong>acols</strong>, int <strong>atype</strong>, unsigned int <strong>abufId</strong>, bool <strong>autoRelease</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#ogl::Buffer::Buffer(int arows, int acols, int atype, unsigned int abufId, bool autoRelease)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ogl::Buffer::Buffer(Size asize, int atype, unsigned int abufId, bool autoRelease)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ogl::Buffer::</code><code class="descname">Buffer</code><span class="sig-paren">(</span>Size <strong>asize</strong>, int <strong>atype</strong>, unsigned int <strong>abufId</strong>, bool <strong>autoRelease</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#ogl::Buffer::Buffer(Size asize, int atype, unsigned int abufId, bool autoRelease)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ogl::Buffer::Buffer(int arows, int acols, int atype, Target target , bool autoRelease)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ogl::Buffer::</code><code class="descname">Buffer</code><span class="sig-paren">(</span>int <strong>arows</strong>, int <strong>acols</strong>, int <strong>atype</strong>, Target <strong>target</strong>=ARRAY_BUFFER, bool <strong>autoRelease</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#ogl::Buffer::Buffer(int arows, int acols, int atype, Target target , bool autoRelease)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ogl::Buffer::Buffer(Size asize, int atype, Target target , bool autoRelease)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ogl::Buffer::</code><code class="descname">Buffer</code><span class="sig-paren">(</span>Size <strong>asize</strong>, int <strong>atype</strong>, Target <strong>target</strong>=ARRAY_BUFFER, bool <strong>autoRelease</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#ogl::Buffer::Buffer(Size asize, int atype, Target target , bool autoRelease)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ogl::Buffer::Buffer(InputArray arr, Target target , bool autoRelease)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ogl::Buffer::</code><code class="descname">Buffer</code><span class="sig-paren">(</span>InputArray <strong>arr</strong>, Target <strong>target</strong>=ARRAY_BUFFER, bool <strong>autoRelease</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#ogl::Buffer::Buffer(InputArray arr, Target target , bool autoRelease)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>arows</strong> &#8211; Number of rows in a 2D array.</li>
+<li><strong>acols</strong> &#8211; Number of columns in a 2D array.</li>
+<li><strong>asize</strong> &#8211; 2D array size.</li>
+<li><strong>atype</strong> &#8211; Array type ( <code class="docutils literal"><span class="pre">CV_8UC1,</span> <span class="pre">...,</span> <span class="pre">CV_64FC4</span></code> ). See <a class="reference internal" href="basic_structures.html#Mat" title="class Mat"><code class="xref ocv ocv-class docutils literal"><span class="pre">Mat</span></code></a> for details.</li>
+<li><strong>abufId</strong> &#8211; Buffer object name.</li>
+<li><strong>arr</strong> &#8211; Input array (host or device memory, it can be <a class="reference internal" href="basic_structures.html#Mat" title="class Mat"><code class="xref ocv ocv-class docutils literal"><span class="pre">Mat</span></code></a> , <a class="reference internal" href="../../gpu/doc/data_structures.html#gpu::GpuMat" title="class gpu::GpuMat"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::GpuMat</span></code></a> or <code class="docutils literal"><span class="pre">std::vector</span></code> ).</li>
+<li><strong>target</strong> &#8211; Buffer usage. See <a class="reference internal" href="#ogl::Buffer::Target" title="ogl::Buffer::Target"><code class="xref ocv ocv-enum docutils literal"><span class="pre">ogl::Buffer::Target</span></code></a> .</li>
+<li><strong>autoRelease</strong> &#8211; Auto release mode (if true, release will be called in object&#8217;s destructor).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Creates empty <code class="docutils literal"><span class="pre">ogl::Buffer</span></code> object, creates <code class="docutils literal"><span class="pre">ogl::Buffer</span></code> object from existed buffer ( <code class="docutils literal"><span class="pre">abufId</span></code> parameter),
+allocates memory for <code class="docutils literal"><span class="pre">ogl::Buffer</span></code> object or copies from host/device memory.</p>
+</div>
+<div class="section" id="ogl-buffer-create">
+<h2>ogl::Buffer::create<a class="headerlink" href="#ogl-buffer-create" title="Permalink to this headline">¶</a></h2>
+<p>Allocates memory for <code class="docutils literal"><span class="pre">ogl::Buffer</span></code> object.</p>
+<dl class="function">
+<dt id="void ogl::Buffer::create(int arows, int acols, int atype, Target target , bool autoRelease)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Buffer::</code><code class="descname">create</code><span class="sig-paren">(</span>int <strong>arows</strong>, int <strong>acols</strong>, int <strong>atype</strong>, Target <strong>target</strong>=ARRAY_BUFFER, bool <strong>autoRelease</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Buffer::create(int arows, int acols, int atype, Target target , bool autoRelease)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ogl::Buffer::create(Size asize, int atype, Target target , bool autoRelease)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Buffer::</code><code class="descname">create</code><span class="sig-paren">(</span>Size <strong>asize</strong>, int <strong>atype</strong>, Target <strong>target</strong>=ARRAY_BUFFER, bool <strong>autoRelease</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Buffer::create(Size asize, int atype, Target target , bool autoRelease)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>arows</strong> &#8211; Number of rows in a 2D array.</li>
+<li><strong>acols</strong> &#8211; Number of columns in a 2D array.</li>
+<li><strong>asize</strong> &#8211; 2D array size.</li>
+<li><strong>atype</strong> &#8211; Array type ( <code class="docutils literal"><span class="pre">CV_8UC1,</span> <span class="pre">...,</span> <span class="pre">CV_64FC4</span></code> ). See <a class="reference internal" href="basic_structures.html#Mat" title="class Mat"><code class="xref ocv ocv-class docutils literal"><span class="pre">Mat</span></code></a> for details.</li>
+<li><strong>target</strong> &#8211; Buffer usage. See <a class="reference internal" href="#ogl::Buffer::Target" title="ogl::Buffer::Target"><code class="xref ocv ocv-enum docutils literal"><span class="pre">ogl::Buffer::Target</span></code></a> .</li>
+<li><strong>autoRelease</strong> &#8211; Auto release mode (if true, release will be called in object&#8217;s destructor).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ogl-buffer-release">
+<h2>ogl::Buffer::release<a class="headerlink" href="#ogl-buffer-release" title="Permalink to this headline">¶</a></h2>
+<p>Decrements the reference counter and destroys the buffer object if needed.</p>
+<dl class="function">
+<dt id="void ogl::Buffer::release()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Buffer::</code><code class="descname">release</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Buffer::release()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ogl-buffer-setautorelease">
+<h2>ogl::Buffer::setAutoRelease<a class="headerlink" href="#ogl-buffer-setautorelease" title="Permalink to this headline">¶</a></h2>
+<p>Sets auto release mode.</p>
+<dl class="function">
+<dt id="void ogl::Buffer::setAutoRelease(bool flag)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Buffer::</code><code class="descname">setAutoRelease</code><span class="sig-paren">(</span>bool <strong>flag</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Buffer::setAutoRelease(bool flag)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>flag</strong> &#8211; Auto release mode (if true, release will be called in object&#8217;s destructor).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The lifetime of the OpenGL object is tied to the lifetime of the context.
+If OpenGL context was bound to a window it could be released at any time (user can close a window).
+If object&#8217;s destructor is called after destruction of the context it will cause an error.
+Thus <code class="docutils literal"><span class="pre">ogl::Buffer</span></code> doesn&#8217;t destroy OpenGL object in destructor by default (all OpenGL resources will be released with OpenGL context).
+This function can force <code class="docutils literal"><span class="pre">ogl::Buffer</span></code> destructor to destroy OpenGL object.</p>
+</div>
+<div class="section" id="ogl-buffer-copyfrom">
+<h2>ogl::Buffer::copyFrom<a class="headerlink" href="#ogl-buffer-copyfrom" title="Permalink to this headline">¶</a></h2>
+<p>Copies from host/device memory to OpenGL buffer.</p>
+<dl class="function">
+<dt id="void ogl::Buffer::copyFrom(InputArray arr, Target target , bool autoRelease)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Buffer::</code><code class="descname">copyFrom</code><span class="sig-paren">(</span>InputArray <strong>arr</strong>, Target <strong>target</strong>=ARRAY_BUFFER, bool <strong>autoRelease</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Buffer::copyFrom(InputArray arr, Target target , bool autoRelease)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>arr</strong> &#8211; Input array (host or device memory, it can be <a class="reference internal" href="basic_structures.html#Mat" title="class Mat"><code class="xref ocv ocv-class docutils literal"><span class="pre">Mat</span></code></a> , <a class="reference internal" href="../../gpu/doc/data_structures.html#gpu::GpuMat" title="class gpu::GpuMat"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::GpuMat</span></code></a> or <code class="docutils literal"><span class="pre">std::vector</span></code> ).</li>
+<li><strong>target</strong> &#8211; Buffer usage. See <a class="reference internal" href="#ogl::Buffer::Target" title="ogl::Buffer::Target"><code class="xref ocv ocv-enum docutils literal"><span class="pre">ogl::Buffer::Target</span></code></a> .</li>
+<li><strong>autoRelease</strong> &#8211; Auto release mode (if true, release will be called in object&#8217;s destructor).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ogl-buffer-copyto">
+<h2>ogl::Buffer::copyTo<a class="headerlink" href="#ogl-buffer-copyto" title="Permalink to this headline">¶</a></h2>
+<p>Copies from OpenGL buffer to host/device memory or another OpenGL buffer object.</p>
+<dl class="function">
+<dt id="void ogl::Buffer::copyTo(OutputArray arr, Target target , bool autoRelease) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Buffer::</code><code class="descname">copyTo</code><span class="sig-paren">(</span>OutputArray <strong>arr</strong>, Target <strong>target</strong>=ARRAY_BUFFER, bool <strong>autoRelease</strong>=false<span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void ogl::Buffer::copyTo(OutputArray arr, Target target , bool autoRelease) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>arr</strong> &#8211; Destination array (host or device memory, can be <a class="reference internal" href="basic_structures.html#Mat" title="class Mat"><code class="xref ocv ocv-class docutils literal"><span class="pre">Mat</span></code></a> , <a class="reference internal" href="../../gpu/doc/data_structures.html#gpu::GpuMat" title="class gpu::GpuMat"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::GpuMat</span></code></a> , <code class="docutils literal"><span class="pre">std::vector</span></code> or <code class="docutils literal"><span class="pre">ogl::Buffer</span></code> ).</li>
+<li><strong>target</strong> &#8211; Buffer usage for destination buffer (if <code class="docutils literal"><span class="pre">arr</span></code> is OpenGL buffer).</li>
+<li><strong>autoRelease</strong> &#8211; Auto release mode for destination buffer (if <code class="docutils literal"><span class="pre">arr</span></code> is OpenGL buffer).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ogl-buffer-clone">
+<h2>ogl::Buffer::clone<a class="headerlink" href="#ogl-buffer-clone" title="Permalink to this headline">¶</a></h2>
+<p>Creates a full copy of the buffer object and the underlying data.</p>
+<dl class="function">
+<dt id="Buffer ogl::Buffer::clone(Target target , bool autoRelease) const">
+<strong>C++:</strong><code class="descname"> </code>Buffer <code class="descclassname">ogl::Buffer::</code><code class="descname">clone</code><span class="sig-paren">(</span>Target <strong>target</strong>=ARRAY_BUFFER, bool <strong>autoRelease</strong>=false<span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#Buffer ogl::Buffer::clone(Target target , bool autoRelease) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>target</strong> &#8211; Buffer usage for destination buffer.</li>
+<li><strong>autoRelease</strong> &#8211; Auto release mode for destination buffer.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ogl-buffer-bind">
+<h2>ogl::Buffer::bind<a class="headerlink" href="#ogl-buffer-bind" title="Permalink to this headline">¶</a></h2>
+<p>Binds OpenGL buffer to the specified buffer binding point.</p>
+<dl class="function">
+<dt id="void ogl::Buffer::bind(Target target) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Buffer::</code><code class="descname">bind</code><span class="sig-paren">(</span>Target <strong>target</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void ogl::Buffer::bind(Target target) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>target</strong> &#8211; Binding point. See <a class="reference internal" href="#ogl::Buffer::Target" title="ogl::Buffer::Target"><code class="xref ocv ocv-enum docutils literal"><span class="pre">ogl::Buffer::Target</span></code></a> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ogl-buffer-unbind">
+<h2>ogl::Buffer::unbind<a class="headerlink" href="#ogl-buffer-unbind" title="Permalink to this headline">¶</a></h2>
+<p>Unbind any buffers from the specified binding point.</p>
+<dl class="function">
+<dt id="static void ogl::Buffer::unbind(Target target)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> void <code class="descclassname">ogl::Buffer::</code><code class="descname">unbind</code><span class="sig-paren">(</span>Target <strong>target</strong><span class="sig-paren">)</span><a class="headerlink" href="#static void ogl::Buffer::unbind(Target target)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>target</strong> &#8211; Binding point. See <a class="reference internal" href="#ogl::Buffer::Target" title="ogl::Buffer::Target"><code class="xref ocv ocv-enum docutils literal"><span class="pre">ogl::Buffer::Target</span></code></a> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ogl-buffer-maphost">
+<h2>ogl::Buffer::mapHost<a class="headerlink" href="#ogl-buffer-maphost" title="Permalink to this headline">¶</a></h2>
+<p>Maps OpenGL buffer to host memory.</p>
+<dl class="function">
+<dt id="Mat ogl::Buffer::mapHost(Access access)">
+<strong>C++:</strong><code class="descname"> </code>Mat <code class="descclassname">ogl::Buffer::</code><code class="descname">mapHost</code><span class="sig-paren">(</span>Access <strong>access</strong><span class="sig-paren">)</span><a class="headerlink" href="#Mat ogl::Buffer::mapHost(Access access)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>access</strong> &#8211; Access policy, indicating whether it will be possible to read from, write to, or both read from and write to the buffer object&#8217;s mapped data store. The symbolic constant must be <code class="docutils literal"><span class="pre">ogl::Buffer::READ_ONLY</span></code> , <code class="docutils literal"><span class="pre">ogl::Buffer::WRITE_ONLY</span></code> or <code class="docutils literal"><span class="pre">ogl::Buffer::READ_WRITE</span></code> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p><code class="docutils literal"><span class="pre">mapHost</span></code> maps to the client&#8217;s address space the entire data store of the buffer object.
+The data can then be directly read and/or written relative to the returned pointer, depending on the specified <code class="docutils literal"><span class="pre">access</span></code> policy.</p>
+<p>A mapped data store must be unmapped with <a class="reference internal" href="#void ogl::Buffer::unmapHost()" title="void ogl::Buffer::unmapHost()"><code class="xref ocv ocv-func docutils literal"><span class="pre">ogl::Buffer::unmapHost()</span></code></a> before its buffer object is used.</p>
+<p>This operation can lead to memory transfers between host and device.</p>
+<p>Only one buffer object can be mapped at a time.</p>
+</div>
+<div class="section" id="ogl-buffer-unmaphost">
+<h2>ogl::Buffer::unmapHost<a class="headerlink" href="#ogl-buffer-unmaphost" title="Permalink to this headline">¶</a></h2>
+<p>Unmaps OpenGL buffer.</p>
+<dl class="function">
+<dt id="void ogl::Buffer::unmapHost()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Buffer::</code><code class="descname">unmapHost</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Buffer::unmapHost()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ogl-buffer-mapdevice">
+<h2>ogl::Buffer::mapDevice<a class="headerlink" href="#ogl-buffer-mapdevice" title="Permalink to this headline">¶</a></h2>
+<p>Maps OpenGL buffer to CUDA device memory.</p>
+<dl class="function">
+<dt id="gpu::GpuMat ogl::Buffer::mapDevice()">
+<strong>C++:</strong><code class="descname"> </code>gpu::GpuMat <code class="descclassname">ogl::Buffer::</code><code class="descname">mapDevice</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gpu::GpuMat ogl::Buffer::mapDevice()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This operatation doesn&#8217;t copy data.
+Several buffer objects can be mapped to CUDA memory at a time.</p>
+<p>A mapped data store must be unmapped with <a class="reference internal" href="#void ogl::Buffer::unmapDevice()" title="void ogl::Buffer::unmapDevice()"><code class="xref ocv ocv-func docutils literal"><span class="pre">ogl::Buffer::unmapDevice()</span></code></a> before its buffer object is used.</p>
+</div>
+<div class="section" id="ogl-buffer-unmapdevice">
+<h2>ogl::Buffer::unmapDevice<a class="headerlink" href="#ogl-buffer-unmapdevice" title="Permalink to this headline">¶</a></h2>
+<p>Unmaps OpenGL buffer.</p>
+<dl class="function">
+<dt id="void ogl::Buffer::unmapDevice()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Buffer::</code><code class="descname">unmapDevice</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Buffer::unmapDevice()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ogl-texture2d">
+<h2>ogl::Texture2D<a class="headerlink" href="#ogl-texture2d" title="Permalink to this headline">¶</a></h2>
+<p>Smart pointer for OpenGL 2D texture memory with reference counting.</p>
+<dl class="class">
+<dt id="ogl::Texture2D">
+<em class="property">class </em><code class="descclassname">ogl::</code><code class="descname">Texture2D</code><a class="headerlink" href="#ogl::Texture2D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ogl-texture2d-format">
+<h2>ogl::Texture2D::Format<a class="headerlink" href="#ogl-texture2d-format" title="Permalink to this headline">¶</a></h2>
+<p>An Image Format describes the way that the images in Textures store their data.</p>
+<dl class="enum">
+<dt id="ogl::Texture2D::Format">
+<strong>C++:</strong><code class="descname"> </code><em class="property">enum </em><code class="descclassname">ogl::Texture2D::</code><code class="descname">Format</code><a class="headerlink" href="#ogl::Texture2D::Format" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="emember">
+<dt id="NONE">
+<code class="descname">NONE</code><a class="headerlink" href="#NONE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="DEPTH_COMPONENT">
+<code class="descname">DEPTH_COMPONENT</code><a class="headerlink" href="#DEPTH_COMPONENT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="RGB">
+<code class="descname">RGB</code><a class="headerlink" href="#RGB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="RGBA">
+<code class="descname">RGBA</code><a class="headerlink" href="#RGBA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="ogl-texture2d-texture2d">
+<h2>ogl::Texture2D::Texture2D<a class="headerlink" href="#ogl-texture2d-texture2d" title="Permalink to this headline">¶</a></h2>
+<p>The constructors.</p>
+<dl class="function">
+<dt id="ogl::Texture2D::Texture2D()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ogl::Texture2D::</code><code class="descname">Texture2D</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ogl::Texture2D::Texture2D()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ogl::Texture2D::Texture2D(int arows, int acols, Format aformat, unsigned int atexId, bool autoRelease)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ogl::Texture2D::</code><code class="descname">Texture2D</code><span class="sig-paren">(</span>int <strong>arows</strong>, int <strong>acols</strong>, Format <strong>aformat</strong>, unsigned int <strong>atexId</strong>, bool <strong>autoRelease</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#ogl::Texture2D::Texture2D(int arows, int acols, Format aformat, unsigned int atexId, bool autoRelease)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ogl::Texture2D::Texture2D(Size asize, Format aformat, unsigned int atexId, bool autoRelease)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ogl::Texture2D::</code><code class="descname">Texture2D</code><span class="sig-paren">(</span>Size <strong>asize</strong>, Format <strong>aformat</strong>, unsigned int <strong>atexId</strong>, bool <strong>autoRelease</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#ogl::Texture2D::Texture2D(Size asize, Format aformat, unsigned int atexId, bool autoRelease)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ogl::Texture2D::Texture2D(int arows, int acols, Format aformat, bool autoRelease)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ogl::Texture2D::</code><code class="descname">Texture2D</code><span class="sig-paren">(</span>int <strong>arows</strong>, int <strong>acols</strong>, Format <strong>aformat</strong>, bool <strong>autoRelease</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#ogl::Texture2D::Texture2D(int arows, int acols, Format aformat, bool autoRelease)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ogl::Texture2D::Texture2D(Size asize, Format aformat, bool autoRelease)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ogl::Texture2D::</code><code class="descname">Texture2D</code><span class="sig-paren">(</span>Size <strong>asize</strong>, Format <strong>aformat</strong>, bool <strong>autoRelease</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#ogl::Texture2D::Texture2D(Size asize, Format aformat, bool autoRelease)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ogl::Texture2D::Texture2D(InputArray arr, bool autoRelease)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ogl::Texture2D::</code><code class="descname">Texture2D</code><span class="sig-paren">(</span>InputArray <strong>arr</strong>, bool <strong>autoRelease</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#ogl::Texture2D::Texture2D(InputArray arr, bool autoRelease)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>arows</strong> &#8211; Number of rows.</li>
+<li><strong>acols</strong> &#8211; Number of columns.</li>
+<li><strong>asize</strong> &#8211; 2D array size.</li>
+<li><strong>aformat</strong> &#8211; Image format. See <a class="reference internal" href="#ogl::Texture2D::Format" title="ogl::Texture2D::Format"><code class="xref ocv ocv-enum docutils literal"><span class="pre">ogl::Texture2D::Format</span></code></a> .</li>
+<li><strong>arr</strong> &#8211; Input array (host or device memory, it can be <a class="reference internal" href="basic_structures.html#Mat" title="class Mat"><code class="xref ocv ocv-class docutils literal"><span class="pre">Mat</span></code></a> , <a class="reference internal" href="../../gpu/doc/data_structures.html#gpu::GpuMat" title="class gpu::GpuMat"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::GpuMat</span></code></a> or <a class="reference internal" href="#ogl::Buffer" title="class ogl::Buffer"><code class="xref ocv ocv-class docutils literal"><span class="pre">ogl::Buffer</span></code></a> ).</li>
+<li><strong>autoRelease</strong> &#8211; Auto release mode (if true, release will be called in object&#8217;s destructor).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Creates empty <code class="docutils literal"><span class="pre">ogl::Texture2D</span></code> object, allocates memory for <code class="docutils literal"><span class="pre">ogl::Texture2D</span></code> object or copies from host/device memory.</p>
+</div>
+<div class="section" id="ogl-texture2d-create">
+<h2>ogl::Texture2D::create<a class="headerlink" href="#ogl-texture2d-create" title="Permalink to this headline">¶</a></h2>
+<p>Allocates memory for <code class="docutils literal"><span class="pre">ogl::Texture2D</span></code> object.</p>
+<dl class="function">
+<dt id="void ogl::Texture2D::create(int arows, int acols, Format aformat, bool autoRelease)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Texture2D::</code><code class="descname">create</code><span class="sig-paren">(</span>int <strong>arows</strong>, int <strong>acols</strong>, Format <strong>aformat</strong>, bool <strong>autoRelease</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Texture2D::create(int arows, int acols, Format aformat, bool autoRelease)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ogl::Texture2D::create(Size asize, Format aformat, bool autoRelease)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Texture2D::</code><code class="descname">create</code><span class="sig-paren">(</span>Size <strong>asize</strong>, Format <strong>aformat</strong>, bool <strong>autoRelease</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Texture2D::create(Size asize, Format aformat, bool autoRelease)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>arows</strong> &#8211; Number of rows.</li>
+<li><strong>acols</strong> &#8211; Number of columns.</li>
+<li><strong>asize</strong> &#8211; 2D array size.</li>
+<li><strong>aformat</strong> &#8211; Image format. See <a class="reference internal" href="#ogl::Texture2D::Format" title="ogl::Texture2D::Format"><code class="xref ocv ocv-enum docutils literal"><span class="pre">ogl::Texture2D::Format</span></code></a> .</li>
+<li><strong>autoRelease</strong> &#8211; Auto release mode (if true, release will be called in object&#8217;s destructor).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ogl-texture2d-release">
+<h2>ogl::Texture2D::release<a class="headerlink" href="#ogl-texture2d-release" title="Permalink to this headline">¶</a></h2>
+<p>Decrements the reference counter and destroys the texture object if needed.</p>
+<dl class="function">
+<dt id="void ogl::Texture2D::release()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Texture2D::</code><code class="descname">release</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Texture2D::release()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ogl-texture2d-setautorelease">
+<h2>ogl::Texture2D::setAutoRelease<a class="headerlink" href="#ogl-texture2d-setautorelease" title="Permalink to this headline">¶</a></h2>
+<p>Sets auto release mode.</p>
+<dl class="function">
+<dt id="void ogl::Texture2D::setAutoRelease(bool flag)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Texture2D::</code><code class="descname">setAutoRelease</code><span class="sig-paren">(</span>bool <strong>flag</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Texture2D::setAutoRelease(bool flag)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>flag</strong> &#8211; Auto release mode (if true, release will be called in object&#8217;s destructor).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The lifetime of the OpenGL object is tied to the lifetime of the context.
+If OpenGL context was bound to a window it could be released at any time (user can close a window).
+If object&#8217;s destructor is called after destruction of the context it will cause an error.
+Thus <code class="docutils literal"><span class="pre">ogl::Texture2D</span></code> doesn&#8217;t destroy OpenGL object in destructor by default (all OpenGL resources will be released with OpenGL context).
+This function can force <code class="docutils literal"><span class="pre">ogl::Texture2D</span></code> destructor to destroy OpenGL object.</p>
+</div>
+<div class="section" id="ogl-texture2d-copyfrom">
+<h2>ogl::Texture2D::copyFrom<a class="headerlink" href="#ogl-texture2d-copyfrom" title="Permalink to this headline">¶</a></h2>
+<p>Copies from host/device memory to OpenGL texture.</p>
+<dl class="function">
+<dt id="void ogl::Texture2D::copyFrom(InputArray arr, bool autoRelease)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Texture2D::</code><code class="descname">copyFrom</code><span class="sig-paren">(</span>InputArray <strong>arr</strong>, bool <strong>autoRelease</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Texture2D::copyFrom(InputArray arr, bool autoRelease)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>arr</strong> &#8211; Input array (host or device memory, it can be <a class="reference internal" href="basic_structures.html#Mat" title="class Mat"><code class="xref ocv ocv-class docutils literal"><span class="pre">Mat</span></code></a> , <a class="reference internal" href="../../gpu/doc/data_structures.html#gpu::GpuMat" title="class gpu::GpuMat"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::GpuMat</span></code></a> or <a class="reference internal" href="#ogl::Buffer" title="class ogl::Buffer"><code class="xref ocv ocv-class docutils literal"><span class="pre">ogl::Buffer</span></code></a> ).</li>
+<li><strong>autoRelease</strong> &#8211; Auto release mode (if true, release will be called in object&#8217;s destructor).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ogl-texture2d-copyto">
+<h2>ogl::Texture2D::copyTo<a class="headerlink" href="#ogl-texture2d-copyto" title="Permalink to this headline">¶</a></h2>
+<p>Copies from OpenGL texture to host/device memory or another OpenGL texture object.</p>
+<dl class="function">
+<dt id="void ogl::Texture2D::copyTo(OutputArray arr, int ddepth , bool autoRelease) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Texture2D::</code><code class="descname">copyTo</code><span class="sig-paren">(</span>OutputArray <strong>arr</strong>, int <strong>ddepth</strong>=CV_32F, bool <strong>autoRelease</strong>=false<span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void ogl::Texture2D::copyTo(OutputArray arr, int ddepth , bool autoRelease) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>arr</strong> &#8211; Destination array (host or device memory, can be <a class="reference internal" href="basic_structures.html#Mat" title="class Mat"><code class="xref ocv ocv-class docutils literal"><span class="pre">Mat</span></code></a> , <a class="reference internal" href="../../gpu/doc/data_structures.html#gpu::GpuMat" title="class gpu::GpuMat"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::GpuMat</span></code></a> , <a class="reference internal" href="#ogl::Buffer" title="class ogl::Buffer"><code class="xref ocv ocv-class docutils literal"><span class="pre">ogl::Buffer</span></code></a> or <code class="docutils literal"><span class="pre">ogl::Texture2D</span></code> ).</li>
+<li><strong>ddepth</strong> &#8211; Destination depth.</li>
+<li><strong>autoRelease</strong> &#8211; Auto release mode for destination buffer (if <code class="docutils literal"><span class="pre">arr</span></code> is OpenGL buffer or texture).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ogl-texture2d-bind">
+<h2>ogl::Texture2D::bind<a class="headerlink" href="#ogl-texture2d-bind" title="Permalink to this headline">¶</a></h2>
+<p>Binds texture to current active texture unit for <code class="docutils literal"><span class="pre">GL_TEXTURE_2D</span></code> target.</p>
+<dl class="function">
+<dt id="void ogl::Texture2D::bind() const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Texture2D::</code><code class="descname">bind</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void ogl::Texture2D::bind() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ogl-arrays">
+<h2>ogl::Arrays<a class="headerlink" href="#ogl-arrays" title="Permalink to this headline">¶</a></h2>
+<p>Wrapper for OpenGL Client-Side Vertex arrays.</p>
+<dl class="class">
+<dt id="ogl::Arrays">
+<em class="property">class </em><code class="descclassname">ogl::</code><code class="descname">Arrays</code><a class="headerlink" href="#ogl::Arrays" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><code class="docutils literal"><span class="pre">ogl::Arrays</span></code> stores vertex data in <a class="reference internal" href="#ogl::Buffer" title="class ogl::Buffer"><code class="xref ocv ocv-class docutils literal"><span class="pre">ogl::Buffer</span></code></a> objects.</p>
+</div>
+<div class="section" id="ogl-arrays-setvertexarray">
+<h2>ogl::Arrays::setVertexArray<a class="headerlink" href="#ogl-arrays-setvertexarray" title="Permalink to this headline">¶</a></h2>
+<p>Sets an array of vertex coordinates.</p>
+<dl class="function">
+<dt id="void ogl::Arrays::setVertexArray(InputArray vertex)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Arrays::</code><code class="descname">setVertexArray</code><span class="sig-paren">(</span>InputArray <strong>vertex</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Arrays::setVertexArray(InputArray vertex)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>vertex</strong> &#8211; array with vertex coordinates, can be both host and device memory.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ogl-arrays-resetvertexarray">
+<h2>ogl::Arrays::resetVertexArray<a class="headerlink" href="#ogl-arrays-resetvertexarray" title="Permalink to this headline">¶</a></h2>
+<p>Resets vertex coordinates.</p>
+<dl class="function">
+<dt id="void ogl::Arrays::resetVertexArray()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Arrays::</code><code class="descname">resetVertexArray</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Arrays::resetVertexArray()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ogl-arrays-setcolorarray">
+<h2>ogl::Arrays::setColorArray<a class="headerlink" href="#ogl-arrays-setcolorarray" title="Permalink to this headline">¶</a></h2>
+<p>Sets an array of vertex colors.</p>
+<dl class="function">
+<dt id="void ogl::Arrays::setColorArray(InputArray color)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Arrays::</code><code class="descname">setColorArray</code><span class="sig-paren">(</span>InputArray <strong>color</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Arrays::setColorArray(InputArray color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>color</strong> &#8211; array with vertex colors, can be both host and device memory.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ogl-arrays-resetcolorarray">
+<h2>ogl::Arrays::resetColorArray<a class="headerlink" href="#ogl-arrays-resetcolorarray" title="Permalink to this headline">¶</a></h2>
+<p>Resets vertex colors.</p>
+<dl class="function">
+<dt id="void ogl::Arrays::resetColorArray()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Arrays::</code><code class="descname">resetColorArray</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Arrays::resetColorArray()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ogl-arrays-setnormalarray">
+<h2>ogl::Arrays::setNormalArray<a class="headerlink" href="#ogl-arrays-setnormalarray" title="Permalink to this headline">¶</a></h2>
+<p>Sets an array of vertex normals.</p>
+<dl class="function">
+<dt id="void ogl::Arrays::setNormalArray(InputArray normal)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Arrays::</code><code class="descname">setNormalArray</code><span class="sig-paren">(</span>InputArray <strong>normal</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Arrays::setNormalArray(InputArray normal)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>normal</strong> &#8211; array with vertex normals, can be both host and device memory.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ogl-arrays-resetnormalarray">
+<h2>ogl::Arrays::resetNormalArray<a class="headerlink" href="#ogl-arrays-resetnormalarray" title="Permalink to this headline">¶</a></h2>
+<p>Resets vertex normals.</p>
+<dl class="function">
+<dt id="void ogl::Arrays::resetNormalArray()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Arrays::</code><code class="descname">resetNormalArray</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Arrays::resetNormalArray()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ogl-arrays-settexcoordarray">
+<h2>ogl::Arrays::setTexCoordArray<a class="headerlink" href="#ogl-arrays-settexcoordarray" title="Permalink to this headline">¶</a></h2>
+<p>Sets an array of vertex texture coordinates.</p>
+<dl class="function">
+<dt id="void ogl::Arrays::setTexCoordArray(InputArray texCoord)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Arrays::</code><code class="descname">setTexCoordArray</code><span class="sig-paren">(</span>InputArray <strong>texCoord</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Arrays::setTexCoordArray(InputArray texCoord)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>texCoord</strong> &#8211; array with vertex texture coordinates, can be both host and device memory.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ogl-arrays-resettexcoordarray">
+<h2>ogl::Arrays::resetTexCoordArray<a class="headerlink" href="#ogl-arrays-resettexcoordarray" title="Permalink to this headline">¶</a></h2>
+<p>Resets vertex texture coordinates.</p>
+<dl class="function">
+<dt id="void ogl::Arrays::resetTexCoordArray()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Arrays::</code><code class="descname">resetTexCoordArray</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Arrays::resetTexCoordArray()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ogl-arrays-release">
+<h2>ogl::Arrays::release<a class="headerlink" href="#ogl-arrays-release" title="Permalink to this headline">¶</a></h2>
+<p>Releases all inner buffers.</p>
+<dl class="function">
+<dt id="void ogl::Arrays::release()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Arrays::</code><code class="descname">release</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Arrays::release()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ogl-arrays-setautorelease">
+<h2>ogl::Arrays::setAutoRelease<a class="headerlink" href="#ogl-arrays-setautorelease" title="Permalink to this headline">¶</a></h2>
+<p>Sets auto release mode all inner buffers.</p>
+<dl class="function">
+<dt id="void ogl::Arrays::setAutoRelease(bool flag)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Arrays::</code><code class="descname">setAutoRelease</code><span class="sig-paren">(</span>bool <strong>flag</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ogl::Arrays::setAutoRelease(bool flag)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>flag</strong> &#8211; Auto release mode.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ogl-arrays-bind">
+<h2>ogl::Arrays::bind<a class="headerlink" href="#ogl-arrays-bind" title="Permalink to this headline">¶</a></h2>
+<p>Binds all vertex arrays.</p>
+<dl class="function">
+<dt id="void ogl::Arrays::bind() const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::Arrays::</code><code class="descname">bind</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void ogl::Arrays::bind() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ogl-arrays-size">
+<h2>ogl::Arrays::size<a class="headerlink" href="#ogl-arrays-size" title="Permalink to this headline">¶</a></h2>
+<p>Returns the vertex count.</p>
+<dl class="function">
+<dt id="int ogl::Arrays::size() const">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">ogl::Arrays::</code><code class="descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#int ogl::Arrays::size() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ogl-render">
+<h2>ogl::render<a class="headerlink" href="#ogl-render" title="Permalink to this headline">¶</a></h2>
+<p>Render OpenGL texture or primitives.</p>
+<dl class="function">
+<dt id="void ogl::render(const Texture2D&amp; tex, Rect_&lt;double&gt; wndRect , Rect_&lt;double&gt; texRect)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::</code><code class="descname">render</code><span class="sig-paren">(</span>const Texture2D&amp; <strong>tex</strong>, Rect_&lt;double&gt; <strong>wndRect</strong>=Rect_&lt;double&gt;(0.0, 0.0, 1.0, 1.0), Rect_&lt;double&gt; <strong>texRect</strong>=Rect_&lt;double&gt;(0.0, 0.0, 1.0, 1.0)<span class="sig-paren">)</span><a class="headerlink" href="#void ogl::render(const Texture2D& tex, Rect_<double> wndRect , Rect_<double> texRect)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ogl::render(const Arrays&amp; arr, int mode , Scalar color)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::</code><code class="descname">render</code><span class="sig-paren">(</span>const Arrays&amp; <strong>arr</strong>, int <strong>mode</strong>=POINTS, Scalar <strong>color</strong>=Scalar::all(255)<span class="sig-paren">)</span><a class="headerlink" href="#void ogl::render(const Arrays& arr, int mode , Scalar color)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ogl::render(const Arrays&amp; arr, InputArray indices, int mode , Scalar color)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ogl::</code><code class="descname">render</code><span class="sig-paren">(</span>const Arrays&amp; <strong>arr</strong>, InputArray <strong>indices</strong>, int <strong>mode</strong>=POINTS, Scalar <strong>color</strong>=Scalar::all(255)<span class="sig-paren">)</span><a class="headerlink" href="#void ogl::render(const Arrays& arr, InputArray indices, int mode , Scalar color)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>tex</strong> &#8211; Texture to draw.</li>
+<li><strong>wndRect</strong> &#8211; Region of window, where to draw a texture (normalized coordinates).</li>
+<li><strong>texRect</strong> &#8211; Region of texture to draw (normalized coordinates).</li>
+<li><strong>arr</strong> &#8211; Array of privitives vertices.</li>
+<li><strong>indices</strong> &#8211; Array of vertices indices (host or device memory).</li>
+<li><strong>mode</strong> &#8211; <p>Render mode. Available options:</p>
+<ul>
+<li><strong>POINTS</strong></li>
+<li><strong>LINES</strong></li>
+<li><strong>LINE_LOOP</strong></li>
+<li><strong>LINE_STRIP</strong></li>
+<li><strong>TRIANGLES</strong></li>
+<li><strong>TRIANGLE_STRIP</strong></li>
+<li><strong>TRIANGLE_FAN</strong></li>
+<li><strong>QUADS</strong></li>
+<li><strong>QUAD_STRIP</strong></li>
+<li><strong>POLYGON</strong></li>
+</ul>
+</li>
+<li><strong>color</strong> &#8211; Color for all vertices. Will be used if <code class="docutils literal"><span class="pre">arr</span></code> doesn&#8217;t contain color array.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-setgldevice">
+<h2>gpu::setGlDevice<a class="headerlink" href="#gpu-setgldevice" title="Permalink to this headline">¶</a></h2>
+<p>Sets a CUDA device and initializes it for the current thread with OpenGL interoperability.</p>
+<dl class="function">
+<dt id="void gpu::setGlDevice(int device)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">setGlDevice</code><span class="sig-paren">(</span>int <strong>device</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::setGlDevice(int device)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>device</strong> &#8211; System index of a GPU device starting with 0.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function should be explicitly called after OpenGL context creation and before any CUDA calls.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">OpenGL interoperability</a><ul>
+<li><a class="reference internal" href="#general-information">General Information</a></li>
+<li><a class="reference internal" href="#ogl-buffer">ogl::Buffer</a></li>
+<li><a class="reference internal" href="#ogl-buffer-target">ogl::Buffer::Target</a></li>
+<li><a class="reference internal" href="#ogl-buffer-buffer">ogl::Buffer::Buffer</a></li>
+<li><a class="reference internal" href="#ogl-buffer-create">ogl::Buffer::create</a></li>
+<li><a class="reference internal" href="#ogl-buffer-release">ogl::Buffer::release</a></li>
+<li><a class="reference internal" href="#ogl-buffer-setautorelease">ogl::Buffer::setAutoRelease</a></li>
+<li><a class="reference internal" href="#ogl-buffer-copyfrom">ogl::Buffer::copyFrom</a></li>
+<li><a class="reference internal" href="#ogl-buffer-copyto">ogl::Buffer::copyTo</a></li>
+<li><a class="reference internal" href="#ogl-buffer-clone">ogl::Buffer::clone</a></li>
+<li><a class="reference internal" href="#ogl-buffer-bind">ogl::Buffer::bind</a></li>
+<li><a class="reference internal" href="#ogl-buffer-unbind">ogl::Buffer::unbind</a></li>
+<li><a class="reference internal" href="#ogl-buffer-maphost">ogl::Buffer::mapHost</a></li>
+<li><a class="reference internal" href="#ogl-buffer-unmaphost">ogl::Buffer::unmapHost</a></li>
+<li><a class="reference internal" href="#ogl-buffer-mapdevice">ogl::Buffer::mapDevice</a></li>
+<li><a class="reference internal" href="#ogl-buffer-unmapdevice">ogl::Buffer::unmapDevice</a></li>
+<li><a class="reference internal" href="#ogl-texture2d">ogl::Texture2D</a></li>
+<li><a class="reference internal" href="#ogl-texture2d-format">ogl::Texture2D::Format</a></li>
+<li><a class="reference internal" href="#ogl-texture2d-texture2d">ogl::Texture2D::Texture2D</a></li>
+<li><a class="reference internal" href="#ogl-texture2d-create">ogl::Texture2D::create</a></li>
+<li><a class="reference internal" href="#ogl-texture2d-release">ogl::Texture2D::release</a></li>
+<li><a class="reference internal" href="#ogl-texture2d-setautorelease">ogl::Texture2D::setAutoRelease</a></li>
+<li><a class="reference internal" href="#ogl-texture2d-copyfrom">ogl::Texture2D::copyFrom</a></li>
+<li><a class="reference internal" href="#ogl-texture2d-copyto">ogl::Texture2D::copyTo</a></li>
+<li><a class="reference internal" href="#ogl-texture2d-bind">ogl::Texture2D::bind</a></li>
+<li><a class="reference internal" href="#ogl-arrays">ogl::Arrays</a></li>
+<li><a class="reference internal" href="#ogl-arrays-setvertexarray">ogl::Arrays::setVertexArray</a></li>
+<li><a class="reference internal" href="#ogl-arrays-resetvertexarray">ogl::Arrays::resetVertexArray</a></li>
+<li><a class="reference internal" href="#ogl-arrays-setcolorarray">ogl::Arrays::setColorArray</a></li>
+<li><a class="reference internal" href="#ogl-arrays-resetcolorarray">ogl::Arrays::resetColorArray</a></li>
+<li><a class="reference internal" href="#ogl-arrays-setnormalarray">ogl::Arrays::setNormalArray</a></li>
+<li><a class="reference internal" href="#ogl-arrays-resetnormalarray">ogl::Arrays::resetNormalArray</a></li>
+<li><a class="reference internal" href="#ogl-arrays-settexcoordarray">ogl::Arrays::setTexCoordArray</a></li>
+<li><a class="reference internal" href="#ogl-arrays-resettexcoordarray">ogl::Arrays::resetTexCoordArray</a></li>
+<li><a class="reference internal" href="#ogl-arrays-release">ogl::Arrays::release</a></li>
+<li><a class="reference internal" href="#ogl-arrays-setautorelease">ogl::Arrays::setAutoRelease</a></li>
+<li><a class="reference internal" href="#ogl-arrays-bind">ogl::Arrays::bind</a></li>
+<li><a class="reference internal" href="#ogl-arrays-size">ogl::Arrays::size</a></li>
+<li><a class="reference internal" href="#ogl-render">ogl::render</a></li>
+<li><a class="reference internal" href="#gpu-setgldevice">gpu::setGlDevice</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="utility_and_system_functions_and_macros.html"
+                        title="previous chapter">Utility and System Functions and Macros</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../imgproc/doc/imgproc.html"
+                        title="next chapter">imgproc. Image Processing</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/core/doc/opengl_interop.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../imgproc/doc/imgproc.html" title="imgproc. Image Processing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="utility_and_system_functions_and_macros.html" title="Utility and System Functions and Macros"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="core.html" >core. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

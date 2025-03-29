@@ -1,0 +1,1193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Structural Analysis and Shape Descriptors &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="imgproc. Image Processing" href="imgproc.html" />
+    <link rel="next" title="Motion Analysis and Object Tracking" href="motion_analysis_and_object_tracking.html" />
+    <link rel="prev" title="Histograms" href="histograms.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="motion_analysis_and_object_tracking.html" title="Motion Analysis and Object Tracking"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="histograms.html" title="Histograms"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="imgproc.html" accesskey="U">imgproc. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="structural-analysis-and-shape-descriptors">
+<h1>Structural Analysis and Shape Descriptors<a class="headerlink" href="#structural-analysis-and-shape-descriptors" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="moments">
+<h2>moments<a class="headerlink" href="#moments" title="Permalink to this headline">¶</a></h2>
+<p>Calculates all of the moments up to the third order of a polygon or rasterized shape.</p>
+<dl class="function">
+<dt id="Moments moments(InputArray array, bool binaryImage)">
+<strong>C++:</strong><code class="descname"> </code>Moments <code class="descname">moments</code><span class="sig-paren">(</span>InputArray <strong>array</strong>, bool <strong>binaryImage</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#Moments moments(InputArray array, bool binaryImage)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.moments">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">moments</code><span class="sig-paren">(</span>array<span class="optional">[</span>, binaryImage<span class="optional">]</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.moments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvMoments(const CvArr* arr, CvMoments* moments, int binary)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvMoments</code><span class="sig-paren">(</span>const CvArr* <strong>arr</strong>, CvMoments* <strong>moments</strong>, int <strong>binary</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void cvMoments(const CvArr* arr, CvMoments* moments, int binary)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Moments">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Moments</code><span class="sig-paren">(</span>arr, binary=0<span class="sig-paren">)</span> &rarr; moments<a class="headerlink" href="#cv.Moments" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>array</strong> &#8211; Raster image (single-channel, 8-bit or floating-point 2D array) or an array ( <img class="math" src="../../../_images/math/176818d22e6473b3b8aaeae20735f505f7cc16d0.png" alt="1 \times N"/>  or  <img class="math" src="../../../_images/math/0ffc812b7baf1ebbcdc6d8494027fdc64fdf35f2.png" alt="N \times 1"/> ) of 2D points (<code class="docutils literal"><span class="pre">Point</span></code>  or  <code class="docutils literal"><span class="pre">Point2f</span></code> ).</li>
+<li><strong>binaryImage</strong> &#8211; If it is true, all non-zero image pixels are treated as 1&#8217;s. The parameter is used for images only.</li>
+<li><strong>moments</strong> &#8211; Output moments.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function computes moments, up to the 3rd order, of a vector shape or a rasterized shape. The results are returned in the structure <code class="docutils literal"><span class="pre">Moments</span></code> defined as:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Moments</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">Moments</span><span class="p">();</span>
+    <span class="n">Moments</span><span class="p">(</span><span class="kt">double</span> <span class="n">m00</span><span class="p">,</span> <span class="kt">double</span> <span class="n">m10</span><span class="p">,</span> <span class="kt">double</span> <span class="n">m01</span><span class="p">,</span> <span class="kt">double</span> <span class="n">m20</span><span class="p">,</span> <span class="kt">double</span> <span class="n">m11</span><span class="p">,</span>
+            <span class="kt">double</span> <span class="n">m02</span><span class="p">,</span> <span class="kt">double</span> <span class="n">m30</span><span class="p">,</span> <span class="kt">double</span> <span class="n">m21</span><span class="p">,</span> <span class="kt">double</span> <span class="n">m12</span><span class="p">,</span> <span class="kt">double</span> <span class="n">m03</span> <span class="p">);</span>
+    <span class="n">Moments</span><span class="p">(</span> <span class="k">const</span> <span class="n">CvMoments</span><span class="o">&amp;</span> <span class="n">moments</span> <span class="p">);</span>
+    <span class="k">operator</span> <span class="nf">CvMoments</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">// spatial moments</span>
+    <span class="kt">double</span>  <span class="n">m00</span><span class="p">,</span> <span class="n">m10</span><span class="p">,</span> <span class="n">m01</span><span class="p">,</span> <span class="n">m20</span><span class="p">,</span> <span class="n">m11</span><span class="p">,</span> <span class="n">m02</span><span class="p">,</span> <span class="n">m30</span><span class="p">,</span> <span class="n">m21</span><span class="p">,</span> <span class="n">m12</span><span class="p">,</span> <span class="n">m03</span><span class="p">;</span>
+    <span class="c1">// central moments</span>
+    <span class="kt">double</span>  <span class="n">mu20</span><span class="p">,</span> <span class="n">mu11</span><span class="p">,</span> <span class="n">mu02</span><span class="p">,</span> <span class="n">mu30</span><span class="p">,</span> <span class="n">mu21</span><span class="p">,</span> <span class="n">mu12</span><span class="p">,</span> <span class="n">mu03</span><span class="p">;</span>
+    <span class="c1">// central normalized moments</span>
+    <span class="kt">double</span>  <span class="n">nu20</span><span class="p">,</span> <span class="n">nu11</span><span class="p">,</span> <span class="n">nu02</span><span class="p">,</span> <span class="n">nu30</span><span class="p">,</span> <span class="n">nu21</span><span class="p">,</span> <span class="n">nu12</span><span class="p">,</span> <span class="n">nu03</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In case of a raster image, the spatial moments <img class="math" src="../../../_images/math/4394639b37d13075ebd6ef70fa68f83c9aed1022.png" alt="\texttt{Moments::m}_{ji}"/> are computed as:</p>
+<div class="math">
+<p><img src="../../../_images/math/d9bd5f5326c5ed2f2ddf8b674f776e80edaa528b.png" alt="\texttt{m} _{ji}= \sum _{x,y}  \left ( \texttt{array} (x,y)  \cdot x^j  \cdot y^i \right )"/></p>
+</div><p>The central moments
+<img class="math" src="../../../_images/math/a428fe7bc18905ad8304e6585a6c907789b3ed76.png" alt="\texttt{Moments::mu}_{ji}"/> are computed as:</p>
+<div class="math">
+<p><img src="../../../_images/math/b2d04bb91f234f0f3a14bb2c760bd3462d4132d7.png" alt="\texttt{mu} _{ji}= \sum _{x,y}  \left ( \texttt{array} (x,y)  \cdot (x -  \bar{x} )^j  \cdot (y -  \bar{y} )^i \right )"/></p>
+</div><p>where
+<img class="math" src="../../../_images/math/59d0ff73815d23ba636ea0be1cf94d8656ddfa97.png" alt="(\bar{x}, \bar{y})"/> is the mass center:</p>
+<div class="math">
+<p><img src="../../../_images/math/0af8534226c23a39387269570965e276a70d80a8.png" alt="\bar{x} = \frac{\texttt{m}_{10}}{\texttt{m}_{00}} , \; \bar{y} = \frac{\texttt{m}_{01}}{\texttt{m}_{00}}"/></p>
+</div><p>The normalized central moments
+<img class="math" src="../../../_images/math/937c0d50828947a8130e0e6858f9a8293f79e0c7.png" alt="\texttt{Moments::nu}_{ij}"/> are computed as:</p>
+<div class="math">
+<p><img src="../../../_images/math/3570e87610d702dd1a18c9b1d0bfeedfc5c340a8.png" alt="\texttt{nu} _{ji}= \frac{\texttt{mu}_{ji}}{\texttt{m}_{00}^{(i+j)/2+1}} ."/></p>
+</div><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><img class="math" src="../../../_images/math/d94ee482d107c7a3d010cab0af0f8459c5bc18f8.png" alt="\texttt{mu}_{00}=\texttt{m}_{00}"/>,
+<img class="math" src="../../../_images/math/579f3e1dac0475cb6a4641b642c6847a12ad404c.png" alt="\texttt{nu}_{00}=1"/>
+<img class="math" src="../../../_images/math/ccdff628df2843fe8477643a5835b3d7b0de1521.png" alt="\texttt{nu}_{10}=\texttt{mu}_{10}=\texttt{mu}_{01}=\texttt{mu}_{10}=0"/> , hence the values are not stored.</p>
+</div>
+<p>The moments of a contour are defined in the same way but computed using the Green&#8217;s formula (see <a class="reference external" href="http://en.wikipedia.org/wiki/Green_theorem">http://en.wikipedia.org/wiki/Green_theorem</a>). So, due to a limited raster resolution, the moments computed for a contour are slightly different from the moments computed for the same rasterized contour.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Since the contour moments are computed using Green formula, you may get seemingly odd results for contours with self-intersections, e.g. a zero area (<code class="docutils literal"><span class="pre">m00</span></code>) for butterfly-shaped contours.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#double contourArea(InputArray contour, bool oriented)" title="double contourArea(InputArray contour, bool oriented)"><code class="xref ocv ocv-func docutils literal"><span class="pre">contourArea()</span></code></a>,
+<a class="reference internal" href="#double arcLength(InputArray curve, bool closed)" title="double arcLength(InputArray curve, bool closed)"><code class="xref ocv ocv-func docutils literal"><span class="pre">arcLength()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="humoments">
+<h2>HuMoments<a class="headerlink" href="#humoments" title="Permalink to this headline">¶</a></h2>
+<p>Calculates seven Hu invariants.</p>
+<dl class="function">
+<dt id="void HuMoments(const Moments&amp; m, OutputArray hu)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">HuMoments</code><span class="sig-paren">(</span>const Moments&amp; <strong>m</strong>, OutputArray <strong>hu</strong><span class="sig-paren">)</span><a class="headerlink" href="#void HuMoments(const Moments& m, OutputArray hu)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void HuMoments(const Moments&amp; moments, double hu[7])">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">HuMoments</code><span class="sig-paren">(</span>const Moments&amp; <strong>moments</strong>, double <strong>hu</strong>[7]<span class="sig-paren">)</span><a class="headerlink" href="#void HuMoments(const Moments& moments, double hu[7])" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.HuMoments">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">HuMoments</code><span class="sig-paren">(</span>m<span class="optional">[</span>, hu<span class="optional">]</span><span class="sig-paren">)</span> &rarr; hu<a class="headerlink" href="#cv2.HuMoments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvGetHuMoments(CvMoments* moments, CvHuMoments* hu_moments)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvGetHuMoments</code><span class="sig-paren">(</span>CvMoments* <strong>moments</strong>, CvHuMoments* <strong>hu_moments</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvGetHuMoments(CvMoments* moments, CvHuMoments* hu_moments)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.GetHuMoments">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">GetHuMoments</code><span class="sig-paren">(</span>moments<span class="sig-paren">)</span> &rarr; hu<a class="headerlink" href="#cv.GetHuMoments" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>moments</strong> &#8211; Input moments computed with  <a class="reference internal" href="#Moments moments(InputArray array, bool binaryImage)" title="Moments moments(InputArray array, bool binaryImage)"><code class="xref ocv ocv-func docutils literal"><span class="pre">moments()</span></code></a> .</li>
+<li><strong>hu</strong> &#8211; Output Hu invariants.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function calculates seven Hu invariants (introduced in <a class="reference internal" href="#hu62" id="id1">[Hu62]</a>; see also
+<a class="reference external" href="http://en.wikipedia.org/wiki/Image_moment">http://en.wikipedia.org/wiki/Image_moment</a>) defined as:</p>
+<div class="math">
+<p><img src="../../../_images/math/6f3e6a1dd05317afa7a9317d0d0e87bc3dacf7fd.png" alt="\begin{array}{l} hu[0]= \eta _{20}+ \eta _{02} \\ hu[1]=( \eta _{20}- \eta _{02})^{2}+4 \eta _{11}^{2} \\ hu[2]=( \eta _{30}-3 \eta _{12})^{2}+ (3 \eta _{21}- \eta _{03})^{2} \\ hu[3]=( \eta _{30}+ \eta _{12})^{2}+ ( \eta _{21}+ \eta _{03})^{2} \\ hu[4]=( \eta _{30}-3 \eta _{12})( \eta _{30}+ \eta _{12})[( \eta _{30}+ \eta _{12})^{2}-3( \eta _{21}+ \eta _{03})^{2}]+(3 \eta _{21}- \eta _{03})( \eta _{21}+ \eta _{03})[3( \eta _{30}+ \eta _{12})^{2}-( \eta _{21}+ \eta _{03})^{2}] \\ hu[5]=( \eta _{20}- \eta _{02})[( \eta _{30}+ \eta _{12})^{2}- ( \eta _{21}+ \eta _{03})^{2}]+4 \eta _{11}( \eta _{30}+ \eta _{12})( \eta _{21}+ \eta _{03}) \\ hu[6]=(3 \eta _{21}- \eta _{03})( \eta _{21}+ \eta _{03})[3( \eta _{30}+ \eta _{12})^{2}-( \eta _{21}+ \eta _{03})^{2}]-( \eta _{30}-3 \eta _{12})( \eta _{21}+ \eta _{03})[3( \eta _{30}+ \eta _{12})^{2}-( \eta _{21}+ \eta _{03})^{2}] \\ \end{array}"/></p>
+</div><p>where
+<img class="math" src="../../../_images/math/92cee1ff411c1f45b377d60821b0f11d6df22fd9.png" alt="\eta_{ji}"/> stands for
+<img class="math" src="../../../_images/math/f8a0ee59dc08a3a1d0cf0d2c6f14bc20c2236497.png" alt="\texttt{Moments::nu}_{ji}"/> .</p>
+<p>These values are proved to be invariants to the image scale, rotation, and reflection except the seventh one, whose sign is changed by reflection. This invariance is proved with the assumption of infinite image resolution. In case of raster images, the computed Hu invariants for the original and transformed images are a bit different.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#double matchShapes(InputArray contour1, InputArray contour2, int method, double parameter)" title="double matchShapes(InputArray contour1, InputArray contour2, int method, double parameter)"><code class="xref ocv ocv-func docutils literal"><span class="pre">matchShapes()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="findcontours">
+<h2>findContours<a class="headerlink" href="#findcontours" title="Permalink to this headline">¶</a></h2>
+<p>Finds contours in a binary image.</p>
+<dl class="function">
+<dt id="void findContours(InputOutputArray image, OutputArrayOfArrays contours, OutputArray hierarchy, int mode, int method, Point offset)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">findContours</code><span class="sig-paren">(</span>InputOutputArray <strong>image</strong>, OutputArrayOfArrays <strong>contours</strong>, OutputArray <strong>hierarchy</strong>, int <strong>mode</strong>, int <strong>method</strong>, Point <strong>offset</strong>=Point()<span class="sig-paren">)</span><a class="headerlink" href="#void findContours(InputOutputArray image, OutputArrayOfArrays contours, OutputArray hierarchy, int mode, int method, Point offset)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void findContours(InputOutputArray image, OutputArrayOfArrays contours, int mode, int method, Point offset)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">findContours</code><span class="sig-paren">(</span>InputOutputArray <strong>image</strong>, OutputArrayOfArrays <strong>contours</strong>, int <strong>mode</strong>, int <strong>method</strong>, Point <strong>offset</strong>=Point()<span class="sig-paren">)</span><a class="headerlink" href="#void findContours(InputOutputArray image, OutputArrayOfArrays contours, int mode, int method, Point offset)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.findContours">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">findContours</code><span class="sig-paren">(</span>image, mode, method<span class="optional">[</span>, contours<span class="optional">[</span>, hierarchy<span class="optional">[</span>, offset<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; contours, hierarchy<a class="headerlink" href="#cv2.findContours" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="int cvFindContours(CvArr* image, CvMemStorage* storage, CvSeq** first_contour, int header_size, int mode, int method, CvPoint offset)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvFindContours</code><span class="sig-paren">(</span>CvArr* <strong>image</strong>, CvMemStorage* <strong>storage</strong>, CvSeq** <strong>first_contour</strong>, int <strong>header_size</strong>=sizeof(CvContour), int <strong>mode</strong>=CV_RETR_LIST, int <strong>method</strong>=CV_CHAIN_APPROX_SIMPLE, CvPoint <strong>offset</strong>=cvPoint(0,0) <span class="sig-paren">)</span><a class="headerlink" href="#int cvFindContours(CvArr* image, CvMemStorage* storage, CvSeq** first_contour, int header_size, int mode, int method, CvPoint offset)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.FindContours">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">FindContours</code><span class="sig-paren">(</span>image, storage, mode=CV_RETR_LIST, method=CV_CHAIN_APPROX_SIMPLE, offset=(0, 0)<span class="sig-paren">)</span> &rarr; contours<a class="headerlink" href="#cv.FindContours" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Source, an 8-bit single-channel image. Non-zero pixels are treated as 1&#8217;s. Zero pixels remain 0&#8217;s, so the image is treated as  <code class="docutils literal"><span class="pre">binary</span></code> . You can use  <a class="reference internal" href="../../contrib/doc/openfabmap.html#void compare(const Mat&amp; queryImgDescriptor, vector&lt;IMatch&gt;&amp; matches, bool addQuery , const Mat&amp; mask)" title="void compare(const Mat&amp; queryImgDescriptor, vector&lt;IMatch&gt;&amp; matches, bool addQuery , const Mat&amp; mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">compare()</span></code></a> ,  <a class="reference internal" href="../../core/doc/operations_on_arrays.html#void inRange(InputArray src, InputArray lowerb, InputArray upperb, OutputArray dst)" title="void inRange(InputArray src, InputArray lowerb, InputArray upperb, OutputArray dst)"><code class="xref ocv ocv-func docutils literal"><span class="pre">inRange()</span></code></a> ,  <a class="reference internal" href="miscellaneous_transformations.html#double threshold(InputArray src, OutputArray dst, double thresh, double maxval, int type)" title="double threshold(InputArray src, OutputArray dst, double thresh, double maxval, int type)"><code class="xref ocv ocv-func docutils literal"><span class="pre">threshold()</span></code></a> ,  <a class="reference internal" href="miscellaneous_transformations.html#void adaptiveThreshold(InputArray src, OutputArray dst, double maxValue, int adaptiveMethod, int thresholdType, int blockSize, double C)" title="void adaptiveThreshold(InputArray src, OutputArray dst, double maxValue, int adaptiveMethod, int thresholdType, int blockSize, double C)"><code class="xref ocv ocv-func docutils literal"><span class="pre">adaptiveThreshold()</span></code></a> ,  <a class="reference internal" href="feature_detection.html#void Canny(InputArray image, OutputArray edges, double threshold1, double threshold2, int apertureSize, bool L2gradient)" title="void Canny(InputArray image, OutputArray edges, double threshold1, double threshold2, int apertureSize, bool L2gradient)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Canny()</span></code></a> , and others to create a binary image out of a grayscale or color one. The function modifies the  <code class="docutils literal"><span class="pre">image</span></code>  while extracting the contours. If mode equals to <code class="docutils literal"><span class="pre">CV_RETR_CCOMP</span></code> or <code class="docutils literal"><span class="pre">CV_RETR_FLOODFILL</span></code>, the input can also be a 32-bit integer image of labels (<code class="docutils literal"><span class="pre">CV_32SC1</span></code>).</li>
+<li><strong>contours</strong> &#8211; Detected contours. Each contour is stored as a vector of points.</li>
+<li><strong>hierarchy</strong> &#8211; Optional output vector, containing information about the image topology. It has as many elements as the number of contours. For each i-th contour  <code class="docutils literal"><span class="pre">contours[i]</span></code> , the elements  <code class="docutils literal"><span class="pre">hierarchy[i][0]</span></code> ,  <code class="docutils literal"><span class="pre">hiearchy[i][1]</span></code> ,  <code class="docutils literal"><span class="pre">hiearchy[i][2]</span></code> , and  <code class="docutils literal"><span class="pre">hiearchy[i][3]</span></code>  are set to 0-based indices in  <code class="docutils literal"><span class="pre">contours</span></code>  of the next and previous contours at the same hierarchical level, the first child contour and the parent contour, respectively. If for the contour  <code class="docutils literal"><span class="pre">i</span></code>  there are no next, previous, parent, or nested contours, the corresponding elements of  <code class="docutils literal"><span class="pre">hierarchy[i]</span></code>  will be negative.</li>
+<li><strong>mode</strong> &#8211; <p>Contour retrieval mode (if you use Python see also a note below).</p>
+<ul>
+<li><strong>CV_RETR_EXTERNAL</strong> retrieves only the extreme outer contours. It sets  <code class="docutils literal"><span class="pre">hierarchy[i][2]=hierarchy[i][3]=-1</span></code>  for all the contours.</li>
+<li><strong>CV_RETR_LIST</strong> retrieves all of the contours without establishing any hierarchical relationships.</li>
+<li><strong>CV_RETR_CCOMP</strong> retrieves all of the contours and organizes them into a two-level hierarchy. At the top level, there are external boundaries of the components. At the second level, there are boundaries of the holes. If there is another contour inside a hole of a connected component, it is still put at the top level.</li>
+<li><strong>CV_RETR_TREE</strong> retrieves all of the contours and reconstructs a full hierarchy of nested contours. This full hierarchy is built and shown in the OpenCV  <code class="docutils literal"><span class="pre">contours.c</span></code>  demo.</li>
+</ul>
+</li>
+<li><strong>method</strong> &#8211; <p>Contour approximation method (if you use Python see also a note below).</p>
+<ul>
+<li><strong>CV_CHAIN_APPROX_NONE</strong> stores absolutely all the contour points. That is, any 2 subsequent points <code class="docutils literal"><span class="pre">(x1,y1)</span></code> and <code class="docutils literal"><span class="pre">(x2,y2)</span></code> of the contour will be either horizontal, vertical or diagonal neighbors, that is, <code class="docutils literal"><span class="pre">max(abs(x1-x2),abs(y2-y1))==1</span></code>.</li>
+<li><strong>CV_CHAIN_APPROX_SIMPLE</strong> compresses horizontal, vertical, and diagonal segments and leaves only their end points. For example, an up-right rectangular contour is encoded with 4 points.</li>
+<li><strong>CV_CHAIN_APPROX_TC89_L1,CV_CHAIN_APPROX_TC89_KCOS</strong> applies one of the flavors of the Teh-Chin chain approximation algorithm. See  <a class="reference internal" href="#tehchin89" id="id2">[TehChin89]</a> for details.</li>
+</ul>
+</li>
+<li><strong>offset</strong> &#8211; Optional offset by which every contour point is shifted. This is useful if the contours are extracted from the image ROI and then they should be analyzed in the whole image context.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function retrieves contours from the binary image using the algorithm
+<a class="reference internal" href="#suzuki85" id="id3">[Suzuki85]</a>. The contours are a useful tool for shape analysis and object detection and recognition. See <code class="docutils literal"><span class="pre">squares.c</span></code> in the OpenCV sample directory.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Source <code class="docutils literal"><span class="pre">image</span></code> is modified by this function. Also, the function does not take into account 1-pixel border of the image (it&#8217;s filled with 0&#8217;s and used for neighbor analysis in the algorithm), therefore the contours touching the image border will be clipped.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you use the new Python interface then the <code class="docutils literal"><span class="pre">CV_</span></code> prefix has to be omitted in contour retrieval mode and contour approximation method parameters (for example, use <code class="docutils literal"><span class="pre">cv2.RETR_LIST</span></code> and <code class="docutils literal"><span class="pre">cv2.CHAIN_APPROX_NONE</span></code> parameters). If you use the old Python interface then these parameters have the <code class="docutils literal"><span class="pre">CV_</span></code> prefix (for example, use <code class="docutils literal"><span class="pre">cv.CV_RETR_LIST</span></code> and <code class="docutils literal"><span class="pre">cv.CV_CHAIN_APPROX_NONE</span></code>).</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example using the findContour functionality can be found at opencv_source_code/samples/cpp/contours2.cpp</li>
+<li>An example using findContours to clean up a background segmentation result at opencv_source_code/samples/cpp/segment_objects.cpp</li>
+<li>(Python) An example using the findContour functionality can be found at opencv_source/samples/python2/contours.py</li>
+<li>(Python) An example of detecting squares in an image can be found at opencv_source/samples/python2/squares.py</li>
+</ul>
+</div>
+</div>
+<div class="section" id="drawcontours">
+<h2>drawContours<a class="headerlink" href="#drawcontours" title="Permalink to this headline">¶</a></h2>
+<p>Draws contours outlines or filled contours.</p>
+<dl class="function">
+<dt id="void drawContours(InputOutputArray image, InputArrayOfArrays contours, int contourIdx, const Scalar&amp; color, int thickness, int lineType, InputArray hierarchy, int maxLevel, Point offset)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">drawContours</code><span class="sig-paren">(</span>InputOutputArray <strong>image</strong>, InputArrayOfArrays <strong>contours</strong>, int <strong>contourIdx</strong>, const Scalar&amp; <strong>color</strong>, int <strong>thickness</strong>=1, int <strong>lineType</strong>=8, InputArray <strong>hierarchy</strong>=noArray(), int <strong>maxLevel</strong>=INT_MAX, Point <strong>offset</strong>=Point() <span class="sig-paren">)</span><a class="headerlink" href="#void drawContours(InputOutputArray image, InputArrayOfArrays contours, int contourIdx, const Scalar& color, int thickness, int lineType, InputArray hierarchy, int maxLevel, Point offset)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.drawContours">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">drawContours</code><span class="sig-paren">(</span>image, contours, contourIdx, color<span class="optional">[</span>, thickness<span class="optional">[</span>, lineType<span class="optional">[</span>, hierarchy<span class="optional">[</span>, maxLevel<span class="optional">[</span>, offset<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv2.drawContours" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvDrawContours(CvArr *img, CvSeq* contour, CvScalar externalColor, CvScalar holeColor, int maxLevel, int thickness, int lineType)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvDrawContours</code><span class="sig-paren">(</span>CvArr* <strong>img</strong>, CvSeq* <strong>contour</strong>, CvScalar <strong>externalColor</strong>, CvScalar <strong>holeColor</strong>, int <strong>maxLevel</strong>, int <strong>thickness</strong>=1, int <strong>lineType</strong>=8 <span class="sig-paren">)</span><a class="headerlink" href="#void cvDrawContours(CvArr *img, CvSeq* contour, CvScalar externalColor, CvScalar holeColor, int maxLevel, int thickness, int lineType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.DrawContours">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">DrawContours</code><span class="sig-paren">(</span>img, contour, external_color, hole_color, max_level, thickness=1, lineType=8, offset=(0, 0)<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.DrawContours" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Destination image.</li>
+<li><strong>contours</strong> &#8211; All the input contours. Each contour is stored as a point vector.</li>
+<li><strong>contourIdx</strong> &#8211; Parameter indicating a contour to draw. If it is negative, all the contours are drawn.</li>
+<li><strong>color</strong> &#8211; Color of the contours.</li>
+<li><strong>thickness</strong> &#8211; Thickness of lines the contours are drawn with. If it is negative (for example,  <code class="docutils literal"><span class="pre">thickness=CV_FILLED</span></code> ), the contour interiors are
+drawn.</li>
+<li><strong>lineType</strong> &#8211; Line connectivity. See  <a class="reference internal" href="../../core/doc/drawing_functions.html#void line(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)" title="void line(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)"><code class="xref ocv ocv-func docutils literal"><span class="pre">line()</span></code></a>  for details.</li>
+<li><strong>hierarchy</strong> &#8211; Optional information about hierarchy. It is only needed if you want to draw only some of the  contours (see  <code class="docutils literal"><span class="pre">maxLevel</span></code> ).</li>
+<li><strong>maxLevel</strong> &#8211; Maximal level for drawn contours. If it is 0, only
+the specified contour is drawn. If it is 1, the function draws the contour(s) and all the nested contours. If it is 2, the function draws the contours, all the nested contours, all the nested-to-nested contours, and so on. This parameter is only taken into account when there is  <code class="docutils literal"><span class="pre">hierarchy</span></code>  available.</li>
+<li><strong>offset</strong> &#8211; Optional contour shift parameter. Shift all the drawn contours by the specified  <img class="math" src="../../../_images/math/986f77d1de9059c061d3213f93eb6827412d66bf.png" alt="\texttt{offset}=(dx,dy)"/> .</li>
+<li><strong>contour</strong> &#8211; Pointer to the first contour.</li>
+<li><strong>externalColor</strong> &#8211; Color of external contours.</li>
+<li><strong>holeColor</strong> &#8211; Color of internal contours (holes).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function draws contour outlines in the image if
+<img class="math" src="../../../_images/math/c266655688ae59ab4b889de55a25a5c3457f1ce2.png" alt="\texttt{thickness} \ge 0"/> or fills the area bounded by the contours if
+<img class="math" src="../../../_images/math/5b9feca4e2442437d603146f8ba7da28dca53a28.png" alt="\texttt{thickness}&lt;0"/> . The example below shows how to retrieve connected components from the binary image and label them:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;cv.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;highgui.h&quot;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Mat</span> <span class="n">src</span><span class="p">;</span>
+    <span class="c1">// the first command-line parameter must be a filename of the binary</span>
+    <span class="c1">// (black-n-white) image</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">argc</span> <span class="o">!=</span> <span class="mi">2</span> <span class="o">||</span> <span class="o">!</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="n">imread</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">)).</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+
+    <span class="n">Mat</span> <span class="n">dst</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span><span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">CV_8UC3</span><span class="p">);</span>
+
+    <span class="n">src</span> <span class="o">=</span> <span class="n">src</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">namedWindow</span><span class="p">(</span> <span class="s">&quot;Source&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">imshow</span><span class="p">(</span> <span class="s">&quot;Source&quot;</span><span class="p">,</span> <span class="n">src</span> <span class="p">);</span>
+
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">contours</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">Vec4i</span><span class="o">&gt;</span> <span class="n">hierarchy</span><span class="p">;</span>
+
+    <span class="n">findContours</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">contours</span><span class="p">,</span> <span class="n">hierarchy</span><span class="p">,</span>
+        <span class="n">CV_RETR_CCOMP</span><span class="p">,</span> <span class="n">CV_CHAIN_APPROX_SIMPLE</span> <span class="p">);</span>
+
+    <span class="c1">// iterate through all the top-level contours,</span>
+    <span class="c1">// draw each connected component with its own random color</span>
+    <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span> <span class="p">;</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">hierarchy</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">Scalar</span> <span class="n">color</span><span class="p">(</span> <span class="n">rand</span><span class="p">()</span><span class="o">&amp;</span><span class="mi">255</span><span class="p">,</span> <span class="n">rand</span><span class="p">()</span><span class="o">&amp;</span><span class="mi">255</span><span class="p">,</span> <span class="n">rand</span><span class="p">()</span><span class="o">&amp;</span><span class="mi">255</span> <span class="p">);</span>
+        <span class="n">drawContours</span><span class="p">(</span> <span class="n">dst</span><span class="p">,</span> <span class="n">contours</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">CV_FILLED</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">hierarchy</span> <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">namedWindow</span><span class="p">(</span> <span class="s">&quot;Components&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">imshow</span><span class="p">(</span> <span class="s">&quot;Components&quot;</span><span class="p">,</span> <span class="n">dst</span> <span class="p">);</span>
+    <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example using the drawContour functionality can be found at opencv_source_code/samples/cpp/contours2.cpp</li>
+<li>An example using drawContours to clean up a background segmentation result at opencv_source_code/samples/cpp/segment_objects.cpp</li>
+<li>(Python) An example using the drawContour functionality can be found at opencv_source/samples/python2/contours.py</li>
+</ul>
+</div>
+</div>
+<div class="section" id="approxpolydp">
+<h2>approxPolyDP<a class="headerlink" href="#approxpolydp" title="Permalink to this headline">¶</a></h2>
+<p>Approximates a polygonal curve(s) with the specified precision.</p>
+<dl class="function">
+<dt id="void approxPolyDP(InputArray curve, OutputArray approxCurve, double epsilon, bool closed)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">approxPolyDP</code><span class="sig-paren">(</span>InputArray <strong>curve</strong>, OutputArray <strong>approxCurve</strong>, double <strong>epsilon</strong>, bool <strong>closed</strong><span class="sig-paren">)</span><a class="headerlink" href="#void approxPolyDP(InputArray curve, OutputArray approxCurve, double epsilon, bool closed)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.approxPolyDP">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">approxPolyDP</code><span class="sig-paren">(</span>curve, epsilon, closed<span class="optional">[</span>, approxCurve<span class="optional">]</span><span class="sig-paren">)</span> &rarr; approxCurve<a class="headerlink" href="#cv2.approxPolyDP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="CvSeq* cvApproxPoly(const void* src_seq, int header_size, CvMemStorage* storage, int method, double eps, int recursive)">
+<strong>C:</strong><code class="descname"> </code>CvSeq* <code class="descname">cvApproxPoly</code><span class="sig-paren">(</span>const void* <strong>src_seq</strong>, int <strong>header_size</strong>, CvMemStorage* <strong>storage</strong>, int <strong>method</strong>, double <strong>eps</strong>, int <strong>recursive</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#CvSeq* cvApproxPoly(const void* src_seq, int header_size, CvMemStorage* storage, int method, double eps, int recursive)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>curve</strong> &#8211; <p>Input vector of a 2D point stored in:</p>
+<ul>
+<li><code class="docutils literal"><span class="pre">std::vector</span></code> or <code class="docutils literal"><span class="pre">Mat</span></code> (C++ interface)</li>
+<li><code class="docutils literal"><span class="pre">Nx2</span></code> numpy array (Python interface)</li>
+<li><code class="docutils literal"><span class="pre">CvSeq</span></code> or `` <code class="docutils literal"><span class="pre">CvMat</span></code> (C interface)</li>
+</ul>
+</li>
+<li><strong>approxCurve</strong> &#8211; Result of the approximation. The type should match the type of the input curve. In case of C interface the approximated curve is stored in the memory storage and pointer to it is returned.</li>
+<li><strong>epsilon</strong> &#8211; Parameter specifying the approximation accuracy. This is the maximum distance between the original curve and its approximation.</li>
+<li><strong>closed</strong> &#8211; If true, the approximated curve is closed (its first and last vertices are connected). Otherwise, it is not closed.</li>
+<li><strong>header_size</strong> &#8211; Header size of the approximated curve. Normally, <code class="docutils literal"><span class="pre">sizeof(CvContour)</span></code> is used.</li>
+<li><strong>storage</strong> &#8211; Memory storage where the approximated curve is stored.</li>
+<li><strong>method</strong> &#8211; Contour approximation algorithm. Only <code class="docutils literal"><span class="pre">CV_POLY_APPROX_DP</span></code> is supported.</li>
+<li><strong>recursive</strong> &#8211; Recursion flag. If it is non-zero and <code class="docutils literal"><span class="pre">curve</span></code> is <code class="docutils literal"><span class="pre">CvSeq*</span></code>, the function <code class="docutils literal"><span class="pre">cvApproxPoly</span></code> approximates all the contours accessible from <code class="docutils literal"><span class="pre">curve</span></code> by <code class="docutils literal"><span class="pre">h_next</span></code> and <code class="docutils literal"><span class="pre">v_next</span></code> links.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The functions <code class="docutils literal"><span class="pre">approxPolyDP</span></code> approximate a curve or a polygon with another curve/polygon with less vertices so that the distance between them is less or equal to the specified precision. It uses the Douglas-Peucker algorithm
+<a class="reference external" href="http://en.wikipedia.org/wiki/Ramer-Douglas-Peucker_algorithm">http://en.wikipedia.org/wiki/Ramer-Douglas-Peucker_algorithm</a></p>
+<p>See <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/contours2.cpp">https://github.com/opencv/opencv/tree/master/samples/cpp/contours2.cpp</a> for the function usage model.</p>
+</div>
+<div class="section" id="approxchains">
+<h2>ApproxChains<a class="headerlink" href="#approxchains" title="Permalink to this headline">¶</a></h2>
+<p>Approximates Freeman chain(s) with a polygonal curve.</p>
+<dl class="cfunction">
+<dt id="CvSeq* cvApproxChains(CvSeq* src_seq, CvMemStorage* storage, int method, double parameter, int minimal_perimeter, int recursive)">
+<strong>C:</strong><code class="descname"> </code>CvSeq* <code class="descname">cvApproxChains</code><span class="sig-paren">(</span>CvSeq* <strong>src_seq</strong>, CvMemStorage* <strong>storage</strong>, int <strong>method</strong>=CV_CHAIN_APPROX_SIMPLE, double <strong>parameter</strong>=0, int <strong>minimal_perimeter</strong>=0, int <strong>recursive</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#CvSeq* cvApproxChains(CvSeq* src_seq, CvMemStorage* storage, int method, double parameter, int minimal_perimeter, int recursive)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.ApproxChains">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">ApproxChains</code><span class="sig-paren">(</span>src_seq, storage, method=CV_CHAIN_APPROX_SIMPLE, parameter=0, minimal_perimeter=0, recursive=0<span class="sig-paren">)</span> &rarr; contours<a class="headerlink" href="#cv.ApproxChains" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src_seq</strong> &#8211; Pointer to the approximated Freeman chain that can refer to other chains.</li>
+<li><strong>storage</strong> &#8211; Storage location for the resulting polylines.</li>
+<li><strong>method</strong> &#8211; Approximation method (see the description of the function  <a class="reference internal" href="#int cvFindContours(CvArr* image, CvMemStorage* storage, CvSeq** first_contour, int header_size, int mode, int method, CvPoint offset)" title="int cvFindContours(CvArr* image, CvMemStorage* storage, CvSeq** first_contour, int header_size, int mode, int method, CvPoint offset)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">FindContours()</span></code></a> ).</li>
+<li><strong>parameter</strong> &#8211; Method parameter (not used now).</li>
+<li><strong>minimal_perimeter</strong> &#8211; Approximates only those contours whose perimeters are not less than  <code class="docutils literal"><span class="pre">minimal_perimeter</span></code> . Other chains are removed from the resulting structure.</li>
+<li><strong>recursive</strong> &#8211; Recursion flag. If it is non-zero, the function approximates all chains that can be obtained from  <code class="docutils literal"><span class="pre">chain</span></code>  by using the  <code class="docutils literal"><span class="pre">h_next</span></code>  or  <code class="docutils literal"><span class="pre">v_next</span></code> links. Otherwise, the single input chain is approximated.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This is a standalone contour approximation routine, not represented in the new interface. When <a class="reference internal" href="#int cvFindContours(CvArr* image, CvMemStorage* storage, CvSeq** first_contour, int header_size, int mode, int method, CvPoint offset)" title="int cvFindContours(CvArr* image, CvMemStorage* storage, CvSeq** first_contour, int header_size, int mode, int method, CvPoint offset)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">FindContours()</span></code></a> retrieves contours as Freeman chains, it calls the function to get approximated contours, represented as polygons.</p>
+</div>
+<div class="section" id="arclength">
+<h2>arcLength<a class="headerlink" href="#arclength" title="Permalink to this headline">¶</a></h2>
+<p>Calculates a contour perimeter or a curve length.</p>
+<dl class="function">
+<dt id="double arcLength(InputArray curve, bool closed)">
+<strong>C++:</strong><code class="descname"> </code>double <code class="descname">arcLength</code><span class="sig-paren">(</span>InputArray <strong>curve</strong>, bool <strong>closed</strong><span class="sig-paren">)</span><a class="headerlink" href="#double arcLength(InputArray curve, bool closed)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.arcLength">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">arcLength</code><span class="sig-paren">(</span>curve, closed<span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.arcLength" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="double cvArcLength(const void* curve, CvSlice slice, int is_closed)">
+<strong>C:</strong><code class="descname"> </code>double <code class="descname">cvArcLength</code><span class="sig-paren">(</span>const void* <strong>curve</strong>, CvSlice <strong>slice</strong>=CV_WHOLE_SEQ, int <strong>is_closed</strong>=-1 <span class="sig-paren">)</span><a class="headerlink" href="#double cvArcLength(const void* curve, CvSlice slice, int is_closed)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.ArcLength">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">ArcLength</code><span class="sig-paren">(</span>curve, slice=CV_WHOLE_SEQ, isClosed=-1<span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#cv.ArcLength" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>curve</strong> &#8211; Input vector of 2D points, stored in <code class="docutils literal"><span class="pre">std::vector</span></code> or <code class="docutils literal"><span class="pre">Mat</span></code>.</li>
+<li><strong>closed</strong> &#8211; Flag indicating whether the curve is closed or not.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function computes a curve length or a closed contour perimeter.</p>
+</div>
+<div class="section" id="boundingrect">
+<h2>boundingRect<a class="headerlink" href="#boundingrect" title="Permalink to this headline">¶</a></h2>
+<p>Calculates the up-right bounding rectangle of a point set.</p>
+<dl class="function">
+<dt id="Rect boundingRect(InputArray points)">
+<strong>C++:</strong><code class="descname"> </code>Rect <code class="descname">boundingRect</code><span class="sig-paren">(</span>InputArray <strong>points</strong><span class="sig-paren">)</span><a class="headerlink" href="#Rect boundingRect(InputArray points)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.boundingRect">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">boundingRect</code><span class="sig-paren">(</span>points<span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.boundingRect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="CvRect cvBoundingRect(CvArr* points, int update)">
+<strong>C:</strong><code class="descname"> </code>CvRect <code class="descname">cvBoundingRect</code><span class="sig-paren">(</span>CvArr* <strong>points</strong>, int <strong>update</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#CvRect cvBoundingRect(CvArr* points, int update)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.BoundingRect">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">BoundingRect</code><span class="sig-paren">(</span>points, update=0<span class="sig-paren">)</span> &rarr; CvRect<a class="headerlink" href="#cv.BoundingRect" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>points</strong> &#8211; Input 2D point set, stored in <code class="docutils literal"><span class="pre">std::vector</span></code> or <code class="docutils literal"><span class="pre">Mat</span></code>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function calculates and returns the minimal up-right bounding rectangle for the specified point set.</p>
+</div>
+<div class="section" id="contourarea">
+<h2>contourArea<a class="headerlink" href="#contourarea" title="Permalink to this headline">¶</a></h2>
+<p>Calculates a contour area.</p>
+<dl class="function">
+<dt id="double contourArea(InputArray contour, bool oriented)">
+<strong>C++:</strong><code class="descname"> </code>double <code class="descname">contourArea</code><span class="sig-paren">(</span>InputArray <strong>contour</strong>, bool <strong>oriented</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#double contourArea(InputArray contour, bool oriented)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.contourArea">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">contourArea</code><span class="sig-paren">(</span>contour<span class="optional">[</span>, oriented<span class="optional">]</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.contourArea" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="double cvContourArea(const CvArr* contour, CvSlice slice, int oriented)">
+<strong>C:</strong><code class="descname"> </code>double <code class="descname">cvContourArea</code><span class="sig-paren">(</span>const CvArr* <strong>contour</strong>, CvSlice <strong>slice</strong>=CV_WHOLE_SEQ, int <strong>oriented</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#double cvContourArea(const CvArr* contour, CvSlice slice, int oriented)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.ContourArea">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">ContourArea</code><span class="sig-paren">(</span>contour, slice=CV_WHOLE_SEQ<span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#cv.ContourArea" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>contour</strong> &#8211; Input vector of 2D points (contour vertices), stored in <code class="docutils literal"><span class="pre">std::vector</span></code> or <code class="docutils literal"><span class="pre">Mat</span></code>.</li>
+<li><strong>oriented</strong> &#8211; Oriented area flag. If it is true, the function returns a signed area value, depending on the contour orientation (clockwise or counter-clockwise). Using this feature you can determine orientation of a contour by taking the sign of an area. By default, the parameter is <code class="docutils literal"><span class="pre">false</span></code>, which means that the absolute value is returned.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function computes a contour area. Similarly to
+<a class="reference internal" href="#Moments moments(InputArray array, bool binaryImage)" title="Moments moments(InputArray array, bool binaryImage)"><code class="xref ocv ocv-func docutils literal"><span class="pre">moments()</span></code></a> , the area is computed using the Green formula. Thus, the returned area and the number of non-zero pixels, if you draw the contour using
+<a class="reference internal" href="#void drawContours(InputOutputArray image, InputArrayOfArrays contours, int contourIdx, const Scalar&amp; color, int thickness, int lineType, InputArray hierarchy, int maxLevel, Point offset)" title="void drawContours(InputOutputArray image, InputArrayOfArrays contours, int contourIdx, const Scalar&amp; color, int thickness, int lineType, InputArray hierarchy, int maxLevel, Point offset)"><code class="xref ocv ocv-func docutils literal"><span class="pre">drawContours()</span></code></a> or
+<a class="reference internal" href="../../core/doc/drawing_functions.html#void fillPoly(Mat&amp; img, const Point** pts, const int* npts, int ncontours, const Scalar&amp; color, int lineType, int shift, Point offset)" title="void fillPoly(Mat&amp; img, const Point** pts, const int* npts, int ncontours, const Scalar&amp; color, int lineType, int shift, Point offset)"><code class="xref ocv ocv-func docutils literal"><span class="pre">fillPoly()</span></code></a> , can be different.
+Also, the function will most certainly give a wrong results for contours with self-intersections.</p>
+<p>Example:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;</span> <span class="n">contour</span><span class="p">;</span>
+<span class="n">contour</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">Point2f</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+<span class="n">contour</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">Point2f</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+<span class="n">contour</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">Point2f</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">));</span>
+<span class="n">contour</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">Point2f</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">));</span>
+
+<span class="kt">double</span> <span class="n">area0</span> <span class="o">=</span> <span class="n">contourArea</span><span class="p">(</span><span class="n">contour</span><span class="p">);</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;</span> <span class="n">approx</span><span class="p">;</span>
+<span class="n">approxPolyDP</span><span class="p">(</span><span class="n">contour</span><span class="p">,</span> <span class="n">approx</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+<span class="kt">double</span> <span class="n">area1</span> <span class="o">=</span> <span class="n">contourArea</span><span class="p">(</span><span class="n">approx</span><span class="p">);</span>
+
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;area0 =&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">area0</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span>
+        <span class="s">&quot;area1 =&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">area1</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span>
+        <span class="s">&quot;approx poly vertices&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">approx</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="convexhull">
+<h2>convexHull<a class="headerlink" href="#convexhull" title="Permalink to this headline">¶</a></h2>
+<p>Finds the convex hull of a point set.</p>
+<dl class="function">
+<dt id="void convexHull(InputArray points, OutputArray hull, bool clockwise, bool returnPoints)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">convexHull</code><span class="sig-paren">(</span>InputArray <strong>points</strong>, OutputArray <strong>hull</strong>, bool <strong>clockwise</strong>=false, bool <strong>returnPoints</strong>=true <span class="sig-paren">)</span><a class="headerlink" href="#void convexHull(InputArray points, OutputArray hull, bool clockwise, bool returnPoints)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.convexHull">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">convexHull</code><span class="sig-paren">(</span>points<span class="optional">[</span>, hull<span class="optional">[</span>, clockwise<span class="optional">[</span>, returnPoints<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; hull<a class="headerlink" href="#cv2.convexHull" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="CvSeq* cvConvexHull2(const CvArr* input, void* hull_storage, int orientation, int return_points)">
+<strong>C:</strong><code class="descname"> </code>CvSeq* <code class="descname">cvConvexHull2</code><span class="sig-paren">(</span>const CvArr* <strong>input</strong>, void* <strong>hull_storage</strong>=NULL, int <strong>orientation</strong>=CV_CLOCKWISE, int <strong>return_points</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#CvSeq* cvConvexHull2(const CvArr* input, void* hull_storage, int orientation, int return_points)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.ConvexHull2">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">ConvexHull2</code><span class="sig-paren">(</span>points, storage, orientation=CV_CLOCKWISE, return_points=0<span class="sig-paren">)</span> &rarr; convexHull<a class="headerlink" href="#cv.ConvexHull2" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>points</strong> &#8211; Input 2D point set, stored in <code class="docutils literal"><span class="pre">std::vector</span></code> or <code class="docutils literal"><span class="pre">Mat</span></code>.</li>
+<li><strong>hull</strong> &#8211; Output convex hull. It is either an integer vector of indices or vector of points. In the first case, the <code class="docutils literal"><span class="pre">hull</span></code> elements are 0-based indices of the convex hull points in the original array (since the set of convex hull points is a subset of the original point set). In the second case, <code class="docutils literal"><span class="pre">hull</span></code> elements are the convex hull points themselves.</li>
+<li><strong>hull_storage</strong> &#8211; Output memory storage in the old API (<code class="docutils literal"><span class="pre">cvConvexHull2</span></code> returns a sequence containing the convex hull points or their indices).</li>
+<li><strong>clockwise</strong> &#8211; Orientation flag. If it is true, the output convex hull is oriented clockwise. Otherwise, it is oriented counter-clockwise. The assumed coordinate system has its X axis pointing to the right, and its Y axis pointing upwards.</li>
+<li><strong>orientation</strong> &#8211; Convex hull orientation parameter in the old API, <code class="docutils literal"><span class="pre">CV_CLOCKWISE</span></code> or <code class="docutils literal"><span class="pre">CV_COUNTERCLOCKWISE</span></code>.</li>
+<li><strong>returnPoints</strong> &#8211; Operation flag. In case of a matrix, when the flag is true, the function returns convex hull points. Otherwise, it returns indices of the convex hull points. When the output array is <code class="docutils literal"><span class="pre">std::vector</span></code>, the flag is ignored, and the output depends on the type of the vector: <code class="docutils literal"><span class="pre">std::vector&lt;int&gt;</span></code> implies <code class="docutils literal"><span class="pre">returnPoints=true</span></code>, <code class="docutils literal"><span class="pre">std::vector&lt;Point&gt;</span></code> implies <code class="docutils literal"><span class="pre">returnPoints=false</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The functions find the convex hull of a 2D point set using the Sklansky&#8217;s algorithm
+<a class="reference internal" href="#sklansky82" id="id4">[Sklansky82]</a>
+that has
+<em>O(N logN)</em> complexity in the current implementation. See the OpenCV sample <code class="docutils literal"><span class="pre">convexhull.cpp</span></code> that demonstrates the usage of different function variants.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example using the convexHull functionality can be found at opencv_source_code/samples/cpp/convexhull.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="convexitydefects">
+<h2>convexityDefects<a class="headerlink" href="#convexitydefects" title="Permalink to this headline">¶</a></h2>
+<p>Finds the convexity defects of a contour.</p>
+<dl class="function">
+<dt id="void convexityDefects(InputArray contour, InputArray convexhull, OutputArray convexityDefects)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">convexityDefects</code><span class="sig-paren">(</span>InputArray <strong>contour</strong>, InputArray <strong>convexhull</strong>, OutputArray <strong>convexityDefects</strong><span class="sig-paren">)</span><a class="headerlink" href="#void convexityDefects(InputArray contour, InputArray convexhull, OutputArray convexityDefects)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.convexityDefects">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">convexityDefects</code><span class="sig-paren">(</span>contour, convexhull<span class="optional">[</span>, convexityDefects<span class="optional">]</span><span class="sig-paren">)</span> &rarr; convexityDefects<a class="headerlink" href="#cv2.convexityDefects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="CvSeq* cvConvexityDefects(const CvArr* contour, const CvArr* convexhull, CvMemStorage* storage)">
+<strong>C:</strong><code class="descname"> </code>CvSeq* <code class="descname">cvConvexityDefects</code><span class="sig-paren">(</span>const CvArr* <strong>contour</strong>, const CvArr* <strong>convexhull</strong>, CvMemStorage* <strong>storage</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#CvSeq* cvConvexityDefects(const CvArr* contour, const CvArr* convexhull, CvMemStorage* storage)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.ConvexityDefects">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">ConvexityDefects</code><span class="sig-paren">(</span>contour, convexhull, storage<span class="sig-paren">)</span> &rarr; convexityDefects<a class="headerlink" href="#cv.ConvexityDefects" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>contour</strong> &#8211; Input contour.</li>
+<li><strong>convexhull</strong> &#8211; Convex hull obtained using  <a class="reference internal" href="#void convexHull(InputArray points, OutputArray hull, bool clockwise, bool returnPoints)" title="void convexHull(InputArray points, OutputArray hull, bool clockwise, bool returnPoints)"><code class="xref ocv ocv-func docutils literal"><span class="pre">convexHull()</span></code></a>  that should contain indices of the contour points that make the hull.</li>
+<li><strong>convexityDefects</strong> &#8211; The output vector of convexity defects. In C++ and the new Python/Java interface each convexity defect is represented as 4-element integer vector (a.k.a. <code class="docutils literal"><span class="pre">cv::Vec4i</span></code>): <code class="docutils literal"><span class="pre">(start_index,</span> <span class="pre">end_index,</span> <span class="pre">farthest_pt_index,</span> <span class="pre">fixpt_depth)</span></code>, where indices are 0-based indices in the original contour of the convexity defect beginning, end and the farthest point, and <code class="docutils literal"><span class="pre">fixpt_depth</span></code> is fixed-point approximation (with 8 fractional bits) of the distance between the farthest contour point and the hull. That is, to get the floating-point value of the depth will be <code class="docutils literal"><span class="pre">fixpt_depth/256.0</span></code>. In C interface convexity defect is represented by <code class="docutils literal"><span class="pre">CvConvexityDefect</span></code> structure - see below.</li>
+<li><strong>storage</strong> &#8211; Container for the output sequence of convexity defects. If it is NULL, the contour or hull (in that order) storage is used.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function finds all convexity defects of the input contour and returns a sequence of the <code class="docutils literal"><span class="pre">CvConvexityDefect</span></code> structures, where <code class="docutils literal"><span class="pre">CvConvexityDetect</span></code> is defined as:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">CvConvexityDefect</span>
+<span class="p">{</span>
+   <span class="n">CvPoint</span><span class="o">*</span> <span class="n">start</span><span class="p">;</span> <span class="c1">// point of the contour where the defect begins</span>
+   <span class="n">CvPoint</span><span class="o">*</span> <span class="n">end</span><span class="p">;</span> <span class="c1">// point of the contour where the defect ends</span>
+   <span class="n">CvPoint</span><span class="o">*</span> <span class="n">depth_point</span><span class="p">;</span> <span class="c1">// the farthest from the convex hull point within the defect</span>
+   <span class="kt">float</span> <span class="n">depth</span><span class="p">;</span> <span class="c1">// distance between the farthest point and the convex hull</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The figure below displays convexity defects of a hand contour:</p>
+<img alt="../../../_images/defects.png" src="../../../_images/defects.png" />
+</div>
+<div class="section" id="fitellipse">
+<h2>fitEllipse<a class="headerlink" href="#fitellipse" title="Permalink to this headline">¶</a></h2>
+<p>Fits an ellipse around a set of 2D points.</p>
+<dl class="function">
+<dt id="RotatedRect fitEllipse(InputArray points)">
+<strong>C++:</strong><code class="descname"> </code>RotatedRect <code class="descname">fitEllipse</code><span class="sig-paren">(</span>InputArray <strong>points</strong><span class="sig-paren">)</span><a class="headerlink" href="#RotatedRect fitEllipse(InputArray points)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.fitEllipse">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">fitEllipse</code><span class="sig-paren">(</span>points<span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.fitEllipse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="CvBox2D cvFitEllipse2(const CvArr* points)">
+<strong>C:</strong><code class="descname"> </code>CvBox2D <code class="descname">cvFitEllipse2</code><span class="sig-paren">(</span>const CvArr* <strong>points</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvBox2D cvFitEllipse2(const CvArr* points)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.FitEllipse2">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">FitEllipse2</code><span class="sig-paren">(</span>points<span class="sig-paren">)</span> &rarr; Box2D<a class="headerlink" href="#cv.FitEllipse2" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>points</strong> &#8211; <p>Input 2D point set, stored in:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">std::vector&lt;&gt;</span></code> or <code class="docutils literal"><span class="pre">Mat</span></code> (C++ interface)</li>
+<li><code class="docutils literal"><span class="pre">CvSeq*</span></code> or <code class="docutils literal"><span class="pre">CvMat*</span></code> (C interface)</li>
+<li>Nx2 numpy array (Python interface)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function calculates the ellipse that fits (in a least-squares sense) a set of 2D points best of all. It returns the rotated rectangle in which the ellipse is inscribed. The algorithm <a class="reference internal" href="#fitzgibbon95" id="id5">[Fitzgibbon95]</a> is used.
+Developer should keep in mind that it is possible that the returned ellipse/rotatedRect data contains negative indices, due to the data points being close to the border of the containing Mat element.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example using the fitEllipse technique can be found at opencv_source_code/samples/cpp/fitellipse.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="fitline">
+<h2>fitLine<a class="headerlink" href="#fitline" title="Permalink to this headline">¶</a></h2>
+<p>Fits a line to a 2D or 3D point set.</p>
+<dl class="function">
+<dt id="void fitLine(InputArray points, OutputArray line, int distType, double param, double reps, double aeps)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">fitLine</code><span class="sig-paren">(</span>InputArray <strong>points</strong>, OutputArray <strong>line</strong>, int <strong>distType</strong>, double <strong>param</strong>, double <strong>reps</strong>, double <strong>aeps</strong><span class="sig-paren">)</span><a class="headerlink" href="#void fitLine(InputArray points, OutputArray line, int distType, double param, double reps, double aeps)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.fitLine">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">fitLine</code><span class="sig-paren">(</span>points, distType, param, reps, aeps<span class="optional">[</span>, line<span class="optional">]</span><span class="sig-paren">)</span> &rarr; line<a class="headerlink" href="#cv2.fitLine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvFitLine(const CvArr* points, int dist_type, double param, double reps, double aeps, float* line)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvFitLine</code><span class="sig-paren">(</span>const CvArr* <strong>points</strong>, int <strong>dist_type</strong>, double <strong>param</strong>, double <strong>reps</strong>, double <strong>aeps</strong>, float* <strong>line</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvFitLine(const CvArr* points, int dist_type, double param, double reps, double aeps, float* line)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.FitLine">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">FitLine</code><span class="sig-paren">(</span>points, dist_type, param, reps, aeps<span class="sig-paren">)</span> &rarr; line<a class="headerlink" href="#cv.FitLine" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>points</strong> &#8211; Input vector of 2D or 3D points, stored in <code class="docutils literal"><span class="pre">std::vector&lt;&gt;</span></code> or <code class="docutils literal"><span class="pre">Mat</span></code>.</li>
+<li><strong>line</strong> &#8211; Output line parameters. In case of 2D fitting, it should be a vector of 4 elements (like <code class="docutils literal"><span class="pre">Vec4f</span></code>) - <code class="docutils literal"><span class="pre">(vx,</span> <span class="pre">vy,</span> <span class="pre">x0,</span> <span class="pre">y0)</span></code>,  where  <code class="docutils literal"><span class="pre">(vx,</span> <span class="pre">vy)</span></code>  is a normalized vector collinear to the line and  <code class="docutils literal"><span class="pre">(x0,</span> <span class="pre">y0)</span></code>  is a point on the line. In case of 3D fitting, it should be a vector of 6 elements (like  <code class="docutils literal"><span class="pre">Vec6f</span></code>) - <code class="docutils literal"><span class="pre">(vx,</span> <span class="pre">vy,</span> <span class="pre">vz,</span> <span class="pre">x0,</span> <span class="pre">y0,</span> <span class="pre">z0)</span></code>, where <code class="docutils literal"><span class="pre">(vx,</span> <span class="pre">vy,</span> <span class="pre">vz)</span></code> is a normalized vector collinear to the line and <code class="docutils literal"><span class="pre">(x0,</span> <span class="pre">y0,</span> <span class="pre">z0)</span></code> is a point on the line.</li>
+<li><strong>distType</strong> &#8211; Distance used by the M-estimator (see the discussion below).</li>
+<li><strong>param</strong> &#8211; Numerical parameter ( <code class="docutils literal"><span class="pre">C</span></code> ) for some types of distances. If it is 0, an optimal value is chosen.</li>
+<li><strong>reps</strong> &#8211; Sufficient accuracy for the radius (distance between the coordinate origin and the line).</li>
+<li><strong>aeps</strong> &#8211; Sufficient accuracy for the angle. 0.01 would be a good default value for <code class="docutils literal"><span class="pre">reps</span></code> and <code class="docutils literal"><span class="pre">aeps</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">fitLine</span></code> fits a line to a 2D or 3D point set by minimizing
+<img class="math" src="../../../_images/math/556c21d89040110fca7374694834da89287266ca.png" alt="\sum_i \rho(r_i)"/> where
+<img class="math" src="../../../_images/math/b21607222acbcf4bc004d6b15e24ff5a50f02b27.png" alt="r_i"/> is a distance between the
+<img class="math" src="../../../_images/math/6957f7dfca367070ef804a1b0e3f8c79955e90fc.png" alt="i^{th}"/> point, the line and
+<img class="math" src="../../../_images/math/f4fb11d54bfa340321d602c71f0cfd51db9f6f36.png" alt="\rho(r)"/> is a distance function, one of the following:</p>
+<ul>
+<li><p class="first">distType=CV_DIST_L2</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/1108dce52aae3948146ec155b868b26bc1e482d6.png" alt="\rho (r) = r^2/2  \quad \text{(the simplest and the fastest least-squares method)}"/></p>
+</div></div></blockquote>
+</li>
+<li><p class="first">distType=CV_DIST_L1</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/c39503145a6b7c08506e0d6c85ce61cdb4f084bb.png" alt="\rho (r) = r"/></p>
+</div></div></blockquote>
+</li>
+<li><p class="first">distType=CV_DIST_L12</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/7fac727774350802eb076e6f579b0becabd10a82.png" alt="\rho (r) = 2  \cdot ( \sqrt{1 + \frac{r^2}{2}} - 1)"/></p>
+</div></div></blockquote>
+</li>
+<li><p class="first">distType=CV_DIST_FAIR</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/2443d34ca053b0ab4f7cbb386f1db644190539ae.png" alt="\rho \left (r \right ) = C^2  \cdot \left (  \frac{r}{C} -  \log{\left(1 + \frac{r}{C}\right)} \right )  \quad \text{where} \quad C=1.3998"/></p>
+</div></div></blockquote>
+</li>
+<li><p class="first">distType=CV_DIST_WELSCH</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/87ee7db21f66da96e7e4e20d13e4c86985a3f641.png" alt="\rho \left (r \right ) =  \frac{C^2}{2} \cdot \left ( 1 -  \exp{\left(-\left(\frac{r}{C}\right)^2\right)} \right )  \quad \text{where} \quad C=2.9846"/></p>
+</div></div></blockquote>
+</li>
+<li><p class="first">distType=CV_DIST_HUBER</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/f79c41136cf88a6b340c98487ad468f6dd32d9c0.png" alt="\rho (r) =  \fork{r^2/2}{if $r &lt; C$}{C \cdot (r-C/2)}{otherwise} \quad \text{where} \quad C=1.345"/></p>
+</div></div></blockquote>
+</li>
+</ul>
+<p>The algorithm is based on the M-estimator (
+<a class="reference external" href="http://en.wikipedia.org/wiki/M-estimator">http://en.wikipedia.org/wiki/M-estimator</a>
+) technique that iteratively fits the line using the weighted least-squares algorithm. After each iteration the weights
+<img class="math" src="../../../_images/math/71e64a8758b90c142e36309cf433df09396a5ce0.png" alt="w_i"/> are adjusted to be inversely proportional to
+<img class="math" src="../../../_images/math/b01a9b200a74f1691f5339dd7cf92c46c845e4cf.png" alt="\rho(r_i)"/> .</p>
+</div>
+<div class="section" id="iscontourconvex">
+<h2>isContourConvex<a class="headerlink" href="#iscontourconvex" title="Permalink to this headline">¶</a></h2>
+<p>Tests a contour convexity.</p>
+<dl class="function">
+<dt id="bool isContourConvex(InputArray contour)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descname">isContourConvex</code><span class="sig-paren">(</span>InputArray <strong>contour</strong><span class="sig-paren">)</span><a class="headerlink" href="#bool isContourConvex(InputArray contour)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.isContourConvex">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">isContourConvex</code><span class="sig-paren">(</span>contour<span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.isContourConvex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="int cvCheckContourConvexity(const CvArr* contour)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvCheckContourConvexity</code><span class="sig-paren">(</span>const CvArr* <strong>contour</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvCheckContourConvexity(const CvArr* contour)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CheckContourConvexity">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CheckContourConvexity</code><span class="sig-paren">(</span>contour<span class="sig-paren">)</span> &rarr; int<a class="headerlink" href="#cv.CheckContourConvexity" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>contour</strong> &#8211; <p>Input vector of 2D points, stored in:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">std::vector&lt;&gt;</span></code> or <code class="docutils literal"><span class="pre">Mat</span></code> (C++ interface)</li>
+<li><code class="docutils literal"><span class="pre">CvSeq*</span></code> or <code class="docutils literal"><span class="pre">CvMat*</span></code> (C interface)</li>
+<li>Nx2 numpy array (Python interface)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function tests whether the input contour is convex or not. The contour must be simple, that is, without self-intersections. Otherwise, the function output is undefined.</p>
+</div>
+<div class="section" id="minarearect">
+<h2>minAreaRect<a class="headerlink" href="#minarearect" title="Permalink to this headline">¶</a></h2>
+<p>Finds a rotated rectangle of the minimum area enclosing the input 2D point set.</p>
+<dl class="function">
+<dt id="RotatedRect minAreaRect(InputArray points)">
+<strong>C++:</strong><code class="descname"> </code>RotatedRect <code class="descname">minAreaRect</code><span class="sig-paren">(</span>InputArray <strong>points</strong><span class="sig-paren">)</span><a class="headerlink" href="#RotatedRect minAreaRect(InputArray points)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.minAreaRect">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">minAreaRect</code><span class="sig-paren">(</span>points<span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.minAreaRect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="CvBox2D cvMinAreaRect2(const CvArr* points, CvMemStorage* storage)">
+<strong>C:</strong><code class="descname"> </code>CvBox2D <code class="descname">cvMinAreaRect2</code><span class="sig-paren">(</span>const CvArr* <strong>points</strong>, CvMemStorage* <strong>storage</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#CvBox2D cvMinAreaRect2(const CvArr* points, CvMemStorage* storage)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.MinAreaRect2">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">MinAreaRect2</code><span class="sig-paren">(</span>points, storage=None<span class="sig-paren">)</span> &rarr; Box2D<a class="headerlink" href="#cv.MinAreaRect2" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>points</strong> &#8211; <p>Input vector of 2D points, stored in:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">std::vector&lt;&gt;</span></code> or <code class="docutils literal"><span class="pre">Mat</span></code> (C++ interface)</li>
+<li><code class="docutils literal"><span class="pre">CvSeq*</span></code> or <code class="docutils literal"><span class="pre">CvMat*</span></code> (C interface)</li>
+<li>Nx2 numpy array (Python interface)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function calculates and returns the minimum-area bounding rectangle (possibly rotated) for a specified point set. See the OpenCV sample <code class="docutils literal"><span class="pre">minarea.cpp</span></code> .
+Developer should keep in mind that the returned rotatedRect can contain negative indices when data is close the the containing Mat element boundary.</p>
+</div>
+<div class="section" id="minenclosingcircle">
+<h2>minEnclosingCircle<a class="headerlink" href="#minenclosingcircle" title="Permalink to this headline">¶</a></h2>
+<p>Finds a circle of the minimum area enclosing a 2D point set.</p>
+<dl class="function">
+<dt id="void minEnclosingCircle(InputArray points, Point2f&amp; center, float&amp; radius)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">minEnclosingCircle</code><span class="sig-paren">(</span>InputArray <strong>points</strong>, Point2f&amp; <strong>center</strong>, float&amp; <strong>radius</strong><span class="sig-paren">)</span><a class="headerlink" href="#void minEnclosingCircle(InputArray points, Point2f& center, float& radius)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.minEnclosingCircle">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">minEnclosingCircle</code><span class="sig-paren">(</span>points<span class="sig-paren">)</span> &rarr; center, radius<a class="headerlink" href="#cv2.minEnclosingCircle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="int cvMinEnclosingCircle(const CvArr* points, CvPoint2D32f* center, float* radius)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvMinEnclosingCircle</code><span class="sig-paren">(</span>const CvArr* <strong>points</strong>, CvPoint2D32f* <strong>center</strong>, float* <strong>radius</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvMinEnclosingCircle(const CvArr* points, CvPoint2D32f* center, float* radius)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.MinEnclosingCircle">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">MinEnclosingCircle</code><span class="sig-paren">(</span>points)-&gt; (int, center, radius<span class="sig-paren">)</span><a class="headerlink" href="#cv.MinEnclosingCircle" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>points</strong> &#8211; <p>Input vector of 2D points, stored in:</p>
+<ul>
+<li><code class="docutils literal"><span class="pre">std::vector&lt;&gt;</span></code> or <code class="docutils literal"><span class="pre">Mat</span></code> (C++ interface)</li>
+<li><code class="docutils literal"><span class="pre">CvSeq*</span></code> or <code class="docutils literal"><span class="pre">CvMat*</span></code> (C interface)</li>
+<li>Nx2 numpy array (Python interface)</li>
+</ul>
+</li>
+<li><strong>center</strong> &#8211; Output center of the circle.</li>
+<li><strong>radius</strong> &#8211; Output radius of the circle.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function finds the minimal enclosing circle of a 2D point set using an iterative algorithm. See the OpenCV sample <code class="docutils literal"><span class="pre">minarea.cpp</span></code> .</p>
+</div>
+<div class="section" id="matchshapes">
+<h2>matchShapes<a class="headerlink" href="#matchshapes" title="Permalink to this headline">¶</a></h2>
+<p>Compares two shapes.</p>
+<dl class="function">
+<dt id="double matchShapes(InputArray contour1, InputArray contour2, int method, double parameter)">
+<strong>C++:</strong><code class="descname"> </code>double <code class="descname">matchShapes</code><span class="sig-paren">(</span>InputArray <strong>contour1</strong>, InputArray <strong>contour2</strong>, int <strong>method</strong>, double <strong>parameter</strong><span class="sig-paren">)</span><a class="headerlink" href="#double matchShapes(InputArray contour1, InputArray contour2, int method, double parameter)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.matchShapes">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">matchShapes</code><span class="sig-paren">(</span>contour1, contour2, method, parameter<span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.matchShapes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="double cvMatchShapes(const void* object1, const void* object2, int method, double parameter)">
+<strong>C:</strong><code class="descname"> </code>double <code class="descname">cvMatchShapes</code><span class="sig-paren">(</span>const void* <strong>object1</strong>, const void* <strong>object2</strong>, int <strong>method</strong>, double <strong>parameter</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#double cvMatchShapes(const void* object1, const void* object2, int method, double parameter)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.MatchShapes">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">MatchShapes</code><span class="sig-paren">(</span>object1, object2, method, parameter=0<span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#cv.MatchShapes" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>object1</strong> &#8211; First contour or grayscale image.</li>
+<li><strong>object2</strong> &#8211; Second contour or grayscale image.</li>
+<li><strong>method</strong> &#8211; Comparison method: <code class="docutils literal"><span class="pre">CV_CONTOURS_MATCH_I1</span></code> , <code class="docutils literal"><span class="pre">CV_CONTOURS_MATCH_I2</span></code> or <code class="docutils literal"><span class="pre">CV_CONTOURS_MATCH_I3</span></code>  (see the details below).</li>
+<li><strong>parameter</strong> &#8211; Method-specific parameter (not supported now).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function compares two shapes. All three implemented methods use the Hu invariants (see
+<a class="reference internal" href="#void HuMoments(const Moments&amp; m, OutputArray hu)" title="void HuMoments(const Moments&amp; m, OutputArray hu)"><code class="xref ocv ocv-func docutils literal"><span class="pre">HuMoments()</span></code></a> ) as follows (
+<img class="math" src="../../../_images/math/a4a22711db10ba4f6c1c70ad5f01fcc7f29a10ba.png" alt="A"/> denotes <code class="docutils literal"><span class="pre">object1</span></code>,:math:<cite>B</cite> denotes <code class="docutils literal"><span class="pre">object2</span></code> ):</p>
+<ul>
+<li><p class="first">method=CV_CONTOURS_MATCH_I1</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/72c212264668dbdf03e743d2ca64f3ba63808302.png" alt="I_1(A,B) =  \sum _{i=1...7}  \left |  \frac{1}{m^A_i} -  \frac{1}{m^B_i} \right |"/></p>
+</div></div></blockquote>
+</li>
+<li><p class="first">method=CV_CONTOURS_MATCH_I2</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/f7b2fcf190a007405193c89e59b81b5dc5d38bf3.png" alt="I_2(A,B) =  \sum _{i=1...7}  \left | m^A_i - m^B_i  \right |"/></p>
+</div></div></blockquote>
+</li>
+<li><p class="first">method=CV_CONTOURS_MATCH_I3</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/b0a0c0d9dafeaefa057bc9918ba39bc7fcc63c07.png" alt="I_3(A,B) =  \max _{i=1...7}  \frac{ \left| m^A_i - m^B_i \right| }{ \left| m^A_i \right| }"/></p>
+</div></div></blockquote>
+</li>
+</ul>
+<p>where</p>
+<div class="math">
+<p><img src="../../../_images/math/c1f831efacfd7a67b932397e643f2748a53d73d5.png" alt="\begin{array}{l} m^A_i =  \mathrm{sign} (h^A_i)  \cdot \log{h^A_i} \\ m^B_i =  \mathrm{sign} (h^B_i)  \cdot \log{h^B_i} \end{array}"/></p>
+</div><p>and
+<img class="math" src="../../../_images/math/5864a9408cc2cdf48f946958580030d934ee5b99.png" alt="h^A_i, h^B_i"/> are the Hu moments of
+<img class="math" src="../../../_images/math/a4a22711db10ba4f6c1c70ad5f01fcc7f29a10ba.png" alt="A"/> and
+<img class="math" src="../../../_images/math/a899bd9a55bd983bd0cd87dd2d1328f9eb72286b.png" alt="B"/> , respectively.</p>
+</div>
+<div class="section" id="pointpolygontest">
+<h2>pointPolygonTest<a class="headerlink" href="#pointpolygontest" title="Permalink to this headline">¶</a></h2>
+<p>Performs a point-in-contour test.</p>
+<dl class="function">
+<dt id="double pointPolygonTest(InputArray contour, Point2f pt, bool measureDist)">
+<strong>C++:</strong><code class="descname"> </code>double <code class="descname">pointPolygonTest</code><span class="sig-paren">(</span>InputArray <strong>contour</strong>, Point2f <strong>pt</strong>, bool <strong>measureDist</strong><span class="sig-paren">)</span><a class="headerlink" href="#double pointPolygonTest(InputArray contour, Point2f pt, bool measureDist)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.pointPolygonTest">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">pointPolygonTest</code><span class="sig-paren">(</span>contour, pt, measureDist<span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.pointPolygonTest" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="double cvPointPolygonTest(const CvArr* contour, CvPoint2D32f pt, int measure_dist)">
+<strong>C:</strong><code class="descname"> </code>double <code class="descname">cvPointPolygonTest</code><span class="sig-paren">(</span>const CvArr* <strong>contour</strong>, CvPoint2D32f <strong>pt</strong>, int <strong>measure_dist</strong><span class="sig-paren">)</span><a class="headerlink" href="#double cvPointPolygonTest(const CvArr* contour, CvPoint2D32f pt, int measure_dist)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.PointPolygonTest">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">PointPolygonTest</code><span class="sig-paren">(</span>contour, pt, measure_dist<span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#cv.PointPolygonTest" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>contour</strong> &#8211; Input contour.</li>
+<li><strong>pt</strong> &#8211; Point tested against the contour.</li>
+<li><strong>measureDist</strong> &#8211; If true, the function estimates the signed distance from the point to the nearest contour edge. Otherwise, the function only checks if the point is inside a contour or not.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function determines whether the
+point is inside a contour, outside, or lies on an edge (or coincides
+with a vertex). It returns positive (inside), negative (outside), or zero (on an edge) value,
+correspondingly. When <code class="docutils literal"><span class="pre">measureDist=false</span></code> , the return value
+is +1, -1, and 0, respectively. Otherwise, the return value
+is a signed distance between the point and the nearest contour
+edge.</p>
+<p>See below a sample output of the function where each image pixel is tested against the contour.</p>
+<img alt="../../../_images/pointpolygon.png" src="../../../_images/pointpolygon.png" />
+<table class="docutils citation" frame="void" id="fitzgibbon95" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[Fitzgibbon95]</a></td><td>Andrew W. Fitzgibbon, R.B.Fisher. <em>A Buyer&#8217;s Guide to Conic Fitting</em>. Proc.5th British Machine Vision Conference, Birmingham, pp. 513-522, 1995. The technique used for ellipse fitting is the first one described in this summary paper.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="hu62" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[Hu62]</a></td><td><ol class="first last upperalpha simple" start="13">
+<li>Hu. <em>Visual Pattern Recognition by Moment Invariants</em>, IRE Transactions on Information Theory, 8:2, pp. 179-187, 1962.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="sklansky82" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[Sklansky82]</a></td><td>Sklansky, J., <em>Finding the Convex Hull of a Simple Polygon</em>. PRL 1 $number, pp 79-83 (1982)</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="suzuki85" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[Suzuki85]</a></td><td>Suzuki, S. and Abe, K., <em>Topological Structural Analysis of Digitized Binary Images by Border Following</em>. CVGIP 30 1, pp 32-46 (1985)</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="tehchin89" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[TehChin89]</a></td><td>Teh, C.H. and Chin, R.T., <em>On the Detection of Dominant Points on Digital Curve</em>. PAMI 11 8, pp 859-872 (1989)</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Structural Analysis and Shape Descriptors</a><ul>
+<li><a class="reference internal" href="#moments">moments</a></li>
+<li><a class="reference internal" href="#humoments">HuMoments</a></li>
+<li><a class="reference internal" href="#findcontours">findContours</a></li>
+<li><a class="reference internal" href="#drawcontours">drawContours</a></li>
+<li><a class="reference internal" href="#approxpolydp">approxPolyDP</a></li>
+<li><a class="reference internal" href="#approxchains">ApproxChains</a></li>
+<li><a class="reference internal" href="#arclength">arcLength</a></li>
+<li><a class="reference internal" href="#boundingrect">boundingRect</a></li>
+<li><a class="reference internal" href="#contourarea">contourArea</a></li>
+<li><a class="reference internal" href="#convexhull">convexHull</a></li>
+<li><a class="reference internal" href="#convexitydefects">convexityDefects</a></li>
+<li><a class="reference internal" href="#fitellipse">fitEllipse</a></li>
+<li><a class="reference internal" href="#fitline">fitLine</a></li>
+<li><a class="reference internal" href="#iscontourconvex">isContourConvex</a></li>
+<li><a class="reference internal" href="#minarearect">minAreaRect</a></li>
+<li><a class="reference internal" href="#minenclosingcircle">minEnclosingCircle</a></li>
+<li><a class="reference internal" href="#matchshapes">matchShapes</a></li>
+<li><a class="reference internal" href="#pointpolygontest">pointPolygonTest</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="histograms.html"
+                        title="previous chapter">Histograms</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="motion_analysis_and_object_tracking.html"
+                        title="next chapter">Motion Analysis and Object Tracking</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/imgproc/doc/structural_analysis_and_shape_descriptors.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="motion_analysis_and_object_tracking.html" title="Motion Analysis and Object Tracking"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="histograms.html" title="Histograms"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="imgproc.html" >imgproc. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

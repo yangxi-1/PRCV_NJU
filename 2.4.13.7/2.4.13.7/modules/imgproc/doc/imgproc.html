@@ -1,0 +1,280 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>imgproc. Image Processing &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="OpenCV API Reference" href="../../refman.html" />
+    <link rel="next" title="Image Filtering" href="filtering.html" />
+    <link rel="prev" title="OpenGL interoperability" href="../../core/doc/opengl_interop.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="filtering.html" title="Image Filtering"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../../core/doc/opengl_interop.html" title="OpenGL interoperability"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" accesskey="U">OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="imgproc-image-processing">
+<h1>imgproc. Image Processing<a class="headerlink" href="#imgproc-image-processing" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="filtering.html">Image Filtering</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#basecolumnfilter">BaseColumnFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#basefilter">BaseFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#baserowfilter">BaseRowFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#filterengine">FilterEngine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#bilateralfilter">bilateralFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#adaptivebilateralfilter">adaptiveBilateralFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#blur">blur</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#borderinterpolate">borderInterpolate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#boxfilter">boxFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#buildpyramid">buildPyramid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#copymakeborder">copyMakeBorder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#createboxfilter">createBoxFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#createderivfilter">createDerivFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#creategaussianfilter">createGaussianFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#createlinearfilter">createLinearFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#createmorphologyfilter">createMorphologyFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#createseparablelinearfilter">createSeparableLinearFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#dilate">dilate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#erode">erode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#filter2d">filter2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#gaussianblur">GaussianBlur</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#getderivkernels">getDerivKernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#getgaussiankernel">getGaussianKernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#getkerneltype">getKernelType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#getstructuringelement">getStructuringElement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#medianblur">medianBlur</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#morphologyex">morphologyEx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#laplacian">Laplacian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#pyrdown">pyrDown</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#pyrup">pyrUp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#pyrmeanshiftfiltering">pyrMeanShiftFiltering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#sepfilter2d">sepFilter2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#smooth">Smooth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#sobel">Sobel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html#scharr">Scharr</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="geometric_transformations.html">Geometric Image Transformations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="geometric_transformations.html#convertmaps">convertMaps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometric_transformations.html#getaffinetransform">getAffineTransform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometric_transformations.html#getperspectivetransform">getPerspectiveTransform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometric_transformations.html#getrectsubpix">getRectSubPix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometric_transformations.html#getrotationmatrix2d">getRotationMatrix2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometric_transformations.html#invertaffinetransform">invertAffineTransform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometric_transformations.html#linearpolar">LinearPolar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometric_transformations.html#logpolar">LogPolar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometric_transformations.html#remap">remap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometric_transformations.html#resize">resize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometric_transformations.html#warpaffine">warpAffine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometric_transformations.html#warpperspective">warpPerspective</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometric_transformations.html#initundistortrectifymap">initUndistortRectifyMap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometric_transformations.html#getdefaultnewcameramatrix">getDefaultNewCameraMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometric_transformations.html#undistort">undistort</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometric_transformations.html#undistortpoints">undistortPoints</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="miscellaneous_transformations.html">Miscellaneous Image Transformations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="miscellaneous_transformations.html#adaptivethreshold">adaptiveThreshold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="miscellaneous_transformations.html#cvtcolor">cvtColor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="miscellaneous_transformations.html#distancetransform">distanceTransform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="miscellaneous_transformations.html#floodfill">floodFill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="miscellaneous_transformations.html#integral">integral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="miscellaneous_transformations.html#threshold">threshold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="miscellaneous_transformations.html#watershed">watershed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="miscellaneous_transformations.html#grabcut">grabCut</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="histograms.html">Histograms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#calchist">calcHist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#calcbackproject">calcBackProject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#comparehist">compareHist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#emd">EMD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#equalizehist">equalizeHist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#extra-histogram-functions-c-api">Extra Histogram Functions (C API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#calcbackprojectpatch">CalcBackProjectPatch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#calcprobdensity">CalcProbDensity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#clearhist">ClearHist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#copyhist">CopyHist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#createhist">CreateHist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#getminmaxhistvalue">GetMinMaxHistValue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#makehistheaderforarray">MakeHistHeaderForArray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#normalizehist">NormalizeHist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#releasehist">ReleaseHist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#sethistbinranges">SetHistBinRanges</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#threshhist">ThreshHist</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html">Structural Analysis and Shape Descriptors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html#moments">moments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html#humoments">HuMoments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html#findcontours">findContours</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html#drawcontours">drawContours</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html#approxpolydp">approxPolyDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html#approxchains">ApproxChains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html#arclength">arcLength</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html#boundingrect">boundingRect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html#contourarea">contourArea</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html#convexhull">convexHull</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html#convexitydefects">convexityDefects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html#fitellipse">fitEllipse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html#fitline">fitLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html#iscontourconvex">isContourConvex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html#minarearect">minAreaRect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html#minenclosingcircle">minEnclosingCircle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html#matchshapes">matchShapes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural_analysis_and_shape_descriptors.html#pointpolygontest">pointPolygonTest</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="motion_analysis_and_object_tracking.html">Motion Analysis and Object Tracking</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#accumulate">accumulate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#accumulatesquare">accumulateSquare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#accumulateproduct">accumulateProduct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#accumulateweighted">accumulateWeighted</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#phasecorrelate">phaseCorrelate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis_and_object_tracking.html#createhanningwindow">createHanningWindow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="feature_detection.html">Feature Detection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection.html#canny">Canny</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection.html#cornereigenvalsandvecs">cornerEigenValsAndVecs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection.html#cornerharris">cornerHarris</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection.html#cornermineigenval">cornerMinEigenVal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection.html#cornersubpix">cornerSubPix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection.html#goodfeaturestotrack">goodFeaturesToTrack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection.html#houghcircles">HoughCircles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection.html#houghlines">HoughLines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection.html#houghlinesp">HoughLinesP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection.html#precornerdetect">preCornerDetect</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="object_detection.html">Object Detection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="object_detection.html#matchtemplate">matchTemplate</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../../core/doc/opengl_interop.html"
+                        title="previous chapter">OpenGL interoperability</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="filtering.html"
+                        title="next chapter">Image Filtering</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/imgproc/doc/imgproc.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="filtering.html" title="Image Filtering"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../../core/doc/opengl_interop.html" title="OpenGL interoperability"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

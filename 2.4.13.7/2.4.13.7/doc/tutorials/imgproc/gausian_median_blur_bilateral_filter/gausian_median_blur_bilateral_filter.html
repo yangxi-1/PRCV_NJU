@@ -1,0 +1,447 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Smoothing Images &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="imgproc module. Image Processing" href="../table_of_content_imgproc/table_of_content_imgproc.html" />
+    <link rel="next" title="Eroding and Dilating" href="../erosion_dilatation/erosion_dilatation.html" />
+    <link rel="prev" title="imgproc module. Image Processing" href="../table_of_content_imgproc/table_of_content_imgproc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../erosion_dilatation/erosion_dilatation.html" title="Eroding and Dilating"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../table_of_content_imgproc/table_of_content_imgproc.html" title="imgproc module. Image Processing"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_imgproc/table_of_content_imgproc.html" accesskey="U"><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="smoothing-images">
+<span id="smoothing"></span><h1>Smoothing Images<a class="headerlink" href="#smoothing-images" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to apply diverse linear filters to smooth images using OpenCV functions such as:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li><a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=blur#blur">blur</a></li>
+<li><a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=gaussianblur#gaussianblur">GaussianBlur</a></li>
+<li><a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=medianblur#medianblur">medianBlur</a></li>
+<li><a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=bilateralfilter#bilateralfilter">bilateralFilter</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The explanation below belongs to the book <a class="reference external" href="http://szeliski.org/Book/">Computer Vision: Algorithms and Applications</a>  by Richard Szeliski and to <em>LearningOpenCV</em></p>
+</div>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first"><em>Smoothing</em>, also called <em>blurring</em>, is a simple and frequently used image processing operation.</p>
+</li>
+<li><p class="first">There are many reasons for smoothing. In this tutorial we will focus on smoothing in order to reduce noise (other uses will be seen in the following tutorials).</p>
+</li>
+<li><p class="first">To perform a smoothing operation we will apply a <em>filter</em> to our image. The most common type of filters are <em>linear</em>, in which an output pixel&#8217;s value (i.e. <img class="math" src="../../../../_images/math/5dc5f58762c5b64b48fbe949b82d7b27ecc35524.png" alt="g(i,j)"/>) is determined as a weighted sum of input pixel values (i.e. <img class="math" src="../../../../_images/math/bcdde81bd11cb553b72d2bcd68690628abae0e7e.png" alt="f(i+k,j+l)"/>) :</p>
+<div class="math">
+<p><img src="../../../../_images/math/63c07a05324e75528d0c1cf509df4519ae9f7e9e.png" alt="g(i,j) = \sum_{k,l} f(i+k, j+l) h(k,l)"/></p>
+</div><p><img class="math" src="../../../../_images/math/19f1de2f5e3bad1b43ee538f375dc1f343b1625d.png" alt="h(k,l)"/> is called the <em>kernel</em>, which is nothing more than the coefficients of the filter.</p>
+<p>It helps to visualize a <em>filter</em> as a window of coefficients sliding across the image.</p>
+</li>
+<li><p class="first">There are many kind of filters, here we will mention the most used:</p>
+</li>
+</ul>
+</div>
+<div class="section" id="normalized-box-filter">
+<h3>Normalized Box Filter<a class="headerlink" href="#normalized-box-filter" title="Permalink to this headline">¶</a></h3>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first">This filter is the simplest of all! Each output pixel is the <em>mean</em> of its kernel neighbors ( all of them contribute with equal weights)</p>
+</li>
+<li><p class="first">The kernel is below:</p>
+<div class="math">
+<p><img src="../../../../_images/math/f7b4a5accdf78ae5ba98bb6a06655370059cbf03.png" alt="K = \dfrac{1}{K_{width} \cdot K_{height}} \begin{bmatrix}
+    1 &amp; 1 &amp; 1 &amp; ... &amp; 1 \\
+    1 &amp; 1 &amp; 1 &amp; ... &amp; 1 \\
+    . &amp; . &amp; . &amp; ... &amp; 1 \\
+    . &amp; . &amp; . &amp; ... &amp; 1 \\
+    1 &amp; 1 &amp; 1 &amp; ... &amp; 1
+   \end{bmatrix}"/></p>
+</div></li>
+</ul>
+</div>
+</div>
+<div class="section" id="gaussian-filter">
+<h3>Gaussian Filter<a class="headerlink" href="#gaussian-filter" title="Permalink to this headline">¶</a></h3>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first">Probably the most useful filter (although not the fastest). Gaussian filtering is done by convolving each point in the input array with a <em>Gaussian kernel</em> and then summing them all to produce the output array.</p>
+</li>
+<li><p class="first">Just to make the picture clearer, remember how a 1D Gaussian kernel look like?</p>
+<img alt="../../../../_images/Smoothing_Tutorial_theory_gaussian_0.jpg" class="align-center" src="../../../../_images/Smoothing_Tutorial_theory_gaussian_0.jpg" />
+<p>Assuming that an image is 1D, you can notice that the pixel located in the middle would have the biggest weight. The weight of its neighbors decreases as the spatial distance between them and the center pixel increases.</p>
+</li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Remember that a 2D Gaussian can be represented as :</p>
+<div class="math">
+<p><img src="../../../../_images/math/1fafabfdfb9d1057c61a51d9dcf97ca958262aeb.png" alt="G_{0}(x, y) = A  e^{ \dfrac{ -(x - \mu_{x})^{2} }{ 2\sigma^{2}_{x} } +  \dfrac{ -(y - \mu_{y})^{2} }{ 2\sigma^{2}_{y} } }"/></p>
+</div><p class="last">where <img class="math" src="../../../../_images/math/ec805c307200ba71431f930eed5f64e00233c713.png" alt="\mu"/> is the mean (the peak) and <img class="math" src="../../../../_images/math/d870df83c0f933473f427ed5b844becd2622c551.png" alt="\sigma"/> represents the standard deviation (per each of the variables <img class="math" src="../../../../_images/math/275d1cfd2234a22c171bcf9ee37dd451fffd5e1b.png" alt="x"/> and <img class="math" src="../../../../_images/math/8be61bd3f15e9c74771dd331d4fee2be8dbe30d5.png" alt="y"/>)</p>
+</div>
+</div>
+<div class="section" id="median-filter">
+<h3>Median Filter<a class="headerlink" href="#median-filter" title="Permalink to this headline">¶</a></h3>
+<p>The median filter run through each element of the signal (in this case the image) and replace each pixel with the <strong>median</strong> of its neighboring pixels (located in a square neighborhood around the evaluated pixel).</p>
+</div>
+<div class="section" id="bilateral-filter">
+<h3>Bilateral Filter<a class="headerlink" href="#bilateral-filter" title="Permalink to this headline">¶</a></h3>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>So far, we have explained some filters which main goal is to <em>smooth</em> an input image. However, sometimes the filters do not only dissolve the noise, but also smooth away the <em>edges</em>. To avoid this (at certain extent at least), we can use a bilateral filter.</li>
+<li>In an analogous way as the Gaussian filter,  the bilateral filter also considers the neighboring pixels with  weights assigned to each of them. These weights have two components, the first of which is the same weighting used by the Gaussian filter. The second component takes into account the difference in intensity between the neighboring pixels and the evaluated one.</li>
+<li>For a more detailed explanation you can check <a class="reference external" href="http://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/MANDUCHI1/Bilateral_Filtering.html">this link</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first"><strong>What does this program do?</strong></p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Loads an image</li>
+<li>Applies 4 different kinds of filters (explained in Theory) and show the filtered images sequentially</li>
+</ul>
+</div>
+</li>
+<li><p class="first"><strong>Downloadable code</strong>:
+Click <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/tutorial_code/ImgProc/Smoothing.cpp">here</a></p>
+</li>
+<li><p class="first"><strong>Code at glance:</strong></p>
+</li>
+</ul>
+</div>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;opencv2/imgproc/imgproc.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/highgui/highgui.hpp&quot;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="c1">/// Global Variables</span>
+<span class="kt">int</span> <span class="n">DELAY_CAPTION</span> <span class="o">=</span> <span class="mi">1500</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">DELAY_BLUR</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">MAX_KERNEL_LENGTH</span> <span class="o">=</span> <span class="mi">31</span><span class="p">;</span>
+
+<span class="n">Mat</span> <span class="n">src</span><span class="p">;</span> <span class="n">Mat</span> <span class="n">dst</span><span class="p">;</span>
+<span class="kt">char</span> <span class="n">window_name</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&quot;Filter Demo 1&quot;</span><span class="p">;</span>
+
+<span class="c1">/// Function headers</span>
+<span class="kt">int</span> <span class="nf">display_caption</span><span class="p">(</span> <span class="kt">char</span><span class="o">*</span> <span class="n">caption</span> <span class="p">);</span>
+<span class="kt">int</span> <span class="nf">display_dst</span><span class="p">(</span> <span class="kt">int</span> <span class="n">delay</span> <span class="p">);</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * function main</span>
+<span class="cm"> */</span>
+ <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+ <span class="p">{</span>
+   <span class="n">namedWindow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+
+   <span class="c1">/// Load the source image</span>
+   <span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="s">&quot;../images/lena.jpg&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+
+   <span class="k">if</span><span class="p">(</span> <span class="n">display_caption</span><span class="p">(</span> <span class="s">&quot;Original Image&quot;</span> <span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+
+   <span class="n">dst</span> <span class="o">=</span> <span class="n">src</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+   <span class="k">if</span><span class="p">(</span> <span class="n">display_dst</span><span class="p">(</span> <span class="n">DELAY_CAPTION</span> <span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+
+   <span class="c1">/// Applying Homogeneous blur</span>
+   <span class="k">if</span><span class="p">(</span> <span class="n">display_caption</span><span class="p">(</span> <span class="s">&quot;Homogeneous Blur&quot;</span> <span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+
+   <span class="k">for</span> <span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">MAX_KERNEL_LENGTH</span><span class="p">;</span> <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span> <span class="p">)</span>
+       <span class="p">{</span> <span class="n">blur</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span> <span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="p">),</span> <span class="n">Point</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">);</span>
+         <span class="k">if</span><span class="p">(</span> <span class="n">display_dst</span><span class="p">(</span> <span class="n">DELAY_BLUR</span> <span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+    <span class="c1">/// Applying Gaussian blur</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">display_caption</span><span class="p">(</span> <span class="s">&quot;Gaussian Blur&quot;</span> <span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="k">for</span> <span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">MAX_KERNEL_LENGTH</span><span class="p">;</span> <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span> <span class="p">)</span>
+        <span class="p">{</span> <span class="n">GaussianBlur</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span> <span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+          <span class="k">if</span><span class="p">(</span> <span class="n">display_dst</span><span class="p">(</span> <span class="n">DELAY_BLUR</span> <span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+     <span class="c1">/// Applying Median blur</span>
+     <span class="k">if</span><span class="p">(</span> <span class="n">display_caption</span><span class="p">(</span> <span class="s">&quot;Median Blur&quot;</span> <span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+
+     <span class="k">for</span> <span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">MAX_KERNEL_LENGTH</span><span class="p">;</span> <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span> <span class="p">)</span>
+         <span class="p">{</span> <span class="n">medianBlur</span> <span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">i</span> <span class="p">);</span>
+           <span class="k">if</span><span class="p">(</span> <span class="n">display_dst</span><span class="p">(</span> <span class="n">DELAY_BLUR</span> <span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+     <span class="c1">/// Applying Bilateral Filter</span>
+     <span class="k">if</span><span class="p">(</span> <span class="n">display_caption</span><span class="p">(</span> <span class="s">&quot;Bilateral Blur&quot;</span> <span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+
+     <span class="k">for</span> <span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">MAX_KERNEL_LENGTH</span><span class="p">;</span> <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span> <span class="p">)</span>
+         <span class="p">{</span> <span class="n">bilateralFilter</span> <span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">i</span><span class="o">/</span><span class="mi">2</span> <span class="p">);</span>
+           <span class="k">if</span><span class="p">(</span> <span class="n">display_dst</span><span class="p">(</span> <span class="n">DELAY_BLUR</span> <span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+     <span class="c1">/// Wait until user press a key</span>
+     <span class="n">display_caption</span><span class="p">(</span> <span class="s">&quot;End: Press a key!&quot;</span> <span class="p">);</span>
+
+     <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+ <span class="p">}</span>
+
+ <span class="kt">int</span> <span class="nf">display_caption</span><span class="p">(</span> <span class="kt">char</span><span class="o">*</span> <span class="n">caption</span> <span class="p">)</span>
+ <span class="p">{</span>
+   <span class="n">dst</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">src</span><span class="p">.</span><span class="n">type</span><span class="p">()</span> <span class="p">);</span>
+   <span class="n">putText</span><span class="p">(</span> <span class="n">dst</span><span class="p">,</span> <span class="n">caption</span><span class="p">,</span>
+            <span class="n">Point</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span>
+            <span class="n">CV_FONT_HERSHEY_COMPLEX</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span> <span class="p">);</span>
+
+   <span class="n">imshow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">dst</span> <span class="p">);</span>
+   <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">waitKey</span><span class="p">(</span> <span class="n">DELAY_CAPTION</span> <span class="p">);</span>
+   <span class="k">if</span><span class="p">(</span> <span class="n">c</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kt">int</span> <span class="nf">display_dst</span><span class="p">(</span> <span class="kt">int</span> <span class="n">delay</span> <span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">imshow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">dst</span> <span class="p">);</span>
+    <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">waitKey</span> <span class="p">(</span> <span class="n">delay</span> <span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">c</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Let&#8217;s check the OpenCV functions that involve only the smoothing procedure, since the rest is already known by now.</p>
+</li>
+<li><p class="first"><strong>Normalized Block Filter:</strong></p>
+<p>OpenCV offers the function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=blur#blur">blur</a> to perform smoothing with this filter.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">for</span> <span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">MAX_KERNEL_LENGTH</span><span class="p">;</span> <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span> <span class="p">)</span>
+    <span class="p">{</span> <span class="n">blur</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span> <span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="p">),</span> <span class="n">Point</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">);</span>
+      <span class="k">if</span><span class="p">(</span> <span class="n">display_dst</span><span class="p">(</span> <span class="n">DELAY_BLUR</span> <span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>We specify 4 arguments (more details, check the Reference):</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li><em>src</em>: Source image</li>
+<li><em>dst</em>: Destination image</li>
+<li><em>Size( w,h )</em>: Defines the size of the kernel to be used ( of width <em>w</em> pixels and height <em>h</em> pixels)</li>
+<li><em>Point(-1, -1)</em>: Indicates where the anchor point (the pixel evaluated) is located with respect to the neighborhood. If there is a negative value, then the center of the kernel is considered the anchor point.</li>
+</ul>
+</div>
+</li>
+<li><p class="first"><strong>Gaussian Filter:</strong></p>
+<p>It is performed by the function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=gaussianblur#gaussianblur">GaussianBlur</a> :</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">for</span> <span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">MAX_KERNEL_LENGTH</span><span class="p">;</span> <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span> <span class="p">)</span>
+    <span class="p">{</span> <span class="n">GaussianBlur</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span> <span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+      <span class="k">if</span><span class="p">(</span> <span class="n">display_dst</span><span class="p">(</span> <span class="n">DELAY_BLUR</span> <span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Here we use 4 arguments (more details, check the OpenCV reference):</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li><em>src</em>: Source image</li>
+<li><em>dst</em>: Destination image</li>
+<li><em>Size(w, h)</em>: The size of the kernel to be used (the neighbors to be considered). <img class="math" src="../../../../_images/math/b812b344d3aac7810b0e17bd7dae12f997bea67f.png" alt="w"/> and <img class="math" src="../../../../_images/math/151270ad08aafdf251f1bcdc9c456c49f371203f.png" alt="h"/> have to be odd and positive numbers otherwise thi size will be calculated using the <img class="math" src="../../../../_images/math/c8af017b022331c9c84693f51ad3cd94258879db.png" alt="\sigma_{x}"/> and <img class="math" src="../../../../_images/math/0ff7b5eae1591a8f8319a3a28bfaf459bc088233.png" alt="\sigma_{y}"/> arguments.</li>
+<li><img class="math" src="../../../../_images/math/c8af017b022331c9c84693f51ad3cd94258879db.png" alt="\sigma_{x}"/>: The standard deviation in x. Writing <img class="math" src="../../../../_images/math/f55b2cb61596a4cb87a860cfc3657cdb56b9edba.png" alt="0"/> implies that <img class="math" src="../../../../_images/math/c8af017b022331c9c84693f51ad3cd94258879db.png" alt="\sigma_{x}"/> is calculated using kernel size.</li>
+<li><img class="math" src="../../../../_images/math/0ff7b5eae1591a8f8319a3a28bfaf459bc088233.png" alt="\sigma_{y}"/>: The standard deviation in y. Writing <img class="math" src="../../../../_images/math/f55b2cb61596a4cb87a860cfc3657cdb56b9edba.png" alt="0"/> implies that <img class="math" src="../../../../_images/math/0ff7b5eae1591a8f8319a3a28bfaf459bc088233.png" alt="\sigma_{y}"/> is calculated using kernel size.</li>
+</ul>
+</div>
+</li>
+<li><p class="first"><strong>Median Filter:</strong></p>
+<p>This filter is provided by the <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=medianblur#medianblur">medianBlur</a> function:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">for</span> <span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">MAX_KERNEL_LENGTH</span><span class="p">;</span> <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span> <span class="p">)</span>
+    <span class="p">{</span> <span class="n">medianBlur</span> <span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">i</span> <span class="p">);</span>
+      <span class="k">if</span><span class="p">(</span> <span class="n">display_dst</span><span class="p">(</span> <span class="n">DELAY_BLUR</span> <span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>We use three arguments:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li><em>src</em>: Source image</li>
+<li><em>dst</em>: Destination image, must be the same type as <em>src</em></li>
+<li><em>i</em>: Size of the kernel (only one because we use a square window). Must be odd.</li>
+</ul>
+</div>
+</li>
+<li><p class="first"><strong>Bilateral Filter</strong></p>
+<p>Provided by OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=bilateralfilter#bilateralfilter">bilateralFilter</a></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">for</span> <span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">MAX_KERNEL_LENGTH</span><span class="p">;</span> <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span> <span class="p">)</span>
+    <span class="p">{</span> <span class="n">bilateralFilter</span> <span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">i</span><span class="o">/</span><span class="mi">2</span> <span class="p">);</span>
+      <span class="k">if</span><span class="p">(</span> <span class="n">display_dst</span><span class="p">(</span> <span class="n">DELAY_BLUR</span> <span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>We use 5 arguments:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li><em>src</em>: Source image</li>
+<li><em>dst</em>: Destination image</li>
+<li><em>d</em>: The diameter of each pixel neighborhood.</li>
+<li><img class="math" src="../../../../_images/math/c38acc72885d6543dd0c9bf2758025f3dcfcefe0.png" alt="\sigma_{Color}"/>: Standard deviation in the color space.</li>
+<li><img class="math" src="../../../../_images/math/444e5713c5de5dc7ae25e4c6cca47304b09eacde.png" alt="\sigma_{Space}"/>: Standard deviation in the coordinate space (in pixel terms)</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first">The code opens an image (in this case <em>lena.jpg</em>) and display it under the effects of the 4 filters explained.</p>
+</li>
+<li><p class="first">Here is a snapshot of the image smoothed using <em>medianBlur</em>:</p>
+<img alt="Smoothing with a median filter" class="align-center" src="../../../../_images/Smoothing_Tutorial_Result_Median_Filter.jpg" />
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Smoothing Images</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a><ul>
+<li><a class="reference internal" href="#normalized-box-filter">Normalized Box Filter</a></li>
+<li><a class="reference internal" href="#gaussian-filter">Gaussian Filter</a></li>
+<li><a class="reference internal" href="#median-filter">Median Filter</a></li>
+<li><a class="reference internal" href="#bilateral-filter">Bilateral Filter</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#results">Results</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../table_of_content_imgproc/table_of_content_imgproc.html"
+                        title="previous chapter"><em>imgproc</em> module. Image Processing</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../erosion_dilatation/erosion_dilatation.html"
+                        title="next chapter">Eroding and Dilating</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/imgproc/gausian_median_blur_bilateral_filter/gausian_median_blur_bilateral_filter.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../erosion_dilatation/erosion_dilatation.html" title="Eroding and Dilating"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../table_of_content_imgproc/table_of_content_imgproc.html" title="imgproc module. Image Processing"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_imgproc/table_of_content_imgproc.html" ><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

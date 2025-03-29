@@ -1,0 +1,528 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Common Interfaces of Generic Descriptor Matchers &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="legacy. Deprecated stuff" href="legacy.html" />
+    <link rel="next" title="ocl. OpenCL-accelerated Computer Vision" href="../../ocl/doc/ocl.html" />
+    <link rel="prev" title="Common Interfaces of Descriptor Extractors" href="common_interfaces_of_descriptor_extractors.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../ocl/doc/ocl.html" title="ocl. OpenCL-accelerated Computer Vision"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="common_interfaces_of_descriptor_extractors.html" title="Common Interfaces of Descriptor Extractors"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="legacy.html" accesskey="U">legacy. Deprecated stuff</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="common-interfaces-of-generic-descriptor-matchers">
+<h1>Common Interfaces of Generic Descriptor Matchers<a class="headerlink" href="#common-interfaces-of-generic-descriptor-matchers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="onewaydescriptorbase">
+<h2>OneWayDescriptorBase<a class="headerlink" href="#onewaydescriptorbase" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="OneWayDescriptorBase">
+<em class="property">class </em><code class="descname">OneWayDescriptorBase</code><a class="headerlink" href="#OneWayDescriptorBase" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class encapsulates functionality for training/loading a set of one way descriptors
+and finding the nearest closest descriptor to an input feature.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">OneWayDescriptorBase</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="c1">// creates an instance of OneWayDescriptor from a set of training files</span>
+    <span class="c1">// - patch_size: size of the input (large) patch</span>
+    <span class="c1">// - pose_count: the number of poses to generate for each descriptor</span>
+    <span class="c1">// - train_path: path to training files</span>
+    <span class="c1">// - pca_config: the name of the file that contains PCA for small patches (2 times smaller</span>
+    <span class="c1">// than patch_size each dimension</span>
+    <span class="c1">// - pca_hr_config: the name of the file that contains PCA for large patches (of patch_size size)</span>
+    <span class="c1">// - pca_desc_config: the name of the file that contains descriptors of PCA components</span>
+    <span class="n">OneWayDescriptorBase</span><span class="p">(</span><span class="n">CvSize</span> <span class="n">patch_size</span><span class="p">,</span> <span class="kt">int</span> <span class="n">pose_count</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">train_path</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">pca_config</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                        <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">pca_hr_config</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">pca_desc_config</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="kt">int</span> <span class="n">pyr_levels</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="kt">int</span> <span class="n">pca_dim_high</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="kt">int</span> <span class="n">pca_dim_low</span> <span class="o">=</span> <span class="mi">100</span><span class="p">);</span>
+
+    <span class="n">OneWayDescriptorBase</span><span class="p">(</span><span class="n">CvSize</span> <span class="n">patch_size</span><span class="p">,</span> <span class="kt">int</span> <span class="n">pose_count</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">pca_filename</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">train_path</span> <span class="o">=</span> <span class="n">string</span><span class="p">(),</span> <span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">images_list</span> <span class="o">=</span> <span class="n">string</span><span class="p">(),</span>
+                        <span class="kt">float</span> <span class="n">_scale_min</span> <span class="o">=</span> <span class="mf">0.7f</span><span class="p">,</span> <span class="kt">float</span> <span class="n">_scale_max</span><span class="o">=</span><span class="mf">1.5f</span><span class="p">,</span> <span class="kt">float</span> <span class="n">_scale_step</span><span class="o">=</span><span class="mf">1.2f</span><span class="p">,</span> <span class="kt">int</span> <span class="n">pyr_levels</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="kt">int</span> <span class="n">pca_dim_high</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="kt">int</span> <span class="n">pca_dim_low</span> <span class="o">=</span> <span class="mi">100</span><span class="p">);</span>
+
+
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">OneWayDescriptorBase</span><span class="p">();</span>
+    <span class="kt">void</span> <span class="nf">clear</span> <span class="p">();</span>
+
+
+    <span class="c1">// Allocate: allocates memory for a given number of descriptors</span>
+    <span class="kt">void</span> <span class="nf">Allocate</span><span class="p">(</span><span class="kt">int</span> <span class="n">train_feature_count</span><span class="p">);</span>
+
+    <span class="c1">// AllocatePCADescriptors: allocates memory for pca descriptors</span>
+    <span class="kt">void</span> <span class="nf">AllocatePCADescriptors</span><span class="p">();</span>
+
+    <span class="c1">// returns patch size</span>
+    <span class="n">CvSize</span> <span class="nf">GetPatchSize</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">m_patch_size</span><span class="p">;};</span>
+    <span class="c1">// returns the number of poses for each descriptor</span>
+    <span class="kt">int</span> <span class="nf">GetPoseCount</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">m_pose_count</span><span class="p">;};</span>
+
+    <span class="c1">// returns the number of pyramid levels</span>
+    <span class="kt">int</span> <span class="nf">GetPyrLevels</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">m_pyr_levels</span><span class="p">;};</span>
+
+    <span class="c1">// returns the number of descriptors</span>
+    <span class="kt">int</span> <span class="nf">GetDescriptorCount</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">m_train_feature_count</span><span class="p">;};</span>
+
+    <span class="c1">// CreateDescriptorsFromImage: creates descriptors for each of the input features</span>
+    <span class="c1">// - src: input image</span>
+    <span class="c1">// - features: input features</span>
+    <span class="c1">// - pyr_levels: the number of pyramid levels</span>
+    <span class="kt">void</span> <span class="nf">CreateDescriptorsFromImage</span><span class="p">(</span><span class="n">IplImage</span><span class="o">*</span> <span class="n">src</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">features</span><span class="p">);</span>
+
+    <span class="c1">// CreatePCADescriptors: generates descriptors for PCA components, needed for fast generation of feature descriptors</span>
+    <span class="kt">void</span> <span class="nf">CreatePCADescriptors</span><span class="p">();</span>
+
+    <span class="c1">// returns a feature descriptor by feature index</span>
+    <span class="k">const</span> <span class="n">OneWayDescriptor</span><span class="o">*</span> <span class="nf">GetDescriptor</span><span class="p">(</span><span class="kt">int</span> <span class="n">desc_idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="o">&amp;</span><span class="n">m_descriptors</span><span class="p">[</span><span class="n">desc_idx</span><span class="p">];};</span>
+
+    <span class="c1">// FindDescriptor: finds the closest descriptor</span>
+    <span class="c1">// - patch: input image patch</span>
+    <span class="c1">// - desc_idx: output index of the closest descriptor to the input patch</span>
+    <span class="c1">// - pose_idx: output index of the closest pose of the closest descriptor to the input patch</span>
+    <span class="c1">// - distance: distance from the input patch to the closest feature pose</span>
+    <span class="c1">// - _scales: scales of the input patch for each descriptor</span>
+    <span class="c1">// - scale_ranges: input scales variation (float[2])</span>
+    <span class="kt">void</span> <span class="nf">FindDescriptor</span><span class="p">(</span><span class="n">IplImage</span><span class="o">*</span> <span class="n">patch</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">desc_idx</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">pose_idx</span><span class="p">,</span> <span class="kt">float</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">_scale</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">scale_ranges</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">// - patch: input image patch</span>
+    <span class="c1">// - n: number of the closest indexes</span>
+    <span class="c1">// - desc_idxs: output indexes of the closest descriptor to the input patch (n)</span>
+    <span class="c1">// - pose_idx: output indexes of the closest pose of the closest descriptor to the input patch (n)</span>
+    <span class="c1">// - distances: distance from the input patch to the closest feature pose (n)</span>
+    <span class="c1">// - _scales: scales of the input patch</span>
+    <span class="c1">// - scale_ranges: input scales variation (float[2])</span>
+    <span class="kt">void</span> <span class="nf">FindDescriptor</span><span class="p">(</span><span class="n">IplImage</span><span class="o">*</span> <span class="n">patch</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">desc_idxs</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">pose_idxs</span><span class="p">,</span>
+                        <span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">distances</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">_scales</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">scale_ranges</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">// FindDescriptor: finds the closest descriptor</span>
+    <span class="c1">// - src: input image</span>
+    <span class="c1">// - pt: center of the feature</span>
+    <span class="c1">// - desc_idx: output index of the closest descriptor to the input patch</span>
+    <span class="c1">// - pose_idx: output index of the closest pose of the closest descriptor to the input patch</span>
+    <span class="c1">// - distance: distance from the input patch to the closest feature pose</span>
+    <span class="kt">void</span> <span class="nf">FindDescriptor</span><span class="p">(</span><span class="n">IplImage</span><span class="o">*</span> <span class="n">src</span><span class="p">,</span> <span class="n">cv</span><span class="o">::</span><span class="n">Point2f</span> <span class="n">pt</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">desc_idx</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">pose_idx</span><span class="p">,</span> <span class="kt">float</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">// InitializePoses: generates random poses</span>
+    <span class="kt">void</span> <span class="nf">InitializePoses</span><span class="p">();</span>
+
+    <span class="c1">// InitializeTransformsFromPoses: generates 2x3 affine matrices from poses (initializes m_transforms)</span>
+    <span class="kt">void</span> <span class="nf">InitializeTransformsFromPoses</span><span class="p">();</span>
+
+    <span class="c1">// InitializePoseTransforms: subsequently calls InitializePoses and InitializeTransformsFromPoses</span>
+    <span class="kt">void</span> <span class="nf">InitializePoseTransforms</span><span class="p">();</span>
+
+    <span class="c1">// InitializeDescriptor: initializes a descriptor</span>
+    <span class="c1">// - desc_idx: descriptor index</span>
+    <span class="c1">// - train_image: image patch (ROI is supported)</span>
+    <span class="c1">// - feature_label: feature textual label</span>
+    <span class="kt">void</span> <span class="nf">InitializeDescriptor</span><span class="p">(</span><span class="kt">int</span> <span class="n">desc_idx</span><span class="p">,</span> <span class="n">IplImage</span><span class="o">*</span> <span class="n">train_image</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">feature_label</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">InitializeDescriptor</span><span class="p">(</span><span class="kt">int</span> <span class="n">desc_idx</span><span class="p">,</span> <span class="n">IplImage</span><span class="o">*</span> <span class="n">train_image</span><span class="p">,</span> <span class="k">const</span> <span class="n">KeyPoint</span><span class="o">&amp;</span> <span class="n">keypoint</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">feature_label</span><span class="p">);</span>
+
+    <span class="c1">// InitializeDescriptors: load features from an image and create descriptors for each of them</span>
+    <span class="kt">void</span> <span class="nf">InitializeDescriptors</span><span class="p">(</span><span class="n">IplImage</span><span class="o">*</span> <span class="n">train_image</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">features</span><span class="p">,</span>
+                              <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">feature_label</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="kt">int</span> <span class="n">desc_start_idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="c1">// Write: writes this object to a file storage</span>
+    <span class="c1">// - fs: output filestorage</span>
+    <span class="kt">void</span> <span class="nf">Write</span> <span class="p">(</span><span class="n">FileStorage</span> <span class="o">&amp;</span><span class="n">fs</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">// Read: reads OneWayDescriptorBase object from a file node</span>
+    <span class="c1">// - fn: input file node</span>
+    <span class="kt">void</span> <span class="nf">Read</span> <span class="p">(</span><span class="k">const</span> <span class="n">FileNode</span> <span class="o">&amp;</span><span class="n">fn</span><span class="p">);</span>
+
+    <span class="c1">// LoadPCADescriptors: loads PCA descriptors from a file</span>
+    <span class="c1">// - filename: input filename</span>
+    <span class="kt">int</span> <span class="nf">LoadPCADescriptors</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">filename</span><span class="p">);</span>
+
+    <span class="c1">// LoadPCADescriptors: loads PCA descriptors from a file node</span>
+    <span class="c1">// - fn: input file node</span>
+    <span class="kt">int</span> <span class="nf">LoadPCADescriptors</span><span class="p">(</span><span class="k">const</span> <span class="n">FileNode</span> <span class="o">&amp;</span><span class="n">fn</span><span class="p">);</span>
+
+    <span class="c1">// SavePCADescriptors: saves PCA descriptors to a file</span>
+    <span class="c1">// - filename: output filename</span>
+    <span class="kt">void</span> <span class="nf">SavePCADescriptors</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">filename</span><span class="p">);</span>
+
+    <span class="c1">// SavePCADescriptors: saves PCA descriptors to a file storage</span>
+    <span class="c1">// - fs: output file storage</span>
+    <span class="kt">void</span> <span class="nf">SavePCADescriptors</span><span class="p">(</span><span class="n">CvFileStorage</span><span class="o">*</span> <span class="n">fs</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">// GeneratePCA: calculate and save PCA components and descriptors</span>
+    <span class="c1">// - img_path: path to training PCA images directory</span>
+    <span class="c1">// - images_list: filename with filenames of training PCA images</span>
+    <span class="kt">void</span> <span class="nf">GeneratePCA</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">img_path</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">images_list</span><span class="p">,</span> <span class="kt">int</span> <span class="n">pose_count</span><span class="o">=</span><span class="mi">500</span><span class="p">);</span>
+
+    <span class="c1">// SetPCAHigh: sets the high resolution pca matrices (copied to internal structures)</span>
+    <span class="kt">void</span> <span class="nf">SetPCAHigh</span><span class="p">(</span><span class="n">CvMat</span><span class="o">*</span> <span class="n">avg</span><span class="p">,</span> <span class="n">CvMat</span><span class="o">*</span> <span class="n">eigenvectors</span><span class="p">);</span>
+
+    <span class="c1">// SetPCALow: sets the low resolution pca matrices (copied to internal structures)</span>
+    <span class="kt">void</span> <span class="nf">SetPCALow</span><span class="p">(</span><span class="n">CvMat</span><span class="o">*</span> <span class="n">avg</span><span class="p">,</span> <span class="n">CvMat</span><span class="o">*</span> <span class="n">eigenvectors</span><span class="p">);</span>
+
+    <span class="kt">int</span> <span class="nf">GetLowPCA</span><span class="p">(</span><span class="n">CvMat</span><span class="o">**</span> <span class="n">avg</span><span class="p">,</span> <span class="n">CvMat</span><span class="o">**</span> <span class="n">eigenvectors</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="o">*</span><span class="n">avg</span> <span class="o">=</span> <span class="n">m_pca_avg</span><span class="p">;</span>
+        <span class="o">*</span><span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">m_pca_eigenvectors</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">m_pca_dim_low</span><span class="p">;</span>
+    <span class="p">};</span>
+
+    <span class="kt">int</span> <span class="nf">GetPCADimLow</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">m_pca_dim_low</span><span class="p">;};</span>
+    <span class="kt">int</span> <span class="nf">GetPCADimHigh</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">m_pca_dim_high</span><span class="p">;};</span>
+
+    <span class="kt">void</span> <span class="nf">ConvertDescriptorsArrayToTree</span><span class="p">();</span> <span class="c1">// Converting pca_descriptors array to KD tree</span>
+
+    <span class="c1">// GetPCAFilename: get default PCA filename</span>
+    <span class="k">static</span> <span class="n">string</span> <span class="nf">GetPCAFilename</span> <span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s">&quot;pca.yml&quot;</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">empty</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_train_feature_count</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="o">?</span> <span class="nb">true</span> <span class="o">:</span> <span class="nb">false</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="k">protected</span><span class="o">:</span>
+    <span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="onewaydescriptormatcher">
+<h2>OneWayDescriptorMatcher<a class="headerlink" href="#onewaydescriptormatcher" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="OneWayDescriptorMatcher : public GenericDescriptorMatcher">
+<em class="property">class </em><code class="descname">OneWayDescriptorMatcher</code> : <em class="property">public</em> <code class="descname">GenericDescriptorMatcher</code><a class="headerlink" href="#OneWayDescriptorMatcher : public GenericDescriptorMatcher" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Wrapping class for computing, matching, and classifying descriptors using the
+<a class="reference internal" href="#OneWayDescriptorBase" title="class OneWayDescriptorBase"><code class="xref ocv ocv-class docutils literal"><span class="pre">OneWayDescriptorBase</span></code></a> class.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">OneWayDescriptorMatcher</span> <span class="o">:</span> <span class="k">public</span> <span class="n">GenericDescriptorMatcher</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">Params</span>
+    <span class="p">{</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">POSE_COUNT</span> <span class="o">=</span> <span class="mi">500</span><span class="p">;</span>
+        <span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">PATCH_WIDTH</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
+        <span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">PATCH_HEIGHT</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
+        <span class="k">static</span> <span class="kt">float</span> <span class="nf">GET_MIN_SCALE</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="mf">0.7f</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">static</span> <span class="kt">float</span> <span class="nf">GET_MAX_SCALE</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="mf">1.5f</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">static</span> <span class="kt">float</span> <span class="nf">GET_STEP_SCALE</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="mf">1.2f</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="n">Params</span><span class="p">(</span> <span class="kt">int</span> <span class="n">poseCount</span> <span class="o">=</span> <span class="n">POSE_COUNT</span><span class="p">,</span>
+                <span class="n">Size</span> <span class="n">patchSize</span> <span class="o">=</span> <span class="n">Size</span><span class="p">(</span><span class="n">PATCH_WIDTH</span><span class="p">,</span> <span class="n">PATCH_HEIGHT</span><span class="p">),</span>
+                <span class="n">string</span> <span class="n">pcaFilename</span> <span class="o">=</span> <span class="n">string</span><span class="p">(),</span>
+                <span class="n">string</span> <span class="n">trainPath</span> <span class="o">=</span> <span class="n">string</span><span class="p">(),</span> <span class="n">string</span> <span class="n">trainImagesList</span> <span class="o">=</span> <span class="n">string</span><span class="p">(),</span>
+                <span class="kt">float</span> <span class="n">minScale</span> <span class="o">=</span> <span class="n">GET_MIN_SCALE</span><span class="p">(),</span> <span class="kt">float</span> <span class="n">maxScale</span> <span class="o">=</span> <span class="n">GET_MAX_SCALE</span><span class="p">(),</span>
+                <span class="kt">float</span> <span class="n">stepScale</span> <span class="o">=</span> <span class="n">GET_STEP_SCALE</span><span class="p">()</span> <span class="p">);</span>
+
+        <span class="kt">int</span> <span class="n">poseCount</span><span class="p">;</span>
+        <span class="n">Size</span> <span class="n">patchSize</span><span class="p">;</span>
+        <span class="n">string</span> <span class="n">pcaFilename</span><span class="p">;</span>
+        <span class="n">string</span> <span class="n">trainPath</span><span class="p">;</span>
+        <span class="n">string</span> <span class="n">trainImagesList</span><span class="p">;</span>
+
+        <span class="kt">float</span> <span class="n">minScale</span><span class="p">,</span> <span class="n">maxScale</span><span class="p">,</span> <span class="n">stepScale</span><span class="p">;</span>
+    <span class="p">};</span>
+
+    <span class="n">OneWayDescriptorMatcher</span><span class="p">(</span> <span class="k">const</span> <span class="n">Params</span><span class="o">&amp;</span> <span class="n">params</span><span class="o">=</span><span class="n">Params</span><span class="p">()</span> <span class="p">);</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">OneWayDescriptorMatcher</span><span class="p">();</span>
+
+    <span class="kt">void</span> <span class="nf">initialize</span><span class="p">(</span> <span class="k">const</span> <span class="n">Params</span><span class="o">&amp;</span> <span class="n">params</span><span class="p">,</span> <span class="k">const</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">OneWayDescriptorBase</span><span class="o">&gt;&amp;</span> <span class="n">base</span><span class="o">=</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">OneWayDescriptorBase</span><span class="o">&gt;</span><span class="p">()</span> <span class="p">);</span>
+
+    <span class="c1">// Clears keypoints stored in collection and OneWayDescriptorBase</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">clear</span><span class="p">();</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">train</span><span class="p">();</span>
+
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">isMaskSupported</span><span class="p">();</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">read</span><span class="p">(</span> <span class="k">const</span> <span class="n">FileNode</span> <span class="o">&amp;</span><span class="n">fn</span> <span class="p">);</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">write</span><span class="p">(</span> <span class="n">FileStorage</span><span class="o">&amp;</span> <span class="n">fs</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">GenericDescriptorMatcher</span><span class="o">&gt;</span> <span class="n">clone</span><span class="p">(</span> <span class="kt">bool</span> <span class="n">emptyTrainData</span><span class="o">=</span><span class="nb">false</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="k">protected</span><span class="o">:</span>
+    <span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="fernclassifier">
+<h2>FernClassifier<a class="headerlink" href="#fernclassifier" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="FernClassifier">
+<em class="property">class </em><code class="descname">FernClassifier</code><a class="headerlink" href="#FernClassifier" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">FernClassifier</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">FernClassifier</span><span class="p">();</span>
+    <span class="n">FernClassifier</span><span class="p">(</span><span class="k">const</span> <span class="n">FileNode</span><span class="o">&amp;</span> <span class="n">node</span><span class="p">);</span>
+    <span class="n">FernClassifier</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point2f</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">points</span><span class="p">,</span>
+                  <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;&amp;</span> <span class="n">refimgs</span><span class="p">,</span>
+                  <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">labels</span><span class="o">=</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span><span class="p">(),</span>
+                  <span class="kt">int</span> <span class="n">_nclasses</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_patchSize</span><span class="o">=</span><span class="n">PATCH_SIZE</span><span class="p">,</span>
+                  <span class="kt">int</span> <span class="n">_signatureSize</span><span class="o">=</span><span class="n">DEFAULT_SIGNATURE_SIZE</span><span class="p">,</span>
+                  <span class="kt">int</span> <span class="n">_nstructs</span><span class="o">=</span><span class="n">DEFAULT_STRUCTS</span><span class="p">,</span>
+                  <span class="kt">int</span> <span class="n">_structSize</span><span class="o">=</span><span class="n">DEFAULT_STRUCT_SIZE</span><span class="p">,</span>
+                  <span class="kt">int</span> <span class="n">_nviews</span><span class="o">=</span><span class="n">DEFAULT_VIEWS</span><span class="p">,</span>
+                  <span class="kt">int</span> <span class="n">_compressionMethod</span><span class="o">=</span><span class="n">COMPRESSION_NONE</span><span class="p">,</span>
+                  <span class="k">const</span> <span class="n">PatchGenerator</span><span class="o">&amp;</span> <span class="n">patchGenerator</span><span class="o">=</span><span class="n">PatchGenerator</span><span class="p">());</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">FernClassifier</span><span class="p">();</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">read</span><span class="p">(</span><span class="k">const</span> <span class="n">FileNode</span><span class="o">&amp;</span> <span class="n">n</span><span class="p">);</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">write</span><span class="p">(</span><span class="n">FileStorage</span><span class="o">&amp;</span> <span class="n">fs</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">name</span><span class="o">=</span><span class="n">String</span><span class="p">())</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">trainFromSingleView</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">image</span><span class="p">,</span>
+                                    <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">keypoints</span><span class="p">,</span>
+                                    <span class="kt">int</span> <span class="n">_patchSize</span><span class="o">=</span><span class="n">PATCH_SIZE</span><span class="p">,</span>
+                                    <span class="kt">int</span> <span class="n">_signatureSize</span><span class="o">=</span><span class="n">DEFAULT_SIGNATURE_SIZE</span><span class="p">,</span>
+                                    <span class="kt">int</span> <span class="n">_nstructs</span><span class="o">=</span><span class="n">DEFAULT_STRUCTS</span><span class="p">,</span>
+                                    <span class="kt">int</span> <span class="n">_structSize</span><span class="o">=</span><span class="n">DEFAULT_STRUCT_SIZE</span><span class="p">,</span>
+                                    <span class="kt">int</span> <span class="n">_nviews</span><span class="o">=</span><span class="n">DEFAULT_VIEWS</span><span class="p">,</span>
+                                    <span class="kt">int</span> <span class="n">_compressionMethod</span><span class="o">=</span><span class="n">COMPRESSION_NONE</span><span class="p">,</span>
+                                    <span class="k">const</span> <span class="n">PatchGenerator</span><span class="o">&amp;</span> <span class="n">patchGenerator</span><span class="o">=</span><span class="n">PatchGenerator</span><span class="p">());</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">train</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point2f</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">points</span><span class="p">,</span>
+                      <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;&amp;</span> <span class="n">refimgs</span><span class="p">,</span>
+                      <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">labels</span><span class="o">=</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span><span class="p">(),</span>
+                      <span class="kt">int</span> <span class="n">_nclasses</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_patchSize</span><span class="o">=</span><span class="n">PATCH_SIZE</span><span class="p">,</span>
+                      <span class="kt">int</span> <span class="n">_signatureSize</span><span class="o">=</span><span class="n">DEFAULT_SIGNATURE_SIZE</span><span class="p">,</span>
+                      <span class="kt">int</span> <span class="n">_nstructs</span><span class="o">=</span><span class="n">DEFAULT_STRUCTS</span><span class="p">,</span>
+                      <span class="kt">int</span> <span class="n">_structSize</span><span class="o">=</span><span class="n">DEFAULT_STRUCT_SIZE</span><span class="p">,</span>
+                      <span class="kt">int</span> <span class="n">_nviews</span><span class="o">=</span><span class="n">DEFAULT_VIEWS</span><span class="p">,</span>
+                      <span class="kt">int</span> <span class="n">_compressionMethod</span><span class="o">=</span><span class="n">COMPRESSION_NONE</span><span class="p">,</span>
+                      <span class="k">const</span> <span class="n">PatchGenerator</span><span class="o">&amp;</span> <span class="n">patchGenerator</span><span class="o">=</span><span class="n">PatchGenerator</span><span class="p">());</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="nf">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">img</span><span class="p">,</span> <span class="n">Point2f</span> <span class="n">kpt</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">signature</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="nf">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">patch</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">signature</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">clear</span><span class="p">();</span>
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">empty</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="nf">setVerbose</span><span class="p">(</span><span class="kt">bool</span> <span class="n">verbose</span><span class="p">);</span>
+
+    <span class="kt">int</span> <span class="nf">getClassCount</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="nf">getStructCount</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="nf">getStructSize</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="nf">getSignatureSize</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="nf">getCompressionMethod</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="n">Size</span> <span class="nf">getPatchSize</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="k">struct</span> <span class="n">Feature</span>
+    <span class="p">{</span>
+        <span class="n">uchar</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">;</span>
+        <span class="n">Feature</span><span class="p">()</span> <span class="o">:</span> <span class="n">x1</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">y1</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">x2</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">y2</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{}</span>
+        <span class="n">Feature</span><span class="p">(</span><span class="kt">int</span> <span class="n">_x1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_y1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_x2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_y2</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">x1</span><span class="p">((</span><span class="n">uchar</span><span class="p">)</span><span class="n">_x1</span><span class="p">),</span> <span class="n">y1</span><span class="p">((</span><span class="n">uchar</span><span class="p">)</span><span class="n">_y1</span><span class="p">),</span> <span class="n">x2</span><span class="p">((</span><span class="n">uchar</span><span class="p">)</span><span class="n">_x2</span><span class="p">),</span> <span class="n">y2</span><span class="p">((</span><span class="n">uchar</span><span class="p">)</span><span class="n">_y2</span><span class="p">)</span>
+        <span class="p">{}</span>
+        <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">_Tp</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="k">operator</span> <span class="p">()(</span><span class="k">const</span> <span class="n">Mat_</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;&amp;</span> <span class="n">patch</span><span class="p">)</span> <span class="k">const</span>
+        <span class="p">{</span> <span class="k">return</span> <span class="n">patch</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span><span class="n">x1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">patch</span><span class="p">(</span><span class="n">y2</span><span class="p">,</span> <span class="n">x2</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">enum</span>
+    <span class="p">{</span>
+        <span class="n">PATCH_SIZE</span> <span class="o">=</span> <span class="mi">31</span><span class="p">,</span>
+        <span class="n">DEFAULT_STRUCTS</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="n">DEFAULT_STRUCT_SIZE</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+        <span class="n">DEFAULT_VIEWS</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+        <span class="n">DEFAULT_SIGNATURE_SIZE</span> <span class="o">=</span> <span class="mi">176</span><span class="p">,</span>
+        <span class="n">COMPRESSION_NONE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">COMPRESSION_RANDOM_PROJ</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">COMPRESSION_PCA</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">DEFAULT_COMPRESSION_METHOD</span> <span class="o">=</span> <span class="n">COMPRESSION_NONE</span>
+    <span class="p">};</span>
+
+<span class="k">protected</span><span class="o">:</span>
+    <span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ferndescriptormatcher">
+<h2>FernDescriptorMatcher<a class="headerlink" href="#ferndescriptormatcher" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="FernDescriptorMatcher : public GenericDescriptorMatcher">
+<em class="property">class </em><code class="descname">FernDescriptorMatcher</code> : <em class="property">public</em> <code class="descname">GenericDescriptorMatcher</code><a class="headerlink" href="#FernDescriptorMatcher : public GenericDescriptorMatcher" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Wrapping class for computing, matching, and classifying descriptors using the
+<a class="reference internal" href="#FernClassifier" title="class FernClassifier"><code class="xref ocv ocv-class docutils literal"><span class="pre">FernClassifier</span></code></a> class.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">FernDescriptorMatcher</span> <span class="o">:</span> <span class="k">public</span> <span class="n">GenericDescriptorMatcher</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">Params</span>
+    <span class="p">{</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">Params</span><span class="p">(</span> <span class="kt">int</span> <span class="n">nclasses</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">patchSize</span><span class="o">=</span><span class="n">FernClassifier</span><span class="o">::</span><span class="n">PATCH_SIZE</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">signatureSize</span><span class="o">=</span><span class="n">FernClassifier</span><span class="o">::</span><span class="n">DEFAULT_SIGNATURE_SIZE</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">nstructs</span><span class="o">=</span><span class="n">FernClassifier</span><span class="o">::</span><span class="n">DEFAULT_STRUCTS</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">structSize</span><span class="o">=</span><span class="n">FernClassifier</span><span class="o">::</span><span class="n">DEFAULT_STRUCT_SIZE</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">nviews</span><span class="o">=</span><span class="n">FernClassifier</span><span class="o">::</span><span class="n">DEFAULT_VIEWS</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">compressionMethod</span><span class="o">=</span><span class="n">FernClassifier</span><span class="o">::</span><span class="n">COMPRESSION_NONE</span><span class="p">,</span>
+                <span class="k">const</span> <span class="n">PatchGenerator</span><span class="o">&amp;</span> <span class="n">patchGenerator</span><span class="o">=</span><span class="n">PatchGenerator</span><span class="p">()</span> <span class="p">);</span>
+
+        <span class="n">Params</span><span class="p">(</span> <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">filename</span> <span class="p">);</span>
+
+        <span class="kt">int</span> <span class="n">nclasses</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">patchSize</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">signatureSize</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">nstructs</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">structSize</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">nviews</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">compressionMethod</span><span class="p">;</span>
+        <span class="n">PatchGenerator</span> <span class="n">patchGenerator</span><span class="p">;</span>
+
+        <span class="n">string</span> <span class="n">filename</span><span class="p">;</span>
+    <span class="p">};</span>
+
+    <span class="n">FernDescriptorMatcher</span><span class="p">(</span> <span class="k">const</span> <span class="n">Params</span><span class="o">&amp;</span> <span class="n">params</span><span class="o">=</span><span class="n">Params</span><span class="p">()</span> <span class="p">);</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">FernDescriptorMatcher</span><span class="p">();</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">clear</span><span class="p">();</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">train</span><span class="p">();</span>
+
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">isMaskSupported</span><span class="p">();</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">read</span><span class="p">(</span> <span class="k">const</span> <span class="n">FileNode</span> <span class="o">&amp;</span><span class="n">fn</span> <span class="p">);</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">write</span><span class="p">(</span> <span class="n">FileStorage</span><span class="o">&amp;</span> <span class="n">fs</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">GenericDescriptorMatcher</span><span class="o">&gt;</span> <span class="n">clone</span><span class="p">(</span> <span class="kt">bool</span> <span class="n">emptyTrainData</span><span class="o">=</span><span class="nb">false</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+<span class="k">protected</span><span class="o">:</span>
+        <span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Common Interfaces of Generic Descriptor Matchers</a><ul>
+<li><a class="reference internal" href="#onewaydescriptorbase">OneWayDescriptorBase</a></li>
+<li><a class="reference internal" href="#onewaydescriptormatcher">OneWayDescriptorMatcher</a></li>
+<li><a class="reference internal" href="#fernclassifier">FernClassifier</a></li>
+<li><a class="reference internal" href="#ferndescriptormatcher">FernDescriptorMatcher</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="common_interfaces_of_descriptor_extractors.html"
+                        title="previous chapter">Common Interfaces of Descriptor Extractors</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../ocl/doc/ocl.html"
+                        title="next chapter">ocl. OpenCL-accelerated Computer Vision</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/legacy/doc/common_interfaces_of_generic_descriptor_matchers.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../ocl/doc/ocl.html" title="ocl. OpenCL-accelerated Computer Vision"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="common_interfaces_of_descriptor_extractors.html" title="Common Interfaces of Descriptor Extractors"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="legacy.html" >legacy. Deprecated stuff</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

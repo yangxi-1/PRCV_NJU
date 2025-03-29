@@ -1,0 +1,1104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Geometric Image Transformations &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="imgproc. Image Processing" href="imgproc.html" />
+    <link rel="next" title="Miscellaneous Image Transformations" href="miscellaneous_transformations.html" />
+    <link rel="prev" title="Image Filtering" href="filtering.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="miscellaneous_transformations.html" title="Miscellaneous Image Transformations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="filtering.html" title="Image Filtering"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="imgproc.html" accesskey="U">imgproc. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="geometric-image-transformations">
+<h1>Geometric Image Transformations<a class="headerlink" href="#geometric-image-transformations" title="Permalink to this headline">¶</a></h1>
+<p>The functions in this section perform various geometrical transformations of 2D images. They do not change the image content but deform the pixel grid and map this deformed grid to the destination image. In fact, to avoid sampling artifacts, the mapping is done in the reverse order, from destination to the source. That is, for each pixel <img class="math" src="../../../_images/math/dee21a914bf9088bc0dfbd38a96c1f859c412ec7.png" alt="(x, y)"/> of the destination image, the functions compute    coordinates of the corresponding &#8220;donor&#8221; pixel in the source image and copy the pixel value:</p>
+<div class="math">
+<p><img src="../../../_images/math/5586964cd29886b8967be9e8415e936b777ff237.png" alt="\texttt{dst} (x,y)= \texttt{src} (f_x(x,y), f_y(x,y))"/></p>
+</div><p>In case when you specify the forward mapping
+<img class="math" src="../../../_images/math/b44ea225e88d2d84cb8ad7cf6f7f0b4ddad2c833.png" alt="\left&lt;g_x, g_y\right&gt;: \texttt{src} \rightarrow \texttt{dst}"/> , the OpenCV functions first compute the corresponding inverse mapping
+<img class="math" src="../../../_images/math/5f54615e5c8a8ff86fafb72fc7802b76da9e47dd.png" alt="\left&lt;f_x, f_y\right&gt;: \texttt{dst} \rightarrow \texttt{src}"/> and then use the above formula.</p>
+<p>The actual implementations of the geometrical transformations, from the most generic
+<a class="reference internal" href="#void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)" title="void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">remap()</span></code></a> and to the simplest and the fastest
+<a class="reference internal" href="#void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)" title="void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)"><code class="xref ocv ocv-func docutils literal"><span class="pre">resize()</span></code></a> , need to solve two main problems with the above formula:</p>
+<ul class="simple">
+<li>Extrapolation of non-existing pixels. Similarly to the filtering functions described in the previous section, for some
+<img class="math" src="../../../_images/math/45b34b73b5a1fed1fd38b3a37ca1ada031de9970.png" alt="(x,y)"/>  ,   either one of
+<img class="math" src="../../../_images/math/da67f35faec802ef36cfb926cd7c6d02fbcbb87e.png" alt="f_x(x,y)"/>   ,  or
+<img class="math" src="../../../_images/math/203f8a44e19f0413462b5221f9d2376143ccf071.png" alt="f_y(x,y)"/>     , or both of them may fall outside of the image. In this case, an extrapolation method needs to be used. OpenCV provides the same selection of extrapolation methods as in the filtering functions. In addition, it provides the method <code class="docutils literal"><span class="pre">BORDER_TRANSPARENT</span></code>   . This means that the corresponding pixels in the destination image will not be modified at all.</li>
+<li>Interpolation of pixel values. Usually
+<img class="math" src="../../../_images/math/da67f35faec802ef36cfb926cd7c6d02fbcbb87e.png" alt="f_x(x,y)"/>     and
+<img class="math" src="../../../_images/math/203f8a44e19f0413462b5221f9d2376143ccf071.png" alt="f_y(x,y)"/>     are floating-point numbers. This means that
+<img class="math" src="../../../_images/math/26549f994bdf2bb4799fb99a35ada30df175e7f9.png" alt="\left&lt;f_x, f_y\right&gt;"/>     can be either an affine or perspective transformation, or radial lens distortion correction, and so on. So, a pixel value at fractional coordinates needs to be retrieved. In the simplest case, the coordinates can be just rounded to the nearest integer coordinates and the corresponding pixel can be used. This is called a nearest-neighbor interpolation. However, a better result can be achieved by using more sophisticated <a class="reference external" href="http://en.wikipedia.org/wiki/Multivariate_interpolation">interpolation methods</a>
+, where a polynomial function is fit into some neighborhood of the computed pixel
+<img class="math" src="../../../_images/math/bbc20ad3d60b55f78dd96263cf73b4060c688f5d.png" alt="(f_x(x,y), f_y(x,y))"/>   ,  and then the value of the polynomial at
+<img class="math" src="../../../_images/math/bbc20ad3d60b55f78dd96263cf73b4060c688f5d.png" alt="(f_x(x,y), f_y(x,y))"/>     is taken as the interpolated pixel value. In OpenCV, you can choose between several interpolation methods. See
+<a class="reference internal" href="#void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)" title="void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)"><code class="xref ocv ocv-func docutils literal"><span class="pre">resize()</span></code></a>   for details.</li>
+</ul>
+<div class="section" id="convertmaps">
+<h2>convertMaps<a class="headerlink" href="#convertmaps" title="Permalink to this headline">¶</a></h2>
+<p>Converts image transformation maps from one representation to another.</p>
+<dl class="function">
+<dt id="void convertMaps(InputArray map1, InputArray map2, OutputArray dstmap1, OutputArray dstmap2, int dstmap1type, bool nninterpolation)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">convertMaps</code><span class="sig-paren">(</span>InputArray <strong>map1</strong>, InputArray <strong>map2</strong>, OutputArray <strong>dstmap1</strong>, OutputArray <strong>dstmap2</strong>, int <strong>dstmap1type</strong>, bool <strong>nninterpolation</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#void convertMaps(InputArray map1, InputArray map2, OutputArray dstmap1, OutputArray dstmap2, int dstmap1type, bool nninterpolation)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.convertMaps">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">convertMaps</code><span class="sig-paren">(</span>map1, map2, dstmap1type<span class="optional">[</span>, dstmap1<span class="optional">[</span>, dstmap2<span class="optional">[</span>, nninterpolation<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; dstmap1, dstmap2<a class="headerlink" href="#cv2.convertMaps" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>map1</strong> &#8211; The first input map of type  <code class="docutils literal"><span class="pre">CV_16SC2</span></code>  ,  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> , or  <code class="docutils literal"><span class="pre">CV_32FC2</span></code> .</li>
+<li><strong>map2</strong> &#8211; The second input map of type  <code class="docutils literal"><span class="pre">CV_16UC1</span></code>  , <code class="docutils literal"><span class="pre">CV_32FC1</span></code>  , or none (empty matrix), respectively.</li>
+<li><strong>dstmap1</strong> &#8211; The first output map that has the type  <code class="docutils literal"><span class="pre">dstmap1type</span></code>  and the same size as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>dstmap2</strong> &#8211; The second output map.</li>
+<li><strong>dstmap1type</strong> &#8211; Type of the first output map that should be  <code class="docutils literal"><span class="pre">CV_16SC2</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code> , or  <code class="docutils literal"><span class="pre">CV_32FC2</span></code> .</li>
+<li><strong>nninterpolation</strong> &#8211; Flag indicating whether the fixed-point maps are used for the nearest-neighbor or for a more complex interpolation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function converts a pair of maps for
+<a class="reference internal" href="#void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)" title="void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">remap()</span></code></a> from one representation to another. The following options ( <code class="docutils literal"><span class="pre">(map1.type(),</span> <span class="pre">map2.type())</span></code> <img class="math" src="../../../_images/math/58b7ec42688624f44250d3934b7d7da5164dae2c.png" alt="\rightarrow"/> <code class="docutils literal"><span class="pre">(dstmap1.type(),</span> <span class="pre">dstmap2.type())</span></code> ) are supported:</p>
+<ul class="simple">
+<li><img class="math" src="../../../_images/math/7b5ead4c463b9acf2fc23ff5cbb0c8644f273389.png" alt="\texttt{(CV\_32FC1, CV\_32FC1)} \rightarrow \texttt{(CV\_16SC2, CV\_16UC1)}"/>     . This is the most frequently used conversion operation, in which the original floating-point maps (see
+<a class="reference internal" href="#void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)" title="void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">remap()</span></code></a>     ) are converted to a more compact and much faster fixed-point representation. The first output array contains the rounded coordinates and the second array (created only when <code class="docutils literal"><span class="pre">nninterpolation=false</span></code>     ) contains indices in the interpolation tables.</li>
+<li><img class="math" src="../../../_images/math/6de37720f0eb8f70d3e18c92c6d442ce9573f37d.png" alt="\texttt{(CV\_32FC2)} \rightarrow \texttt{(CV\_16SC2, CV\_16UC1)}"/>     . The same as above but the original maps are stored in one 2-channel matrix.</li>
+<li>Reverse conversion. Obviously, the reconstructed floating-point maps will not be exactly the same as the originals.</li>
+</ul>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)" title="void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">remap()</span></code></a>,
+<a class="reference internal" href="#void undistort(InputArray src, OutputArray dst, InputArray cameraMatrix, InputArray distCoeffs, InputArray newCameraMatrix)" title="void undistort(InputArray src, OutputArray dst, InputArray cameraMatrix, InputArray distCoeffs, InputArray newCameraMatrix)"><code class="xref ocv ocv-func docutils literal"><span class="pre">undistort()</span></code></a>,
+<a class="reference internal" href="#void initUndistortRectifyMap(InputArray cameraMatrix, InputArray distCoeffs, InputArray R, InputArray newCameraMatrix, Size size, int m1type, OutputArray map1, OutputArray map2)" title="void initUndistortRectifyMap(InputArray cameraMatrix, InputArray distCoeffs, InputArray R, InputArray newCameraMatrix, Size size, int m1type, OutputArray map1, OutputArray map2)"><code class="xref ocv ocv-func docutils literal"><span class="pre">initUndistortRectifyMap()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="getaffinetransform">
+<h2>getAffineTransform<a class="headerlink" href="#getaffinetransform" title="Permalink to this headline">¶</a></h2>
+<p>Calculates an affine transform from three pairs of the corresponding points.</p>
+<dl class="function">
+<dt id="Mat getAffineTransform(InputArray src, InputArray dst)">
+<strong>C++:</strong><code class="descname"> </code>Mat <code class="descname">getAffineTransform</code><span class="sig-paren">(</span>InputArray <strong>src</strong>, InputArray <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#Mat getAffineTransform(InputArray src, InputArray dst)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Mat getAffineTransform(const Point2f src[], const Point2f dst[])">
+<strong>C++:</strong><code class="descname"> </code>Mat <code class="descname">getAffineTransform</code><span class="sig-paren">(</span>const Point2f <strong>src</strong>[], const Point2f <strong>dst</strong>[]<span class="sig-paren">)</span><a class="headerlink" href="#Mat getAffineTransform(const Point2f src[], const Point2f dst[])" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.getAffineTransform">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">getAffineTransform</code><span class="sig-paren">(</span>src, dst<span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.getAffineTransform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="CvMat* cvGetAffineTransform(const CvPoint2D32f * src, const CvPoint2D32f * dst, CvMat * map_matrix)">
+<strong>C:</strong><code class="descname"> </code>CvMat* <code class="descname">cvGetAffineTransform</code><span class="sig-paren">(</span>const CvPoint2D32f* <strong>src</strong>, const CvPoint2D32f* <strong>dst</strong>, CvMat* <strong>map_matrix</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvMat* cvGetAffineTransform(const CvPoint2D32f * src, const CvPoint2D32f * dst, CvMat * map_matrix)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.GetAffineTransform">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">GetAffineTransform</code><span class="sig-paren">(</span>src, dst, mapMatrix<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.GetAffineTransform" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Coordinates of triangle vertices in the source image.</li>
+<li><strong>dst</strong> &#8211; Coordinates of the corresponding triangle vertices in the destination image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function calculates the <img class="math" src="../../../_images/math/f1f16ce7385b2d3da848512fba020c85ce9d8c67.png" alt="2 \times 3"/> matrix of an affine transform so that:</p>
+<div class="math">
+<p><img src="../../../_images/math/fbd69da4149b9b78bd1b3fa7e672072d848373f2.png" alt="\begin{bmatrix} x'_i \\ y'_i \end{bmatrix} = \texttt{map\_matrix} \cdot \begin{bmatrix} x_i \\ y_i \\ 1 \end{bmatrix}"/></p>
+</div><p>where</p>
+<div class="math">
+<p><img src="../../../_images/math/4c5b043b81b0b43a08b17ead21968a1a4523c56c.png" alt="dst(i)=(x'_i,y'_i),
+src(i)=(x_i, y_i),
+i=0,1,2"/></p>
+</div><div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)" title="void warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">warpAffine()</span></code></a>,
+<a class="reference internal" href="../../core/doc/operations_on_arrays.html#void transform(InputArray src, OutputArray dst, InputArray m)" title="void transform(InputArray src, OutputArray dst, InputArray m)"><code class="xref ocv ocv-func docutils literal"><span class="pre">transform()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="getperspectivetransform">
+<h2>getPerspectiveTransform<a class="headerlink" href="#getperspectivetransform" title="Permalink to this headline">¶</a></h2>
+<p>Calculates a perspective transform from four pairs of the corresponding points.</p>
+<dl class="function">
+<dt id="Mat getPerspectiveTransform(InputArray src, InputArray dst)">
+<strong>C++:</strong><code class="descname"> </code>Mat <code class="descname">getPerspectiveTransform</code><span class="sig-paren">(</span>InputArray <strong>src</strong>, InputArray <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#Mat getPerspectiveTransform(InputArray src, InputArray dst)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Mat getPerspectiveTransform(const Point2f src[], const Point2f dst[])">
+<strong>C++:</strong><code class="descname"> </code>Mat <code class="descname">getPerspectiveTransform</code><span class="sig-paren">(</span>const Point2f <strong>src</strong>[], const Point2f <strong>dst</strong>[]<span class="sig-paren">)</span><a class="headerlink" href="#Mat getPerspectiveTransform(const Point2f src[], const Point2f dst[])" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.getPerspectiveTransform">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">getPerspectiveTransform</code><span class="sig-paren">(</span>src, dst<span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.getPerspectiveTransform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="CvMat* cvGetPerspectiveTransform(const CvPoint2D32f* src, const CvPoint2D32f* dst, CvMat* map_matrix)">
+<strong>C:</strong><code class="descname"> </code>CvMat* <code class="descname">cvGetPerspectiveTransform</code><span class="sig-paren">(</span>const CvPoint2D32f* <strong>src</strong>, const CvPoint2D32f* <strong>dst</strong>, CvMat* <strong>map_matrix</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvMat* cvGetPerspectiveTransform(const CvPoint2D32f* src, const CvPoint2D32f* dst, CvMat* map_matrix)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.GetPerspectiveTransform">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">GetPerspectiveTransform</code><span class="sig-paren">(</span>src, dst, mapMatrix<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.GetPerspectiveTransform" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Coordinates of quadrangle vertices in the source image.</li>
+<li><strong>dst</strong> &#8211; Coordinates of the corresponding quadrangle vertices in the destination image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function calculates the <img class="math" src="../../../_images/math/4e17330236365b9188352f6e0aeef470b1f872f1.png" alt="3 \times 3"/> matrix of a perspective transform so that:</p>
+<div class="math">
+<p><img src="../../../_images/math/6246ed0e2d25dc1f8301de4c822741fbe1d1cde0.png" alt="\begin{bmatrix} t_i x'_i \\ t_i y'_i \\ t_i \end{bmatrix} = \texttt{map\_matrix} \cdot \begin{bmatrix} x_i \\ y_i \\ 1 \end{bmatrix}"/></p>
+</div><p>where</p>
+<div class="math">
+<p><img src="../../../_images/math/943082517cd4a9cc108c0adf9212ce0282419a94.png" alt="dst(i)=(x'_i,y'_i),
+src(i)=(x_i, y_i),
+i=0,1,2,3"/></p>
+</div><div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html#Mat findHomography(InputArray srcPoints, InputArray dstPoints, int method, double ransacReprojThreshold, OutputArray mask)" title="Mat findHomography(InputArray srcPoints, InputArray dstPoints, int method, double ransacReprojThreshold, OutputArray mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">findHomography()</span></code></a>,
+<a class="reference internal" href="#void warpPerspective(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)" title="void warpPerspective(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">warpPerspective()</span></code></a>,
+<a class="reference internal" href="../../core/doc/operations_on_arrays.html#void perspectiveTransform(InputArray src, OutputArray dst, InputArray m)" title="void perspectiveTransform(InputArray src, OutputArray dst, InputArray m)"><code class="xref ocv ocv-func docutils literal"><span class="pre">perspectiveTransform()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="getrectsubpix">
+<h2>getRectSubPix<a class="headerlink" href="#getrectsubpix" title="Permalink to this headline">¶</a></h2>
+<p>Retrieves a pixel rectangle from an image with sub-pixel accuracy.</p>
+<dl class="function">
+<dt id="void getRectSubPix(InputArray image, Size patchSize, Point2f center, OutputArray patch, int patchType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">getRectSubPix</code><span class="sig-paren">(</span>InputArray <strong>image</strong>, Size <strong>patchSize</strong>, Point2f <strong>center</strong>, OutputArray <strong>patch</strong>, int <strong>patchType</strong>=-1 <span class="sig-paren">)</span><a class="headerlink" href="#void getRectSubPix(InputArray image, Size patchSize, Point2f center, OutputArray patch, int patchType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.getRectSubPix">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">getRectSubPix</code><span class="sig-paren">(</span>image, patchSize, center<span class="optional">[</span>, patch<span class="optional">[</span>, patchType<span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; patch<a class="headerlink" href="#cv2.getRectSubPix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvGetRectSubPix(const CvArr* src, CvArr* dst, CvPoint2D32f center)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvGetRectSubPix</code><span class="sig-paren">(</span>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong>, CvPoint2D32f <strong>center</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvGetRectSubPix(const CvArr* src, CvArr* dst, CvPoint2D32f center)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.GetRectSubPix">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">GetRectSubPix</code><span class="sig-paren">(</span>src, dst, center<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.GetRectSubPix" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.</li>
+<li><strong>patchSize</strong> &#8211; Size of the extracted patch.</li>
+<li><strong>center</strong> &#8211; Floating point coordinates of the center of the extracted rectangle within the source image. The center must be inside the image.</li>
+<li><strong>dst</strong> &#8211; Extracted patch that has the size  <code class="docutils literal"><span class="pre">patchSize</span></code>  and the same number of channels as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>patchType</strong> &#8211; Depth of the extracted pixels. By default, they have the same depth as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">getRectSubPix</span></code> extracts pixels from <code class="docutils literal"><span class="pre">src</span></code> :</p>
+<div class="math">
+<p><img src="../../../_images/math/07ec4cca5e9cc8c312398710e9d757e35c3a8489.png" alt="dst(x, y) = src(x +  \texttt{center.x} - ( \texttt{dst.cols} -1)*0.5, y +  \texttt{center.y} - ( \texttt{dst.rows} -1)*0.5)"/></p>
+</div><p>where the values of the pixels at non-integer coordinates are retrieved
+using bilinear interpolation. Every channel of multi-channel
+images is processed independently. While the center of the rectangle
+must be inside the image, parts of the rectangle may be
+outside. In this case, the replication border mode (see
+<a class="reference internal" href="filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a> ) is used to extrapolate
+the pixel values outside of the image.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)" title="void warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">warpAffine()</span></code></a>,
+<a class="reference internal" href="#void warpPerspective(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)" title="void warpPerspective(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">warpPerspective()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="getrotationmatrix2d">
+<h2>getRotationMatrix2D<a class="headerlink" href="#getrotationmatrix2d" title="Permalink to this headline">¶</a></h2>
+<p>Calculates an affine matrix of 2D rotation.</p>
+<dl class="function">
+<dt id="Mat getRotationMatrix2D(Point2f center, double angle, double scale)">
+<strong>C++:</strong><code class="descname"> </code>Mat <code class="descname">getRotationMatrix2D</code><span class="sig-paren">(</span>Point2f <strong>center</strong>, double <strong>angle</strong>, double <strong>scale</strong><span class="sig-paren">)</span><a class="headerlink" href="#Mat getRotationMatrix2D(Point2f center, double angle, double scale)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.getRotationMatrix2D">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">getRotationMatrix2D</code><span class="sig-paren">(</span>center, angle, scale<span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.getRotationMatrix2D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="CvMat* cv2DRotationMatrix(CvPoint2D32f center, double angle, double scale, CvMat* map_matrix)">
+<strong>C:</strong><code class="descname"> </code>CvMat* <code class="descname">cv2DRotationMatrix</code><span class="sig-paren">(</span>CvPoint2D32f <strong>center</strong>, double <strong>angle</strong>, double <strong>scale</strong>, CvMat* <strong>map_matrix</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvMat* cv2DRotationMatrix(CvPoint2D32f center, double angle, double scale, CvMat* map_matrix)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.GetRotationMatrix2D">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">GetRotationMatrix2D</code><span class="sig-paren">(</span>center, angle, scale, mapMatrix<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.GetRotationMatrix2D" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>center</strong> &#8211; Center of the rotation in the source image.</li>
+<li><strong>angle</strong> &#8211; Rotation angle in degrees. Positive values mean counter-clockwise rotation (the coordinate origin is assumed to be the top-left corner).</li>
+<li><strong>scale</strong> &#8211; Isotropic scale factor.</li>
+<li><strong>map_matrix</strong> &#8211; The output affine transformation, 2x3 floating-point matrix.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function calculates the following matrix:</p>
+<div class="math">
+<p><img src="../../../_images/math/9b2f7b18b914fea0d6712fafb52f2d425becd7d4.png" alt="\begin{bmatrix} \alpha &amp;  \beta &amp; (1- \alpha )  \cdot \texttt{center.x} -  \beta \cdot \texttt{center.y} \\ - \beta &amp;  \alpha &amp;  \beta \cdot \texttt{center.x} + (1- \alpha )  \cdot \texttt{center.y} \end{bmatrix}"/></p>
+</div><p>where</p>
+<div class="math">
+<p><img src="../../../_images/math/ec67bb21242806438616d772f8223aa094d8f296.png" alt="\begin{array}{l} \alpha =  \texttt{scale} \cdot \cos \texttt{angle} , \\ \beta =  \texttt{scale} \cdot \sin \texttt{angle} \end{array}"/></p>
+</div><p>The transformation maps the rotation center to itself. If this is not the target, adjust the shift.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#Mat getAffineTransform(InputArray src, InputArray dst)" title="Mat getAffineTransform(InputArray src, InputArray dst)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getAffineTransform()</span></code></a>,
+<a class="reference internal" href="#void warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)" title="void warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">warpAffine()</span></code></a>,
+<a class="reference internal" href="../../core/doc/operations_on_arrays.html#void transform(InputArray src, OutputArray dst, InputArray m)" title="void transform(InputArray src, OutputArray dst, InputArray m)"><code class="xref ocv ocv-func docutils literal"><span class="pre">transform()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="invertaffinetransform">
+<h2>invertAffineTransform<a class="headerlink" href="#invertaffinetransform" title="Permalink to this headline">¶</a></h2>
+<p>Inverts an affine transformation.</p>
+<dl class="function">
+<dt id="void invertAffineTransform(InputArray M, OutputArray iM)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">invertAffineTransform</code><span class="sig-paren">(</span>InputArray <strong>M</strong>, OutputArray <strong>iM</strong><span class="sig-paren">)</span><a class="headerlink" href="#void invertAffineTransform(InputArray M, OutputArray iM)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.invertAffineTransform">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">invertAffineTransform</code><span class="sig-paren">(</span>M<span class="optional">[</span>, iM<span class="optional">]</span><span class="sig-paren">)</span> &rarr; iM<a class="headerlink" href="#cv2.invertAffineTransform" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>M</strong> &#8211; Original affine transformation.</li>
+<li><strong>iM</strong> &#8211; Output reverse affine transformation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function computes an inverse affine transformation represented by
+<img class="math" src="../../../_images/math/f1f16ce7385b2d3da848512fba020c85ce9d8c67.png" alt="2 \times 3"/> matrix <code class="docutils literal"><span class="pre">M</span></code> :</p>
+<div class="math">
+<p><img src="../../../_images/math/3108fbd6fb3e95f812360ea64911fd1f386af65a.png" alt="\begin{bmatrix} a_{11} &amp; a_{12} &amp; b_1  \\ a_{21} &amp; a_{22} &amp; b_2 \end{bmatrix}"/></p>
+</div><p>The result is also a
+<img class="math" src="../../../_images/math/f1f16ce7385b2d3da848512fba020c85ce9d8c67.png" alt="2 \times 3"/> matrix of the same type as <code class="docutils literal"><span class="pre">M</span></code> .</p>
+</div>
+<div class="section" id="linearpolar">
+<h2>LinearPolar<a class="headerlink" href="#linearpolar" title="Permalink to this headline">¶</a></h2>
+<p>Remaps an image to polar space.</p>
+<dl class="cfunction">
+<dt id="void cvLinearPolar(const CvArr* src, CvArr* dst, CvPoint2D32f center, double maxRadius, int flags)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvLinearPolar</code><span class="sig-paren">(</span>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong>, CvPoint2D32f <strong>center</strong>, double <strong>maxRadius</strong>, int <strong>flags</strong>=CV_INTER_LINEAR+CV_WARP_FILL_OUTLIERS <span class="sig-paren">)</span><a class="headerlink" href="#void cvLinearPolar(const CvArr* src, CvArr* dst, CvPoint2D32f center, double maxRadius, int flags)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image</li>
+<li><strong>dst</strong> &#8211; Destination image. It will have same size and type as src.</li>
+<li><strong>center</strong> &#8211; The transformation center;</li>
+<li><strong>maxRadius</strong> &#8211; The radius of the bounding circle to transform. It determines the inverse magnitude scale parameter too. See below</li>
+<li><strong>flags</strong> &#8211; <p>A combination of interpolation methods and the following optional flags:</p>
+<ul>
+<li><strong>CV_WARP_FILL_OUTLIERS</strong> fills all of the destination image pixels. If some of them correspond to outliers in the source image, they are set to zero</li>
+<li><strong>CV_WARP_INVERSE_MAP</strong> See below</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">cvLinearPolar</span></code> transforms the source image using the following transformation:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Forward transformation (<code class="docutils literal"><span class="pre">CV_WARP_INVERSE_MAP</span></code> is not set):</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/2ee2f3949fb676f9f379e45188eac6c713b92d99.png" alt="dst( \rho , \phi ) = src(x,y)"/></p>
+</div></div></blockquote>
+</li>
+<li><p class="first">Inverse transformation (<code class="docutils literal"><span class="pre">CV_WARP_INVERSE_MAP</span></code> is set):</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/160d7bd753e5d51c8d439d7b4942f6ad05722bc8.png" alt="dst(x,y) = src( \rho , \phi )"/></p>
+</div></div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<p>where</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/4ab3bec73697069e687d7bd6c11e48f119ec9757.png" alt="\begin{array}{l}
+I = (dx,dy) = (x - center.x,y - center.y) \\
+\rho = Kx \cdot \texttt{magnitude} (I) ,\\
+\phi = Ky \cdot \texttt{angle} (I)_{0..360 deg}
+\end{array}"/></p>
+</div></div></blockquote>
+<p>and</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/b7295b801abcef914f42185142e9d949764807fe.png" alt="\begin{array}{l}
+Kx = src.cols / maxRadius \\
+Ky = src.rows / 360
+\end{array}"/></p>
+</div></div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>The function can not operate in-place.</li>
+<li>To calculate magnitude and angle in degrees <code class="xref ocv ocv-func docutils literal"><span class="pre">cvCartToPolar()</span></code> is used internally thus angles are measured from 0 to 360 with accuracy about 0.3 degrees.</li>
+<li>An example using the LinearPolar operation can be found at opencv_source_code/samples/c/polar_transforms.c</li>
+</ul>
+</div>
+</div>
+<div class="section" id="logpolar">
+<h2>LogPolar<a class="headerlink" href="#logpolar" title="Permalink to this headline">¶</a></h2>
+<p>Remaps an image to log-polar space.</p>
+<dl class="cfunction">
+<dt id="void cvLogPolar(const CvArr* src, CvArr* dst, CvPoint2D32f center, double M, int flags)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvLogPolar</code><span class="sig-paren">(</span>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong>, CvPoint2D32f <strong>center</strong>, double <strong>M</strong>, int <strong>flags</strong>=CV_INTER_LINEAR+CV_WARP_FILL_OUTLIERS <span class="sig-paren">)</span><a class="headerlink" href="#void cvLogPolar(const CvArr* src, CvArr* dst, CvPoint2D32f center, double M, int flags)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.LogPolar">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">LogPolar</code><span class="sig-paren">(</span>src, dst, center, M, flags=CV_INTER_LINEAR+CV_WARP_FILL_OUTLIERS<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.LogPolar" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image</li>
+<li><strong>dst</strong> &#8211; Destination image. It will have same size and type as src.</li>
+<li><strong>center</strong> &#8211; The transformation center; where the output precision is maximal</li>
+<li><strong>M</strong> &#8211; Magnitude scale parameter. It determines the radius of the bounding circle to transform too. See below</li>
+<li><strong>flags</strong> &#8211; <p>A combination of interpolation methods and the following optional flags:</p>
+<ul>
+<li><strong>CV_WARP_FILL_OUTLIERS</strong> fills all of the destination image pixels. If some of them correspond to outliers in the source image, they are set to zero</li>
+<li><strong>CV_WARP_INVERSE_MAP</strong> See below</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">cvLogPolar</span></code> transforms the source image using the following transformation:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Forward transformation (<code class="docutils literal"><span class="pre">CV_WARP_INVERSE_MAP</span></code> is not set):</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/96c3a731ab8bacd5e0d7a46a07fc108736b6dc60.png" alt="dst( \rho , \phi ) = src(x, y)"/></p>
+</div></div></blockquote>
+</li>
+<li><p class="first">Inverse transformation (<code class="docutils literal"><span class="pre">CV_WARP_INVERSE_MAP</span></code> is set):</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/160d7bd753e5d51c8d439d7b4942f6ad05722bc8.png" alt="dst(x,y) = src( \rho , \phi )"/></p>
+</div></div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<p>where</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/f98a8431e38ad0cc514958e26ce27fd22a3c171f.png" alt="\begin{array}{l}
+I = (dx,dy) = (x - center.x,y - center.y) \\
+\rho = M \cdot log_e(\texttt{magnitude} (I)) ,\\
+\phi = Ky \cdot \texttt{angle} (I)_{0..360 deg}
+\end{array}"/></p>
+</div></div></blockquote>
+<p>and</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/bae8921c47ec95ede5ebc21f911b9c9322477263.png" alt="\begin{array}{l}
+M = src.cols / log_e(maxRadius) \\
+Ky = src.rows / 360
+\end{array}"/></p>
+</div></div></blockquote>
+<p>The function emulates the human &#8220;foveal&#8221; vision and can be used for fast scale and rotation-invariant template matching, for object tracking and so forth.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>The function can not operate in-place.</li>
+<li>To calculate magnitude and angle in degrees <code class="xref ocv ocv-func docutils literal"><span class="pre">cvCartToPolar()</span></code> is used internally thus angles are measured from 0 to 360 with accuracy about 0.3 degrees.</li>
+<li>An example using the geometric logpolar operation in 4 applications can be found at opencv_source_code/samples/cpp/logpolar_bsm.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="remap">
+<h2>remap<a class="headerlink" href="#remap" title="Permalink to this headline">¶</a></h2>
+<p>Applies a generic geometrical transformation to an image.</p>
+<dl class="function">
+<dt id="void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">remap</code><span class="sig-paren">(</span>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, InputArray <strong>map1</strong>, InputArray <strong>map2</strong>, int <strong>interpolation</strong>, int <strong>borderMode</strong>=BORDER_CONSTANT, const Scalar&amp; <strong>borderValue</strong>=Scalar()<span class="sig-paren">)</span><a class="headerlink" href="#void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar& borderValue)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.remap">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">remap</code><span class="sig-paren">(</span>src, map1, map2, interpolation<span class="optional">[</span>, dst<span class="optional">[</span>, borderMode<span class="optional">[</span>, borderValue<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; dst<a class="headerlink" href="#cv2.remap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvRemap(const CvArr* src, CvArr* dst, const CvArr* mapx, const CvArr* mapy, int flags, CvScalar fillval)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvRemap</code><span class="sig-paren">(</span>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong>, const CvArr* <strong>mapx</strong>, const CvArr* <strong>mapy</strong>, int <strong>flags</strong>=CV_INTER_LINEAR+CV_WARP_FILL_OUTLIERS, CvScalar <strong>fillval</strong>=cvScalarAll(0) <span class="sig-paren">)</span><a class="headerlink" href="#void cvRemap(const CvArr* src, CvArr* dst, const CvArr* mapx, const CvArr* mapy, int flags, CvScalar fillval)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Remap">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Remap</code><span class="sig-paren">(</span>src, dst, mapx, mapy, flags=CV_INTER_LINEAR+CV_WARP_FILL_OUTLIERS, fillval=(0, 0, 0, 0)<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.Remap" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.</li>
+<li><strong>dst</strong> &#8211; Destination image. It has the same size as  <code class="docutils literal"><span class="pre">map1</span></code>  and the same type as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>map1</strong> &#8211; The first map of either  <code class="docutils literal"><span class="pre">(x,y)</span></code>  points or just  <code class="docutils literal"><span class="pre">x</span></code>  values having the type  <code class="docutils literal"><span class="pre">CV_16SC2</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code> , or  <code class="docutils literal"><span class="pre">CV_32FC2</span></code> . See  <a class="reference internal" href="#void convertMaps(InputArray map1, InputArray map2, OutputArray dstmap1, OutputArray dstmap2, int dstmap1type, bool nninterpolation)" title="void convertMaps(InputArray map1, InputArray map2, OutputArray dstmap1, OutputArray dstmap2, int dstmap1type, bool nninterpolation)"><code class="xref ocv ocv-func docutils literal"><span class="pre">convertMaps()</span></code></a>  for details on converting a floating point representation to fixed-point for speed.</li>
+<li><strong>map2</strong> &#8211; The second map of  <code class="docutils literal"><span class="pre">y</span></code>  values having the type  <code class="docutils literal"><span class="pre">CV_16UC1</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code> , or none (empty map if <code class="docutils literal"><span class="pre">map1</span></code> is  <code class="docutils literal"><span class="pre">(x,y)</span></code>  points), respectively.</li>
+<li><strong>interpolation</strong> &#8211; Interpolation method (see  <a class="reference internal" href="#void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)" title="void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)"><code class="xref ocv ocv-func docutils literal"><span class="pre">resize()</span></code></a> ). The method  <code class="docutils literal"><span class="pre">INTER_AREA</span></code>  is not supported by this function.</li>
+<li><strong>borderMode</strong> &#8211; Pixel extrapolation method (see  <a class="reference internal" href="filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a> ). When   <code class="docutils literal"><span class="pre">borderMode=BORDER_TRANSPARENT</span></code> , it means that the pixels in the destination image that corresponds to the &#8220;outliers&#8221; in the source image are not modified by the function.</li>
+<li><strong>borderValue</strong> &#8211; Value used in case of a constant border. By default, it is 0.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">remap</span></code> transforms the source image using the specified map:</p>
+<div class="math">
+<p><img src="../../../_images/math/f9449cd3bdb73686991442e9a15db0caff2b568b.png" alt="\texttt{dst} (x,y) =  \texttt{src} (map_x(x,y),map_y(x,y))"/></p>
+</div><p>where values of pixels with non-integer coordinates are computed using one of available interpolation methods.
+<img class="math" src="../../../_images/math/91970ab096944ce7fe3efb5c8b49ae0b5525b927.png" alt="map_x"/> and
+<img class="math" src="../../../_images/math/78f6c85562823bd76628b40e365853579dfb1818.png" alt="map_y"/> can be encoded as separate floating-point maps in
+<img class="math" src="../../../_images/math/e036710662d71a6b65c4a0d41392c019d914772a.png" alt="map_1"/> and
+<img class="math" src="../../../_images/math/ca86e1582a85b178cfc4ebb410c2eca74336f7ef.png" alt="map_2"/> respectively, or interleaved floating-point maps of
+<img class="math" src="../../../_images/math/45b34b73b5a1fed1fd38b3a37ca1ada031de9970.png" alt="(x,y)"/> in
+<img class="math" src="../../../_images/math/e036710662d71a6b65c4a0d41392c019d914772a.png" alt="map_1"/> , or
+fixed-point maps created by using
+<a class="reference internal" href="#void convertMaps(InputArray map1, InputArray map2, OutputArray dstmap1, OutputArray dstmap2, int dstmap1type, bool nninterpolation)" title="void convertMaps(InputArray map1, InputArray map2, OutputArray dstmap1, OutputArray dstmap2, int dstmap1type, bool nninterpolation)"><code class="xref ocv ocv-func docutils literal"><span class="pre">convertMaps()</span></code></a> . The reason you might want to convert from floating to fixed-point
+representations of a map is that they can yield much faster (~2x) remapping operations. In the converted case,
+<img class="math" src="../../../_images/math/e036710662d71a6b65c4a0d41392c019d914772a.png" alt="map_1"/> contains pairs <code class="docutils literal"><span class="pre">(cvFloor(x),</span> <span class="pre">cvFloor(y))</span></code> and
+<img class="math" src="../../../_images/math/ca86e1582a85b178cfc4ebb410c2eca74336f7ef.png" alt="map_2"/> contains indices in a table of interpolation coefficients.</p>
+<p>This function cannot operate in-place.</p>
+</div>
+<div class="section" id="resize">
+<h2>resize<a class="headerlink" href="#resize" title="Permalink to this headline">¶</a></h2>
+<p>Resizes an image.</p>
+<dl class="function">
+<dt id="void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">resize</code><span class="sig-paren">(</span>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, Size <strong>dsize</strong>, double <strong>fx</strong>=0, double <strong>fy</strong>=0, int <strong>interpolation</strong>=INTER_LINEAR <span class="sig-paren">)</span><a class="headerlink" href="#void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.resize">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">resize</code><span class="sig-paren">(</span>src, dsize<span class="optional">[</span>, dst<span class="optional">[</span>, fx<span class="optional">[</span>, fy<span class="optional">[</span>, interpolation<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; dst<a class="headerlink" href="#cv2.resize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvResize(const CvArr* src, CvArr* dst, int interpolation)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvResize</code><span class="sig-paren">(</span>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong>, int <strong>interpolation</strong>=CV_INTER_LINEAR <span class="sig-paren">)</span><a class="headerlink" href="#void cvResize(const CvArr* src, CvArr* dst, int interpolation)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Resize">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Resize</code><span class="sig-paren">(</span>src, dst, interpolation=CV_INTER_LINEAR<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.Resize" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; input image.</li>
+<li><strong>dst</strong> &#8211; output image; it has the size <code class="docutils literal"><span class="pre">dsize</span></code> (when it is non-zero) or the size computed from <code class="docutils literal"><span class="pre">src.size()</span></code>, <code class="docutils literal"><span class="pre">fx</span></code>, and <code class="docutils literal"><span class="pre">fy</span></code>; the type of <code class="docutils literal"><span class="pre">dst</span></code> is the same as of <code class="docutils literal"><span class="pre">src</span></code>.</li>
+<li><strong>dsize</strong> &#8211; <p>output image size; if it equals zero, it is computed as:</p>
+<div class="math">
+<p><img src="../../../_images/math/35ed0468ed221de8a5f35516bceafda9788cd015.png" alt="\texttt{dsize = Size(round(fx*src.cols), round(fy*src.rows))}"/></p>
+</div><p>Either  <code class="docutils literal"><span class="pre">dsize</span></code>  or both  <code class="docutils literal"><span class="pre">fx</span></code>  and  <code class="docutils literal"><span class="pre">fy</span></code>  must be non-zero.</p>
+</li>
+<li><strong>fx</strong> &#8211; <p>scale factor along the horizontal axis; when it equals 0, it is computed as</p>
+<div class="math">
+<p><img src="../../../_images/math/68bc15bc90b1ec313d34f5d72485fa04c51f5c3e.png" alt="\texttt{(double)dsize.width/src.cols}"/></p>
+</div></li>
+<li><strong>fy</strong> &#8211; <p>scale factor along the vertical axis; when it equals 0, it is computed as</p>
+<div class="math">
+<p><img src="../../../_images/math/af495c626474d56d29d356d581a18f143109e972.png" alt="\texttt{(double)dsize.height/src.rows}"/></p>
+</div></li>
+<li><strong>interpolation</strong> &#8211; <p>interpolation method:</p>
+<ul>
+<li><strong>INTER_NEAREST</strong> - a nearest-neighbor interpolation</li>
+<li><strong>INTER_LINEAR</strong> - a bilinear interpolation (used by default)</li>
+<li><strong>INTER_AREA</strong> - resampling using pixel area relation. It may be a preferred method for image decimation, as it gives moire&#8217;-free results. But when the image is zoomed, it is similar to the  <code class="docutils literal"><span class="pre">INTER_NEAREST</span></code>  method.</li>
+<li><strong>INTER_CUBIC</strong>  - a bicubic interpolation over 4x4 pixel neighborhood</li>
+<li><strong>INTER_LANCZOS4</strong> - a Lanczos interpolation over 8x8 pixel neighborhood</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">resize</span></code> resizes the image <code class="docutils literal"><span class="pre">src</span></code> down to or up to the specified size.
+Note that the initial <code class="docutils literal"><span class="pre">dst</span></code> type or size are not taken into account. Instead, the size and type are derived from the <code class="docutils literal"><span class="pre">src</span></code>,``dsize``,``fx`` , and <code class="docutils literal"><span class="pre">fy</span></code> . If you want to resize <code class="docutils literal"><span class="pre">src</span></code> so that it fits the pre-created <code class="docutils literal"><span class="pre">dst</span></code> , you may call the function as follows:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// explicitly specify dsize=dst.size(); fx and fy will be computed from that.</span>
+<span class="n">resize</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">dst</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">interpolation</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>If you want to decimate the image by factor of 2 in each direction, you can call the function this way:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// specify fx and fy and let the function compute the destination image size.</span>
+<span class="n">resize</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">Size</span><span class="p">(),</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">interpolation</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>To shrink an image, it will generally look best with CV_INTER_AREA interpolation, whereas to enlarge an image, it will generally look best with CV_INTER_CUBIC (slow) or CV_INTER_LINEAR (faster but still looks OK).</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)" title="void warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">warpAffine()</span></code></a>,
+<a class="reference internal" href="#void warpPerspective(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)" title="void warpPerspective(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">warpPerspective()</span></code></a>,
+<a class="reference internal" href="#void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)" title="void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">remap()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="warpaffine">
+<h2>warpAffine<a class="headerlink" href="#warpaffine" title="Permalink to this headline">¶</a></h2>
+<p>Applies an affine transformation to an image.</p>
+<dl class="function">
+<dt id="void warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">warpAffine</code><span class="sig-paren">(</span>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, InputArray <strong>M</strong>, Size <strong>dsize</strong>, int <strong>flags</strong>=INTER_LINEAR, int <strong>borderMode</strong>=BORDER_CONSTANT, const Scalar&amp; <strong>borderValue</strong>=Scalar()<span class="sig-paren">)</span><a class="headerlink" href="#void warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar& borderValue)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.warpAffine">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">warpAffine</code><span class="sig-paren">(</span>src, M, dsize<span class="optional">[</span>, dst<span class="optional">[</span>, flags<span class="optional">[</span>, borderMode<span class="optional">[</span>, borderValue<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; dst<a class="headerlink" href="#cv2.warpAffine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvWarpAffine(const CvArr* src, CvArr* dst, const CvMat* map_matrix, int flags, CvScalar fillval)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvWarpAffine</code><span class="sig-paren">(</span>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong>, const CvMat* <strong>map_matrix</strong>, int <strong>flags</strong>=CV_INTER_LINEAR+CV_WARP_FILL_OUTLIERS, CvScalar <strong>fillval</strong>=cvScalarAll(0) <span class="sig-paren">)</span><a class="headerlink" href="#void cvWarpAffine(const CvArr* src, CvArr* dst, const CvMat* map_matrix, int flags, CvScalar fillval)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.WarpAffine">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">WarpAffine</code><span class="sig-paren">(</span>src, dst, mapMatrix, flags=CV_INTER_LINEAR+CV_WARP_FILL_OUTLIERS, fillval=(0, 0, 0, 0)<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.WarpAffine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvGetQuadrangleSubPix(const CvArr* src, CvArr* dst, const CvMat* map_matrix)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvGetQuadrangleSubPix</code><span class="sig-paren">(</span>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong>, const CvMat* <strong>map_matrix</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvGetQuadrangleSubPix(const CvArr* src, CvArr* dst, const CvMat* map_matrix)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.GetQuadrangleSubPix">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">GetQuadrangleSubPix</code><span class="sig-paren">(</span>src, dst, mapMatrix<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.GetQuadrangleSubPix" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; input image.</li>
+<li><strong>dst</strong> &#8211; output image that has the size  <code class="docutils literal"><span class="pre">dsize</span></code>  and the same type as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>M</strong> &#8211; <img class="math" src="../../../_images/math/f335f976f482cd08e9c6c198204b18c1fc769882.png" alt="2\times 3"/> transformation matrix.</li>
+<li><strong>dsize</strong> &#8211; size of the output image.</li>
+<li><strong>flags</strong> &#8211; combination of interpolation methods (see  <a class="reference internal" href="#void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)" title="void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)"><code class="xref ocv ocv-func docutils literal"><span class="pre">resize()</span></code></a> ) and the optional flag <code class="docutils literal"><span class="pre">WARP_INVERSE_MAP</span></code> that means that <code class="docutils literal"><span class="pre">M</span></code> is the inverse transformation ( <img class="math" src="../../../_images/math/79358c8b893d7d0db75b629175a7eab3db5f192b.png" alt="\texttt{dst}\rightarrow\texttt{src}"/> ).</li>
+<li><strong>borderMode</strong> &#8211; pixel extrapolation method (see <a class="reference internal" href="filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a>); when    <code class="docutils literal"><span class="pre">borderMode=BORDER_TRANSPARENT</span></code> , it means that the pixels in the destination image corresponding to the &#8220;outliers&#8221; in the source image are not modified by the function.</li>
+<li><strong>borderValue</strong> &#8211; value used in case of a constant border; by default, it is 0.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">warpAffine</span></code> transforms the source image using the specified matrix:</p>
+<div class="math">
+<p><img src="../../../_images/math/189dfa6dbab9ff81eaeaa453b1a1e2313dcd3a26.png" alt="\texttt{dst} (x,y) =  \texttt{src} ( \texttt{M} _{11} x +  \texttt{M} _{12} y +  \texttt{M} _{13}, \texttt{M} _{21} x +  \texttt{M} _{22} y +  \texttt{M} _{23})"/></p>
+</div><p>when the flag <code class="docutils literal"><span class="pre">WARP_INVERSE_MAP</span></code> is set. Otherwise, the transformation is first inverted with
+<a class="reference internal" href="#void invertAffineTransform(InputArray M, OutputArray iM)" title="void invertAffineTransform(InputArray M, OutputArray iM)"><code class="xref ocv ocv-func docutils literal"><span class="pre">invertAffineTransform()</span></code></a> and then put in the formula above instead of <code class="docutils literal"><span class="pre">M</span></code> .
+The function cannot operate in-place.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void warpPerspective(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)" title="void warpPerspective(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">warpPerspective()</span></code></a>,
+<a class="reference internal" href="#void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)" title="void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)"><code class="xref ocv ocv-func docutils literal"><span class="pre">resize()</span></code></a>,
+<a class="reference internal" href="#void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)" title="void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">remap()</span></code></a>,
+<a class="reference internal" href="#void getRectSubPix(InputArray image, Size patchSize, Point2f center, OutputArray patch, int patchType)" title="void getRectSubPix(InputArray image, Size patchSize, Point2f center, OutputArray patch, int patchType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getRectSubPix()</span></code></a>,
+<a class="reference internal" href="../../core/doc/operations_on_arrays.html#void transform(InputArray src, OutputArray dst, InputArray m)" title="void transform(InputArray src, OutputArray dst, InputArray m)"><code class="xref ocv ocv-func docutils literal"><span class="pre">transform()</span></code></a></p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><code class="docutils literal"><span class="pre">cvGetQuadrangleSubPix</span></code> is similar to <code class="docutils literal"><span class="pre">cvWarpAffine</span></code>, but the outliers are extrapolated using replication border mode.</p>
+</div>
+</div>
+<div class="section" id="warpperspective">
+<h2>warpPerspective<a class="headerlink" href="#warpperspective" title="Permalink to this headline">¶</a></h2>
+<p>Applies a perspective transformation to an image.</p>
+<dl class="function">
+<dt id="void warpPerspective(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">warpPerspective</code><span class="sig-paren">(</span>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, InputArray <strong>M</strong>, Size <strong>dsize</strong>, int <strong>flags</strong>=INTER_LINEAR, int <strong>borderMode</strong>=BORDER_CONSTANT, const Scalar&amp; <strong>borderValue</strong>=Scalar()<span class="sig-paren">)</span><a class="headerlink" href="#void warpPerspective(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar& borderValue)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.warpPerspective">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">warpPerspective</code><span class="sig-paren">(</span>src, M, dsize<span class="optional">[</span>, dst<span class="optional">[</span>, flags<span class="optional">[</span>, borderMode<span class="optional">[</span>, borderValue<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; dst<a class="headerlink" href="#cv2.warpPerspective" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvWarpPerspective(const CvArr* src, CvArr* dst, const CvMat* map_matrix, int flags, CvScalar fillval)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvWarpPerspective</code><span class="sig-paren">(</span>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong>, const CvMat* <strong>map_matrix</strong>, int <strong>flags</strong>=CV_INTER_LINEAR+CV_WARP_FILL_OUTLIERS, CvScalar <strong>fillval</strong>=cvScalarAll(0) <span class="sig-paren">)</span><a class="headerlink" href="#void cvWarpPerspective(const CvArr* src, CvArr* dst, const CvMat* map_matrix, int flags, CvScalar fillval)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.WarpPerspective">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">WarpPerspective</code><span class="sig-paren">(</span>src, dst, mapMatrix, flags=CV_INTER_LINEAR+CV_WARP_FILL_OUTLIERS, fillval=(0, 0, 0, 0)<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.WarpPerspective" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; input image.</li>
+<li><strong>dst</strong> &#8211; output image that has the size  <code class="docutils literal"><span class="pre">dsize</span></code>  and the same type as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>M</strong> &#8211; <img class="math" src="../../../_images/math/268e62297468c4d7ef109727ed4bcbfad953ad61.png" alt="3\times 3"/>  transformation matrix.</li>
+<li><strong>dsize</strong> &#8211; size of the output image.</li>
+<li><strong>flags</strong> &#8211; combination of interpolation methods (<code class="docutils literal"><span class="pre">INTER_LINEAR</span></code> or <code class="docutils literal"><span class="pre">INTER_NEAREST</span></code>) and the optional flag  <code class="docutils literal"><span class="pre">WARP_INVERSE_MAP</span></code>, that sets <code class="docutils literal"><span class="pre">M</span></code> as the inverse transformation ( <img class="math" src="../../../_images/math/79358c8b893d7d0db75b629175a7eab3db5f192b.png" alt="\texttt{dst}\rightarrow\texttt{src}"/> ).</li>
+<li><strong>borderMode</strong> &#8211; pixel extrapolation method (<code class="docutils literal"><span class="pre">BORDER_CONSTANT</span></code> or <code class="docutils literal"><span class="pre">BORDER_REPLICATE</span></code>).</li>
+<li><strong>borderValue</strong> &#8211; value used in case of a constant border; by default, it equals 0.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">warpPerspective</span></code> transforms the source image using the specified matrix:</p>
+<div class="math">
+<p><img src="../../../_images/math/fa7e99ae84a2294284e680e2d4c4011121be6492.png" alt="\texttt{dst} (x,y) =  \texttt{src} \left ( \frac{M_{11} x + M_{12} y + M_{13}}{M_{31} x + M_{32} y + M_{33}} ,
+     \frac{M_{21} x + M_{22} y + M_{23}}{M_{31} x + M_{32} y + M_{33}} \right )"/></p>
+</div><p>when the flag <code class="docutils literal"><span class="pre">WARP_INVERSE_MAP</span></code> is set. Otherwise, the transformation is first inverted with
+<a class="reference internal" href="../../core/doc/operations_on_arrays.html#double invert(InputArray src, OutputArray dst, int flags)" title="double invert(InputArray src, OutputArray dst, int flags)"><code class="xref ocv ocv-func docutils literal"><span class="pre">invert()</span></code></a> and then put in the formula above instead of <code class="docutils literal"><span class="pre">M</span></code> .
+The function cannot operate in-place.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)" title="void warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">warpAffine()</span></code></a>,
+<a class="reference internal" href="#void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)" title="void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)"><code class="xref ocv ocv-func docutils literal"><span class="pre">resize()</span></code></a>,
+<a class="reference internal" href="#void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)" title="void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">remap()</span></code></a>,
+<a class="reference internal" href="#void getRectSubPix(InputArray image, Size patchSize, Point2f center, OutputArray patch, int patchType)" title="void getRectSubPix(InputArray image, Size patchSize, Point2f center, OutputArray patch, int patchType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getRectSubPix()</span></code></a>,
+<a class="reference internal" href="../../core/doc/operations_on_arrays.html#void perspectiveTransform(InputArray src, OutputArray dst, InputArray m)" title="void perspectiveTransform(InputArray src, OutputArray dst, InputArray m)"><code class="xref ocv ocv-func docutils literal"><span class="pre">perspectiveTransform()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="initundistortrectifymap">
+<h2>initUndistortRectifyMap<a class="headerlink" href="#initundistortrectifymap" title="Permalink to this headline">¶</a></h2>
+<p>Computes the undistortion and rectification transformation map.</p>
+<dl class="function">
+<dt id="void initUndistortRectifyMap(InputArray cameraMatrix, InputArray distCoeffs, InputArray R, InputArray newCameraMatrix, Size size, int m1type, OutputArray map1, OutputArray map2)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">initUndistortRectifyMap</code><span class="sig-paren">(</span>InputArray <strong>cameraMatrix</strong>, InputArray <strong>distCoeffs</strong>, InputArray <strong>R</strong>, InputArray <strong>newCameraMatrix</strong>, Size <strong>size</strong>, int <strong>m1type</strong>, OutputArray <strong>map1</strong>, OutputArray <strong>map2</strong><span class="sig-paren">)</span><a class="headerlink" href="#void initUndistortRectifyMap(InputArray cameraMatrix, InputArray distCoeffs, InputArray R, InputArray newCameraMatrix, Size size, int m1type, OutputArray map1, OutputArray map2)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.initUndistortRectifyMap">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">initUndistortRectifyMap</code><span class="sig-paren">(</span>cameraMatrix, distCoeffs, R, newCameraMatrix, size, m1type<span class="optional">[</span>, map1<span class="optional">[</span>, map2<span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; map1, map2<a class="headerlink" href="#cv2.initUndistortRectifyMap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvInitUndistortRectifyMap(const CvMat* camera_matrix, const CvMat* dist_coeffs, const CvMat * R, const CvMat* new_camera_matrix, CvArr* mapx, CvArr* mapy)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvInitUndistortRectifyMap</code><span class="sig-paren">(</span>const CvMat* <strong>camera_matrix</strong>, const CvMat* <strong>dist_coeffs</strong>, const CvMat* <strong>R</strong>, const CvMat* <strong>new_camera_matrix</strong>, CvArr* <strong>mapx</strong>, CvArr* <strong>mapy</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvInitUndistortRectifyMap(const CvMat* camera_matrix, const CvMat* dist_coeffs, const CvMat * R, const CvMat* new_camera_matrix, CvArr* mapx, CvArr* mapy)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvInitUndistortMap(const CvMat* camera_matrix, const CvMat* distortion_coeffs, CvArr* mapx, CvArr* mapy)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvInitUndistortMap</code><span class="sig-paren">(</span>const CvMat* <strong>camera_matrix</strong>, const CvMat* <strong>distortion_coeffs</strong>, CvArr* <strong>mapx</strong>, CvArr* <strong>mapy</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvInitUndistortMap(const CvMat* camera_matrix, const CvMat* distortion_coeffs, CvArr* mapx, CvArr* mapy)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.InitUndistortRectifyMap">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">InitUndistortRectifyMap</code><span class="sig-paren">(</span>cameraMatrix, distCoeffs, R, newCameraMatrix, map1, map2<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.InitUndistortRectifyMap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.InitUndistortMap">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">InitUndistortMap</code><span class="sig-paren">(</span>cameraMatrix, distCoeffs, map1, map2<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.InitUndistortMap" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cameraMatrix</strong> &#8211; Input camera matrix  <img class="math" src="../../../_images/math/3356c05a942d297035284c0bce1fbfb94102238e.png" alt="A=\vecthreethree{f_x}{0}{c_x}{0}{f_y}{c_y}{0}{0}{1}"/> .</li>
+<li><strong>distCoeffs</strong> &#8211; Input vector of distortion coefficients  <img class="math" src="../../../_images/math/94288b7709d10a7ddf286e33db0074512bda0411.png" alt="(k_1, k_2, p_1, p_2[, k_3[, k_4, k_5, k_6]])"/>  of 4, 5, or 8 elements. If the vector is NULL/empty, the zero distortion coefficients are assumed.</li>
+<li><strong>R</strong> &#8211; Optional rectification transformation in the object space (3x3 matrix).  <code class="docutils literal"><span class="pre">R1</span></code>  or  <code class="docutils literal"><span class="pre">R2</span></code> , computed by  <a class="reference internal" href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html#void stereoRectify(InputArray cameraMatrix1, InputArray distCoeffs1, InputArray cameraMatrix2, InputArray distCoeffs2, Size imageSize, InputArray R, InputArray T, OutputArray R1, OutputArray R2, OutputArray P1, OutputArray P2, OutputArray Q, int flags, double alpha, Size newImageSize, Rect* validPixROI1, Rect* validPixROI2)" title="void stereoRectify(InputArray cameraMatrix1, InputArray distCoeffs1, InputArray cameraMatrix2, InputArray distCoeffs2, Size imageSize, InputArray R, InputArray T, OutputArray R1, OutputArray R2, OutputArray P1, OutputArray P2, OutputArray Q, int flags, double alpha, Size newImageSize, Rect* validPixROI1, Rect* validPixROI2)"><code class="xref ocv ocv-func docutils literal"><span class="pre">stereoRectify()</span></code></a>  can be passed here. If the matrix is empty, the identity transformation is assumed. In <code class="docutils literal"><span class="pre">cvInitUndistortMap</span></code> R assumed to be an identity matrix.</li>
+<li><strong>newCameraMatrix</strong> &#8211; New camera matrix  <img class="math" src="../../../_images/math/0e0f1576ba6043068b1c62c942958d75e801a2ea.png" alt="A'=\vecthreethree{f_x'}{0}{c_x'}{0}{f_y'}{c_y'}{0}{0}{1}"/> .</li>
+<li><strong>size</strong> &#8211; Undistorted image size.</li>
+<li><strong>m1type</strong> &#8211; Type of the first output map that can be  <code class="docutils literal"><span class="pre">CV_32FC1</span></code>  or  <code class="docutils literal"><span class="pre">CV_16SC2</span></code> . See  <a class="reference internal" href="#void convertMaps(InputArray map1, InputArray map2, OutputArray dstmap1, OutputArray dstmap2, int dstmap1type, bool nninterpolation)" title="void convertMaps(InputArray map1, InputArray map2, OutputArray dstmap1, OutputArray dstmap2, int dstmap1type, bool nninterpolation)"><code class="xref ocv ocv-func docutils literal"><span class="pre">convertMaps()</span></code></a> for details.</li>
+<li><strong>map1</strong> &#8211; The first output map.</li>
+<li><strong>map2</strong> &#8211; The second output map.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function computes the joint undistortion and rectification transformation and represents the result in the form of maps for
+<a class="reference internal" href="#void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)" title="void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">remap()</span></code></a> . The undistorted image looks like original, as if it is captured with a camera using the camera matrix <code class="docutils literal"><span class="pre">=newCameraMatrix</span></code> and zero distortion. In case of a monocular camera, <code class="docutils literal"><span class="pre">newCameraMatrix</span></code> is usually equal to <code class="docutils literal"><span class="pre">cameraMatrix</span></code> , or it can be computed by
+<a class="reference internal" href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html#Mat getOptimalNewCameraMatrix(InputArray cameraMatrix, InputArray distCoeffs, Size imageSize, double alpha, Size newImgSize, Rect* validPixROI, bool centerPrincipalPoint)" title="Mat getOptimalNewCameraMatrix(InputArray cameraMatrix, InputArray distCoeffs, Size imageSize, double alpha, Size newImgSize, Rect* validPixROI, bool centerPrincipalPoint)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getOptimalNewCameraMatrix()</span></code></a> for a better control over scaling. In case of a stereo camera, <code class="docutils literal"><span class="pre">newCameraMatrix</span></code> is normally set to <code class="docutils literal"><span class="pre">P1</span></code> or <code class="docutils literal"><span class="pre">P2</span></code> computed by
+<a class="reference internal" href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html#void stereoRectify(InputArray cameraMatrix1, InputArray distCoeffs1, InputArray cameraMatrix2, InputArray distCoeffs2, Size imageSize, InputArray R, InputArray T, OutputArray R1, OutputArray R2, OutputArray P1, OutputArray P2, OutputArray Q, int flags, double alpha, Size newImageSize, Rect* validPixROI1, Rect* validPixROI2)" title="void stereoRectify(InputArray cameraMatrix1, InputArray distCoeffs1, InputArray cameraMatrix2, InputArray distCoeffs2, Size imageSize, InputArray R, InputArray T, OutputArray R1, OutputArray R2, OutputArray P1, OutputArray P2, OutputArray Q, int flags, double alpha, Size newImageSize, Rect* validPixROI1, Rect* validPixROI2)"><code class="xref ocv ocv-func docutils literal"><span class="pre">stereoRectify()</span></code></a> .</p>
+<p>Also, this new camera is oriented differently in the coordinate space, according to <code class="docutils literal"><span class="pre">R</span></code> . That, for example, helps to align two heads of a stereo camera so that the epipolar lines on both images become horizontal and have the same y- coordinate (in case of a horizontally aligned stereo camera).</p>
+<p>The function actually builds the maps for the inverse mapping algorithm that is used by
+<a class="reference internal" href="#void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)" title="void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">remap()</span></code></a> . That is, for each pixel
+<img class="math" src="../../../_images/math/8a26bd6b76072e327e2462b2fe05546ba899e682.png" alt="(u, v)"/> in the destination (corrected and rectified) image, the function computes the corresponding coordinates in the source image (that is, in the original image from camera). The following process is applied:</p>
+<div class="math">
+<p><img src="../../../_images/math/8808430360ef87d99c3a5725cd2ba7d2852ba689.png" alt="\begin{array}{l} x  \leftarrow (u - {c'}_x)/{f'}_x  \\ y  \leftarrow (v - {c'}_y)/{f'}_y  \\{[X\,Y\,W]} ^T  \leftarrow R^{-1}*[x \, y \, 1]^T  \\ x'  \leftarrow X/W  \\ y'  \leftarrow Y/W  \\ x&quot;  \leftarrow x' (1 + k_1 r^2 + k_2 r^4 + k_3 r^6) + 2p_1 x' y' + p_2(r^2 + 2 x'^2)  \\ y&quot;  \leftarrow y' (1 + k_1 r^2 + k_2 r^4 + k_3 r^6) + p_1 (r^2 + 2 y'^2) + 2 p_2 x' y'  \\ map_x(u,v)  \leftarrow x&quot; f_x + c_x  \\ map_y(u,v)  \leftarrow y&quot; f_y + c_y \end{array}"/></p>
+</div><p>where
+<img class="math" src="../../../_images/math/1cf983c88f452726ea3655ebe8d92882db4eff90.png" alt="(k_1, k_2, p_1, p_2[, k_3])"/> are the distortion coefficients.</p>
+<p>In case of a stereo camera, this function is called twice: once for each camera head, after
+<a class="reference internal" href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html#void stereoRectify(InputArray cameraMatrix1, InputArray distCoeffs1, InputArray cameraMatrix2, InputArray distCoeffs2, Size imageSize, InputArray R, InputArray T, OutputArray R1, OutputArray R2, OutputArray P1, OutputArray P2, OutputArray Q, int flags, double alpha, Size newImageSize, Rect* validPixROI1, Rect* validPixROI2)" title="void stereoRectify(InputArray cameraMatrix1, InputArray distCoeffs1, InputArray cameraMatrix2, InputArray distCoeffs2, Size imageSize, InputArray R, InputArray T, OutputArray R1, OutputArray R2, OutputArray P1, OutputArray P2, OutputArray Q, int flags, double alpha, Size newImageSize, Rect* validPixROI1, Rect* validPixROI2)"><code class="xref ocv ocv-func docutils literal"><span class="pre">stereoRectify()</span></code></a> , which in its turn is called after
+<a class="reference internal" href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html#double stereoCalibrate(InputArrayOfArrays objectPoints, InputArrayOfArrays imagePoints1, InputArrayOfArrays imagePoints2, InputOutputArray cameraMatrix1, InputOutputArray distCoeffs1, InputOutputArray cameraMatrix2, InputOutputArray distCoeffs2, Size imageSize, OutputArray R, OutputArray T, OutputArray E, OutputArray F, TermCriteria criteria, int flags)" title="double stereoCalibrate(InputArrayOfArrays objectPoints, InputArrayOfArrays imagePoints1, InputArrayOfArrays imagePoints2, InputOutputArray cameraMatrix1, InputOutputArray distCoeffs1, InputOutputArray cameraMatrix2, InputOutputArray distCoeffs2, Size imageSize, OutputArray R, OutputArray T, OutputArray E, OutputArray F, TermCriteria criteria, int flags)"><code class="xref ocv ocv-func docutils literal"><span class="pre">stereoCalibrate()</span></code></a> . But if the stereo camera was not calibrated, it is still possible to compute the rectification transformations directly from the fundamental matrix using
+<a class="reference internal" href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html#bool stereoRectifyUncalibrated(InputArray points1, InputArray points2, InputArray F, Size imgSize, OutputArray H1, OutputArray H2, double threshold)" title="bool stereoRectifyUncalibrated(InputArray points1, InputArray points2, InputArray F, Size imgSize, OutputArray H1, OutputArray H2, double threshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">stereoRectifyUncalibrated()</span></code></a> . For each camera, the function computes homography <code class="docutils literal"><span class="pre">H</span></code> as the rectification transformation in a pixel domain, not a rotation matrix <code class="docutils literal"><span class="pre">R</span></code> in 3D space. <code class="docutils literal"><span class="pre">R</span></code> can be computed from <code class="docutils literal"><span class="pre">H</span></code> as</p>
+<div class="math">
+<p><img src="../../../_images/math/59b747d7c0408805084a5b6a98070accf380ae2a.png" alt="\texttt{R} =  \texttt{cameraMatrix} ^{-1}  \cdot \texttt{H} \cdot \texttt{cameraMatrix}"/></p>
+</div><p>where <code class="docutils literal"><span class="pre">cameraMatrix</span></code> can be chosen arbitrarily.</p>
+</div>
+<div class="section" id="getdefaultnewcameramatrix">
+<h2>getDefaultNewCameraMatrix<a class="headerlink" href="#getdefaultnewcameramatrix" title="Permalink to this headline">¶</a></h2>
+<p>Returns the default new camera matrix.</p>
+<dl class="function">
+<dt id="Mat getDefaultNewCameraMatrix(InputArray cameraMatrix, Size imgsize, bool centerPrincipalPoint)">
+<strong>C++:</strong><code class="descname"> </code>Mat <code class="descname">getDefaultNewCameraMatrix</code><span class="sig-paren">(</span>InputArray <strong>cameraMatrix</strong>, Size <strong>imgsize</strong>=Size(), bool <strong>centerPrincipalPoint</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#Mat getDefaultNewCameraMatrix(InputArray cameraMatrix, Size imgsize, bool centerPrincipalPoint)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.getDefaultNewCameraMatrix">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">getDefaultNewCameraMatrix</code><span class="sig-paren">(</span>cameraMatrix<span class="optional">[</span>, imgsize<span class="optional">[</span>, centerPrincipalPoint<span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.getDefaultNewCameraMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cameraMatrix</strong> &#8211; Input camera matrix.</li>
+<li><strong>imgsize</strong> &#8211; Camera view image size in pixels.</li>
+<li><strong>centerPrincipalPoint</strong> &#8211; Location of the principal point in the new camera matrix. The parameter indicates whether this location should be at the image center or not.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns the camera matrix that is either an exact copy of the input <code class="docutils literal"><span class="pre">cameraMatrix</span></code> (when <code class="docutils literal"><span class="pre">centerPrinicipalPoint=false</span></code> ), or the modified one (when <code class="docutils literal"><span class="pre">centerPrincipalPoint=true</span></code>).</p>
+<p>In the latter case, the new camera matrix will be:</p>
+<div class="math">
+<p><img src="../../../_images/math/4ff134c6310643e9d3ba23b67075489e04fdcc6a.png" alt="\begin{bmatrix} f_x &amp;&amp; 0 &amp;&amp; ( \texttt{imgSize.width} -1)*0.5  \\ 0 &amp;&amp; f_y &amp;&amp; ( \texttt{imgSize.height} -1)*0.5  \\ 0 &amp;&amp; 0 &amp;&amp; 1 \end{bmatrix} ,"/></p>
+</div><p>where
+<img class="math" src="../../../_images/math/90cbff5be10b7d5d6a3ec6cabfe05e306e99ac1c.png" alt="f_x"/> and
+<img class="math" src="../../../_images/math/0a9dfcd96704b05afe921dcabeefcd77bfdbd863.png" alt="f_y"/> are
+<img class="math" src="../../../_images/math/efcf02ab5643293fb10588214b1ed71ead4edd4c.png" alt="(0,0)"/> and
+<img class="math" src="../../../_images/math/849b2bba16eb4db658d192d8748dc7c837dc4d45.png" alt="(1,1)"/> elements of <code class="docutils literal"><span class="pre">cameraMatrix</span></code> , respectively.</p>
+<p>By default, the undistortion functions in OpenCV (see
+<a class="reference internal" href="#void initUndistortRectifyMap(InputArray cameraMatrix, InputArray distCoeffs, InputArray R, InputArray newCameraMatrix, Size size, int m1type, OutputArray map1, OutputArray map2)" title="void initUndistortRectifyMap(InputArray cameraMatrix, InputArray distCoeffs, InputArray R, InputArray newCameraMatrix, Size size, int m1type, OutputArray map1, OutputArray map2)"><code class="xref ocv ocv-func docutils literal"><span class="pre">initUndistortRectifyMap()</span></code></a>,
+<a class="reference internal" href="#void undistort(InputArray src, OutputArray dst, InputArray cameraMatrix, InputArray distCoeffs, InputArray newCameraMatrix)" title="void undistort(InputArray src, OutputArray dst, InputArray cameraMatrix, InputArray distCoeffs, InputArray newCameraMatrix)"><code class="xref ocv ocv-func docutils literal"><span class="pre">undistort()</span></code></a>) do not move the principal point. However, when you work with stereo, it is important to move the principal points in both views to the same y-coordinate (which is required by most of stereo correspondence algorithms), and may be to the same x-coordinate too. So, you can form the new camera matrix for each view where the principal points are located at the center.</p>
+</div>
+<div class="section" id="undistort">
+<h2>undistort<a class="headerlink" href="#undistort" title="Permalink to this headline">¶</a></h2>
+<p>Transforms an image to compensate for lens distortion.</p>
+<dl class="function">
+<dt id="void undistort(InputArray src, OutputArray dst, InputArray cameraMatrix, InputArray distCoeffs, InputArray newCameraMatrix)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">undistort</code><span class="sig-paren">(</span>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, InputArray <strong>cameraMatrix</strong>, InputArray <strong>distCoeffs</strong>, InputArray <strong>newCameraMatrix</strong>=noArray() <span class="sig-paren">)</span><a class="headerlink" href="#void undistort(InputArray src, OutputArray dst, InputArray cameraMatrix, InputArray distCoeffs, InputArray newCameraMatrix)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.undistort">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">undistort</code><span class="sig-paren">(</span>src, cameraMatrix, distCoeffs<span class="optional">[</span>, dst<span class="optional">[</span>, newCameraMatrix<span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; dst<a class="headerlink" href="#cv2.undistort" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvUndistort2(const CvArr* src, CvArr* dst, const CvMat* camera_matrix, const CvMat* distortion_coeffs, const CvMat* new_camera_matrix)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvUndistort2</code><span class="sig-paren">(</span>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong>, const CvMat* <strong>camera_matrix</strong>, const CvMat* <strong>distortion_coeffs</strong>, const CvMat* <strong>new_camera_matrix</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void cvUndistort2(const CvArr* src, CvArr* dst, const CvMat* camera_matrix, const CvMat* distortion_coeffs, const CvMat* new_camera_matrix)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Undistort2">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Undistort2</code><span class="sig-paren">(</span>src, dst, cameraMatrix, distCoeffs<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.Undistort2" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input (distorted) image.</li>
+<li><strong>dst</strong> &#8211; Output (corrected) image that has the same size and type as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>cameraMatrix</strong> &#8211; Input camera matrix  <img class="math" src="../../../_images/math/5017fc06df8951eb2ca115915d52e6fe6d8034de.png" alt="A = \vecthreethree{f_x}{0}{c_x}{0}{f_y}{c_y}{0}{0}{1}"/> .</li>
+<li><strong>distCoeffs</strong> &#8211; Input vector of distortion coefficients  <img class="math" src="../../../_images/math/94288b7709d10a7ddf286e33db0074512bda0411.png" alt="(k_1, k_2, p_1, p_2[, k_3[, k_4, k_5, k_6]])"/>  of 4, 5, or 8 elements. If the vector is NULL/empty, the zero distortion coefficients are assumed.</li>
+<li><strong>newCameraMatrix</strong> &#8211; Camera matrix of the distorted image. By default, it is the same as  <code class="docutils literal"><span class="pre">cameraMatrix</span></code>  but you may additionally scale and shift the result by using a different matrix.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function transforms an image to compensate radial and tangential lens distortion.</p>
+<p>The function is simply a combination of
+<a class="reference internal" href="#void initUndistortRectifyMap(InputArray cameraMatrix, InputArray distCoeffs, InputArray R, InputArray newCameraMatrix, Size size, int m1type, OutputArray map1, OutputArray map2)" title="void initUndistortRectifyMap(InputArray cameraMatrix, InputArray distCoeffs, InputArray R, InputArray newCameraMatrix, Size size, int m1type, OutputArray map1, OutputArray map2)"><code class="xref ocv ocv-func docutils literal"><span class="pre">initUndistortRectifyMap()</span></code></a> (with unity <code class="docutils literal"><span class="pre">R</span></code> ) and
+<a class="reference internal" href="#void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)" title="void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">remap()</span></code></a> (with bilinear interpolation). See the former function for details of the transformation being performed.</p>
+<p>Those pixels in the destination image, for which there is no correspondent pixels in the source image, are filled with zeros (black color).</p>
+<p>A particular subset of the source image that will be visible in the corrected image can be regulated by <code class="docutils literal"><span class="pre">newCameraMatrix</span></code> . You can use
+<a class="reference internal" href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html#Mat getOptimalNewCameraMatrix(InputArray cameraMatrix, InputArray distCoeffs, Size imageSize, double alpha, Size newImgSize, Rect* validPixROI, bool centerPrincipalPoint)" title="Mat getOptimalNewCameraMatrix(InputArray cameraMatrix, InputArray distCoeffs, Size imageSize, double alpha, Size newImgSize, Rect* validPixROI, bool centerPrincipalPoint)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getOptimalNewCameraMatrix()</span></code></a> to compute the appropriate <code class="docutils literal"><span class="pre">newCameraMatrix</span></code>  depending on your requirements.</p>
+<p>The camera matrix and the distortion parameters can be determined using
+<a class="reference internal" href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html#double calibrateCamera(InputArrayOfArrays objectPoints, InputArrayOfArrays imagePoints, Size imageSize, InputOutputArray cameraMatrix, InputOutputArray distCoeffs, OutputArrayOfArrays rvecs, OutputArrayOfArrays tvecs, int flags, TermCriteria criteria)" title="double calibrateCamera(InputArrayOfArrays objectPoints, InputArrayOfArrays imagePoints, Size imageSize, InputOutputArray cameraMatrix, InputOutputArray distCoeffs, OutputArrayOfArrays rvecs, OutputArrayOfArrays tvecs, int flags, TermCriteria criteria)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calibrateCamera()</span></code></a> . If the resolution of images is different from the resolution used at the calibration stage,
+<img class="math" src="../../../_images/math/9ea57d8a2d5aab0891c30971ecb4861d676236df.png" alt="f_x, f_y, c_x"/> and
+<img class="math" src="../../../_images/math/690b7a0c20d6a00f67e5c16ca5dcab66d7969184.png" alt="c_y"/> need to be scaled accordingly, while the distortion coefficients remain the same.</p>
+</div>
+<div class="section" id="undistortpoints">
+<h2>undistortPoints<a class="headerlink" href="#undistortpoints" title="Permalink to this headline">¶</a></h2>
+<p>Computes the ideal point coordinates from the observed point coordinates.</p>
+<dl class="function">
+<dt id="void undistortPoints(InputArray src, OutputArray dst, InputArray cameraMatrix, InputArray distCoeffs, InputArray R, InputArray P)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">undistortPoints</code><span class="sig-paren">(</span>InputArray <strong>src</strong>, OutputArray <strong>dst</strong>, InputArray <strong>cameraMatrix</strong>, InputArray <strong>distCoeffs</strong>, InputArray <strong>R</strong>=noArray(), InputArray <strong>P</strong>=noArray()<span class="sig-paren">)</span><a class="headerlink" href="#void undistortPoints(InputArray src, OutputArray dst, InputArray cameraMatrix, InputArray distCoeffs, InputArray R, InputArray P)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.undistortPoints">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">undistortPoints</code><span class="sig-paren">(</span>src, cameraMatrix, distCoeffs<span class="optional">[</span>, dst<span class="optional">[</span>, R<span class="optional">[</span>, P<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; dst<a class="headerlink" href="#cv2.undistortPoints" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvUndistortPoints(const CvMat* src, CvMat* dst, const CvMat* camera_matrix, const CvMat* dist_coeffs, const CvMat* R, const CvMat* P)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvUndistortPoints</code><span class="sig-paren">(</span>const CvMat* <strong>src</strong>, CvMat* <strong>dst</strong>, const CvMat* <strong>camera_matrix</strong>, const CvMat* <strong>dist_coeffs</strong>, const CvMat* <strong>R</strong>=0, const CvMat* <strong>P</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void cvUndistortPoints(const CvMat* src, CvMat* dst, const CvMat* camera_matrix, const CvMat* dist_coeffs, const CvMat* R, const CvMat* P)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.UndistortPoints">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">UndistortPoints</code><span class="sig-paren">(</span>src, dst, cameraMatrix, distCoeffs, R=None, P=None<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.UndistortPoints" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Observed point coordinates, 1xN or Nx1 2-channel (CV_32FC2 or CV_64FC2).</li>
+<li><strong>dst</strong> &#8211; Output ideal point coordinates after undistortion and reverse perspective transformation. If matrix <code class="docutils literal"><span class="pre">P</span></code> is identity  or omitted, <code class="docutils literal"><span class="pre">dst</span></code> will contain normalized point coordinates.</li>
+<li><strong>cameraMatrix</strong> &#8211; Camera matrix  <img class="math" src="../../../_images/math/c568b55fba0b37aca4e37dd3a7452eba5602347a.png" alt="\vecthreethree{f_x}{0}{c_x}{0}{f_y}{c_y}{0}{0}{1}"/> .</li>
+<li><strong>distCoeffs</strong> &#8211; Input vector of distortion coefficients  <img class="math" src="../../../_images/math/94288b7709d10a7ddf286e33db0074512bda0411.png" alt="(k_1, k_2, p_1, p_2[, k_3[, k_4, k_5, k_6]])"/>  of 4, 5, or 8 elements. If the vector is NULL/empty, the zero distortion coefficients are assumed.</li>
+<li><strong>R</strong> &#8211; Rectification transformation in the object space (3x3 matrix).  <code class="docutils literal"><span class="pre">R1</span></code>  or  <code class="docutils literal"><span class="pre">R2</span></code>  computed by  <a class="reference internal" href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html#void stereoRectify(InputArray cameraMatrix1, InputArray distCoeffs1, InputArray cameraMatrix2, InputArray distCoeffs2, Size imageSize, InputArray R, InputArray T, OutputArray R1, OutputArray R2, OutputArray P1, OutputArray P2, OutputArray Q, int flags, double alpha, Size newImageSize, Rect* validPixROI1, Rect* validPixROI2)" title="void stereoRectify(InputArray cameraMatrix1, InputArray distCoeffs1, InputArray cameraMatrix2, InputArray distCoeffs2, Size imageSize, InputArray R, InputArray T, OutputArray R1, OutputArray R2, OutputArray P1, OutputArray P2, OutputArray Q, int flags, double alpha, Size newImageSize, Rect* validPixROI1, Rect* validPixROI2)"><code class="xref ocv ocv-func docutils literal"><span class="pre">stereoRectify()</span></code></a>  can be passed here. If the matrix is empty, the identity transformation is used.</li>
+<li><strong>P</strong> &#8211; New camera matrix (3x3) or new projection matrix (3x4).  <code class="docutils literal"><span class="pre">P1</span></code>  or  <code class="docutils literal"><span class="pre">P2</span></code>  computed by  <a class="reference internal" href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html#void stereoRectify(InputArray cameraMatrix1, InputArray distCoeffs1, InputArray cameraMatrix2, InputArray distCoeffs2, Size imageSize, InputArray R, InputArray T, OutputArray R1, OutputArray R2, OutputArray P1, OutputArray P2, OutputArray Q, int flags, double alpha, Size newImageSize, Rect* validPixROI1, Rect* validPixROI2)" title="void stereoRectify(InputArray cameraMatrix1, InputArray distCoeffs1, InputArray cameraMatrix2, InputArray distCoeffs2, Size imageSize, InputArray R, InputArray T, OutputArray R1, OutputArray R2, OutputArray P1, OutputArray P2, OutputArray Q, int flags, double alpha, Size newImageSize, Rect* validPixROI1, Rect* validPixROI2)"><code class="xref ocv ocv-func docutils literal"><span class="pre">stereoRectify()</span></code></a>  can be passed here. If the matrix is empty, the identity new camera matrix is used.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function is similar to
+<a class="reference internal" href="#void undistort(InputArray src, OutputArray dst, InputArray cameraMatrix, InputArray distCoeffs, InputArray newCameraMatrix)" title="void undistort(InputArray src, OutputArray dst, InputArray cameraMatrix, InputArray distCoeffs, InputArray newCameraMatrix)"><code class="xref ocv ocv-func docutils literal"><span class="pre">undistort()</span></code></a> and
+<a class="reference internal" href="#void initUndistortRectifyMap(InputArray cameraMatrix, InputArray distCoeffs, InputArray R, InputArray newCameraMatrix, Size size, int m1type, OutputArray map1, OutputArray map2)" title="void initUndistortRectifyMap(InputArray cameraMatrix, InputArray distCoeffs, InputArray R, InputArray newCameraMatrix, Size size, int m1type, OutputArray map1, OutputArray map2)"><code class="xref ocv ocv-func docutils literal"><span class="pre">initUndistortRectifyMap()</span></code></a>  but it operates on a sparse set of points instead of a raster image. Also the function performs a reverse transformation to
+<a class="reference internal" href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html#void projectPoints(InputArray objectPoints, InputArray rvec, InputArray tvec, InputArray cameraMatrix, InputArray distCoeffs, OutputArray imagePoints, OutputArray jacobian, double aspectRatio)" title="void projectPoints(InputArray objectPoints, InputArray rvec, InputArray tvec, InputArray cameraMatrix, InputArray distCoeffs, OutputArray imagePoints, OutputArray jacobian, double aspectRatio)"><code class="xref ocv ocv-func docutils literal"><span class="pre">projectPoints()</span></code></a> . In case of a 3D object, it does not reconstruct its 3D coordinates, but for a planar object, it does, up to a translation vector, if the proper <code class="docutils literal"><span class="pre">R</span></code> is specified.</p>
+<div class="highlight-cpp"><div class="highlight"><pre>// (u,v) is the input point, (u&#39;, v&#39;) is the output point
+// camera_matrix=[fx 0 cx; 0 fy cy; 0 0 1]
+// P=[fx&#39; 0 cx&#39; tx; 0 fy&#39; cy&#39; ty; 0 0 1 tz]
+x&quot; = (u - cx)/fx
+y&quot; = (v - cy)/fy
+(x&#39;,y&#39;) = undistort(x&quot;,y&quot;,dist_coeffs)
+[X,Y,W]T = R*[x&#39; y&#39; 1]T
+x = X/W, y = Y/W
+// only performed if P=[fx&#39; 0 cx&#39; [tx]; 0 fy&#39; cy&#39; [ty]; 0 0 1 [tz]] is specified
+u&#39; = x*fx&#39; + cx&#39;
+v&#39; = y*fy&#39; + cy&#39;,
+</pre></div>
+</div>
+<p>where <code class="docutils literal"><span class="pre">undistort()</span></code> is an approximate iterative algorithm that estimates the normalized original point coordinates out of the normalized distorted point coordinates (&#8220;normalized&#8221; means that the coordinates do not depend on the camera matrix).</p>
+<p>The function can be used for both a stereo camera head or a monocular camera (when R is empty).</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Geometric Image Transformations</a><ul>
+<li><a class="reference internal" href="#convertmaps">convertMaps</a></li>
+<li><a class="reference internal" href="#getaffinetransform">getAffineTransform</a></li>
+<li><a class="reference internal" href="#getperspectivetransform">getPerspectiveTransform</a></li>
+<li><a class="reference internal" href="#getrectsubpix">getRectSubPix</a></li>
+<li><a class="reference internal" href="#getrotationmatrix2d">getRotationMatrix2D</a></li>
+<li><a class="reference internal" href="#invertaffinetransform">invertAffineTransform</a></li>
+<li><a class="reference internal" href="#linearpolar">LinearPolar</a></li>
+<li><a class="reference internal" href="#logpolar">LogPolar</a></li>
+<li><a class="reference internal" href="#remap">remap</a></li>
+<li><a class="reference internal" href="#resize">resize</a></li>
+<li><a class="reference internal" href="#warpaffine">warpAffine</a></li>
+<li><a class="reference internal" href="#warpperspective">warpPerspective</a></li>
+<li><a class="reference internal" href="#initundistortrectifymap">initUndistortRectifyMap</a></li>
+<li><a class="reference internal" href="#getdefaultnewcameramatrix">getDefaultNewCameraMatrix</a></li>
+<li><a class="reference internal" href="#undistort">undistort</a></li>
+<li><a class="reference internal" href="#undistortpoints">undistortPoints</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="filtering.html"
+                        title="previous chapter">Image Filtering</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="miscellaneous_transformations.html"
+                        title="next chapter">Miscellaneous Image Transformations</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/imgproc/doc/geometric_transformations.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="miscellaneous_transformations.html" title="Miscellaneous Image Transformations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="filtering.html" title="Image Filtering"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="imgproc.html" >imgproc. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

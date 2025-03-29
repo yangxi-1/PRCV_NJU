@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Clustering &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="core. The Core Functionality" href="core.html" />
+    <link rel="next" title="Utility and System Functions and Macros" href="utility_and_system_functions_and_macros.html" />
+    <link rel="prev" title="XML/YAML Persistence (C API)" href="old_xml_yaml_persistence.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="utility_and_system_functions_and_macros.html" title="Utility and System Functions and Macros"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="old_xml_yaml_persistence.html" title="XML/YAML Persistence (C API)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="core.html" accesskey="U">core. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="clustering">
+<h1>Clustering<a class="headerlink" href="#clustering" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="kmeans">
+<h2>kmeans<a class="headerlink" href="#kmeans" title="Permalink to this headline">¶</a></h2>
+<p>Finds centers of clusters and groups input samples around the clusters.</p>
+<dl class="function">
+<dt id="double kmeans(InputArray data, int K, InputOutputArray bestLabels, TermCriteria criteria, int attempts, int flags, OutputArray centers)">
+<strong>C++:</strong><code class="descname"> </code>double <code class="descname">kmeans</code><span class="sig-paren">(</span>InputArray <strong>data</strong>, int <strong>K</strong>, InputOutputArray <strong>bestLabels</strong>, TermCriteria <strong>criteria</strong>, int <strong>attempts</strong>, int <strong>flags</strong>, OutputArray <strong>centers</strong>=noArray() <span class="sig-paren">)</span><a class="headerlink" href="#double kmeans(InputArray data, int K, InputOutputArray bestLabels, TermCriteria criteria, int attempts, int flags, OutputArray centers)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.kmeans">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">kmeans</code><span class="sig-paren">(</span>data, K, criteria, attempts, flags<span class="optional">[</span>, bestLabels<span class="optional">[</span>, centers<span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; retval, bestLabels, centers<a class="headerlink" href="#cv2.kmeans" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="int cvKMeans2(const CvArr* samples, int cluster_count, CvArr* labels, CvTermCriteria termcrit, int attempts, CvRNG* rng, int flags, CvArr* _centers, double* compactness)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvKMeans2</code><span class="sig-paren">(</span>const CvArr* <strong>samples</strong>, int <strong>cluster_count</strong>, CvArr* <strong>labels</strong>, CvTermCriteria <strong>termcrit</strong>, int <strong>attempts</strong>=1, CvRNG* <strong>rng</strong>=0, int <strong>flags</strong>=0, CvArr* <strong>_centers</strong>=0, double* <strong>compactness</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#int cvKMeans2(const CvArr* samples, int cluster_count, CvArr* labels, CvTermCriteria termcrit, int attempts, CvRNG* rng, int flags, CvArr* _centers, double* compactness)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.KMeans2">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">KMeans2</code><span class="sig-paren">(</span>samples, nclusters, labels, termcrit, attempts=1, flags=0, centers=None<span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#cv.KMeans2" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>samples</strong> &#8211; Floating-point matrix of input samples, one row per sample.</li>
+<li><strong>data</strong> &#8211; <p>Data for clustering. An array of N-Dimensional points with float coordinates is needed. Examples of this array can be:</p>
+<ul>
+<li><code class="docutils literal"><span class="pre">Mat</span> <span class="pre">points(count,</span> <span class="pre">2,</span> <span class="pre">CV_32F);</span></code></li>
+<li><code class="docutils literal"><span class="pre">Mat</span> <span class="pre">points(count,</span> <span class="pre">1,</span> <span class="pre">CV_32FC2);</span></code></li>
+<li><code class="docutils literal"><span class="pre">Mat</span> <span class="pre">points(1,</span> <span class="pre">count,</span> <span class="pre">CV_32FC2);</span></code></li>
+<li><code class="docutils literal"><span class="pre">std::vector&lt;cv::Point2f&gt;</span> <span class="pre">points(sampleCount);</span></code></li>
+</ul>
+</li>
+<li><strong>cluster_count</strong> &#8211; Number of clusters to split the set by.</li>
+<li><strong>K</strong> &#8211; Number of clusters to split the set by.</li>
+<li><strong>labels</strong> &#8211; Input/output integer array that stores the cluster indices for every sample.</li>
+<li><strong>criteria</strong> &#8211; The algorithm termination criteria, that is, the maximum number of iterations and/or the desired accuracy. The accuracy is specified as <code class="docutils literal"><span class="pre">criteria.epsilon</span></code>. As soon as each of the cluster centers moves by less than <code class="docutils literal"><span class="pre">criteria.epsilon</span></code> on some iteration, the algorithm stops.</li>
+<li><strong>termcrit</strong> &#8211; The algorithm termination criteria, that is, the maximum number of iterations and/or the desired accuracy.</li>
+<li><strong>attempts</strong> &#8211; Flag to specify the number of times the algorithm is executed using different initial labellings. The algorithm returns the labels that yield the best compactness (see the last function parameter).</li>
+<li><strong>rng</strong> &#8211; CvRNG state initialized by RNG().</li>
+<li><strong>flags</strong> &#8211; <p>Flag that can take the following values:</p>
+<ul>
+<li><strong>KMEANS_RANDOM_CENTERS</strong> Select random initial centers in each attempt.</li>
+<li><strong>KMEANS_PP_CENTERS</strong> Use <code class="docutils literal"><span class="pre">kmeans++</span></code> center initialization by Arthur and Vassilvitskii [Arthur2007].</li>
+<li><strong>KMEANS_USE_INITIAL_LABELS</strong> During the first (and possibly the only) attempt, use the user-supplied labels instead of computing them from the initial centers. For the second and further attempts, use the random or semi-random centers. Use one of  <code class="docutils literal"><span class="pre">KMEANS_*_CENTERS</span></code>  flag to specify the exact method.</li>
+</ul>
+</li>
+<li><strong>centers</strong> &#8211; Output matrix of the cluster centers, one row per each cluster center.</li>
+<li><strong>_centers</strong> &#8211; Output matrix of the cluster centers, one row per each cluster center.</li>
+<li><strong>compactness</strong> &#8211; The returned value that is described below.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">kmeans</span></code> implements a k-means algorithm that finds the
+centers of <code class="docutils literal"><span class="pre">cluster_count</span></code> clusters and groups the input samples
+around the clusters. As an output,
+<img class="math" src="../../../_images/math/886a7f5d5a02acc5f91c6b44850fada5e5e4464c.png" alt="\texttt{labels}_i"/> contains a 0-based cluster index for
+the sample stored in the
+<img class="math" src="../../../_images/math/6957f7dfca367070ef804a1b0e3f8c79955e90fc.png" alt="i^{th}"/> row of the <code class="docutils literal"><span class="pre">samples</span></code> matrix.</p>
+<p>The function returns the compactness measure that is computed as</p>
+<div class="math">
+<p><img src="../../../_images/math/5802427a39f496fd49d5072a17d922079fa3b27e.png" alt="\sum _i  \| \texttt{samples} _i -  \texttt{centers} _{ \texttt{labels} _i} \| ^2"/></p>
+</div><p>after every attempt. The best (minimum) value is chosen and the
+corresponding labels and the compactness value are returned by the function.
+Basically, you can use only the core of the function, set the number of
+attempts to 1, initialize labels each time using a custom algorithm, pass them with the
+( <code class="docutils literal"><span class="pre">flags</span></code> = <code class="docutils literal"><span class="pre">KMEANS_USE_INITIAL_LABELS</span></code> ) flag, and then choose the best (most-compact) clustering.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example on K-means clustering can be found at opencv_source_code/samples/cpp/kmeans.cpp</li>
+<li>(Python) An example on K-means clustering can be found at opencv_source_code/samples/python2/kmeans.py</li>
+</ul>
+</div>
+</div>
+<div class="section" id="partition">
+<h2>partition<a class="headerlink" href="#partition" title="Permalink to this headline">¶</a></h2>
+<p>Splits an element set into equivalency classes.</p>
+<dl class="function">
+<dt id="template&lt;typename _Tp, class _EqPredicate&gt; int partition(const vector&lt;_Tp&gt;&amp; vec, vector&lt;int&gt;&amp; labels, _EqPredicate predicate)">
+<strong>C++:</strong><code class="descname"> </code>template&lt;typename _Tp, class _EqPredicate&gt; int <code class="descname">partition</code><span class="sig-paren">(</span>const vector&lt;_Tp&gt;&amp; <strong>vec</strong>, vector&lt;int&gt;&amp; <strong>labels</strong>, _EqPredicate <strong>predicate</strong>=_EqPredicate()<span class="sig-paren">)</span><a class="headerlink" href="#template<typename _Tp, class _EqPredicate> int partition(const vector<_Tp>& vec, vector<int>& labels, _EqPredicate predicate)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>vec</strong> &#8211; Set of elements stored as a vector.</li>
+<li><strong>labels</strong> &#8211; Output vector of labels. It contains as many elements as  <code class="docutils literal"><span class="pre">vec</span></code>. Each label  <code class="docutils literal"><span class="pre">labels[i]</span></code>  is a 0-based cluster index of  <code class="docutils literal"><span class="pre">vec[i]</span></code> .</li>
+<li><strong>predicate</strong> &#8211; Equivalence predicate (pointer to a boolean function of two arguments or an instance of the class that has the method  <code class="docutils literal"><span class="pre">bool</span> <span class="pre">operator()(const</span> <span class="pre">_Tp&amp;</span> <span class="pre">a,</span> <span class="pre">const</span> <span class="pre">_Tp&amp;</span> <span class="pre">b)</span></code> ). The predicate returns <code class="docutils literal"><span class="pre">true</span></code> when the elements are certainly in the same class, and returns <code class="docutils literal"><span class="pre">false</span></code> if they may or may not be in the same class.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The generic function <code class="docutils literal"><span class="pre">partition</span></code> implements an
+<img class="math" src="../../../_images/math/b6c39ba76387ebf37c4ea3cba26a7dd34eed8cb9.png" alt="O(N^2)"/> algorithm for
+splitting a set of
+<img class="math" src="../../../_images/math/b7fa5a60940a885027b1a7928d7b1d3f7431c8a2.png" alt="N"/> elements into one or more equivalency classes, as described in
+<a class="reference external" href="http://en.wikipedia.org/wiki/Disjoint-set_data_structure">http://en.wikipedia.org/wiki/Disjoint-set_data_structure</a>
+. The function
+returns the number of equivalency classes.</p>
+<table class="docutils citation" frame="void" id="arthur2007" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Arthur2007]</td><td>Arthur and S. Vassilvitskii. k-means++: the advantages of careful seeding, Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms, 2007</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Clustering</a><ul>
+<li><a class="reference internal" href="#kmeans">kmeans</a></li>
+<li><a class="reference internal" href="#partition">partition</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="old_xml_yaml_persistence.html"
+                        title="previous chapter">XML/YAML Persistence (C API)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="utility_and_system_functions_and_macros.html"
+                        title="next chapter">Utility and System Functions and Macros</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/core/doc/clustering.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="utility_and_system_functions_and_macros.html" title="Utility and System Functions and Macros"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="old_xml_yaml_persistence.html" title="XML/YAML Persistence (C API)"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="core.html" >core. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

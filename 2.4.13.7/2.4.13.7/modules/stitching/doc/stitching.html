@@ -1,0 +1,249 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>stitching. Images stitching &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="OpenCV API Reference" href="../../refman.html" />
+    <link rel="next" title="Stitching Pipeline" href="introduction.html" />
+    <link rel="prev" title="Denoising" href="../../photo/doc/denoising.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="introduction.html" title="Stitching Pipeline"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../../photo/doc/denoising.html" title="Denoising"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" accesskey="U">OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="stitching-images-stitching">
+<h1>stitching. Images stitching<a class="headerlink" href="#stitching-images-stitching" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Stitching Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#references">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="high_level.html">High Level Functionality</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="high_level.html#stitcher">Stitcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high_level.html#stitcher-createdefault">Stitcher::createDefault</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high_level.html#stitcher-estimatetransform">Stitcher::estimateTransform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high_level.html#stitcher-composepanorama">Stitcher::composePanorama</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high_level.html#stitcher-stitch">Stitcher::stitch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high_level.html#warpercreator">WarperCreator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high_level.html#planewarper">PlaneWarper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high_level.html#cylindricalwarper">CylindricalWarper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high_level.html#sphericalwarper">SphericalWarper</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="camera.html">Camera</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="camera.html#detail-cameraparams">detail::CameraParams</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="matching.html">Features Finding and Images Matching</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="matching.html#detail-imagefeatures">detail::ImageFeatures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html#detail-featuresfinder">detail::FeaturesFinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html#detail-featuresfinder-operator">detail::FeaturesFinder::operator()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html#detail-featuresfinder-collectgarbage">detail::FeaturesFinder::collectGarbage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html#detail-featuresfinder-find">detail::FeaturesFinder::find</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html#detail-surffeaturesfinder">detail::SurfFeaturesFinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html#detail-orbfeaturesfinder">detail::OrbFeaturesFinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html#detail-matchesinfo">detail::MatchesInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html#detail-featuresmatcher">detail::FeaturesMatcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html#detail-featuresmatcher-operator">detail::FeaturesMatcher::operator()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html#detail-featuresmatcher-isthreadsafe">detail::FeaturesMatcher::isThreadSafe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html#detail-featuresmatcher-collectgarbage">detail::FeaturesMatcher::collectGarbage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html#detail-featuresmatcher-match">detail::FeaturesMatcher::match</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html#detail-bestof2nearestmatcher">detail::BestOf2NearestMatcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html#detail-bestof2nearestmatcher-bestof2nearestmatcher">detail::BestOf2NearestMatcher::BestOf2NearestMatcher</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="motion_estimation.html">Rotation Estimation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="motion_estimation.html#detail-estimator">detail::Estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_estimation.html#detail-estimator-operator">detail::Estimator::operator()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_estimation.html#detail-estimator-estimate">detail::Estimator::estimate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_estimation.html#detail-homographybasedestimator">detail::HomographyBasedEstimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_estimation.html#detail-bundleadjusterbase">detail::BundleAdjusterBase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_estimation.html#detail-bundleadjusterbase-bundleadjusterbase">detail::BundleAdjusterBase::BundleAdjusterBase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_estimation.html#detail-bundleadjusterbase-setupinitialcameraparams">detail::BundleAdjusterBase::setUpInitialCameraParams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_estimation.html#detail-bundleadjusterbase-calcerror">detail::BundleAdjusterBase::calcError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_estimation.html#detail-bundleadjusterbase-calcjacobian">detail::BundleAdjusterBase::calcJacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_estimation.html#detail-bundleadjusterbase-obtainrefinedcameraparams">detail::BundleAdjusterBase::obtainRefinedCameraParams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_estimation.html#detail-bundleadjusterreproj">detail::BundleAdjusterReproj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_estimation.html#detail-bundleadjusterray">detail::BundleAdjusterRay</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_estimation.html#detail-wavecorrectkind">detail::WaveCorrectKind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_estimation.html#detail-wavecorrect">detail::waveCorrect</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="autocalib.html">Autocalibration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="autocalib.html#detail-focalsfromhomography">detail::focalsFromHomography</a></li>
+<li class="toctree-l2"><a class="reference internal" href="autocalib.html#detail-estimatefocal">detail::estimateFocal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="warpers.html">Images Warping</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="warpers.html#detail-rotationwarper">detail::RotationWarper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="warpers.html#detail-rotationwarper-warppoint">detail::RotationWarper::warpPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="warpers.html#detail-rotationwarper-buildmaps">detail::RotationWarper::buildMaps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="warpers.html#detail-rotationwarper-warp">detail::RotationWarper::warp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="warpers.html#detail-rotationwarper-warpbackward">detail::RotationWarper::warpBackward</a></li>
+<li class="toctree-l2"><a class="reference internal" href="warpers.html#detail-rotationwarper-warproi">detail::RotationWarper::warpRoi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="warpers.html#detail-projectorbase">detail::ProjectorBase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="warpers.html#detail-rotationwarperbase">detail::RotationWarperBase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="warpers.html#detail-planewarper">detail::PlaneWarper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="warpers.html#detail-planewarper-planewarper">detail::PlaneWarper::PlaneWarper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="warpers.html#detail-sphericalwarper">detail::SphericalWarper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="warpers.html#detail-sphericalwarper-sphericalwarper">detail::SphericalWarper::SphericalWarper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="warpers.html#detail-cylindricalwarper">detail::CylindricalWarper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="warpers.html#detail-cylindricalwarper-cylindricalwarper">detail::CylindricalWarper::CylindricalWarper</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="seam_estimation.html">Seam Estimation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="seam_estimation.html#detail-seamfinder">detail::SeamFinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seam_estimation.html#detail-seamfinder-find">detail::SeamFinder::find</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seam_estimation.html#detail-noseamfinder">detail::NoSeamFinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seam_estimation.html#detail-pairwiseseamfinder">detail::PairwiseSeamFinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seam_estimation.html#detail-pairwiseseamfinder-findinpair">detail::PairwiseSeamFinder::findInPair</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seam_estimation.html#detail-voronoiseamfinder">detail::VoronoiSeamFinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seam_estimation.html#detail-graphcutseamfinderbase">detail::GraphCutSeamFinderBase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seam_estimation.html#detail-graphcutseamfinder">detail::GraphCutSeamFinder</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="exposure_compensation.html">Exposure Compensation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="exposure_compensation.html#detail-exposurecompensator">detail::ExposureCompensator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exposure_compensation.html#detail-exposurecompensator-feed">detail::ExposureCompensator::feed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exposure_compensation.html#detil-exposurecompensator-apply">detil::ExposureCompensator::apply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exposure_compensation.html#detail-noexposurecompensator">detail::NoExposureCompensator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exposure_compensation.html#detail-gaincompensator">detail::GainCompensator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exposure_compensation.html#detail-blocksgaincompensator">detail::BlocksGainCompensator</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="blenders.html">Image Blenders</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="blenders.html#detail-blender">detail::Blender</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blenders.html#detail-blender-prepare">detail::Blender::prepare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blenders.html#detail-blender-feed">detail::Blender::feed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blenders.html#detail-blender-blend">detail::Blender::blend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blenders.html#detail-featherblender">detail::FeatherBlender</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blenders.html#detail-multibandblender">detail::MultiBandBlender</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../../photo/doc/denoising.html"
+                        title="previous chapter">Denoising</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="introduction.html"
+                        title="next chapter">Stitching Pipeline</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/stitching/doc/stitching.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="introduction.html" title="Stitching Pipeline"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../../photo/doc/denoising.html" title="Denoising"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

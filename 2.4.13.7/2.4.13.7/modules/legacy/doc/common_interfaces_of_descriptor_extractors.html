@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Common Interfaces of Descriptor Extractors &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="legacy. Deprecated stuff" href="legacy.html" />
+    <link rel="next" title="Common Interfaces of Generic Descriptor Matchers" href="common_interfaces_of_generic_descriptor_matchers.html" />
+    <link rel="prev" title="Feature Detection and Description" href="feature_detection_and_description.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="common_interfaces_of_generic_descriptor_matchers.html" title="Common Interfaces of Generic Descriptor Matchers"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="feature_detection_and_description.html" title="Feature Detection and Description"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="legacy.html" accesskey="U">legacy. Deprecated stuff</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="common-interfaces-of-descriptor-extractors">
+<h1>Common Interfaces of Descriptor Extractors<a class="headerlink" href="#common-interfaces-of-descriptor-extractors" title="Permalink to this headline">¶</a></h1>
+<p>Extractors of keypoint descriptors in OpenCV have wrappers with a common interface that enables you to easily switch
+between different algorithms solving the same problem. This section is devoted to computing descriptors
+represented as vectors in a multidimensional space. All objects that implement the <code class="docutils literal"><span class="pre">vector</span></code>
+descriptor extractors inherit the
+<a class="reference internal" href="../../features2d/doc/common_interfaces_of_descriptor_extractors.html#DescriptorExtractor : public Algorithm" title="class DescriptorExtractor : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">DescriptorExtractor</span></code></a> interface.</p>
+<div class="section" id="calonderdescriptorextractor">
+<h2>CalonderDescriptorExtractor<a class="headerlink" href="#calonderdescriptorextractor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="CalonderDescriptorExtractor : public DescriptorExtractor">
+<em class="property">class </em><code class="descname">CalonderDescriptorExtractor</code> : <em class="property">public</em> <code class="descname">DescriptorExtractor</code><a class="headerlink" href="#CalonderDescriptorExtractor : public DescriptorExtractor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Wrapping class for computing descriptors by using the
+<a class="reference internal" href="feature_detection_and_description.html#RTreeClassifier" title="class RTreeClassifier"><code class="xref ocv ocv-class docutils literal"><span class="pre">RTreeClassifier</span></code></a> class.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">CalonderDescriptorExtractor</span> <span class="o">:</span> <span class="k">public</span> <span class="n">DescriptorExtractor</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">CalonderDescriptorExtractor</span><span class="p">(</span> <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">classifierFile</span> <span class="p">);</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">read</span><span class="p">(</span> <span class="k">const</span> <span class="n">FileNode</span> <span class="o">&amp;</span><span class="n">fn</span> <span class="p">);</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">write</span><span class="p">(</span> <span class="n">FileStorage</span> <span class="o">&amp;</span><span class="n">fs</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="nf">descriptorSize</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="nf">descriptorType</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="k">protected</span><span class="o">:</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Common Interfaces of Descriptor Extractors</a><ul>
+<li><a class="reference internal" href="#calonderdescriptorextractor">CalonderDescriptorExtractor</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="feature_detection_and_description.html"
+                        title="previous chapter">Feature Detection and Description</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="common_interfaces_of_generic_descriptor_matchers.html"
+                        title="next chapter">Common Interfaces of Generic Descriptor Matchers</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/legacy/doc/common_interfaces_of_descriptor_extractors.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="common_interfaces_of_generic_descriptor_matchers.html" title="Common Interfaces of Generic Descriptor Matchers"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="feature_detection_and_description.html" title="Feature Detection and Description"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="legacy.html" >legacy. Deprecated stuff</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

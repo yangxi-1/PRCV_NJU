@@ -1,0 +1,402 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Image Pyramids &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="imgproc module. Image Processing" href="../table_of_content_imgproc/table_of_content_imgproc.html" />
+    <link rel="next" title="Basic Thresholding Operations" href="../threshold/threshold.html" />
+    <link rel="prev" title="More Morphology Transformations" href="../opening_closing_hats/opening_closing_hats.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../threshold/threshold.html" title="Basic Thresholding Operations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../opening_closing_hats/opening_closing_hats.html" title="More Morphology Transformations"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_imgproc/table_of_content_imgproc.html" accesskey="U"><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="image-pyramids">
+<span id="pyramids"></span><h1>Image Pyramids<a class="headerlink" href="#image-pyramids" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Use the OpenCV functions <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=pyrup#pyrup">pyrUp</a> and <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=pyrdown#pyrdown">pyrDown</a> to downsample  or upsample a given image.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The explanation below belongs to the book <strong>Learning OpenCV</strong> by Bradski and Kaehler.</p>
+</div>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Usually we need to convert an image to a size different than its original. For this, there are two possible options:<ol class="arabic">
+<li><em>Upsize</em> the image (zoom in) or</li>
+<li><em>Downsize</em> it (zoom out).</li>
+</ol>
+</li>
+<li>Although there is a <em>geometric transformation</em> function in OpenCV that -literally- resize an image (<a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/geometric_transformations.html?highlight=resize#resize">resize</a>, which we will show in a future tutorial), in this section we analyze first the use of <strong>Image Pyramids</strong>, which are widely applied in a huge range of vision applications.</li>
+</ul>
+</div>
+<div class="section" id="image-pyramid">
+<h3>Image Pyramid<a class="headerlink" href="#image-pyramid" title="Permalink to this headline">¶</a></h3>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>An image pyramid is a collection of images - all arising from a single original image - that are successively downsampled until some desired stopping point is reached.</li>
+<li>There are two common kinds of image pyramids:<ul>
+<li><strong>Gaussian pyramid:</strong> Used to downsample images</li>
+<li><strong>Laplacian pyramid:</strong> Used to  reconstruct an upsampled image from an image lower in the pyramid (with less resolution)</li>
+</ul>
+</li>
+<li>In this tutorial we&#8217;ll use the <em>Gaussian pyramid</em>.</li>
+</ul>
+</div>
+<div class="section" id="gaussian-pyramid">
+<h4>Gaussian Pyramid<a class="headerlink" href="#gaussian-pyramid" title="Permalink to this headline">¶</a></h4>
+<ul>
+<li><p class="first">Imagine the pyramid as a set of layers in which the higher the layer, the smaller the size.</p>
+<img alt="Pyramid figure" class="align-center" src="../../../../_images/Pyramids_Tutorial_Pyramid_Theory.png" />
+</li>
+<li><p class="first">Every layer is numbered from bottom to top, so layer <img class="math" src="../../../../_images/math/e39a9cc00906126e65df521287749f8a77022a29.png" alt="(i+1)"/> (denoted as <img class="math" src="../../../../_images/math/43509154bab962e531d6284c5612eaae60348f88.png" alt="G_{i+1}"/> is smaller than layer <img class="math" src="../../../../_images/math/881d48e575544c8daaa1d83893dcde5f9f7562ec.png" alt="i"/> (<img class="math" src="../../../../_images/math/5d631d370c487a15316ee35e00024dfa8a405c6e.png" alt="G_{i}"/>).</p>
+</li>
+<li><p class="first">To produce layer <img class="math" src="../../../../_images/math/e39a9cc00906126e65df521287749f8a77022a29.png" alt="(i+1)"/> in the Gaussian pyramid, we do the following:</p>
+<ul>
+<li><p class="first">Convolve <img class="math" src="../../../../_images/math/5d631d370c487a15316ee35e00024dfa8a405c6e.png" alt="G_{i}"/> with a Gaussian kernel:</p>
+<div class="math">
+<p><img src="../../../../_images/math/c9c31f8f8d03beb75a6d450dde2572292550d241.png" alt="\frac{1}{16} \begin{bmatrix} 1 &amp; 4 &amp; 6 &amp; 4 &amp; 1  \\ 4 &amp; 16 &amp; 24 &amp; 16 &amp; 4  \\ 6 &amp; 24 &amp; 36 &amp; 24 &amp; 6  \\ 4 &amp; 16 &amp; 24 &amp; 16 &amp; 4  \\ 1 &amp; 4 &amp; 6 &amp; 4 &amp; 1 \end{bmatrix}"/></p>
+</div></li>
+<li><p class="first">Remove every even-numbered row and column.</p>
+</li>
+</ul>
+</li>
+<li><p class="first">You can easily notice that the resulting image will be exactly one-quarter the area of its predecessor. Iterating this process on the input image <img class="math" src="../../../../_images/math/428ab06daa44352f05325ec62b3de798adef8160.png" alt="G_{0}"/> (original image) produces the entire pyramid.</p>
+</li>
+<li><p class="first">The procedure above was useful to downsample an image. What if we want to make it bigger?:</p>
+<ul class="simple">
+<li>First, upsize the image to twice the original in each dimension, wit the new even rows and columns filled with zeros (<img class="math" src="../../../../_images/math/f55b2cb61596a4cb87a860cfc3657cdb56b9edba.png" alt="0"/>)</li>
+<li>Perform a convolution with the same kernel shown above (multiplied by 4) to approximate the values of the &#8220;missing pixels&#8221;</li>
+</ul>
+</li>
+<li><p class="first">These two procedures (downsampling and upsampling as explained above) are implemented by the OpenCV functions <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=pyrup#pyrup">pyrUp</a> and <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=pyrdown#pyrdown">pyrDown</a>, as we will see in an example with the code below:</p>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When we reduce the size of an image, we are actually <em>losing</em> information of the image.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial code&#8217;s is shown lines below. You can also download it from <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/tutorial_code/ImgProc/Pyramids.cpp">here</a></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;opencv2/imgproc/imgproc.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/highgui/highgui.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;math.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="c1">/// Global variables</span>
+<span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">tmp</span><span class="p">;</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">window_name</span> <span class="o">=</span> <span class="s">&quot;Pyramids Demo&quot;</span><span class="p">;</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @function main</span>
+<span class="cm"> */</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">/// General instructions</span>
+  <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> Zoom In-Out demo  </span><span class="se">\n</span><span class="s"> &quot;</span> <span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;------------------ </span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span> <span class="s">&quot; * [u] -&gt; Zoom in  </span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span> <span class="s">&quot; * [d] -&gt; Zoom out </span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span> <span class="s">&quot; * [ESC] -&gt; Close program </span><span class="se">\n</span><span class="s"> </span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">);</span>
+
+  <span class="c1">/// Test image - Make sure it s divisible by 2^{n}</span>
+  <span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="s">&quot;../images/chicky_512.jpg&quot;</span> <span class="p">);</span>
+  <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">src</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span>
+    <span class="p">{</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot; No data! -- Exiting the program </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+      <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="n">tmp</span> <span class="o">=</span> <span class="n">src</span><span class="p">;</span>
+  <span class="n">dst</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">;</span>
+
+  <span class="c1">/// Create window</span>
+  <span class="n">namedWindow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+  <span class="n">imshow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">dst</span> <span class="p">);</span>
+
+  <span class="c1">/// Loop</span>
+  <span class="k">while</span><span class="p">(</span> <span class="nb">true</span> <span class="p">)</span>
+  <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">c</span><span class="p">;</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">waitKey</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+
+    <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">c</span> <span class="o">==</span> <span class="mi">27</span> <span class="p">)</span>
+      <span class="p">{</span> <span class="k">break</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">c</span> <span class="o">==</span> <span class="sc">&#39;u&#39;</span> <span class="p">)</span>
+      <span class="p">{</span> <span class="n">pyrUp</span><span class="p">(</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span> <span class="n">tmp</span><span class="p">.</span><span class="n">cols</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">tmp</span><span class="p">.</span><span class="n">rows</span><span class="o">*</span><span class="mi">2</span> <span class="p">)</span> <span class="p">);</span>
+        <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;** Zoom In: Image x 2 </span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">);</span>
+      <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">c</span> <span class="o">==</span> <span class="sc">&#39;d&#39;</span> <span class="p">)</span>
+     <span class="p">{</span> <span class="n">pyrDown</span><span class="p">(</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span> <span class="n">tmp</span><span class="p">.</span><span class="n">cols</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">tmp</span><span class="p">.</span><span class="n">rows</span><span class="o">/</span><span class="mi">2</span> <span class="p">)</span> <span class="p">);</span>
+       <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;** Zoom Out: Image / 2 </span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">);</span>
+     <span class="p">}</span>
+
+    <span class="n">imshow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">dst</span> <span class="p">);</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">dst</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Let&#8217;s check the general structure of the program:</p>
+<ul>
+<li><p class="first">Load an image (in this case it is defined in the program, the user does not have to enter it as an argument)</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">/// Test image - Make sure it s divisible by 2^{n}</span>
+<span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="s">&quot;../images/chicky_512.jpg&quot;</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">src</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span>
+  <span class="p">{</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot; No data! -- Exiting the program </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create a Mat object to store the result of the operations (<em>dst</em>) and one to save temporal results (<em>tmp</em>).</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">tmp</span><span class="p">;</span>
+<span class="cm">/* ... */</span>
+<span class="n">tmp</span> <span class="o">=</span> <span class="n">src</span><span class="p">;</span>
+<span class="n">dst</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create a window to display the result</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">namedWindow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+<span class="n">imshow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">dst</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Perform an infinite loop waiting for user input.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">while</span><span class="p">(</span> <span class="nb">true</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="kt">int</span> <span class="n">c</span><span class="p">;</span>
+  <span class="n">c</span> <span class="o">=</span> <span class="n">waitKey</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+
+  <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">c</span> <span class="o">==</span> <span class="mi">27</span> <span class="p">)</span>
+    <span class="p">{</span> <span class="k">break</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">c</span> <span class="o">==</span> <span class="sc">&#39;u&#39;</span> <span class="p">)</span>
+    <span class="p">{</span> <span class="n">pyrUp</span><span class="p">(</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span> <span class="n">tmp</span><span class="p">.</span><span class="n">cols</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">tmp</span><span class="p">.</span><span class="n">rows</span><span class="o">*</span><span class="mi">2</span> <span class="p">)</span> <span class="p">);</span>
+      <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;** Zoom In: Image x 2 </span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">);</span>
+    <span class="p">}</span>
+  <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">c</span> <span class="o">==</span> <span class="sc">&#39;d&#39;</span> <span class="p">)</span>
+   <span class="p">{</span> <span class="n">pyrDown</span><span class="p">(</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span> <span class="n">tmp</span><span class="p">.</span><span class="n">cols</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">tmp</span><span class="p">.</span><span class="n">rows</span><span class="o">/</span><span class="mi">2</span> <span class="p">)</span> <span class="p">);</span>
+     <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;** Zoom Out: Image / 2 </span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">);</span>
+   <span class="p">}</span>
+
+  <span class="n">imshow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">dst</span> <span class="p">);</span>
+  <span class="n">tmp</span> <span class="o">=</span> <span class="n">dst</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Our program exits if the user presses <em>ESC</em>. Besides, it has two options:</p>
+<ul>
+<li><p class="first"><strong>Perform upsampling (after pressing &#8216;u&#8217;)</strong></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">pyrUp</span><span class="p">(</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span> <span class="n">tmp</span><span class="p">.</span><span class="n">cols</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">tmp</span><span class="p">.</span><span class="n">rows</span><span class="o">*</span><span class="mi">2</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>We use the function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=pyrup#pyrup">pyrUp</a> with 03 arguments:</p>
+<ul class="simple">
+<li><em>tmp</em>: The current image, it is initialized with the <em>src</em> original image.</li>
+<li><em>dst</em>: The destination image (to be shown on screen, supposedly the double of the input image)</li>
+<li><em>Size( tmp.cols*2, tmp.rows*2 )</em> : The destination size. Since we are upsampling, <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=pyrup#pyrup">pyrUp</a> expects a size double than the input image (in this case <em>tmp</em>).</li>
+</ul>
+</li>
+<li><p class="first"><strong>Perform downsampling (after pressing &#8216;d&#8217;)</strong></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">pyrDown</span><span class="p">(</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span> <span class="n">tmp</span><span class="p">.</span><span class="n">cols</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">tmp</span><span class="p">.</span><span class="n">rows</span><span class="o">/</span><span class="mi">2</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>Similarly as with <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=pyrup#pyrup">pyrUp</a>, we use the function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=pyrdown#pyrdown">pyrDown</a> with 03 arguments:</p>
+<ul class="simple">
+<li><em>tmp</em>: The current image, it is initialized with the <em>src</em> original image.</li>
+<li><em>dst</em>: The destination image (to be shown on screen, supposedly half the input image)</li>
+<li><em>Size( tmp.cols/2, tmp.rows/2 )</em> : The destination size. Since we are upsampling, <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=pyrdown#pyrdown">pyrDown</a> expects half the size the input image (in this case <em>tmp</em>).</li>
+</ul>
+</li>
+<li><p class="first">Notice that it is important that the input image can be divided by a factor of two (in both dimensions). Otherwise, an error will be shown.</p>
+</li>
+<li><p class="first">Finally, we update the input image <strong>tmp</strong> with the current image displayed, so the subsequent operations are performed on it.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">tmp</span> <span class="o">=</span> <span class="n">dst</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">After compiling the code above we can test it. The program calls an image <strong>chicky_512.jpg</strong> that comes in the <em>tutorial_code/image</em> folder. Notice that this image is <img class="math" src="../../../../_images/math/db5d5f67ad299d5b929098b938577d748b23f340.png" alt="512 \times 512"/>, hence a downsample won&#8217;t generate any error (<img class="math" src="../../../../_images/math/189116948936705c46295fb8d3046fa25831a2ab.png" alt="512 = 2^{9}"/>). The original image is shown below:</p>
+<img alt="Pyramids: Original image" class="align-center" src="../../../../_images/Pyramids_Tutorial_Original_Image.jpg" />
+</li>
+<li><p class="first">First we apply two successive <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=pyrdown#pyrdown">pyrDown</a> operations by pressing &#8216;d&#8217;. Our output is:</p>
+<img alt="Pyramids: PyrDown Result" class="align-center" src="../../../../_images/Pyramids_Tutorial_PyrDown_Result.jpg" />
+</li>
+<li><p class="first">Note that we should have lost some resolution due to the fact that we are diminishing the size of the image. This is evident after we apply <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=pyrup#pyrup">pyrUp</a> twice (by pressing &#8216;u&#8217;). Our output is now:</p>
+<img alt="Pyramids: PyrUp Result" class="align-center" src="../../../../_images/Pyramids_Tutorial_PyrUp_Result.jpg" />
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Image Pyramids</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a><ul>
+<li><a class="reference internal" href="#image-pyramid">Image Pyramid</a><ul>
+<li><a class="reference internal" href="#gaussian-pyramid">Gaussian Pyramid</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#results">Results</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../opening_closing_hats/opening_closing_hats.html"
+                        title="previous chapter">More Morphology Transformations</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../threshold/threshold.html"
+                        title="next chapter">Basic Thresholding Operations</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/imgproc/pyramids/pyramids.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../threshold/threshold.html" title="Basic Thresholding Operations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../opening_closing_hats/opening_closing_hats.html" title="More Morphology Transformations"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_imgproc/table_of_content_imgproc.html" ><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

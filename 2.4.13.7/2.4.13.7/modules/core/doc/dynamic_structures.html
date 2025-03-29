@@ -1,0 +1,2505 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Dynamic Structures &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="core. The Core Functionality" href="core.html" />
+    <link rel="next" title="Operations on Arrays" href="operations_on_arrays.html" />
+    <link rel="prev" title="Basic C Structures and Operations" href="old_basic_structures.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="operations_on_arrays.html" title="Operations on Arrays"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="old_basic_structures.html" title="Basic C Structures and Operations"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="core.html" accesskey="U">core. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="dynamic-structures">
+<h1>Dynamic Structures<a class="headerlink" href="#dynamic-structures" title="Permalink to this headline">¶</a></h1>
+<p>The section describes OpenCV 1.x API for creating growable sequences and other dynamic data structures allocated in <code class="docutils literal"><span class="pre">CvMemStorage</span></code>. If you use the new C++, Python, Java etc interface, you will unlikely need this functionality. Use <code class="docutils literal"><span class="pre">std::vector</span></code> or other high-level data structures.</p>
+<div class="section" id="cvmemstorage">
+<h2>CvMemStorage<a class="headerlink" href="#cvmemstorage" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvMemStorage">
+<em class="property">struct </em><code class="descname">CvMemStorage</code><a class="headerlink" href="#CvMemStorage" title="Permalink to this definition">¶</a></dt>
+<dd><p>A storage for various OpenCV dynamic data structures, such as <code class="docutils literal"><span class="pre">CvSeq</span></code>, <code class="docutils literal"><span class="pre">CvSet</span></code> etc.</p>
+<dl class="member">
+<dt id="CvMemBlock* bottom">
+CvMemBlock* <code class="descname">bottom</code><a class="headerlink" href="#CvMemBlock* bottom" title="Permalink to this definition">¶</a></dt>
+<dd><p>the first memory block in the double-linked list of blocks</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="CvMemBlock* top">
+CvMemBlock* <code class="descname">top</code><a class="headerlink" href="#CvMemBlock* top" title="Permalink to this definition">¶</a></dt>
+<dd><p>the current partially allocated memory block in the list of blocks</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="CvMemStorage* parent">
+CvMemStorage* <code class="descname">parent</code><a class="headerlink" href="#CvMemStorage* parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>the parent storage (if any) from which the new memory blocks are borrowed.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int free_space">
+int <code class="descname">free_space</code><a class="headerlink" href="#int free_space" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of free bytes in the <code class="docutils literal"><span class="pre">top</span></code> block</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int block_size">
+int <code class="descname">block_size</code><a class="headerlink" href="#int block_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>the total size of the memory blocks</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>Memory storage is a low-level structure used to store dynamically growing data structures such as sequences, contours, graphs, subdivisions, etc. It is organized as a list of memory blocks of equal size -
+<code class="docutils literal"><span class="pre">bottom</span></code> field is the beginning of the list of blocks and <code class="docutils literal"><span class="pre">top</span></code> is the currently used block, but not necessarily the last block of the list. All blocks between <code class="docutils literal"><span class="pre">bottom</span></code> and <code class="docutils literal"><span class="pre">top</span></code>, not including the
+latter, are considered fully occupied; all blocks between <code class="docutils literal"><span class="pre">top</span></code> and the last block, not including  <code class="docutils literal"><span class="pre">top</span></code>, are considered free and <code class="docutils literal"><span class="pre">top</span></code> itself is partly occupied - <code class="docutils literal"><span class="pre">free_space</span></code> contains the number of free bytes left in the end of <code class="docutils literal"><span class="pre">top</span></code>.</p>
+<p>A new memory buffer that may be allocated explicitly by <a class="reference internal" href="#void* cvMemStorageAlloc(CvMemStorage* storage, size_t size)" title="void* cvMemStorageAlloc(CvMemStorage* storage, size_t size)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">MemStorageAlloc()</span></code></a> function or implicitly by higher-level functions, such as <a class="reference internal" href="#schar* cvSeqPush(CvSeq* seq, const void* element)" title="schar* cvSeqPush(CvSeq* seq, const void* element)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">SeqPush()</span></code></a>,  <a class="reference internal" href="#int cvGraphAddEdge(CvGraph* graph, int start_idx, int end_idx, const CvGraphEdge* edge, CvGraphEdge** inserted_edge)" title="int cvGraphAddEdge(CvGraph* graph, int start_idx, int end_idx, const CvGraphEdge* edge, CvGraphEdge** inserted_edge)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GraphAddEdge()</span></code></a> etc.</p>
+<p>The buffer is put in the end of already allocated space in the <code class="docutils literal"><span class="pre">top</span></code> memory block, if there is enough free space. After allocation, <code class="docutils literal"><span class="pre">free_space</span></code> is decreased by the size of the allocated buffer plus some padding to keep the proper alignment. When the allocated buffer does not fit into the available portion of
+<code class="docutils literal"><span class="pre">top</span></code>, the next storage block from the list is taken as <code class="docutils literal"><span class="pre">top</span></code> and  <code class="docutils literal"><span class="pre">free_space</span></code> is reset to the whole block size prior to the allocation.</p>
+<p>If there are no more free blocks, a new block is allocated (or borrowed from the parent, see <a class="reference internal" href="#CvMemStorage* cvCreateChildMemStorage(CvMemStorage* parent)" title="CvMemStorage* cvCreateChildMemStorage(CvMemStorage* parent)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CreateChildMemStorage()</span></code></a>) and added to the end of list. Thus, the storage behaves as a stack with <code class="docutils literal"><span class="pre">bottom</span></code> indicating bottom of the stack and the pair (<code class="docutils literal"><span class="pre">top</span></code>, <code class="docutils literal"><span class="pre">free_space</span></code>)
+indicating top of the stack. The stack top may be saved via <a class="reference internal" href="#void cvSaveMemStoragePos(const CvMemStorage* storage, CvMemStoragePos* pos)" title="void cvSaveMemStoragePos(const CvMemStorage* storage, CvMemStoragePos* pos)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">SaveMemStoragePos()</span></code></a>, restored via
+<a class="reference internal" href="#void cvRestoreMemStoragePos(CvMemStorage* storage, CvMemStoragePos* pos)" title="void cvRestoreMemStoragePos(CvMemStorage* storage, CvMemStoragePos* pos)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">RestoreMemStoragePos()</span></code></a>, or reset via <a class="reference internal" href="#void cvClearMemStorage(CvMemStorage* storage)" title="void cvClearMemStorage(CvMemStorage* storage)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">ClearMemStorage()</span></code></a>.</p>
+</div>
+<div class="section" id="cvmemblock">
+<h2>CvMemBlock<a class="headerlink" href="#cvmemblock" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvMemBlock">
+<em class="property">struct </em><code class="descname">CvMemBlock</code><a class="headerlink" href="#CvMemBlock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The structure <a class="reference internal" href="#CvMemBlock" title="struct CvMemBlock"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvMemBlock</span></code></a> represents a single block of memory storage. The actual data in the memory blocks follows the header.</p>
+</div>
+<div class="section" id="cvmemstoragepos">
+<h2>CvMemStoragePos<a class="headerlink" href="#cvmemstoragepos" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvMemStoragePos">
+<em class="property">struct </em><code class="descname">CvMemStoragePos</code><a class="headerlink" href="#CvMemStoragePos" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The structure stores the position in the memory storage. It is used by <a class="reference internal" href="#void cvSaveMemStoragePos(const CvMemStorage* storage, CvMemStoragePos* pos)" title="void cvSaveMemStoragePos(const CvMemStorage* storage, CvMemStoragePos* pos)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">SaveMemStoragePos()</span></code></a> and  <a class="reference internal" href="#void cvRestoreMemStoragePos(CvMemStorage* storage, CvMemStoragePos* pos)" title="void cvRestoreMemStoragePos(CvMemStorage* storage, CvMemStoragePos* pos)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">RestoreMemStoragePos()</span></code></a>.</p>
+</div>
+<div class="section" id="cvseq">
+<h2>CvSeq<a class="headerlink" href="#cvseq" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvSeq">
+<em class="property">struct </em><code class="descname">CvSeq</code><a class="headerlink" href="#CvSeq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dynamically growing sequence.</p>
+<dl class="member">
+<dt id="int flags">
+int <code class="descname">flags</code><a class="headerlink" href="#int flags" title="Permalink to this definition">¶</a></dt>
+<dd><p>sequence flags, including the sequence signature (CV_SEQ_MAGIC_VAL or CV_SET_MAGIC_VAL), type of the elements and some other information about the sequence.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int header_size">
+int <code class="descname">header_size</code><a class="headerlink" href="#int header_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>size of the sequence header. It should be sizeof(CvSeq) at minimum. See <a class="reference internal" href="#CvSeq* cvCreateSeq(int seq_flags, size_t header_size, size_t elem_size, CvMemStorage* storage)" title="CvSeq* cvCreateSeq(int seq_flags, size_t header_size, size_t elem_size, CvMemStorage* storage)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CreateSeq()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="CvSeq* h_prev">
+CvSeq* <code class="descname">h_prev</code><a class="headerlink" href="#CvSeq* h_prev" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="member">
+<dt id="CvSeq* h_next">
+CvSeq* <code class="descname">h_next</code><a class="headerlink" href="#CvSeq* h_next" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="member">
+<dt id="CvSeq* v_prev">
+CvSeq* <code class="descname">v_prev</code><a class="headerlink" href="#CvSeq* v_prev" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="member">
+<dt id="CvSeq* v_next">
+CvSeq* <code class="descname">v_next</code><a class="headerlink" href="#CvSeq* v_next" title="Permalink to this definition">¶</a></dt>
+<dd><p>pointers to another sequences in a sequence tree. Sequence trees are used to store hierarchical contour structures, retrieved by <a class="reference internal" href="../../imgproc/doc/structural_analysis_and_shape_descriptors.html#int cvFindContours(CvArr* image, CvMemStorage* storage, CvSeq** first_contour, int header_size, int mode, int method, CvPoint offset)" title="int cvFindContours(CvArr* image, CvMemStorage* storage, CvSeq** first_contour, int header_size, int mode, int method, CvPoint offset)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">FindContours()</span></code></a></p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int total">
+int <code class="descname">total</code><a class="headerlink" href="#int total" title="Permalink to this definition">¶</a></dt>
+<dd><p>the number of sequence elements</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int elem_size">
+int <code class="descname">elem_size</code><a class="headerlink" href="#int elem_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>size of each sequence element in bytes</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="CvMemStorage* storage">
+CvMemStorage* <code class="descname">storage</code><a class="headerlink" href="#CvMemStorage* storage" title="Permalink to this definition">¶</a></dt>
+<dd><p>memory storage where the sequence resides. It can be a NULL pointer.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="CvSeqBlock* first">
+CvSeqBlock* <code class="descname">first</code><a class="headerlink" href="#CvSeqBlock* first" title="Permalink to this definition">¶</a></dt>
+<dd><p>pointer to the first data block</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>The structure <code class="docutils literal"><span class="pre">CvSeq</span></code> is a base for all of OpenCV dynamic data structures.
+There are two types of sequences - dense and sparse. The base type for dense
+sequences is  <a class="reference internal" href="#CvSeq" title="struct CvSeq"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvSeq</span></code></a> and such sequences are used to represent
+growable 1d arrays - vectors, stacks, queues, and deques. They have no gaps
+in the middle - if an element is removed from the middle or inserted
+into the middle of the sequence, the elements from the closer end are
+shifted. Sparse sequences have  <a class="reference internal" href="#CvSet" title="struct CvSet"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvSet</span></code></a> as a base class and they are
+discussed later in more detail. They are sequences of nodes; each may be either occupied or free as indicated by the node flag. Such sequences are used for unordered data structures such as sets of elements, graphs, hash tables and so forth.</p>
+</div>
+<div class="section" id="cvslice">
+<h2>CvSlice<a class="headerlink" href="#cvslice" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvSlice">
+<em class="property">struct </em><code class="descname">CvSlice</code><a class="headerlink" href="#CvSlice" title="Permalink to this definition">¶</a></dt>
+<dd><p>A sequence slice. In C++ interface the class <a class="reference internal" href="basic_structures.html#Range" title="class Range"><code class="xref ocv ocv-class docutils literal"><span class="pre">Range</span></code></a> should be used instead.</p>
+<dl class="member">
+<dt id="int start_index">
+int <code class="descname">start_index</code><a class="headerlink" href="#int start_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>inclusive start index of the sequence slice</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int end_index">
+int <code class="descname">end_index</code><a class="headerlink" href="#int end_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>exclusive end index of the sequence slice</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>There are helper functions to construct the slice and to compute its length:</p>
+<dl class="cfunction">
+<dt id="CvSlice cvSlice(int start, int end)">
+<strong>C:</strong><code class="descname"> </code>CvSlice <code class="descname">cvSlice</code><span class="sig-paren">(</span>int <strong>start</strong>, int <strong>end</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvSlice cvSlice(int start, int end)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>start</strong> &#8211; Inclusive left boundary.</li>
+<li><strong>end</strong> &#8211; Exclusive right boundary.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="highlight-c"><div class="highlight"><pre><span class="cp">#define CV_WHOLE_SEQ_END_INDEX 0x3fffffff</span>
+<span class="cp">#define CV_WHOLE_SEQ  cvSlice(0, CV_WHOLE_SEQ_END_INDEX)</span>
+</pre></div>
+</div>
+<dl class="cfunction">
+<dt id="int cvSliceLength(CvSlice slice, const CvSeq* seq)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvSliceLength</code><span class="sig-paren">(</span>CvSlice <strong>slice</strong>, const CvSeq* <strong>seq</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvSliceLength(CvSlice slice, const CvSeq* seq)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>slice</strong> &#8211; The slice of sequence.</li>
+<li><strong>seq</strong> &#8211; Source sequence.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Calculates the sequence slice length.</p>
+<p>Some of functions that operate on sequences take a <code class="docutils literal"><span class="pre">CvSlice</span> <span class="pre">slice</span></code> parameter that is often set to the whole sequence (CV_WHOLE_SEQ) by default. Either of the <code class="docutils literal"><span class="pre">start_index</span></code> and  <code class="docutils literal"><span class="pre">end_index</span></code> may be negative or exceed the sequence length. If they are equal, the slice is considered empty (i.e., contains no elements). Because sequences are treated as circular structures, the slice may select a
+few elements in the end of a sequence followed by a few elements at the beginning of the sequence. For example,  <code class="docutils literal"><span class="pre">cvSlice(-2,</span> <span class="pre">3)</span></code> in the case of a 10-element sequence will select a 5-element slice, containing the pre-last (8th), last (9th), the very first (0th), second (1th) and third (2nd)
+elements. The functions normalize the slice argument in the following way:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><a class="reference internal" href="#int cvSliceLength(CvSlice slice, const CvSeq* seq)" title="int cvSliceLength(CvSlice slice, const CvSeq* seq)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">SliceLength()</span></code></a> is called to determine the length of the slice,</li>
+<li><code class="docutils literal"><span class="pre">start_index</span></code> of the slice is normalized similarly to the argument of <a class="reference internal" href="#schar* cvGetSeqElem(const CvSeq* seq, int index)" title="schar* cvGetSeqElem(const CvSeq* seq, int index)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GetSeqElem()</span></code></a> (i.e., negative indices are allowed). The actual slice to process starts at the normalized  <code class="docutils literal"><span class="pre">start_index</span></code> and lasts <a class="reference internal" href="#int cvSliceLength(CvSlice slice, const CvSeq* seq)" title="int cvSliceLength(CvSlice slice, const CvSeq* seq)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">SliceLength()</span></code></a> elements (again, assuming the sequence is a circular structure).</li>
+</ol>
+</div></blockquote>
+<p>If a function does not accept a slice argument, but you want to process only a part of the sequence, the sub-sequence may be extracted using the <a class="reference internal" href="#CvSeq* cvSeqSlice(const CvSeq* seq, CvSlice slice, CvMemStorage* storage, int copy_data)" title="CvSeq* cvSeqSlice(const CvSeq* seq, CvSlice slice, CvMemStorage* storage, int copy_data)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">SeqSlice()</span></code></a> function, or stored into a continuous
+buffer with <a class="reference internal" href="#void* cvCvtSeqToArray(const CvSeq* seq, void* elements, CvSlice slice)" title="void* cvCvtSeqToArray(const CvSeq* seq, void* elements, CvSlice slice)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CvtSeqToArray()</span></code></a> (optionally, followed by <a class="reference internal" href="#CvSeq* cvMakeSeqHeaderForArray(int seq_type, int header_size, int elem_size, void* elements, int total, CvSeq* seq, CvSeqBlock* block)" title="CvSeq* cvMakeSeqHeaderForArray(int seq_type, int header_size, int elem_size, void* elements, int total, CvSeq* seq, CvSeqBlock* block)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">MakeSeqHeaderForArray()</span></code></a>).</p>
+</div>
+<div class="section" id="cvset">
+<h2>CvSet<a class="headerlink" href="#cvset" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvSet">
+<em class="property">struct </em><code class="descname">CvSet</code><a class="headerlink" href="#CvSet" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The structure <code class="docutils literal"><span class="pre">CvSet</span></code> is a base for OpenCV 1.x sparse data structures. It is derived from  <a class="reference internal" href="#CvSeq" title="struct CvSeq"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvSeq</span></code></a> and includes an additional member <code class="docutils literal"><span class="pre">free_elems</span></code> - a list of free nodes. Every node of the set, whether free or not, is an element of the underlying sequence. While there are no restrictions on elements of dense sequences, the set (and derived structures) elements must start with an integer field and be able to fit CvSetElem structure, because these two fields (an integer followed by a pointer) are required for the organization of a node set with the list of free nodes. If a node is free, the <code class="docutils literal"><span class="pre">flags</span></code>
+field is negative (the most-significant bit, or MSB, of the field is set), and the <code class="docutils literal"><span class="pre">next_free</span></code> points to the next free node (the first free node is referenced by the <code class="docutils literal"><span class="pre">free_elems</span></code> field of <a class="reference internal" href="#CvSet" title="struct CvSet"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvSet</span></code></a>). And if a node is occupied, the <code class="docutils literal"><span class="pre">flags</span></code> field is positive and contains the node index that may be retrieved using the (<code class="docutils literal"><span class="pre">set_elem-&gt;flags</span> <span class="pre">&amp;</span> <span class="pre">CV_SET_ELEM_IDX_MASK</span></code>) expressions, the rest of the node content is determined by the user. In particular, the occupied nodes are not linked as the free nodes are, so the second field can be used for such a link as well as for some different purpose. The macro <code class="docutils literal"><span class="pre">CV_IS_SET_ELEM(set_elem_ptr)</span></code> can be used to determined whether the specified node is occupied or not.</p>
+<p>Initially the set and the free node list are empty. When a new node is requested from the set, it is taken from the list of free nodes, which is then updated. If the list appears to be empty, a new sequence block is allocated and all the nodes within the block are joined in the list of free nodes. Thus, the <code class="docutils literal"><span class="pre">total</span></code>
+field of the set is the total number of nodes both occupied and free. When an occupied node is released, it is added to the list of free nodes. The node released last will be occupied first.</p>
+<p><code class="docutils literal"><span class="pre">CvSet</span></code> is used to represent graphs (<a class="reference internal" href="#CvGraph" title="struct CvGraph"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvGraph</span></code></a>), sparse multi-dimensional arrays (<a class="reference internal" href="old_basic_structures.html#CvSparseMat" title="struct CvSparseMat"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvSparseMat</span></code></a>), and planar subdivisions (<a class="reference internal" href="../../legacy/doc/planar_subdivisions.html#CvSubdiv2D" title="struct CvSubdiv2D"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvSubdiv2D</span></code></a>).</p>
+</div>
+<div class="section" id="cvsetelem">
+<h2>CvSetElem<a class="headerlink" href="#cvsetelem" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvSetElem">
+<em class="property">struct </em><code class="descname">CvSetElem</code><a class="headerlink" href="#CvSetElem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The structure is represent single element of <a class="reference internal" href="#CvSet" title="struct CvSet"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvSet</span></code></a>. It consists of two fields: element data pointer and flags.</p>
+</div>
+<div class="section" id="cvgraph">
+<h2>CvGraph<a class="headerlink" href="#cvgraph" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvGraph">
+<em class="property">struct </em><code class="descname">CvGraph</code><a class="headerlink" href="#CvGraph" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The structure <code class="docutils literal"><span class="pre">CvGraph</span></code> is a base for graphs used in OpenCV 1.x. It inherits from
+<a class="reference internal" href="#CvSet" title="struct CvSet"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvSet</span></code></a>, that is, it is considered as a set of vertices. Besides, it contains another set as a member, a set of graph edges. Graphs in OpenCV are represented using adjacency lists format.</p>
+</div>
+<div class="section" id="cvgraphvtx">
+<h2>CvGraphVtx<a class="headerlink" href="#cvgraphvtx" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvGraphVtx">
+<em class="property">struct </em><code class="descname">CvGraphVtx</code><a class="headerlink" href="#CvGraphVtx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The structure represents single vertex in <a class="reference internal" href="#CvGraph" title="struct CvGraph"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvGraph</span></code></a>. It consists of two filds: pointer to first edge and flags.</p>
+</div>
+<div class="section" id="cvgraphedge">
+<h2>CvGraphEdge<a class="headerlink" href="#cvgraphedge" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvGraphEdge">
+<em class="property">struct </em><code class="descname">CvGraphEdge</code><a class="headerlink" href="#CvGraphEdge" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The structure represents edge in <a class="reference internal" href="#CvGraph" title="struct CvGraph"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvGraph</span></code></a>.  Each edge consists of:</p>
+<ul class="simple">
+<li>Two pointers to the starting and ending vertices (vtx[0] and vtx[1] respectively);</li>
+<li>Two pointers to next edges for the starting and ending vertices, where
+next[0] points to the next edge in the vtx[0] adjacency list and
+next[1] points to the next edge in the vtx[1] adjacency list;</li>
+<li>Weight;</li>
+<li>Flags.</li>
+</ul>
+</div>
+<div class="section" id="cvgraphscanner">
+<h2>CvGraphScanner<a class="headerlink" href="#cvgraphscanner" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvGraphScanner">
+<em class="property">struct </em><code class="descname">CvGraphScanner</code><a class="headerlink" href="#CvGraphScanner" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The structure <code class="docutils literal"><span class="pre">CvGraphScanner</span></code> is used for depth-first graph traversal. See discussion of the functions below.</p>
+</div>
+<div class="section" id="cvtreenodeiterator">
+<h2>CvTreeNodeIterator<a class="headerlink" href="#cvtreenodeiterator" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvTreeNodeIterator">
+<em class="property">struct </em><code class="descname">CvTreeNodeIterator</code><a class="headerlink" href="#CvTreeNodeIterator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The structure <code class="docutils literal"><span class="pre">CvTreeNodeIterator</span></code> is used to traverse trees of sequences.</p>
+</div>
+<div class="section" id="cleargraph">
+<h2>ClearGraph<a class="headerlink" href="#cleargraph" title="Permalink to this headline">¶</a></h2>
+<p>Clears a graph.</p>
+<dl class="cfunction">
+<dt id="void cvClearGraph(CvGraph* graph)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvClearGraph</code><span class="sig-paren">(</span>CvGraph* <strong>graph</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvClearGraph(CvGraph* graph)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>graph</strong> &#8211; Graph</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function removes all vertices and edges from a graph. The function has O(1) time complexity.</p>
+</div>
+<div class="section" id="clearmemstorage">
+<h2>ClearMemStorage<a class="headerlink" href="#clearmemstorage" title="Permalink to this headline">¶</a></h2>
+<p>Clears memory storage.</p>
+<dl class="cfunction">
+<dt id="void cvClearMemStorage(CvMemStorage* storage)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvClearMemStorage</code><span class="sig-paren">(</span>CvMemStorage* <strong>storage</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvClearMemStorage(CvMemStorage* storage)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>storage</strong> &#8211; Memory storage</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function resets the top (free space boundary) of the storage to the very beginning. This function does not deallocate any memory. If the storage has a parent, the function returns
+all blocks to the parent.</p>
+</div>
+<div class="section" id="clearseq">
+<h2>ClearSeq<a class="headerlink" href="#clearseq" title="Permalink to this headline">¶</a></h2>
+<p>Clears a sequence.</p>
+<dl class="cfunction">
+<dt id="void cvClearSeq(CvSeq* seq)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvClearSeq</code><span class="sig-paren">(</span>CvSeq* <strong>seq</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvClearSeq(CvSeq* seq)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Sequence</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function removes all elements from a sequence. The function does not return the memory to the storage block, but this memory is reused later when new elements are added to the sequence. The function has
+&#8216;O(1)&#8217; time complexity.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">It is impossible to deallocate a sequence, i.e. free space in the memory storage occupied by the sequence. Instead, call <a class="reference internal" href="#void cvClearMemStorage(CvMemStorage* storage)" title="void cvClearMemStorage(CvMemStorage* storage)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">ClearMemStorage()</span></code></a> or <a class="reference internal" href="#void cvReleaseMemStorage(CvMemStorage** storage)" title="void cvReleaseMemStorage(CvMemStorage** storage)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">ReleaseMemStorage()</span></code></a> from time to time somewhere in a top-level processing loop.</p>
+</div>
+</div>
+<div class="section" id="clearset">
+<h2>ClearSet<a class="headerlink" href="#clearset" title="Permalink to this headline">¶</a></h2>
+<p>Clears a set.</p>
+<dl class="cfunction">
+<dt id="void cvClearSet(CvSet* set_header)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvClearSet</code><span class="sig-paren">(</span>CvSet* <strong>set_header</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvClearSet(CvSet* set_header)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>set_header</strong> &#8211; Cleared set</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function removes all elements from set. It has O(1) time complexity.</p>
+</div>
+<div class="section" id="clonegraph">
+<h2>CloneGraph<a class="headerlink" href="#clonegraph" title="Permalink to this headline">¶</a></h2>
+<p>Clones a graph.</p>
+<dl class="cfunction">
+<dt id="CvGraph* cvCloneGraph(const CvGraph* graph, CvMemStorage* storage)">
+<strong>C:</strong><code class="descname"> </code>CvGraph* <code class="descname">cvCloneGraph</code><span class="sig-paren">(</span>const CvGraph* <strong>graph</strong>, CvMemStorage* <strong>storage</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvGraph* cvCloneGraph(const CvGraph* graph, CvMemStorage* storage)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>graph</strong> &#8211; The graph to copy</li>
+<li><strong>storage</strong> &#8211; Container for the copy</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function creates a full copy of the specified graph. If the
+graph vertices or edges have pointers to some external data, it can still be
+shared between the copies. The vertex and edge indices in the new graph
+may be different from the original because the function defragments
+the vertex and edge sets.</p>
+</div>
+<div class="section" id="cloneseq">
+<h2>CloneSeq<a class="headerlink" href="#cloneseq" title="Permalink to this headline">¶</a></h2>
+<p>Creates a copy of a sequence.</p>
+<dl class="cfunction">
+<dt id="CvSeq* cvCloneSeq(const CvSeq* seq, CvMemStorage* storage)">
+<strong>C:</strong><code class="descname"> </code>CvSeq* <code class="descname">cvCloneSeq</code><span class="sig-paren">(</span>const CvSeq* <strong>seq</strong>, CvMemStorage* <strong>storage</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#CvSeq* cvCloneSeq(const CvSeq* seq, CvMemStorage* storage)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CloneSeq">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CloneSeq</code><span class="sig-paren">(</span>seq, storage<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.CloneSeq" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Sequence</li>
+<li><strong>storage</strong> &#8211; The destination storage block to hold the new sequence header and the copied data, if any. If it is NULL, the function uses the storage block containing the input sequence.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function makes a complete copy of the input sequence and returns it.</p>
+<p>The call <code class="docutils literal"><span class="pre">cvCloneSeq(</span> <span class="pre">seq,</span> <span class="pre">storage</span> <span class="pre">)</span></code> is equivalent to <code class="docutils literal"><span class="pre">cvSeqSlice(</span> <span class="pre">seq,</span> <span class="pre">CV_WHOLE_SEQ,</span> <span class="pre">storage,</span> <span class="pre">1</span> <span class="pre">)</span></code>.</p>
+</div>
+<div class="section" id="createchildmemstorage">
+<h2>CreateChildMemStorage<a class="headerlink" href="#createchildmemstorage" title="Permalink to this headline">¶</a></h2>
+<p>Creates child memory storage.</p>
+<dl class="cfunction">
+<dt id="CvMemStorage* cvCreateChildMemStorage(CvMemStorage* parent)">
+<strong>C:</strong><code class="descname"> </code>CvMemStorage* <code class="descname">cvCreateChildMemStorage</code><span class="sig-paren">(</span>CvMemStorage* <strong>parent</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvMemStorage* cvCreateChildMemStorage(CvMemStorage* parent)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>parent</strong> &#8211; Parent memory storage</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function creates a child memory
+storage that is similar to simple memory storage except for the
+differences in the memory allocation/deallocation mechanism. When a
+child storage needs a new block to add to the block list, it tries
+to get this block from the parent. The first unoccupied parent block
+available is taken and excluded from the parent block list. If no blocks
+are available, the parent either allocates a block or borrows one from
+its own parent, if any. In other words, the chain, or a more complex
+structure, of memory storages where every storage is a child/parent of
+another is possible. When a child storage is released or even cleared,
+it returns all blocks to the parent. In other aspects, child storage
+is the same as simple storage.</p>
+<p>Child storage is useful in the following situation. Imagine
+that the user needs to process dynamic data residing in a given storage area and
+put the result back to that same storage area. With the simplest approach,
+when temporary data is resided in the same storage area as the input and
+output data, the storage area will look as follows after processing:</p>
+<p>Dynamic data processing without using child storage</p>
+<img alt="../../../_images/memstorage1.png" src="../../../_images/memstorage1.png" />
+<p>That is, garbage appears in the middle of the storage. However, if
+one creates a child memory storage at the beginning of processing,
+writes temporary data there, and releases the child storage at the end,
+no garbage will appear in the source/destination storage:</p>
+<p>Dynamic data processing using a child storage</p>
+<img alt="../../../_images/memstorage2.png" src="../../../_images/memstorage2.png" />
+</div>
+<div class="section" id="creategraph">
+<h2>CreateGraph<a class="headerlink" href="#creategraph" title="Permalink to this headline">¶</a></h2>
+<p>Creates an empty graph.</p>
+<dl class="cfunction">
+<dt id="CvGraph* cvCreateGraph(int graph_flags, int header_size, int vtx_size, int edge_size, CvMemStorage* storage)">
+<strong>C:</strong><code class="descname"> </code>CvGraph* <code class="descname">cvCreateGraph</code><span class="sig-paren">(</span>int <strong>graph_flags</strong>, int <strong>header_size</strong>, int <strong>vtx_size</strong>, int <strong>edge_size</strong>, CvMemStorage* <strong>storage</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvGraph* cvCreateGraph(int graph_flags, int header_size, int vtx_size, int edge_size, CvMemStorage* storage)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>graph_flags</strong> &#8211; Type of the created graph. Usually, it is either  <code class="docutils literal"><span class="pre">CV_SEQ_KIND_GRAPH</span></code>  for generic unoriented graphs and <code class="docutils literal"><span class="pre">CV_SEQ_KIND_GRAPH</span> <span class="pre">|</span> <span class="pre">CV_GRAPH_FLAG_ORIENTED</span></code>  for generic oriented graphs.</li>
+<li><strong>header_size</strong> &#8211; Graph header size; may not be less than  <code class="docutils literal"><span class="pre">sizeof(CvGraph)</span></code></li>
+<li><strong>vtx_size</strong> &#8211; Graph vertex size; the custom vertex structure must start with  <a class="reference internal" href="#CvGraphVtx" title="struct CvGraphVtx"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvGraphVtx</span></code></a>  (use  <code class="docutils literal"><span class="pre">CV_GRAPH_VERTEX_FIELDS()</span></code> )</li>
+<li><strong>edge_size</strong> &#8211; Graph edge size; the custom edge structure must start with  <a class="reference internal" href="#CvGraphEdge" title="struct CvGraphEdge"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvGraphEdge</span></code></a>  (use  <code class="docutils literal"><span class="pre">CV_GRAPH_EDGE_FIELDS()</span></code> )</li>
+<li><strong>storage</strong> &#8211; The graph container</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function creates an empty graph and returns a pointer to it.</p>
+</div>
+<div class="section" id="creategraphscanner">
+<h2>CreateGraphScanner<a class="headerlink" href="#creategraphscanner" title="Permalink to this headline">¶</a></h2>
+<p>Creates structure for depth-first graph traversal.</p>
+<dl class="cfunction">
+<dt id="CvGraphScanner* cvCreateGraphScanner(CvGraph* graph, CvGraphVtx* vtx, int mask)">
+<strong>C:</strong><code class="descname"> </code>CvGraphScanner* <code class="descname">cvCreateGraphScanner</code><span class="sig-paren">(</span>CvGraph* <strong>graph</strong>, CvGraphVtx* <strong>vtx</strong>=NULL, int <strong>mask</strong>=CV_GRAPH_ALL_ITEMS <span class="sig-paren">)</span><a class="headerlink" href="#CvGraphScanner* cvCreateGraphScanner(CvGraph* graph, CvGraphVtx* vtx, int mask)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>graph</strong> &#8211; Graph</li>
+<li><strong>vtx</strong> &#8211; Initial vertex to start from. If NULL, the traversal starts from the first vertex (a vertex with the minimal index in the sequence of vertices).</li>
+<li><strong>mask</strong> &#8211; <p>Event mask indicating which events are of interest to the user (where  <a class="reference internal" href="#int cvNextGraphItem(CvGraphScanner* scanner)" title="int cvNextGraphItem(CvGraphScanner* scanner)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">NextGraphItem()</span></code></a>  function returns control to the user) It can be  <code class="docutils literal"><span class="pre">CV_GRAPH_ALL_ITEMS</span></code>  (all events are of interest) or a combination of the following flags:</p>
+<ul>
+<li><strong>CV_GRAPH_VERTEX</strong> stop at the graph vertices visited for the first time</li>
+<li><strong>CV_GRAPH_TREE_EDGE</strong> stop at tree edges ( <code class="docutils literal"><span class="pre">tree</span> <span class="pre">edge</span></code>  is the edge connecting the last visited vertex and the vertex to be visited next)</li>
+<li><strong>CV_GRAPH_BACK_EDGE</strong> stop at back edges ( <code class="docutils literal"><span class="pre">back</span> <span class="pre">edge</span></code>  is an edge connecting the last visited vertex with some of its ancestors in the search tree)</li>
+<li><strong>CV_GRAPH_FORWARD_EDGE</strong> stop at forward edges ( <code class="docutils literal"><span class="pre">forward</span> <span class="pre">edge</span></code>  is an edge connecting the last visited vertex with some of its descendants in the search tree. The forward edges are only possible during oriented graph traversal)</li>
+<li><strong>CV_GRAPH_CROSS_EDGE</strong> stop at cross edges ( <code class="docutils literal"><span class="pre">cross</span> <span class="pre">edge</span></code>  is an edge connecting different search trees or branches of the same tree. The  <code class="docutils literal"><span class="pre">cross</span> <span class="pre">edges</span></code>  are only possible during oriented graph traversal)</li>
+<li><strong>CV_GRAPH_ANY_EDGE</strong> stop at any edge ( <code class="docutils literal"><span class="pre">tree,</span> <span class="pre">back,</span> <span class="pre">forward</span></code> , and  <code class="docutils literal"><span class="pre">cross</span> <span class="pre">edges</span></code> )</li>
+<li><strong>CV_GRAPH_NEW_TREE</strong> stop in the beginning of every new search tree. When the traversal procedure visits all vertices and edges reachable from the initial vertex (the visited vertices together with tree edges make up a tree), it searches for some unvisited vertex in the graph and resumes the traversal process from that vertex. Before starting a new tree (including the very first tree when  <code class="docutils literal"><span class="pre">cvNextGraphItem</span></code>  is called for the first time) it generates a  <code class="docutils literal"><span class="pre">CV_GRAPH_NEW_TREE</span></code>  event. For unoriented graphs, each search tree corresponds to a connected component of the graph.</li>
+<li><strong>CV_GRAPH_BACKTRACKING</strong> stop at every already visited vertex during backtracking - returning to already visited vertexes of the traversal tree.</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function creates a structure for depth-first graph traversal/search. The initialized structure is used in the
+<a class="reference internal" href="#int cvNextGraphItem(CvGraphScanner* scanner)" title="int cvNextGraphItem(CvGraphScanner* scanner)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">NextGraphItem()</span></code></a>
+function - the incremental traversal procedure.</p>
+</div>
+<div class="section" id="creatememstorage">
+<h2>CreateMemStorage<a class="headerlink" href="#creatememstorage" title="Permalink to this headline">¶</a></h2>
+<p>Creates memory storage.</p>
+<dl class="cfunction">
+<dt id="CvMemStorage* cvCreateMemStorage(int block_size)">
+<strong>C:</strong><code class="descname"> </code>CvMemStorage* <code class="descname">cvCreateMemStorage</code><span class="sig-paren">(</span>int <strong>block_size</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#CvMemStorage* cvCreateMemStorage(int block_size)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CreateMemStorage">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CreateMemStorage</code><span class="sig-paren">(</span>blockSize=0<span class="sig-paren">)</span> &rarr; memstorage<a class="headerlink" href="#cv.CreateMemStorage" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>block_size</strong> &#8211; Size of the storage blocks in bytes. If it is 0, the block size is set to a default value - currently it is  about 64K.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function creates an empty memory storage. See
+<a class="reference internal" href="#CvMemStorage" title="struct CvMemStorage"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvMemStorage</span></code></a>
+description.</p>
+</div>
+<div class="section" id="createseq">
+<h2>CreateSeq<a class="headerlink" href="#createseq" title="Permalink to this headline">¶</a></h2>
+<p>Creates a sequence.</p>
+<dl class="cfunction">
+<dt id="CvSeq* cvCreateSeq(int seq_flags, size_t header_size, size_t elem_size, CvMemStorage* storage)">
+<strong>C:</strong><code class="descname"> </code>CvSeq* <code class="descname">cvCreateSeq</code><span class="sig-paren">(</span>int <strong>seq_flags</strong>, size_t <strong>header_size</strong>, size_t <strong>elem_size</strong>, CvMemStorage* <strong>storage</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvSeq* cvCreateSeq(int seq_flags, size_t header_size, size_t elem_size, CvMemStorage* storage)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq_flags</strong> &#8211; Flags of the created sequence. If the sequence is not passed to any function working with a specific type of sequences, the sequence value may be set to 0, otherwise the appropriate type must be selected from the list of predefined sequence types.</li>
+<li><strong>header_size</strong> &#8211; Size of the sequence header; must be greater than or equal to  <code class="docutils literal"><span class="pre">sizeof(CvSeq)</span></code> . If a specific type or its extension is indicated, this type must fit the base type header.</li>
+<li><strong>elem_size</strong> &#8211; Size of the sequence elements in bytes. The size must be consistent with the sequence type. For example, for a sequence of points to be created, the element type    <code class="docutils literal"><span class="pre">CV_SEQ_ELTYPE_POINT</span></code>  should be specified and the parameter  <code class="docutils literal"><span class="pre">elem_size</span></code>  must be equal to  <code class="docutils literal"><span class="pre">sizeof(CvPoint)</span></code> .</li>
+<li><strong>storage</strong> &#8211; Sequence location</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function creates a sequence and returns
+the pointer to it. The function allocates the sequence header in
+the storage block as one continuous chunk and sets the structure
+fields
+<code class="docutils literal"><span class="pre">flags</span></code>
+,
+<code class="docutils literal"><span class="pre">elemSize</span></code>
+,
+<code class="docutils literal"><span class="pre">headerSize</span></code>
+, and
+<code class="docutils literal"><span class="pre">storage</span></code>
+to passed values, sets
+<code class="docutils literal"><span class="pre">delta_elems</span></code>
+to the
+default value (that may be reassigned using the
+<a class="reference internal" href="#void cvSetSeqBlockSize(CvSeq* seq, int delta_elems)" title="void cvSetSeqBlockSize(CvSeq* seq, int delta_elems)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">SetSeqBlockSize()</span></code></a>
+function), and clears other header fields, including the space following
+the first
+<code class="docutils literal"><span class="pre">sizeof(CvSeq)</span></code>
+bytes.</p>
+</div>
+<div class="section" id="createset">
+<h2>CreateSet<a class="headerlink" href="#createset" title="Permalink to this headline">¶</a></h2>
+<p>Creates an empty set.</p>
+<dl class="cfunction">
+<dt id="CvSet* cvCreateSet(int set_flags, int header_size, int elem_size, CvMemStorage* storage)">
+<strong>C:</strong><code class="descname"> </code>CvSet* <code class="descname">cvCreateSet</code><span class="sig-paren">(</span>int <strong>set_flags</strong>, int <strong>header_size</strong>, int <strong>elem_size</strong>, CvMemStorage* <strong>storage</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvSet* cvCreateSet(int set_flags, int header_size, int elem_size, CvMemStorage* storage)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>set_flags</strong> &#8211; Type of the created set</li>
+<li><strong>header_size</strong> &#8211; Set header size; may not be less than  <code class="docutils literal"><span class="pre">sizeof(CvSet)</span></code></li>
+<li><strong>elem_size</strong> &#8211; Set element size; may not be less than  <a class="reference internal" href="#CvSetElem" title="struct CvSetElem"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvSetElem</span></code></a></li>
+<li><strong>storage</strong> &#8211; Container for the set</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function creates an empty set with a specified header size and element size, and returns the pointer to the set. This function is just a thin layer on top of
+<a class="reference internal" href="#CvSeq* cvCreateSeq(int seq_flags, size_t header_size, size_t elem_size, CvMemStorage* storage)" title="CvSeq* cvCreateSeq(int seq_flags, size_t header_size, size_t elem_size, CvMemStorage* storage)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CreateSeq()</span></code></a>.</p>
+</div>
+<div class="section" id="cvtseqtoarray">
+<h2>CvtSeqToArray<a class="headerlink" href="#cvtseqtoarray" title="Permalink to this headline">¶</a></h2>
+<p>Copies a sequence to one continuous block of memory.</p>
+<dl class="cfunction">
+<dt id="void* cvCvtSeqToArray(const CvSeq* seq, void* elements, CvSlice slice)">
+<strong>C:</strong><code class="descname"> </code>void* <code class="descname">cvCvtSeqToArray</code><span class="sig-paren">(</span>const CvSeq* <strong>seq</strong>, void* <strong>elements</strong>, CvSlice <strong>slice</strong>=CV_WHOLE_SEQ <span class="sig-paren">)</span><a class="headerlink" href="#void* cvCvtSeqToArray(const CvSeq* seq, void* elements, CvSlice slice)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Sequence</li>
+<li><strong>elements</strong> &#8211; Pointer to the destination array that must be large enough. It should be a pointer to data, not a matrix header.</li>
+<li><strong>slice</strong> &#8211; The sequence portion to copy to the array</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function copies the entire sequence or subsequence to the specified buffer and returns the pointer to the buffer.</p>
+</div>
+<div class="section" id="endwriteseq">
+<h2>EndWriteSeq<a class="headerlink" href="#endwriteseq" title="Permalink to this headline">¶</a></h2>
+<p>Finishes the process of writing a sequence.</p>
+<dl class="cfunction">
+<dt id="CvSeq* cvEndWriteSeq(CvSeqWriter* writer)">
+<strong>C:</strong><code class="descname"> </code>CvSeq* <code class="descname">cvEndWriteSeq</code><span class="sig-paren">(</span>CvSeqWriter* <strong>writer</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvSeq* cvEndWriteSeq(CvSeqWriter* writer)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>writer</strong> &#8211; Writer state</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function finishes the writing process and
+returns the pointer to the written sequence. The function also truncates
+the last incomplete sequence block to return the remaining part of the
+block to memory storage. After that, the sequence can be read and
+modified safely. See
+<a class="reference internal" href="#void cvStartWriteSeq(int seq_flags, int header_size, int elem_size, CvMemStorage* storage, CvSeqWriter* writer)" title="void cvStartWriteSeq(int seq_flags, int header_size, int elem_size, CvMemStorage* storage, CvSeqWriter* writer)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">StartWriteSeq()</span></code></a>
+and
+<a class="reference internal" href="#void cvStartAppendToSeq(CvSeq* seq, CvSeqWriter* writer)" title="void cvStartAppendToSeq(CvSeq* seq, CvSeqWriter* writer)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">StartAppendToSeq()</span></code></a></p>
+</div>
+<div class="section" id="findgraphedge">
+<h2>FindGraphEdge<a class="headerlink" href="#findgraphedge" title="Permalink to this headline">¶</a></h2>
+<p>Finds an edge in a graph.</p>
+<dl class="cfunction">
+<dt id="CvGraphEdge* cvFindGraphEdge(const CvGraph* graph, int start_idx, int end_idx)">
+<strong>C:</strong><code class="descname"> </code>CvGraphEdge* <code class="descname">cvFindGraphEdge</code><span class="sig-paren">(</span>const CvGraph* <strong>graph</strong>, int <strong>start_idx</strong>, int <strong>end_idx</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvGraphEdge* cvFindGraphEdge(const CvGraph* graph, int start_idx, int end_idx)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>graph</strong> &#8211; Graph</li>
+<li><strong>start_idx</strong> &#8211; Index of the starting vertex of the edge</li>
+<li><strong>end_idx</strong> &#8211; Index of the ending vertex of the edge. For an unoriented graph, the order of the vertex parameters does not matter.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="highlight-c"><div class="highlight"><pre><span class="cp">#define cvGraphFindEdge cvFindGraphEdge</span>
+</pre></div>
+</div>
+<p>The function finds the graph edge connecting two specified vertices and returns a pointer to it or NULL if the edge does not exist.</p>
+</div>
+<div class="section" id="findgraphedgebyptr">
+<h2>FindGraphEdgeByPtr<a class="headerlink" href="#findgraphedgebyptr" title="Permalink to this headline">¶</a></h2>
+<p>Finds an edge in a graph by using its pointer.</p>
+<dl class="cfunction">
+<dt id="CvGraphEdge* cvFindGraphEdgeByPtr(const CvGraph* graph, const CvGraphVtx* start_vtx, const CvGraphVtx* end_vtx)">
+<strong>C:</strong><code class="descname"> </code>CvGraphEdge* <code class="descname">cvFindGraphEdgeByPtr</code><span class="sig-paren">(</span>const CvGraph* <strong>graph</strong>, const CvGraphVtx* <strong>start_vtx</strong>, const CvGraphVtx* <strong>end_vtx</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvGraphEdge* cvFindGraphEdgeByPtr(const CvGraph* graph, const CvGraphVtx* start_vtx, const CvGraphVtx* end_vtx)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>graph</strong> &#8211; Graph</li>
+<li><strong>start_vtx</strong> &#8211; Pointer to the starting vertex of the edge</li>
+<li><strong>end_vtx</strong> &#8211; Pointer to the ending vertex of the edge. For an unoriented graph, the order of the vertex parameters does not matter.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="highlight-c"><div class="highlight"><pre><span class="cp">#define cvGraphFindEdgeByPtr cvFindGraphEdgeByPtr</span>
+</pre></div>
+</div>
+<p>The function finds the graph edge connecting two specified vertices and returns pointer to it or NULL if the edge does not exists.</p>
+</div>
+<div class="section" id="flushseqwriter">
+<h2>FlushSeqWriter<a class="headerlink" href="#flushseqwriter" title="Permalink to this headline">¶</a></h2>
+<p>Updates sequence headers from the writer.</p>
+<dl class="cfunction">
+<dt id="void cvFlushSeqWriter(CvSeqWriter* writer)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvFlushSeqWriter</code><span class="sig-paren">(</span>CvSeqWriter* <strong>writer</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvFlushSeqWriter(CvSeqWriter* writer)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>writer</strong> &#8211; Writer state</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function is intended to enable the user to
+read sequence elements, whenever required, during the writing process,
+e.g., in order to check specific conditions. The function updates the
+sequence headers to make reading from the sequence possible. The writer
+is not closed, however, so that the writing process can be continued at
+any time. If an algorithm requires frequent flushes, consider using
+<a class="reference internal" href="#schar* cvSeqPush(CvSeq* seq, const void* element)" title="schar* cvSeqPush(CvSeq* seq, const void* element)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">SeqPush()</span></code></a>
+instead.</p>
+</div>
+<div class="section" id="getgraphvtx">
+<h2>GetGraphVtx<a class="headerlink" href="#getgraphvtx" title="Permalink to this headline">¶</a></h2>
+<p>Finds a graph vertex by using its index.</p>
+<dl class="cfunction">
+<dt id="CvGraphVtx* cvGetGraphVtx(CvGraph* graph, int vtx_idx)">
+<strong>C:</strong><code class="descname"> </code>CvGraphVtx* <code class="descname">cvGetGraphVtx</code><span class="sig-paren">(</span>CvGraph* <strong>graph</strong>, int <strong>vtx_idx</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvGraphVtx* cvGetGraphVtx(CvGraph* graph, int vtx_idx)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>graph</strong> &#8211; Graph</li>
+<li><strong>vtx_idx</strong> &#8211; Index of the vertex</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function finds the graph vertex by using its index and returns the pointer to it or NULL if the vertex does not belong to the graph.</p>
+</div>
+<div class="section" id="getseqelem">
+<h2>GetSeqElem<a class="headerlink" href="#getseqelem" title="Permalink to this headline">¶</a></h2>
+<p>Returns a pointer to a sequence element according to its index.</p>
+<dl class="cfunction">
+<dt id="schar* cvGetSeqElem(const CvSeq* seq, int index)">
+<strong>C:</strong><code class="descname"> </code>schar* <code class="descname">cvGetSeqElem</code><span class="sig-paren">(</span>const CvSeq* <strong>seq</strong>, int <strong>index</strong><span class="sig-paren">)</span><a class="headerlink" href="#schar* cvGetSeqElem(const CvSeq* seq, int index)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Sequence</li>
+<li><strong>index</strong> &#8211; Index of element</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="highlight-c"><div class="highlight"><pre><span class="cp">#define CV_GET_SEQ_ELEM( TYPE, seq, index )  (TYPE*)cvGetSeqElem( (CvSeq*)(seq), (index) )</span>
+</pre></div>
+</div>
+<p>The function finds the element with the given
+index in the sequence and returns the pointer to it. If the element
+is not found, the function returns 0. The function supports negative
+indices, where -1 stands for the last sequence element, -2 stands for
+the one before last, etc. If the sequence is most likely to consist of
+a single sequence block or the desired element is likely to be located
+in the first block, then the macro
+<code class="docutils literal"><span class="pre">CV_GET_SEQ_ELEM(</span> <span class="pre">elemType,</span> <span class="pre">seq,</span> <span class="pre">index</span> <span class="pre">)</span></code>
+should be used, where the parameter
+<code class="docutils literal"><span class="pre">elemType</span></code>
+is the
+type of sequence elements (
+<a class="reference internal" href="old_basic_structures.html#CvPoint" title="struct CvPoint"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvPoint</span></code></a>
+for example), the parameter
+<code class="docutils literal"><span class="pre">seq</span></code>
+is a sequence, and the parameter
+<code class="docutils literal"><span class="pre">index</span></code>
+is the index
+of the desired element. The macro checks first whether the desired element
+belongs to the first block of the sequence and returns it if it does;
+otherwise the macro calls the main function
+<code class="docutils literal"><span class="pre">GetSeqElem</span></code>
+. Negative
+indices always cause the
+<a class="reference internal" href="#schar* cvGetSeqElem(const CvSeq* seq, int index)" title="schar* cvGetSeqElem(const CvSeq* seq, int index)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GetSeqElem()</span></code></a>
+call. The function has O(1)
+time complexity assuming that the number of blocks is much smaller than the
+number of elements.</p>
+</div>
+<div class="section" id="getseqreaderpos">
+<h2>GetSeqReaderPos<a class="headerlink" href="#getseqreaderpos" title="Permalink to this headline">¶</a></h2>
+<p>Returns the current reader position.</p>
+<dl class="cfunction">
+<dt id="int cvGetSeqReaderPos(CvSeqReader* reader)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvGetSeqReaderPos</code><span class="sig-paren">(</span>CvSeqReader* <strong>reader</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvGetSeqReaderPos(CvSeqReader* reader)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>reader</strong> &#8211; Reader state</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns the current reader position (within 0 ...
+<code class="docutils literal"><span class="pre">reader-&gt;seq-&gt;total</span></code>
+- 1).</p>
+</div>
+<div class="section" id="getsetelem">
+<h2>GetSetElem<a class="headerlink" href="#getsetelem" title="Permalink to this headline">¶</a></h2>
+<p>Finds a set element by its index.</p>
+<dl class="cfunction">
+<dt id="CvSetElem* cvGetSetElem(const CvSet* set_header, int idx)">
+<strong>C:</strong><code class="descname"> </code>CvSetElem* <code class="descname">cvGetSetElem</code><span class="sig-paren">(</span>const CvSet* <strong>set_header</strong>, int <strong>idx</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvSetElem* cvGetSetElem(const CvSet* set_header, int idx)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>set_header</strong> &#8211; Set</li>
+<li><strong>idx</strong> &#8211; Index of the set element within a sequence</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function finds a set element by its index. The function returns the pointer to it or 0 if the index is invalid or the corresponding node is free. The function supports negative indices as it uses
+<a class="reference internal" href="#schar* cvGetSeqElem(const CvSeq* seq, int index)" title="schar* cvGetSeqElem(const CvSeq* seq, int index)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GetSeqElem()</span></code></a>
+to locate the node.</p>
+</div>
+<div class="section" id="graphaddedge">
+<h2>GraphAddEdge<a class="headerlink" href="#graphaddedge" title="Permalink to this headline">¶</a></h2>
+<p>Adds an edge to a graph.</p>
+<dl class="cfunction">
+<dt id="int cvGraphAddEdge(CvGraph* graph, int start_idx, int end_idx, const CvGraphEdge* edge, CvGraphEdge** inserted_edge)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvGraphAddEdge</code><span class="sig-paren">(</span>CvGraph* <strong>graph</strong>, int <strong>start_idx</strong>, int <strong>end_idx</strong>, const CvGraphEdge* <strong>edge</strong>=NULL, CvGraphEdge** <strong>inserted_edge</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#int cvGraphAddEdge(CvGraph* graph, int start_idx, int end_idx, const CvGraphEdge* edge, CvGraphEdge** inserted_edge)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>graph</strong> &#8211; Graph</li>
+<li><strong>start_idx</strong> &#8211; Index of the starting vertex of the edge</li>
+<li><strong>end_idx</strong> &#8211; Index of the ending vertex of the edge. For an unoriented graph, the order of the vertex parameters does not matter.</li>
+<li><strong>edge</strong> &#8211; Optional input parameter, initialization data for the edge</li>
+<li><strong>inserted_edge</strong> &#8211; Optional output parameter to contain the address of the inserted edge</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function connects two specified vertices. The function returns 1 if the edge has been added successfully, 0 if the edge connecting the two vertices exists already and -1 if either of the vertices was not found, the starting and the ending vertex are the same, or there is some other critical situation. In the latter case (i.e., when the result is negative), the function also reports an error by default.</p>
+</div>
+<div class="section" id="graphaddedgebyptr">
+<h2>GraphAddEdgeByPtr<a class="headerlink" href="#graphaddedgebyptr" title="Permalink to this headline">¶</a></h2>
+<p>Adds an edge to a graph by using its pointer.</p>
+<dl class="cfunction">
+<dt id="int cvGraphAddEdgeByPtr(CvGraph* graph, CvGraphVtx* start_vtx, CvGraphVtx* end_vtx, const CvGraphEdge* edge, CvGraphEdge** inserted_edge)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvGraphAddEdgeByPtr</code><span class="sig-paren">(</span>CvGraph* <strong>graph</strong>, CvGraphVtx* <strong>start_vtx</strong>, CvGraphVtx* <strong>end_vtx</strong>, const CvGraphEdge* <strong>edge</strong>=NULL, CvGraphEdge** <strong>inserted_edge</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#int cvGraphAddEdgeByPtr(CvGraph* graph, CvGraphVtx* start_vtx, CvGraphVtx* end_vtx, const CvGraphEdge* edge, CvGraphEdge** inserted_edge)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>graph</strong> &#8211; Graph</li>
+<li><strong>start_vtx</strong> &#8211; Pointer to the starting vertex of the edge</li>
+<li><strong>end_vtx</strong> &#8211; Pointer to the ending vertex of the edge. For an unoriented graph, the order of the vertex parameters does not matter.</li>
+<li><strong>edge</strong> &#8211; Optional input parameter, initialization data for the edge</li>
+<li><strong>inserted_edge</strong> &#8211; Optional output parameter to contain the address of the inserted edge within the edge set</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function connects two specified vertices. The
+function returns 1 if the edge has been added successfully, 0 if the
+edge connecting the two vertices exists already, and -1 if either of the
+vertices was not found, the starting and the ending vertex are the same
+or there is some other critical situation. In the latter case (i.e., when
+the result is negative), the function also reports an error by default.</p>
+</div>
+<div class="section" id="graphaddvtx">
+<h2>GraphAddVtx<a class="headerlink" href="#graphaddvtx" title="Permalink to this headline">¶</a></h2>
+<p>Adds a vertex to a graph.</p>
+<dl class="cfunction">
+<dt id="int cvGraphAddVtx(CvGraph* graph, const CvGraphVtx* vtx, CvGraphVtx** inserted_vtx)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvGraphAddVtx</code><span class="sig-paren">(</span>CvGraph* <strong>graph</strong>, const CvGraphVtx* <strong>vtx</strong>=NULL, CvGraphVtx** <strong>inserted_vtx</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#int cvGraphAddVtx(CvGraph* graph, const CvGraphVtx* vtx, CvGraphVtx** inserted_vtx)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>graph</strong> &#8211; Graph</li>
+<li><strong>vtx</strong> &#8211; Optional input argument used to initialize the added vertex (only user-defined fields beyond  <code class="docutils literal"><span class="pre">sizeof(CvGraphVtx)</span></code>  are copied)</li>
+<li><strong>inserted_vtx</strong> &#8211; Optional output argument. If not  <code class="docutils literal"><span class="pre">NULL</span></code> , the address of the new vertex is written here.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function adds a vertex to the graph and returns the vertex index.</p>
+</div>
+<div class="section" id="graphedgeidx">
+<h2>GraphEdgeIdx<a class="headerlink" href="#graphedgeidx" title="Permalink to this headline">¶</a></h2>
+<p>Returns the index of a graph edge.</p>
+<dl class="cfunction">
+<dt id="int cvGraphEdgeIdx(CvGraph* graph, CvGraphEdge* edge)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvGraphEdgeIdx</code><span class="sig-paren">(</span>CvGraph* <strong>graph</strong>, CvGraphEdge* <strong>edge</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvGraphEdgeIdx(CvGraph* graph, CvGraphEdge* edge)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>graph</strong> &#8211; Graph</li>
+<li><strong>edge</strong> &#8211; Pointer to the graph edge</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns the index of a graph edge.</p>
+</div>
+<div class="section" id="graphremoveedge">
+<h2>GraphRemoveEdge<a class="headerlink" href="#graphremoveedge" title="Permalink to this headline">¶</a></h2>
+<p>Removes an edge from a graph.</p>
+<dl class="cfunction">
+<dt id="void cvGraphRemoveEdge(CvGraph* graph, int start_idx, int end_idx)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvGraphRemoveEdge</code><span class="sig-paren">(</span>CvGraph* <strong>graph</strong>, int <strong>start_idx</strong>, int <strong>end_idx</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvGraphRemoveEdge(CvGraph* graph, int start_idx, int end_idx)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>graph</strong> &#8211; Graph</li>
+<li><strong>start_idx</strong> &#8211; Index of the starting vertex of the edge</li>
+<li><strong>end_idx</strong> &#8211; Index of the ending vertex of the edge. For an unoriented graph, the order of the vertex parameters does not matter.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function removes the edge connecting two specified vertices. If the vertices are not connected [in that order], the function does nothing.</p>
+</div>
+<div class="section" id="graphremoveedgebyptr">
+<h2>GraphRemoveEdgeByPtr<a class="headerlink" href="#graphremoveedgebyptr" title="Permalink to this headline">¶</a></h2>
+<p>Removes an edge from a graph by using its pointer.</p>
+<dl class="cfunction">
+<dt id="void cvGraphRemoveEdgeByPtr(CvGraph* graph, CvGraphVtx* start_vtx, CvGraphVtx* end_vtx)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvGraphRemoveEdgeByPtr</code><span class="sig-paren">(</span>CvGraph* <strong>graph</strong>, CvGraphVtx* <strong>start_vtx</strong>, CvGraphVtx* <strong>end_vtx</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvGraphRemoveEdgeByPtr(CvGraph* graph, CvGraphVtx* start_vtx, CvGraphVtx* end_vtx)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>graph</strong> &#8211; Graph</li>
+<li><strong>start_vtx</strong> &#8211; Pointer to the starting vertex of the edge</li>
+<li><strong>end_vtx</strong> &#8211; Pointer to the ending vertex of the edge. For an unoriented graph, the order of the vertex parameters does not matter.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function removes the edge connecting two specified vertices. If the vertices are not connected [in that order], the function does nothing.</p>
+</div>
+<div class="section" id="graphremovevtx">
+<h2>GraphRemoveVtx<a class="headerlink" href="#graphremovevtx" title="Permalink to this headline">¶</a></h2>
+<p>Removes a vertex from a graph.</p>
+<dl class="cfunction">
+<dt id="int cvGraphRemoveVtx(CvGraph* graph, int index)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvGraphRemoveVtx</code><span class="sig-paren">(</span>CvGraph* <strong>graph</strong>, int <strong>index</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvGraphRemoveVtx(CvGraph* graph, int index)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>graph</strong> &#8211; Graph</li>
+<li><strong>index</strong> &#8211; Index of the removed vertex</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function removes a vertex from a graph
+together with all the edges incident to it. The function reports an error
+if the input vertex does not belong to the graph. The return value is the
+number of edges deleted, or -1 if the vertex does not belong to the graph.</p>
+</div>
+<div class="section" id="graphremovevtxbyptr">
+<h2>GraphRemoveVtxByPtr<a class="headerlink" href="#graphremovevtxbyptr" title="Permalink to this headline">¶</a></h2>
+<p>Removes a vertex from a graph by using its pointer.</p>
+<dl class="cfunction">
+<dt id="int cvGraphRemoveVtxByPtr(CvGraph* graph, CvGraphVtx* vtx)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvGraphRemoveVtxByPtr</code><span class="sig-paren">(</span>CvGraph* <strong>graph</strong>, CvGraphVtx* <strong>vtx</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvGraphRemoveVtxByPtr(CvGraph* graph, CvGraphVtx* vtx)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>graph</strong> &#8211; Graph</li>
+<li><strong>vtx</strong> &#8211; Pointer to the removed vertex</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function removes a vertex from the graph by using its pointer together with all the edges incident to it. The function reports an error if the vertex does not belong to the graph. The return value is the number of edges deleted, or -1 if the vertex does not belong to the graph.</p>
+</div>
+<div class="section" id="graphvtxdegree">
+<h2>GraphVtxDegree<a class="headerlink" href="#graphvtxdegree" title="Permalink to this headline">¶</a></h2>
+<p>Counts the number of edges incident to the vertex.</p>
+<dl class="cfunction">
+<dt id="int cvGraphVtxDegree(const CvGraph* graph, int vtx_idx)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvGraphVtxDegree</code><span class="sig-paren">(</span>const CvGraph* <strong>graph</strong>, int <strong>vtx_idx</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvGraphVtxDegree(const CvGraph* graph, int vtx_idx)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>graph</strong> &#8211; Graph</li>
+<li><strong>vtx_idx</strong> &#8211; Index of the graph vertex</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns the number of edges incident to the specified vertex, both incoming and outgoing. To count the edges, the following code is used:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">CvGraphEdge</span><span class="o">*</span> <span class="n">edge</span> <span class="o">=</span> <span class="n">vertex</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">;</span> <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">while</span><span class="p">(</span> <span class="n">edge</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">edge</span> <span class="o">=</span> <span class="n">CV_NEXT_GRAPH_EDGE</span><span class="p">(</span> <span class="n">edge</span><span class="p">,</span> <span class="n">vertex</span> <span class="p">);</span>
+    <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The macro
+<code class="docutils literal"><span class="pre">CV_NEXT_GRAPH_EDGE(</span> <span class="pre">edge,</span> <span class="pre">vertex</span> <span class="pre">)</span></code>
+returns the edge incident to
+<code class="docutils literal"><span class="pre">vertex</span></code>
+that follows after
+<code class="docutils literal"><span class="pre">edge</span></code>
+.</p>
+</div>
+<div class="section" id="graphvtxdegreebyptr">
+<h2>GraphVtxDegreeByPtr<a class="headerlink" href="#graphvtxdegreebyptr" title="Permalink to this headline">¶</a></h2>
+<p>Finds an edge in a graph.</p>
+<dl class="cfunction">
+<dt id="int cvGraphVtxDegreeByPtr(const CvGraph* graph, const CvGraphVtx* vtx)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvGraphVtxDegreeByPtr</code><span class="sig-paren">(</span>const CvGraph* <strong>graph</strong>, const CvGraphVtx* <strong>vtx</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvGraphVtxDegreeByPtr(const CvGraph* graph, const CvGraphVtx* vtx)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>graph</strong> &#8211; Graph</li>
+<li><strong>vtx</strong> &#8211; Pointer to the graph vertex</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns the number of edges incident to the specified vertex, both incoming and outcoming.</p>
+</div>
+<div class="section" id="graphvtxidx">
+<h2>GraphVtxIdx<a class="headerlink" href="#graphvtxidx" title="Permalink to this headline">¶</a></h2>
+<p>Returns the index of a graph vertex.</p>
+<dl class="cfunction">
+<dt id="int cvGraphVtxIdx(CvGraph* graph, CvGraphVtx* vtx)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvGraphVtxIdx</code><span class="sig-paren">(</span>CvGraph* <strong>graph</strong>, CvGraphVtx* <strong>vtx</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvGraphVtxIdx(CvGraph* graph, CvGraphVtx* vtx)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>graph</strong> &#8211; Graph</li>
+<li><strong>vtx</strong> &#8211; Pointer to the graph vertex</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns the index of a graph vertex.</p>
+</div>
+<div class="section" id="inittreenodeiterator">
+<h2>InitTreeNodeIterator<a class="headerlink" href="#inittreenodeiterator" title="Permalink to this headline">¶</a></h2>
+<p>Initializes the tree node iterator.</p>
+<dl class="cfunction">
+<dt id="void cvInitTreeNodeIterator(CvTreeNodeIterator* tree_iterator, const void* first, int max_level)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvInitTreeNodeIterator</code><span class="sig-paren">(</span>CvTreeNodeIterator* <strong>tree_iterator</strong>, const void* <strong>first</strong>, int <strong>max_level</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvInitTreeNodeIterator(CvTreeNodeIterator* tree_iterator, const void* first, int max_level)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>tree_iterator</strong> &#8211; Tree iterator initialized by the function</li>
+<li><strong>first</strong> &#8211; The initial node to start traversing from</li>
+<li><strong>max_level</strong> &#8211; The maximal level of the tree ( <code class="docutils literal"><span class="pre">first</span></code>  node assumed to be at the first level) to traverse up to. For example, 1 means that only nodes at the same level as  <code class="docutils literal"><span class="pre">first</span></code>  should be visited, 2 means that the nodes on the same level as  <code class="docutils literal"><span class="pre">first</span></code>  and their direct children should be visited, and so forth.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function initializes the tree iterator. The tree is traversed in depth-first order.</p>
+</div>
+<div class="section" id="insertnodeintotree">
+<h2>InsertNodeIntoTree<a class="headerlink" href="#insertnodeintotree" title="Permalink to this headline">¶</a></h2>
+<p>Adds a new node to a tree.</p>
+<dl class="cfunction">
+<dt id="void cvInsertNodeIntoTree(void* node, void* parent, void* frame)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvInsertNodeIntoTree</code><span class="sig-paren">(</span>void* <strong>node</strong>, void* <strong>parent</strong>, void* <strong>frame</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvInsertNodeIntoTree(void* node, void* parent, void* frame)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>node</strong> &#8211; The inserted node</li>
+<li><strong>parent</strong> &#8211; The parent node that is already in the tree</li>
+<li><strong>frame</strong> &#8211; The top level node. If  <code class="docutils literal"><span class="pre">parent</span></code>  and  <code class="docutils literal"><span class="pre">frame</span></code>  are the same, the  <code class="docutils literal"><span class="pre">v_prev</span></code>  field of  <code class="docutils literal"><span class="pre">node</span></code>  is set to NULL rather than  <code class="docutils literal"><span class="pre">parent</span></code> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function adds another node into tree. The function does not allocate any memory, it can only modify links of the tree nodes.</p>
+</div>
+<div class="section" id="makeseqheaderforarray">
+<h2>MakeSeqHeaderForArray<a class="headerlink" href="#makeseqheaderforarray" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a sequence header for an array.</p>
+<dl class="cfunction">
+<dt id="CvSeq* cvMakeSeqHeaderForArray(int seq_type, int header_size, int elem_size, void* elements, int total, CvSeq* seq, CvSeqBlock* block)">
+<strong>C:</strong><code class="descname"> </code>CvSeq* <code class="descname">cvMakeSeqHeaderForArray</code><span class="sig-paren">(</span>int <strong>seq_type</strong>, int <strong>header_size</strong>, int <strong>elem_size</strong>, void* <strong>elements</strong>, int <strong>total</strong>, CvSeq* <strong>seq</strong>, CvSeqBlock* <strong>block</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvSeq* cvMakeSeqHeaderForArray(int seq_type, int header_size, int elem_size, void* elements, int total, CvSeq* seq, CvSeqBlock* block)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq_type</strong> &#8211; Type of the created sequence</li>
+<li><strong>header_size</strong> &#8211; Size of the header of the sequence. Parameter sequence must point to the structure of that size or greater</li>
+<li><strong>elem_size</strong> &#8211; Size of the sequence elements</li>
+<li><strong>elements</strong> &#8211; Elements that will form a sequence</li>
+<li><strong>total</strong> &#8211; Total number of elements in the sequence. The number of array elements must be equal to the value of this parameter.</li>
+<li><strong>seq</strong> &#8211; Pointer to the local variable that is used as the sequence header</li>
+<li><strong>block</strong> &#8211; Pointer to the local variable that is the header of the single sequence block</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function initializes a sequence
+header for an array. The sequence header as well as the sequence block are
+allocated by the user (for example, on stack). No data is copied by the
+function. The resultant sequence will consists of a single block and
+have NULL storage pointer; thus, it is possible to read its elements,
+but the attempts to add elements to the sequence will raise an error in
+most cases.</p>
+</div>
+<div class="section" id="memstoragealloc">
+<h2>MemStorageAlloc<a class="headerlink" href="#memstoragealloc" title="Permalink to this headline">¶</a></h2>
+<p>Allocates a memory buffer in a storage block.</p>
+<dl class="cfunction">
+<dt id="void* cvMemStorageAlloc(CvMemStorage* storage, size_t size)">
+<strong>C:</strong><code class="descname"> </code>void* <code class="descname">cvMemStorageAlloc</code><span class="sig-paren">(</span>CvMemStorage* <strong>storage</strong>, size_t <strong>size</strong><span class="sig-paren">)</span><a class="headerlink" href="#void* cvMemStorageAlloc(CvMemStorage* storage, size_t size)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>storage</strong> &#8211; Memory storage</li>
+<li><strong>size</strong> &#8211; Buffer size</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function allocates a memory buffer in
+a storage block. The buffer size must not exceed the storage block size,
+otherwise a runtime error is raised. The buffer address is aligned by
+<code class="docutils literal"><span class="pre">CV_STRUCT_ALIGN=sizeof(double)</span></code>
+(for the moment) bytes.</p>
+</div>
+<div class="section" id="memstorageallocstring">
+<h2>MemStorageAllocString<a class="headerlink" href="#memstorageallocstring" title="Permalink to this headline">¶</a></h2>
+<p>Allocates a text string in a storage block.</p>
+<dl class="cfunction">
+<dt id="CvString cvMemStorageAllocString(CvMemStorage* storage, const char* ptr, int len)">
+<strong>C:</strong><code class="descname"> </code>CvString <code class="descname">cvMemStorageAllocString</code><span class="sig-paren">(</span>CvMemStorage* <strong>storage</strong>, const char* <strong>ptr</strong>, int <strong>len</strong>=-1<span class="sig-paren">)</span><a class="headerlink" href="#CvString cvMemStorageAllocString(CvMemStorage* storage, const char* ptr, int len)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>storage</strong> &#8211; Memory storage</li>
+<li><strong>ptr</strong> &#8211; The string</li>
+<li><strong>len</strong> &#8211; Length of the string (not counting the ending  <code class="docutils literal"><span class="pre">NUL</span></code> ) . If the parameter is negative, the function computes the length.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="highlight-c"><div class="highlight"><pre><span class="k">typedef</span> <span class="k">struct</span> <span class="n">CvString</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">len</span><span class="p">;</span>
+    <span class="kt">char</span><span class="o">*</span> <span class="n">ptr</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">CvString</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The function creates copy of the string
+in memory storage. It returns the structure that contains user-passed
+or computed length of the string and pointer to the copied string.</p>
+</div>
+<div class="section" id="nextgraphitem">
+<h2>NextGraphItem<a class="headerlink" href="#nextgraphitem" title="Permalink to this headline">¶</a></h2>
+<p>Executes one or more steps of the graph traversal procedure.</p>
+<dl class="cfunction">
+<dt id="int cvNextGraphItem(CvGraphScanner* scanner)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvNextGraphItem</code><span class="sig-paren">(</span>CvGraphScanner* <strong>scanner</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvNextGraphItem(CvGraphScanner* scanner)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>scanner</strong> &#8211; Graph traversal state. It is updated by this function.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function traverses through the graph
+until an event of interest to the user (that is, an event, specified
+in the
+<code class="docutils literal"><span class="pre">mask</span></code>
+in the
+<a class="reference internal" href="#CvGraphScanner* cvCreateGraphScanner(CvGraph* graph, CvGraphVtx* vtx, int mask)" title="CvGraphScanner* cvCreateGraphScanner(CvGraph* graph, CvGraphVtx* vtx, int mask)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CreateGraphScanner()</span></code></a>
+call) is met or the
+traversal is completed. In the first case, it returns one of the events
+listed in the description of the
+<code class="docutils literal"><span class="pre">mask</span></code>
+parameter above and with
+the next call it resumes the traversal. In the latter case, it returns
+<code class="docutils literal"><span class="pre">CV_GRAPH_OVER</span></code>
+(-1). When the event is
+<code class="docutils literal"><span class="pre">CV_GRAPH_VERTEX</span></code>
+,
+<code class="docutils literal"><span class="pre">CV_GRAPH_BACKTRACKING</span></code>
+, or
+<code class="docutils literal"><span class="pre">CV_GRAPH_NEW_TREE</span></code>
+,
+the currently observed vertex is stored in
+<code class="docutils literal"><span class="pre">scanner-:math:`&gt;`vtx</span></code>
+. And if the
+event is edge-related, the edge itself is stored at
+<code class="docutils literal"><span class="pre">scanner-:math:`&gt;`edge</span></code>
+,
+the previously visited vertex - at
+<code class="docutils literal"><span class="pre">scanner-:math:`&gt;`vtx</span></code>
+and the other ending
+vertex of the edge - at
+<code class="docutils literal"><span class="pre">scanner-:math:`&gt;`dst</span></code>
+.</p>
+</div>
+<div class="section" id="nexttreenode">
+<h2>NextTreeNode<a class="headerlink" href="#nexttreenode" title="Permalink to this headline">¶</a></h2>
+<p>Returns the currently observed node and moves the iterator toward the next node.</p>
+<dl class="cfunction">
+<dt id="void* cvNextTreeNode(CvTreeNodeIterator* tree_iterator)">
+<strong>C:</strong><code class="descname"> </code>void* <code class="descname">cvNextTreeNode</code><span class="sig-paren">(</span>CvTreeNodeIterator* <strong>tree_iterator</strong><span class="sig-paren">)</span><a class="headerlink" href="#void* cvNextTreeNode(CvTreeNodeIterator* tree_iterator)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>tree_iterator</strong> &#8211; Tree iterator initialized by the function</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns the currently observed node and then updates the
+iterator - moving it toward the next node. In other words, the function
+behavior is similar to the
+<code class="docutils literal"><span class="pre">*p++</span></code>
+expression on a typical C
+pointer or C++ collection iterator. The function returns NULL if there
+are no more nodes.</p>
+</div>
+<div class="section" id="prevtreenode">
+<h2>PrevTreeNode<a class="headerlink" href="#prevtreenode" title="Permalink to this headline">¶</a></h2>
+<p>Returns the currently observed node and moves the iterator toward the previous node.</p>
+<dl class="cfunction">
+<dt id="void* cvPrevTreeNode(CvTreeNodeIterator* tree_iterator)">
+<strong>C:</strong><code class="descname"> </code>void* <code class="descname">cvPrevTreeNode</code><span class="sig-paren">(</span>CvTreeNodeIterator* <strong>tree_iterator</strong><span class="sig-paren">)</span><a class="headerlink" href="#void* cvPrevTreeNode(CvTreeNodeIterator* tree_iterator)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>tree_iterator</strong> &#8211; Tree iterator initialized by the function</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns the currently observed node and then updates
+the iterator - moving it toward the previous node. In other words,
+the function behavior is similar to the
+<code class="docutils literal"><span class="pre">*p--</span></code>
+expression on a
+typical C pointer or C++ collection iterator. The function returns NULL
+if there are no more nodes.</p>
+</div>
+<div class="section" id="releasegraphscanner">
+<h2>ReleaseGraphScanner<a class="headerlink" href="#releasegraphscanner" title="Permalink to this headline">¶</a></h2>
+<p>Completes the graph traversal procedure.</p>
+<dl class="cfunction">
+<dt id="void cvReleaseGraphScanner(CvGraphScanner** scanner)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvReleaseGraphScanner</code><span class="sig-paren">(</span>CvGraphScanner** <strong>scanner</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvReleaseGraphScanner(CvGraphScanner** scanner)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>scanner</strong> &#8211; Double pointer to graph traverser</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function completes the graph traversal procedure and releases the traverser state.</p>
+</div>
+<div class="section" id="releasememstorage">
+<h2>ReleaseMemStorage<a class="headerlink" href="#releasememstorage" title="Permalink to this headline">¶</a></h2>
+<p>Releases memory storage.</p>
+<dl class="cfunction">
+<dt id="void cvReleaseMemStorage(CvMemStorage** storage)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvReleaseMemStorage</code><span class="sig-paren">(</span>CvMemStorage** <strong>storage</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvReleaseMemStorage(CvMemStorage** storage)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>storage</strong> &#8211; Pointer to the released storage</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function deallocates all storage memory
+blocks or returns them to the parent, if any. Then it deallocates the
+storage header and clears the pointer to the storage. All child storage
+associated with a given parent storage block must be released before the
+parent storage block is released.</p>
+</div>
+<div class="section" id="restorememstoragepos">
+<h2>RestoreMemStoragePos<a class="headerlink" href="#restorememstoragepos" title="Permalink to this headline">¶</a></h2>
+<p>Restores memory storage position.</p>
+<dl class="cfunction">
+<dt id="void cvRestoreMemStoragePos(CvMemStorage* storage, CvMemStoragePos* pos)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvRestoreMemStoragePos</code><span class="sig-paren">(</span>CvMemStorage* <strong>storage</strong>, CvMemStoragePos* <strong>pos</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvRestoreMemStoragePos(CvMemStorage* storage, CvMemStoragePos* pos)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>storage</strong> &#8211; Memory storage</li>
+<li><strong>pos</strong> &#8211; New storage top position</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function restores the position of the storage top from the parameter
+<code class="docutils literal"><span class="pre">pos</span></code>
+. This function and the function
+<code class="docutils literal"><span class="pre">cvClearMemStorage</span></code>
+are the only methods to release memory occupied in memory blocks. Note again that there is no way to free memory in the middle of an occupied portion of a storage block.</p>
+</div>
+<div class="section" id="savememstoragepos">
+<h2>SaveMemStoragePos<a class="headerlink" href="#savememstoragepos" title="Permalink to this headline">¶</a></h2>
+<p>Saves memory storage position.</p>
+<dl class="cfunction">
+<dt id="void cvSaveMemStoragePos(const CvMemStorage* storage, CvMemStoragePos* pos)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSaveMemStoragePos</code><span class="sig-paren">(</span>const CvMemStorage* <strong>storage</strong>, CvMemStoragePos* <strong>pos</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvSaveMemStoragePos(const CvMemStorage* storage, CvMemStoragePos* pos)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>storage</strong> &#8211; Memory storage</li>
+<li><strong>pos</strong> &#8211; The output position of the storage top</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function saves the current position
+of the storage top to the parameter
+<code class="docutils literal"><span class="pre">pos</span></code>
+. The function
+<code class="docutils literal"><span class="pre">cvRestoreMemStoragePos</span></code>
+can further retrieve this position.</p>
+</div>
+<div class="section" id="seqelemidx">
+<h2>SeqElemIdx<a class="headerlink" href="#seqelemidx" title="Permalink to this headline">¶</a></h2>
+<p>Returns the index of a specific sequence element.</p>
+<dl class="cfunction">
+<dt id="int cvSeqElemIdx(const CvSeq* seq, const void* element, CvSeqBlock** block)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvSeqElemIdx</code><span class="sig-paren">(</span>const CvSeq* <strong>seq</strong>, const void* <strong>element</strong>, CvSeqBlock** <strong>block</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#int cvSeqElemIdx(const CvSeq* seq, const void* element, CvSeqBlock** block)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Sequence</li>
+<li><strong>element</strong> &#8211; Pointer to the element within the sequence</li>
+<li><strong>block</strong> &#8211; Optional argument. If the pointer is not  <code class="docutils literal"><span class="pre">NULL</span></code> , the address of the sequence block that contains the element is stored in this location.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns the index of a sequence element or a negative number if the element is not found.</p>
+</div>
+<div class="section" id="seqinsert">
+<h2>SeqInsert<a class="headerlink" href="#seqinsert" title="Permalink to this headline">¶</a></h2>
+<p>Inserts an element in the middle of a sequence.</p>
+<dl class="cfunction">
+<dt id="schar* cvSeqInsert(CvSeq* seq, int before_index, const void* element)">
+<strong>C:</strong><code class="descname"> </code>schar* <code class="descname">cvSeqInsert</code><span class="sig-paren">(</span>CvSeq* <strong>seq</strong>, int <strong>before_index</strong>, const void* <strong>element</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#schar* cvSeqInsert(CvSeq* seq, int before_index, const void* element)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Sequence</li>
+<li><strong>before_index</strong> &#8211; Index before which the element is inserted. Inserting before 0 (the minimal allowed value of the parameter) is equal to  <a class="reference internal" href="#schar* cvSeqPushFront(CvSeq* seq, const void* element)" title="schar* cvSeqPushFront(CvSeq* seq, const void* element)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">SeqPushFront()</span></code></a>  and inserting before  <code class="docutils literal"><span class="pre">seq-&gt;total</span></code>  (the maximal allowed value of the parameter) is equal to  <a class="reference internal" href="#schar* cvSeqPush(CvSeq* seq, const void* element)" title="schar* cvSeqPush(CvSeq* seq, const void* element)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">SeqPush()</span></code></a> .</li>
+<li><strong>element</strong> &#8211; Inserted element</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function shifts the sequence elements from the inserted position to the nearest end of the sequence and copies the
+<code class="docutils literal"><span class="pre">element</span></code>
+content there if the pointer is not NULL. The function returns a pointer to the inserted element.</p>
+</div>
+<div class="section" id="seqinsertslice">
+<h2>SeqInsertSlice<a class="headerlink" href="#seqinsertslice" title="Permalink to this headline">¶</a></h2>
+<p>Inserts an array in the middle of a sequence.</p>
+<dl class="cfunction">
+<dt id="void cvSeqInsertSlice(CvSeq* seq, int before_index, const CvArr* from_arr)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSeqInsertSlice</code><span class="sig-paren">(</span>CvSeq* <strong>seq</strong>, int <strong>before_index</strong>, const CvArr* <strong>from_arr</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvSeqInsertSlice(CvSeq* seq, int before_index, const CvArr* from_arr)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Sequence</li>
+<li><strong>before_index</strong> &#8211; Index before which the array is inserted</li>
+<li><strong>from_arr</strong> &#8211; The array to take elements from</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function inserts all
+<code class="docutils literal"><span class="pre">fromArr</span></code>
+array elements at the specified position of the sequence. The array
+<code class="docutils literal"><span class="pre">fromArr</span></code>
+can be a matrix or another sequence.</p>
+</div>
+<div class="section" id="seqinvert">
+<h2>SeqInvert<a class="headerlink" href="#seqinvert" title="Permalink to this headline">¶</a></h2>
+<p>Reverses the order of sequence elements.</p>
+<dl class="cfunction">
+<dt id="void cvSeqInvert(CvSeq* seq)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSeqInvert</code><span class="sig-paren">(</span>CvSeq* <strong>seq</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvSeqInvert(CvSeq* seq)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Sequence</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function reverses the sequence in-place - the first element becomes the last one, the last element becomes the first one and so forth.</p>
+</div>
+<div class="section" id="seqpop">
+<h2>SeqPop<a class="headerlink" href="#seqpop" title="Permalink to this headline">¶</a></h2>
+<p>Removes an element from the end of a sequence.</p>
+<dl class="cfunction">
+<dt id="void cvSeqPop(CvSeq* seq, void* element)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSeqPop</code><span class="sig-paren">(</span>CvSeq* <strong>seq</strong>, void* <strong>element</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#void cvSeqPop(CvSeq* seq, void* element)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Sequence</li>
+<li><strong>element</strong> &#8211; Optional parameter . If the pointer is not zero, the function copies the removed element to this location.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function removes an element from a sequence. The function reports an error if the sequence is already empty. The function has O(1) complexity.</p>
+</div>
+<div class="section" id="seqpopfront">
+<h2>SeqPopFront<a class="headerlink" href="#seqpopfront" title="Permalink to this headline">¶</a></h2>
+<p>Removes an element from the beginning of a sequence.</p>
+<dl class="cfunction">
+<dt id="void cvSeqPopFront(CvSeq* seq, void* element)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSeqPopFront</code><span class="sig-paren">(</span>CvSeq* <strong>seq</strong>, void* <strong>element</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#void cvSeqPopFront(CvSeq* seq, void* element)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Sequence</li>
+<li><strong>element</strong> &#8211; Optional parameter. If the pointer is not zero, the function copies the removed element to this location.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function removes an element from the beginning of a sequence. The function reports an error if the sequence is already empty. The function has O(1) complexity.</p>
+</div>
+<div class="section" id="seqpopmulti">
+<h2>SeqPopMulti<a class="headerlink" href="#seqpopmulti" title="Permalink to this headline">¶</a></h2>
+<p>Removes several elements from either end of a sequence.</p>
+<dl class="cfunction">
+<dt id="void cvSeqPopMulti(CvSeq* seq, void* elements, int count, int in_front)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSeqPopMulti</code><span class="sig-paren">(</span>CvSeq* <strong>seq</strong>, void* <strong>elements</strong>, int <strong>count</strong>, int <strong>in_front</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void cvSeqPopMulti(CvSeq* seq, void* elements, int count, int in_front)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Sequence</li>
+<li><strong>elements</strong> &#8211; Removed elements</li>
+<li><strong>count</strong> &#8211; Number of elements to pop</li>
+<li><strong>in_front</strong> &#8211; <p>The flags specifying which end of the modified sequence.</p>
+<ul>
+<li><strong>CV_BACK</strong> the elements are added to the end of the sequence</li>
+<li><strong>CV_FRONT</strong> the elements are added to the beginning of the sequence</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function removes several elements from either end of the sequence. If the number of the elements to be removed exceeds the total number of elements in the sequence, the function removes as many elements as possible.</p>
+</div>
+<div class="section" id="seqpush">
+<h2>SeqPush<a class="headerlink" href="#seqpush" title="Permalink to this headline">¶</a></h2>
+<p>Adds an element to the end of a sequence.</p>
+<dl class="cfunction">
+<dt id="schar* cvSeqPush(CvSeq* seq, const void* element)">
+<strong>C:</strong><code class="descname"> </code>schar* <code class="descname">cvSeqPush</code><span class="sig-paren">(</span>CvSeq* <strong>seq</strong>, const void* <strong>element</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#schar* cvSeqPush(CvSeq* seq, const void* element)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Sequence</li>
+<li><strong>element</strong> &#8211; Added element</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function adds an element to the end of a sequence and returns a pointer to the allocated element. If the input
+<code class="docutils literal"><span class="pre">element</span></code>
+is NULL, the function simply allocates a space for one more element.</p>
+<p>The following code demonstrates how to create a new sequence using this function:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">CvMemStorage</span><span class="o">*</span> <span class="n">storage</span> <span class="o">=</span> <span class="n">cvCreateMemStorage</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">CvSeq</span><span class="o">*</span> <span class="n">seq</span> <span class="o">=</span> <span class="n">cvCreateSeq</span><span class="p">(</span> <span class="n">CV_32SC1</span><span class="p">,</span> <span class="cm">/* sequence of integer elements */</span>
+                          <span class="k">sizeof</span><span class="p">(</span><span class="n">CvSeq</span><span class="p">),</span> <span class="cm">/* header size - no extra fields */</span>
+                          <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span> <span class="cm">/* element size */</span>
+                          <span class="n">storage</span> <span class="cm">/* the container storage */</span> <span class="p">);</span>
+<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+<span class="k">for</span><span class="p">(</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span><span class="o">*</span> <span class="n">added</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">cvSeqPush</span><span class="p">(</span> <span class="n">seq</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">i</span> <span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;</span>
+<span class="p">}</span>
+
+<span class="p">...</span>
+<span class="cm">/* release memory storage in the end */</span>
+<span class="n">cvReleaseMemStorage</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">storage</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>The function has O(1) complexity, but there is a faster method for writing large sequences (see
+<a class="reference internal" href="#void cvStartWriteSeq(int seq_flags, int header_size, int elem_size, CvMemStorage* storage, CvSeqWriter* writer)" title="void cvStartWriteSeq(int seq_flags, int header_size, int elem_size, CvMemStorage* storage, CvSeqWriter* writer)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">StartWriteSeq()</span></code></a>
+and related functions).</p>
+</div>
+<div class="section" id="seqpushfront">
+<h2>SeqPushFront<a class="headerlink" href="#seqpushfront" title="Permalink to this headline">¶</a></h2>
+<p>Adds an element to the beginning of a sequence.</p>
+<dl class="cfunction">
+<dt id="schar* cvSeqPushFront(CvSeq* seq, const void* element)">
+<strong>C:</strong><code class="descname"> </code>schar* <code class="descname">cvSeqPushFront</code><span class="sig-paren">(</span>CvSeq* <strong>seq</strong>, const void* <strong>element</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#schar* cvSeqPushFront(CvSeq* seq, const void* element)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Sequence</li>
+<li><strong>element</strong> &#8211; Added element</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function is similar to
+<a class="reference internal" href="#schar* cvSeqPush(CvSeq* seq, const void* element)" title="schar* cvSeqPush(CvSeq* seq, const void* element)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">SeqPush()</span></code></a>
+but it adds the new element to the beginning of the sequence. The function has O(1) complexity.</p>
+</div>
+<div class="section" id="seqpushmulti">
+<h2>SeqPushMulti<a class="headerlink" href="#seqpushmulti" title="Permalink to this headline">¶</a></h2>
+<p>Pushes several elements to either end of a sequence.</p>
+<dl class="cfunction">
+<dt id="void cvSeqPushMulti(CvSeq* seq, const void* elements, int count, int in_front)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSeqPushMulti</code><span class="sig-paren">(</span>CvSeq* <strong>seq</strong>, const void* <strong>elements</strong>, int <strong>count</strong>, int <strong>in_front</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void cvSeqPushMulti(CvSeq* seq, const void* elements, int count, int in_front)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Sequence</li>
+<li><strong>elements</strong> &#8211; Added elements</li>
+<li><strong>count</strong> &#8211; Number of elements to push</li>
+<li><strong>in_front</strong> &#8211; <p>The flags specifying which end of the modified sequence.</p>
+<ul>
+<li><strong>CV_BACK</strong> the elements are added to the end of the sequence</li>
+<li><strong>CV_FRONT</strong> the elements are added to the beginning of the sequence</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function adds several elements to either
+end of a sequence. The elements are added to the sequence in the same
+order as they are arranged in the input array but they can fall into
+different sequence blocks.</p>
+</div>
+<div class="section" id="seqremove">
+<h2>SeqRemove<a class="headerlink" href="#seqremove" title="Permalink to this headline">¶</a></h2>
+<p>Removes an element from the middle of a sequence.</p>
+<dl class="cfunction">
+<dt id="void cvSeqRemove(CvSeq* seq, int index)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSeqRemove</code><span class="sig-paren">(</span>CvSeq* <strong>seq</strong>, int <strong>index</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvSeqRemove(CvSeq* seq, int index)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Sequence</li>
+<li><strong>index</strong> &#8211; Index of removed element</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function removes elements with the given
+index. If the index is out of range the function reports an error. An
+attempt to remove an element from an empty sequence is a special
+case of this situation. The function removes an element by shifting
+the sequence elements between the nearest end of the sequence and the
+<code class="docutils literal"><span class="pre">index</span></code>
+-th position, not counting the latter.</p>
+</div>
+<div class="section" id="seqremoveslice">
+<h2>SeqRemoveSlice<a class="headerlink" href="#seqremoveslice" title="Permalink to this headline">¶</a></h2>
+<p>Removes a sequence slice.</p>
+<dl class="cfunction">
+<dt id="void cvSeqRemoveSlice(CvSeq* seq, CvSlice slice)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSeqRemoveSlice</code><span class="sig-paren">(</span>CvSeq* <strong>seq</strong>, CvSlice <strong>slice</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvSeqRemoveSlice(CvSeq* seq, CvSlice slice)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Sequence</li>
+<li><strong>slice</strong> &#8211; The part of the sequence to remove</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function removes a slice from the sequence.</p>
+</div>
+<div class="section" id="seqsearch">
+<h2>SeqSearch<a class="headerlink" href="#seqsearch" title="Permalink to this headline">¶</a></h2>
+<p>Searches for an element in a sequence.</p>
+<dl class="cfunction">
+<dt id="schar* cvSeqSearch(CvSeq* seq, const void* elem, CvCmpFunc func, int is_sorted, int* elem_idx, void* userdata)">
+<strong>C:</strong><code class="descname"> </code>schar* <code class="descname">cvSeqSearch</code><span class="sig-paren">(</span>CvSeq* <strong>seq</strong>, const void* <strong>elem</strong>, CvCmpFunc <strong>func</strong>, int <strong>is_sorted</strong>, int* <strong>elem_idx</strong>, void* <strong>userdata</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#schar* cvSeqSearch(CvSeq* seq, const void* elem, CvCmpFunc func, int is_sorted, int* elem_idx, void* userdata)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; The sequence</li>
+<li><strong>elem</strong> &#8211; The element to look for</li>
+<li><strong>func</strong> &#8211; The comparison function that returns negative, zero or positive value depending on the relationships among the elements (see also  <a class="reference internal" href="#void cvSeqSort(CvSeq* seq, CvCmpFunc func, void* userdata)" title="void cvSeqSort(CvSeq* seq, CvCmpFunc func, void* userdata)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">SeqSort()</span></code></a> )</li>
+<li><strong>is_sorted</strong> &#8211; Whether the sequence is sorted or not</li>
+<li><strong>elem_idx</strong> &#8211; Output parameter; index of the found element</li>
+<li><strong>userdata</strong> &#8211; The user parameter passed to the comparison function; helps to avoid global variables in some cases</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* a &lt; b ? -1 : a &gt; b ? 1 : 0 */</span>
+<span class="k">typedef</span> <span class="nf">int</span> <span class="p">(</span><span class="n">CV_CDECL</span><span class="o">*</span> <span class="n">CvCmpFunc</span><span class="p">)(</span><span class="k">const</span> <span class="kt">void</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">void</span><span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">userdata</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The function searches for the element in the sequence. If
+the sequence is sorted, a binary O(log(N)) search is used; otherwise, a
+simple linear search is used. If the element is not found, the function
+returns a NULL pointer and the index is set to the number of sequence
+elements if a linear search is used, or to the smallest index
+<code class="docutils literal"><span class="pre">i,</span> <span class="pre">seq(i)&gt;elem</span></code>
+.</p>
+</div>
+<div class="section" id="seqslice">
+<h2>SeqSlice<a class="headerlink" href="#seqslice" title="Permalink to this headline">¶</a></h2>
+<p>Makes a separate header for a sequence slice.</p>
+<dl class="cfunction">
+<dt id="CvSeq* cvSeqSlice(const CvSeq* seq, CvSlice slice, CvMemStorage* storage, int copy_data)">
+<strong>C:</strong><code class="descname"> </code>CvSeq* <code class="descname">cvSeqSlice</code><span class="sig-paren">(</span>const CvSeq* <strong>seq</strong>, CvSlice <strong>slice</strong>, CvMemStorage* <strong>storage</strong>=NULL, int <strong>copy_data</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#CvSeq* cvSeqSlice(const CvSeq* seq, CvSlice slice, CvMemStorage* storage, int copy_data)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Sequence</li>
+<li><strong>slice</strong> &#8211; The part of the sequence to be extracted</li>
+<li><strong>storage</strong> &#8211; The destination storage block to hold the new sequence header and the copied data, if any. If it is NULL, the function uses the storage block containing the input sequence.</li>
+<li><strong>copy_data</strong> &#8211; The flag that indicates whether to copy the elements of the extracted slice ( <code class="docutils literal"><span class="pre">copy_data!=0</span></code> ) or not ( <code class="docutils literal"><span class="pre">copy_data=0</span></code> )</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function creates a sequence that represents the specified slice of the input sequence. The new sequence either shares the elements with the original sequence or has its own copy of the elements. So if one needs to process a part of sequence but the processing function does not have a slice parameter, the required sub-sequence may be extracted using this function.</p>
+</div>
+<div class="section" id="seqsort">
+<h2>SeqSort<a class="headerlink" href="#seqsort" title="Permalink to this headline">¶</a></h2>
+<p>Sorts sequence element using the specified comparison function.</p>
+<dl class="cfunction">
+<dt id="void cvSeqSort(CvSeq* seq, CvCmpFunc func, void* userdata)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSeqSort</code><span class="sig-paren">(</span>CvSeq* <strong>seq</strong>, CvCmpFunc <strong>func</strong>, void* <strong>userdata</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#void cvSeqSort(CvSeq* seq, CvCmpFunc func, void* userdata)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; The sequence to sort</li>
+<li><strong>func</strong> &#8211; The comparison function that returns a negative, zero, or positive value depending on the relationships among the elements (see the above declaration and the example below) - a similar function is used by  <code class="docutils literal"><span class="pre">qsort</span></code>  from C runline except that in the latter,  <code class="docutils literal"><span class="pre">userdata</span></code>  is not used</li>
+<li><strong>userdata</strong> &#8211; The user parameter passed to the comparison function; helps to avoid global variables in some cases</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* a &lt; b ? -1 : a &gt; b ? 1 : 0 */</span>
+<span class="k">typedef</span> <span class="nf">int</span> <span class="p">(</span><span class="n">CV_CDECL</span><span class="o">*</span> <span class="n">CvCmpFunc</span><span class="p">)(</span><span class="k">const</span> <span class="kt">void</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">void</span><span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">userdata</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The function sorts the sequence in-place using the specified criteria. Below is an example of using this function:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* Sort 2d points in top-to-bottom left-to-right order */</span>
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">cmp_func</span><span class="p">(</span> <span class="k">const</span> <span class="kt">void</span><span class="o">*</span> <span class="n">_a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">void</span><span class="o">*</span> <span class="n">_b</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">userdata</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">CvPoint</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">CvPoint</span><span class="o">*</span><span class="p">)</span><span class="n">_a</span><span class="p">;</span>
+    <span class="n">CvPoint</span><span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">CvPoint</span><span class="o">*</span><span class="p">)</span><span class="n">_b</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">y_diff</span> <span class="o">=</span> <span class="n">a</span><span class="o">-&gt;</span><span class="n">y</span> <span class="o">-</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">y</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">x_diff</span> <span class="o">=</span> <span class="n">a</span><span class="o">-&gt;</span><span class="n">x</span> <span class="o">-</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">y_diff</span> <span class="o">?</span> <span class="nl">y_diff</span> <span class="p">:</span> <span class="n">x_diff</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">...</span>
+
+<span class="n">CvMemStorage</span><span class="o">*</span> <span class="n">storage</span> <span class="o">=</span> <span class="n">cvCreateMemStorage</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">CvSeq</span><span class="o">*</span> <span class="n">seq</span> <span class="o">=</span> <span class="n">cvCreateSeq</span><span class="p">(</span> <span class="n">CV_32SC2</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">CvSeq</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">CvPoint</span><span class="p">),</span> <span class="n">storage</span> <span class="p">);</span>
+<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+
+<span class="k">for</span><span class="p">(</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">CvPoint</span> <span class="n">pt</span><span class="p">;</span>
+    <span class="n">pt</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">rand</span><span class="p">()</span>
+    <span class="n">pt</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">rand</span><span class="p">()</span>
+    <span class="n">cvSeqPush</span><span class="p">(</span> <span class="n">seq</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pt</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">cvSeqSort</span><span class="p">(</span> <span class="n">seq</span><span class="p">,</span> <span class="n">cmp_func</span><span class="p">,</span> <span class="mi">0</span> <span class="cm">/* userdata is not used here */</span> <span class="p">);</span>
+
+<span class="cm">/* print out the sorted sequence */</span>
+<span class="k">for</span><span class="p">(</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">seq</span><span class="o">-&gt;</span><span class="n">total</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">CvPoint</span><span class="o">*</span> <span class="n">pt</span> <span class="o">=</span> <span class="p">(</span><span class="n">CvPoint</span><span class="o">*</span><span class="p">)</span><span class="n">cvSeqElem</span><span class="p">(</span> <span class="n">seq</span><span class="p">,</span> <span class="n">i</span> <span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;(</span>
+<span class="p">}</span>
+
+<span class="n">cvReleaseMemStorage</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">storage</span> <span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="setadd">
+<h2>SetAdd<a class="headerlink" href="#setadd" title="Permalink to this headline">¶</a></h2>
+<p>Occupies a node in the set.</p>
+<dl class="cfunction">
+<dt id="int cvSetAdd(CvSet* set_header, CvSetElem* elem, CvSetElem** inserted_elem)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvSetAdd</code><span class="sig-paren">(</span>CvSet* <strong>set_header</strong>, CvSetElem* <strong>elem</strong>=NULL, CvSetElem** <strong>inserted_elem</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#int cvSetAdd(CvSet* set_header, CvSetElem* elem, CvSetElem** inserted_elem)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>set_header</strong> &#8211; Set</li>
+<li><strong>elem</strong> &#8211; Optional input argument, an inserted element. If not NULL, the function copies the data to the allocated node (the MSB of the first integer field is cleared after copying).</li>
+<li><strong>inserted_elem</strong> &#8211; Optional output argument; the pointer to the allocated cell</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function allocates a new node, optionally copies
+input element data to it, and returns the pointer and the index to the
+node. The index value is taken from the lower bits of the
+<code class="docutils literal"><span class="pre">flags</span></code>
+field of the node. The function has O(1) complexity; however, there exists
+a faster function for allocating set nodes (see
+<a class="reference internal" href="#CvSetElem* cvSetNew(CvSet* set_header)" title="CvSetElem* cvSetNew(CvSet* set_header)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">SetNew()</span></code></a>
+).</p>
+</div>
+<div class="section" id="setnew">
+<h2>SetNew<a class="headerlink" href="#setnew" title="Permalink to this headline">¶</a></h2>
+<p>Adds an element to a set (fast variant).</p>
+<dl class="cfunction">
+<dt id="CvSetElem* cvSetNew(CvSet* set_header)">
+<strong>C:</strong><code class="descname"> </code>CvSetElem* <code class="descname">cvSetNew</code><span class="sig-paren">(</span>CvSet* <strong>set_header</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvSetElem* cvSetNew(CvSet* set_header)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>set_header</strong> &#8211; Set</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function is an inline lightweight variant of
+<a class="reference internal" href="#int cvSetAdd(CvSet* set_header, CvSetElem* elem, CvSetElem** inserted_elem)" title="int cvSetAdd(CvSet* set_header, CvSetElem* elem, CvSetElem** inserted_elem)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">SetAdd()</span></code></a>
+. It occupies a new node and returns a pointer to it rather than an index.</p>
+</div>
+<div class="section" id="setremove">
+<h2>SetRemove<a class="headerlink" href="#setremove" title="Permalink to this headline">¶</a></h2>
+<p>Removes an element from a set.</p>
+<dl class="cfunction">
+<dt id="void cvSetRemove(CvSet* set_header, int index)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSetRemove</code><span class="sig-paren">(</span>CvSet* <strong>set_header</strong>, int <strong>index</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvSetRemove(CvSet* set_header, int index)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>set_header</strong> &#8211; Set</li>
+<li><strong>index</strong> &#8211; Index of the removed element</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function removes an element with a specified
+index from the set. If the node at the specified location is not occupied,
+the function does nothing. The function has O(1) complexity; however,
+<a class="reference internal" href="#void cvSetRemoveByPtr(CvSet* set_header, void* elem)" title="void cvSetRemoveByPtr(CvSet* set_header, void* elem)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">SetRemoveByPtr()</span></code></a>
+provides a quicker way to remove a set element
+if it is located already.</p>
+</div>
+<div class="section" id="setremovebyptr">
+<h2>SetRemoveByPtr<a class="headerlink" href="#setremovebyptr" title="Permalink to this headline">¶</a></h2>
+<p>Removes a set element based on its pointer.</p>
+<dl class="cfunction">
+<dt id="void cvSetRemoveByPtr(CvSet* set_header, void* elem)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSetRemoveByPtr</code><span class="sig-paren">(</span>CvSet* <strong>set_header</strong>, void* <strong>elem</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvSetRemoveByPtr(CvSet* set_header, void* elem)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>set_header</strong> &#8211; Set</li>
+<li><strong>elem</strong> &#8211; Removed element</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function is an inline lightweight variant of
+<a class="reference internal" href="#void cvSetRemove(CvSet* set_header, int index)" title="void cvSetRemove(CvSet* set_header, int index)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">SetRemove()</span></code></a>
+that requires an element pointer. The function does not check whether the node is occupied or not - the user should take care of that.</p>
+</div>
+<div class="section" id="setseqblocksize">
+<h2>SetSeqBlockSize<a class="headerlink" href="#setseqblocksize" title="Permalink to this headline">¶</a></h2>
+<p>Sets up sequence block size.</p>
+<dl class="cfunction">
+<dt id="void cvSetSeqBlockSize(CvSeq* seq, int delta_elems)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSetSeqBlockSize</code><span class="sig-paren">(</span>CvSeq* <strong>seq</strong>, int <strong>delta_elems</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvSetSeqBlockSize(CvSeq* seq, int delta_elems)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Sequence</li>
+<li><strong>delta_elems</strong> &#8211; Desirable sequence block size for elements</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function affects memory allocation
+granularity. When the free space in the sequence buffers has run out,
+the function allocates the space for
+<code class="docutils literal"><span class="pre">delta_elems</span></code>
+sequence
+elements. If this block immediately follows the one previously allocated,
+the two blocks are concatenated; otherwise, a new sequence block is
+created. Therefore, the bigger the parameter is, the lower the possible
+sequence fragmentation, but the more space in the storage block is wasted. When
+the sequence is created, the parameter
+<code class="docutils literal"><span class="pre">delta_elems</span></code>
+is set to
+the default value of about 1K. The function can be called any time after
+the sequence is created and affects future allocations. The function
+can modify the passed value of the parameter to meet memory storage
+constraints.</p>
+</div>
+<div class="section" id="setseqreaderpos">
+<h2>SetSeqReaderPos<a class="headerlink" href="#setseqreaderpos" title="Permalink to this headline">¶</a></h2>
+<p>Moves the reader to the specified position.</p>
+<dl class="cfunction">
+<dt id="void cvSetSeqReaderPos(CvSeqReader* reader, int index, int is_relative)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSetSeqReaderPos</code><span class="sig-paren">(</span>CvSeqReader* <strong>reader</strong>, int <strong>index</strong>, int <strong>is_relative</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void cvSetSeqReaderPos(CvSeqReader* reader, int index, int is_relative)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>reader</strong> &#8211; Reader state</li>
+<li><strong>index</strong> &#8211; The destination position. If the positioning mode is used (see the next parameter), the actual position will be  <code class="docutils literal"><span class="pre">index</span></code>  mod  <code class="docutils literal"><span class="pre">reader-&gt;seq-&gt;total</span></code> .</li>
+<li><strong>is_relative</strong> &#8211; If it is not zero, then  <code class="docutils literal"><span class="pre">index</span></code>  is a relative to the current position</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function moves the read position to an absolute position or relative to the current position.</p>
+</div>
+<div class="section" id="startappendtoseq">
+<h2>StartAppendToSeq<a class="headerlink" href="#startappendtoseq" title="Permalink to this headline">¶</a></h2>
+<p>Initializes the process of writing data to a sequence.</p>
+<dl class="cfunction">
+<dt id="void cvStartAppendToSeq(CvSeq* seq, CvSeqWriter* writer)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvStartAppendToSeq</code><span class="sig-paren">(</span>CvSeq* <strong>seq</strong>, CvSeqWriter* <strong>writer</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvStartAppendToSeq(CvSeq* seq, CvSeqWriter* writer)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Pointer to the sequence</li>
+<li><strong>writer</strong> &#8211; Writer state; initialized by the function</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function initializes the process of
+writing data to a sequence. Written elements are added to the end of the
+sequence by using the
+<code class="docutils literal"><span class="pre">CV_WRITE_SEQ_ELEM(</span> <span class="pre">written_elem,</span> <span class="pre">writer</span> <span class="pre">)</span></code>
+macro. Note
+that during the writing process, other operations on the sequence may
+yield an incorrect result or even corrupt the sequence (see description of
+<a class="reference internal" href="#void cvFlushSeqWriter(CvSeqWriter* writer)" title="void cvFlushSeqWriter(CvSeqWriter* writer)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">FlushSeqWriter()</span></code></a>
+, which helps to avoid some of these problems).</p>
+</div>
+<div class="section" id="startreadseq">
+<h2>StartReadSeq<a class="headerlink" href="#startreadseq" title="Permalink to this headline">¶</a></h2>
+<p>Initializes the process of sequential reading from a sequence.</p>
+<dl class="cfunction">
+<dt id="void cvStartReadSeq(const CvSeq* seq, CvSeqReader* reader, int reverse)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvStartReadSeq</code><span class="sig-paren">(</span>const CvSeq* <strong>seq</strong>, CvSeqReader* <strong>reader</strong>, int <strong>reverse</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void cvStartReadSeq(const CvSeq* seq, CvSeqReader* reader, int reverse)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq</strong> &#8211; Sequence</li>
+<li><strong>reader</strong> &#8211; Reader state; initialized by the function</li>
+<li><strong>reverse</strong> &#8211; Determines the direction of the sequence traversal. If  <code class="docutils literal"><span class="pre">reverse</span></code>  is 0, the reader is positioned at the first sequence element; otherwise it is positioned at the last element.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function initializes the reader state. After
+that, all the sequence elements from the first one down to the last one
+can be read by subsequent calls of the macro
+<code class="docutils literal"><span class="pre">CV_READ_SEQ_ELEM(</span> <span class="pre">read_elem,</span> <span class="pre">reader</span> <span class="pre">)</span></code>
+in the case of forward reading and by using
+<code class="docutils literal"><span class="pre">CV_REV_READ_SEQ_ELEM(</span> <span class="pre">read_elem,</span> <span class="pre">reader</span> <span class="pre">)</span></code>
+in the case of reverse
+reading. Both macros put the sequence element to
+<code class="docutils literal"><span class="pre">read_elem</span></code>
+and
+move the reading pointer toward the next element. A circular structure
+of sequence blocks is used for the reading process, that is, after the
+last element has been read by the macro
+<code class="docutils literal"><span class="pre">CV_READ_SEQ_ELEM</span></code>
+, the
+first element is read when the macro is called again. The same applies to
+<code class="docutils literal"><span class="pre">CV_REV_READ_SEQ_ELEM</span></code>
+. There is no function to finish the reading
+process, since it neither changes the sequence nor creates any temporary
+buffers. The reader field
+<code class="docutils literal"><span class="pre">ptr</span></code>
+points to the current element of
+the sequence that is to be read next. The code below demonstrates how
+to use the sequence writer and reader.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">CvMemStorage</span><span class="o">*</span> <span class="n">storage</span> <span class="o">=</span> <span class="n">cvCreateMemStorage</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">CvSeq</span><span class="o">*</span> <span class="n">seq</span> <span class="o">=</span> <span class="n">cvCreateSeq</span><span class="p">(</span> <span class="n">CV_32SC1</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">CvSeq</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span> <span class="n">storage</span> <span class="p">);</span>
+<span class="n">CvSeqWriter</span> <span class="n">writer</span><span class="p">;</span>
+<span class="n">CvSeqReader</span> <span class="n">reader</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+
+<span class="n">cvStartAppendToSeq</span><span class="p">(</span> <span class="n">seq</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">writer</span> <span class="p">);</span>
+<span class="k">for</span><span class="p">(</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">val</span> <span class="o">=</span> <span class="n">rand</span><span class="p">()</span>
+    <span class="n">CV_WRITE_SEQ_ELEM</span><span class="p">(</span> <span class="n">val</span><span class="p">,</span> <span class="n">writer</span> <span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span>
+<span class="p">}</span>
+<span class="n">cvEndWriteSeq</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">writer</span> <span class="p">);</span>
+
+<span class="n">cvStartReadSeq</span><span class="p">(</span> <span class="n">seq</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">reader</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+<span class="k">for</span><span class="p">(</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">seq</span><span class="o">-&gt;</span><span class="n">total</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">val</span><span class="p">;</span>
+<span class="cp">#if 1</span>
+    <span class="n">CV_READ_SEQ_ELEM</span><span class="p">(</span> <span class="n">val</span><span class="p">,</span> <span class="n">reader</span> <span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span>
+<span class="cp">#else </span><span class="cm">/* alternative way, that is prefferable if sequence elements are large,</span>
+<span class="cm">         or their size/type is unknown at compile time */</span><span class="cp"></span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span>
+    <span class="n">CV_NEXT_SEQ_ELEM</span><span class="p">(</span> <span class="n">seq</span><span class="o">-&gt;</span><span class="n">elem_size</span><span class="p">,</span> <span class="n">reader</span> <span class="p">);</span>
+<span class="cp">#endif</span>
+<span class="p">}</span>
+<span class="p">...</span>
+
+<span class="n">cvReleaseStorage</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">storage</span> <span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="startwriteseq">
+<h2>StartWriteSeq<a class="headerlink" href="#startwriteseq" title="Permalink to this headline">¶</a></h2>
+<p>Creates a new sequence and initializes a writer for it.</p>
+<dl class="cfunction">
+<dt id="void cvStartWriteSeq(int seq_flags, int header_size, int elem_size, CvMemStorage* storage, CvSeqWriter* writer)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvStartWriteSeq</code><span class="sig-paren">(</span>int <strong>seq_flags</strong>, int <strong>header_size</strong>, int <strong>elem_size</strong>, CvMemStorage* <strong>storage</strong>, CvSeqWriter* <strong>writer</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvStartWriteSeq(int seq_flags, int header_size, int elem_size, CvMemStorage* storage, CvSeqWriter* writer)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>seq_flags</strong> &#8211; Flags of the created sequence. If the sequence is not passed to any function working with a specific type of sequences, the sequence value may be equal to 0; otherwise the appropriate type must be selected from the list of predefined sequence types.</li>
+<li><strong>header_size</strong> &#8211; Size of the sequence header. The parameter value may not be less than  <code class="docutils literal"><span class="pre">sizeof(CvSeq)</span></code> . If a certain type or extension is specified, it must fit within the base type header.</li>
+<li><strong>elem_size</strong> &#8211; Size of the sequence elements in bytes; must be consistent with the sequence type. For example, if a sequence of points is created (element type  <code class="docutils literal"><span class="pre">CV_SEQ_ELTYPE_POINT</span></code>  ), then the parameter  <code class="docutils literal"><span class="pre">elem_size</span></code>  must be equal to  <code class="docutils literal"><span class="pre">sizeof(CvPoint)</span></code> .</li>
+<li><strong>storage</strong> &#8211; Sequence location</li>
+<li><strong>writer</strong> &#8211; Writer state; initialized by the function</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function is a combination of
+<a class="reference internal" href="#CvSeq* cvCreateSeq(int seq_flags, size_t header_size, size_t elem_size, CvMemStorage* storage)" title="CvSeq* cvCreateSeq(int seq_flags, size_t header_size, size_t elem_size, CvMemStorage* storage)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CreateSeq()</span></code></a>
+and
+<a class="reference internal" href="#void cvStartAppendToSeq(CvSeq* seq, CvSeqWriter* writer)" title="void cvStartAppendToSeq(CvSeq* seq, CvSeqWriter* writer)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">StartAppendToSeq()</span></code></a>
+. The pointer to the
+created sequence is stored at
+<code class="docutils literal"><span class="pre">writer-&gt;seq</span></code>
+and is also returned by the
+<a class="reference internal" href="#CvSeq* cvEndWriteSeq(CvSeqWriter* writer)" title="CvSeq* cvEndWriteSeq(CvSeqWriter* writer)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">EndWriteSeq()</span></code></a>
+function that should be called at the end.</p>
+</div>
+<div class="section" id="treetonodeseq">
+<h2>TreeToNodeSeq<a class="headerlink" href="#treetonodeseq" title="Permalink to this headline">¶</a></h2>
+<p>Gathers all node pointers to a single sequence.</p>
+<dl class="cfunction">
+<dt id="CvSeq* cvTreeToNodeSeq(const void* first, int header_size, CvMemStorage* storage)">
+<strong>C:</strong><code class="descname"> </code>CvSeq* <code class="descname">cvTreeToNodeSeq</code><span class="sig-paren">(</span>const void* <strong>first</strong>, int <strong>header_size</strong>, CvMemStorage* <strong>storage</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvSeq* cvTreeToNodeSeq(const void* first, int header_size, CvMemStorage* storage)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>first</strong> &#8211; The initial tree node</li>
+<li><strong>header_size</strong> &#8211; Header size of the created sequence (sizeof(CvSeq) is the most frequently used value)</li>
+<li><strong>storage</strong> &#8211; Container for the sequence</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function puts pointers of all nodes reachable from  <code class="docutils literal"><span class="pre">first</span></code> into a single sequence. The pointers are written sequentially in the depth-first order.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Dynamic Structures</a><ul>
+<li><a class="reference internal" href="#cvmemstorage">CvMemStorage</a></li>
+<li><a class="reference internal" href="#cvmemblock">CvMemBlock</a></li>
+<li><a class="reference internal" href="#cvmemstoragepos">CvMemStoragePos</a></li>
+<li><a class="reference internal" href="#cvseq">CvSeq</a></li>
+<li><a class="reference internal" href="#cvslice">CvSlice</a></li>
+<li><a class="reference internal" href="#cvset">CvSet</a></li>
+<li><a class="reference internal" href="#cvsetelem">CvSetElem</a></li>
+<li><a class="reference internal" href="#cvgraph">CvGraph</a></li>
+<li><a class="reference internal" href="#cvgraphvtx">CvGraphVtx</a></li>
+<li><a class="reference internal" href="#cvgraphedge">CvGraphEdge</a></li>
+<li><a class="reference internal" href="#cvgraphscanner">CvGraphScanner</a></li>
+<li><a class="reference internal" href="#cvtreenodeiterator">CvTreeNodeIterator</a></li>
+<li><a class="reference internal" href="#cleargraph">ClearGraph</a></li>
+<li><a class="reference internal" href="#clearmemstorage">ClearMemStorage</a></li>
+<li><a class="reference internal" href="#clearseq">ClearSeq</a></li>
+<li><a class="reference internal" href="#clearset">ClearSet</a></li>
+<li><a class="reference internal" href="#clonegraph">CloneGraph</a></li>
+<li><a class="reference internal" href="#cloneseq">CloneSeq</a></li>
+<li><a class="reference internal" href="#createchildmemstorage">CreateChildMemStorage</a></li>
+<li><a class="reference internal" href="#creategraph">CreateGraph</a></li>
+<li><a class="reference internal" href="#creategraphscanner">CreateGraphScanner</a></li>
+<li><a class="reference internal" href="#creatememstorage">CreateMemStorage</a></li>
+<li><a class="reference internal" href="#createseq">CreateSeq</a></li>
+<li><a class="reference internal" href="#createset">CreateSet</a></li>
+<li><a class="reference internal" href="#cvtseqtoarray">CvtSeqToArray</a></li>
+<li><a class="reference internal" href="#endwriteseq">EndWriteSeq</a></li>
+<li><a class="reference internal" href="#findgraphedge">FindGraphEdge</a></li>
+<li><a class="reference internal" href="#findgraphedgebyptr">FindGraphEdgeByPtr</a></li>
+<li><a class="reference internal" href="#flushseqwriter">FlushSeqWriter</a></li>
+<li><a class="reference internal" href="#getgraphvtx">GetGraphVtx</a></li>
+<li><a class="reference internal" href="#getseqelem">GetSeqElem</a></li>
+<li><a class="reference internal" href="#getseqreaderpos">GetSeqReaderPos</a></li>
+<li><a class="reference internal" href="#getsetelem">GetSetElem</a></li>
+<li><a class="reference internal" href="#graphaddedge">GraphAddEdge</a></li>
+<li><a class="reference internal" href="#graphaddedgebyptr">GraphAddEdgeByPtr</a></li>
+<li><a class="reference internal" href="#graphaddvtx">GraphAddVtx</a></li>
+<li><a class="reference internal" href="#graphedgeidx">GraphEdgeIdx</a></li>
+<li><a class="reference internal" href="#graphremoveedge">GraphRemoveEdge</a></li>
+<li><a class="reference internal" href="#graphremoveedgebyptr">GraphRemoveEdgeByPtr</a></li>
+<li><a class="reference internal" href="#graphremovevtx">GraphRemoveVtx</a></li>
+<li><a class="reference internal" href="#graphremovevtxbyptr">GraphRemoveVtxByPtr</a></li>
+<li><a class="reference internal" href="#graphvtxdegree">GraphVtxDegree</a></li>
+<li><a class="reference internal" href="#graphvtxdegreebyptr">GraphVtxDegreeByPtr</a></li>
+<li><a class="reference internal" href="#graphvtxidx">GraphVtxIdx</a></li>
+<li><a class="reference internal" href="#inittreenodeiterator">InitTreeNodeIterator</a></li>
+<li><a class="reference internal" href="#insertnodeintotree">InsertNodeIntoTree</a></li>
+<li><a class="reference internal" href="#makeseqheaderforarray">MakeSeqHeaderForArray</a></li>
+<li><a class="reference internal" href="#memstoragealloc">MemStorageAlloc</a></li>
+<li><a class="reference internal" href="#memstorageallocstring">MemStorageAllocString</a></li>
+<li><a class="reference internal" href="#nextgraphitem">NextGraphItem</a></li>
+<li><a class="reference internal" href="#nexttreenode">NextTreeNode</a></li>
+<li><a class="reference internal" href="#prevtreenode">PrevTreeNode</a></li>
+<li><a class="reference internal" href="#releasegraphscanner">ReleaseGraphScanner</a></li>
+<li><a class="reference internal" href="#releasememstorage">ReleaseMemStorage</a></li>
+<li><a class="reference internal" href="#restorememstoragepos">RestoreMemStoragePos</a></li>
+<li><a class="reference internal" href="#savememstoragepos">SaveMemStoragePos</a></li>
+<li><a class="reference internal" href="#seqelemidx">SeqElemIdx</a></li>
+<li><a class="reference internal" href="#seqinsert">SeqInsert</a></li>
+<li><a class="reference internal" href="#seqinsertslice">SeqInsertSlice</a></li>
+<li><a class="reference internal" href="#seqinvert">SeqInvert</a></li>
+<li><a class="reference internal" href="#seqpop">SeqPop</a></li>
+<li><a class="reference internal" href="#seqpopfront">SeqPopFront</a></li>
+<li><a class="reference internal" href="#seqpopmulti">SeqPopMulti</a></li>
+<li><a class="reference internal" href="#seqpush">SeqPush</a></li>
+<li><a class="reference internal" href="#seqpushfront">SeqPushFront</a></li>
+<li><a class="reference internal" href="#seqpushmulti">SeqPushMulti</a></li>
+<li><a class="reference internal" href="#seqremove">SeqRemove</a></li>
+<li><a class="reference internal" href="#seqremoveslice">SeqRemoveSlice</a></li>
+<li><a class="reference internal" href="#seqsearch">SeqSearch</a></li>
+<li><a class="reference internal" href="#seqslice">SeqSlice</a></li>
+<li><a class="reference internal" href="#seqsort">SeqSort</a></li>
+<li><a class="reference internal" href="#setadd">SetAdd</a></li>
+<li><a class="reference internal" href="#setnew">SetNew</a></li>
+<li><a class="reference internal" href="#setremove">SetRemove</a></li>
+<li><a class="reference internal" href="#setremovebyptr">SetRemoveByPtr</a></li>
+<li><a class="reference internal" href="#setseqblocksize">SetSeqBlockSize</a></li>
+<li><a class="reference internal" href="#setseqreaderpos">SetSeqReaderPos</a></li>
+<li><a class="reference internal" href="#startappendtoseq">StartAppendToSeq</a></li>
+<li><a class="reference internal" href="#startreadseq">StartReadSeq</a></li>
+<li><a class="reference internal" href="#startwriteseq">StartWriteSeq</a></li>
+<li><a class="reference internal" href="#treetonodeseq">TreeToNodeSeq</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="old_basic_structures.html"
+                        title="previous chapter">Basic C Structures and Operations</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="operations_on_arrays.html"
+                        title="next chapter">Operations on Arrays</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/core/doc/dynamic_structures.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="operations_on_arrays.html" title="Operations on Arrays"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="old_basic_structures.html" title="Basic C Structures and Operations"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="core.html" >core. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

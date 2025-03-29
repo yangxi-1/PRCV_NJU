@@ -1,0 +1,446 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Random Trees &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="ml. Machine Learning" href="ml.html" />
+    <link rel="next" title="Extremely randomized trees" href="ertrees.html" />
+    <link rel="prev" title="Gradient Boosted Trees" href="gradient_boosted_trees.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="ertrees.html" title="Extremely randomized trees"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="gradient_boosted_trees.html" title="Gradient Boosted Trees"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" accesskey="U">ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="random-trees">
+<span id="id1"></span><h1>Random Trees<a class="headerlink" href="#random-trees" title="Permalink to this headline">¶</a></h1>
+<p>Random trees have been introduced by Leo Breiman and Adele Cutler:
+<a class="reference external" href="http://www.stat.berkeley.edu/users/breiman/RandomForests/">http://www.stat.berkeley.edu/users/breiman/RandomForests/</a>
+. The algorithm can deal with both classification and regression problems. Random trees is a collection (ensemble) of tree predictors that is called
+<em>forest</em>
+further in this section (the term has been also introduced by L. Breiman). The classification works as follows: the random trees classifier takes the input feature vector, classifies it with every tree in the forest, and outputs the class label that received the majority of &#8220;votes&#8221;. In case of a regression, the classifier response is the average of the responses over all the trees in the forest.</p>
+<p>All the trees are trained with the same parameters but on different training sets. These sets are generated from the original training set using the bootstrap procedure: for each training set, you randomly select the same number of vectors as in the original set ( <code class="docutils literal"><span class="pre">=N</span></code> ). The vectors are chosen with replacement. That is, some vectors will occur more than once and some will be absent. At each node of each trained tree,  not all the variables are used to find the best split, but a random subset of them. With each node a new subset is generated. However, its size is fixed for all the nodes and all the trees. It is a training parameter set to
+<img class="math" src="../../../_images/math/6b71221115c989d14e8ffadfca9ed7ae712f2e59.png" alt="\sqrt{number\_of\_variables}"/> by default. None of the built trees are pruned.</p>
+<p>In random trees there is no need for any accuracy estimation procedures, such as cross-validation or bootstrap, or a separate test set to get an estimate of the training error. The error is estimated internally during the training. When the training set for the current tree is drawn by sampling with replacement, some vectors are left out (so-called
+<em>oob (out-of-bag) data</em>
+). The size of oob data is about <code class="docutils literal"><span class="pre">N/3</span></code> . The classification error is estimated by using this oob-data as follows:</p>
+<ol class="arabic simple">
+<li>Get a prediction for each vector, which is oob relative to the i-th tree, using the very i-th tree.</li>
+<li>After all the trees have been trained, for each vector that has ever been oob, find the class-<em>winner</em> for it (the class that has got the majority of votes in the trees where the vector was oob) and compare it to the ground-truth response.</li>
+<li>Compute the classification error estimate as a ratio of the number of misclassified oob vectors to all the vectors in the original data. In case of regression, the oob-error is computed as the squared error for oob vectors difference divided by the total number of vectors.</li>
+</ol>
+<p>For the random trees usage example, please, see letter_recog.cpp sample in OpenCV distribution.</p>
+<p><strong>References:</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><em>Machine Learning</em>, Wald I, July 2002. <a class="reference external" href="http://stat-www.berkeley.edu/users/breiman/wald2002-1.pdf">http://stat-www.berkeley.edu/users/breiman/wald2002-1.pdf</a></li>
+<li><em>Looking Inside the Black Box</em>, Wald II, July 2002. <a class="reference external" href="http://stat-www.berkeley.edu/users/breiman/wald2002-2.pdf">http://stat-www.berkeley.edu/users/breiman/wald2002-2.pdf</a></li>
+<li><em>Software for the Masses</em>, Wald III, July 2002. <a class="reference external" href="http://stat-www.berkeley.edu/users/breiman/wald2002-3.pdf">http://stat-www.berkeley.edu/users/breiman/wald2002-3.pdf</a></li>
+<li>And other articles from the web site <a class="reference external" href="http://www.stat.berkeley.edu/users/breiman/RandomForests/cc_home.htm">http://www.stat.berkeley.edu/users/breiman/RandomForests/cc_home.htm</a></li>
+</ul>
+</div></blockquote>
+<div class="section" id="cvrtparams">
+<h2>CvRTParams<a class="headerlink" href="#cvrtparams" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvRTParams : public CvDTreeParams">
+<em class="property">struct </em><code class="descname">CvRTParams</code> : <em class="property">public</em> <code class="descname">CvDTreeParams</code><a class="headerlink" href="#CvRTParams : public CvDTreeParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Training parameters of random trees.</p>
+</dd></dl>
+
+<p>The set of training parameters for the forest is a superset of the training parameters for a single tree. However, random trees do not need all the functionality/features of decision trees. Most noticeably, the trees are not pruned, so the cross-validation parameters are not used.</p>
+</div>
+<div class="section" id="cvrtparams-cvrtparams">
+<h2>CvRTParams::CvRTParams:<a class="headerlink" href="#cvrtparams-cvrtparams" title="Permalink to this headline">¶</a></h2>
+<p>The constructors.</p>
+<dl class="function">
+<dt id="CvRTParams::CvRTParams()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">CvRTParams::</code><code class="descname">CvRTParams</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CvRTParams::CvRTParams()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="CvRTParams::CvRTParams(int max_depth, int min_sample_count, float regression_accuracy, bool use_surrogates, int max_categories, const float* priors, bool calc_var_importance, int nactive_vars, int max_num_of_trees_in_the_forest, float forest_accuracy, int termcrit_type)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">CvRTParams::</code><code class="descname">CvRTParams</code><span class="sig-paren">(</span>int <strong>max_depth</strong>, int <strong>min_sample_count</strong>, float <strong>regression_accuracy</strong>, bool <strong>use_surrogates</strong>, int <strong>max_categories</strong>, const float* <strong>priors</strong>, bool <strong>calc_var_importance</strong>, int <strong>nactive_vars</strong>, int <strong>max_num_of_trees_in_the_forest</strong>, float <strong>forest_accuracy</strong>, int <strong>termcrit_type</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvRTParams::CvRTParams(int max_depth, int min_sample_count, float regression_accuracy, bool use_surrogates, int max_categories, const float* priors, bool calc_var_importance, int nactive_vars, int max_num_of_trees_in_the_forest, float forest_accuracy, int termcrit_type)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>max_depth</strong> &#8211; the depth of the tree. A low value will likely underfit and conversely a high value will likely overfit. The optimal value can be obtained using cross validation or other suitable methods.</li>
+<li><strong>min_sample_count</strong> &#8211; minimum samples required at a leaf node for it to be split. A reasonable value is a small percentage of the total data e.g. 1%.</li>
+<li><strong>max_categories</strong> &#8211; Cluster possible values of a categorical variable into <code class="docutils literal"><span class="pre">K</span></code> <img class="math" src="../../../_images/math/4b429a7d8c5f9462f630952b73293345b4c68be9.png" alt="\leq"/> <code class="docutils literal"><span class="pre">max_categories</span></code> clusters to find a suboptimal split. If a discrete variable, on which the training procedure tries to make a split, takes more than <code class="docutils literal"><span class="pre">max_categories</span></code> values, the precise best subset estimation may take a very long time because the algorithm is exponential. Instead, many decision trees engines (including ML) try to find sub-optimal split in this case by clustering all the samples into <code class="docutils literal"><span class="pre">max_categories</span></code> clusters that is some categories are merged together. The clustering is applied only in <code class="docutils literal"><span class="pre">n</span></code>&gt;2-class classification problems for categorical variables with <code class="docutils literal"><span class="pre">N</span> <span class="pre">&gt;</span> <span class="pre">max_categories</span></code> possible values. In case of regression and 2-class classification the optimal split can be found efficiently without employing clustering, thus the parameter is not used in these cases.</li>
+<li><strong>calc_var_importance</strong> &#8211; If true then variable importance will be calculated and then it can be retrieved by <a class="reference internal" href="#const CvMat* CvRTrees::get_var_importance()" title="const CvMat* CvRTrees::get_var_importance()"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvRTrees::get_var_importance()</span></code></a>.</li>
+<li><strong>nactive_vars</strong> &#8211; The size of the randomly selected subset of features at each tree node and that are used to find the best split(s). If you set it to 0 then the size will be set to the square root of the total number of features.</li>
+<li><strong>max_num_of_trees_in_the_forest</strong> &#8211; The maximum number of trees in the forest (surprise, surprise). Typically the more trees you have the better the accuracy. However, the improvement in accuracy generally diminishes and asymptotes pass a certain number of trees. Also to keep in mind, the number of tree increases the prediction time linearly.</li>
+<li><strong>forest_accuracy</strong> &#8211; Sufficient accuracy (OOB error).</li>
+<li><strong>termcrit_type</strong> &#8211; <p>The type of the termination criteria:</p>
+<ul>
+<li><strong>CV_TERMCRIT_ITER</strong> Terminate learning by the <code class="docutils literal"><span class="pre">max_num_of_trees_in_the_forest</span></code>;</li>
+<li><strong>CV_TERMCRIT_EPS</strong> Terminate learning by the <code class="docutils literal"><span class="pre">forest_accuracy</span></code>;</li>
+<li><strong>CV_TERMCRIT_ITER | CV_TERMCRIT_EPS</strong> Use both termination criteria.</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>For meaning of other parameters see <a class="reference internal" href="decision_trees.html#CvDTreeParams::CvDTreeParams()" title="CvDTreeParams::CvDTreeParams()"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvDTreeParams::CvDTreeParams()</span></code></a>.</p>
+<p>The default constructor sets all parameters to default values which are different from default values of <code class="xref ocv ocv-class docutils literal"><span class="pre">CvDTreeParams</span></code>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">CvRTParams</span><span class="o">::</span><span class="n">CvRTParams</span><span class="p">()</span> <span class="o">:</span> <span class="n">CvDTreeParams</span><span class="p">(</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="mi">0</span> <span class="p">),</span>
+    <span class="n">calc_var_importance</span><span class="p">(</span><span class="nb">false</span><span class="p">),</span> <span class="n">nactive_vars</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">term_crit</span> <span class="o">=</span> <span class="n">cvTermCriteria</span><span class="p">(</span> <span class="n">CV_TERMCRIT_ITER</span><span class="o">+</span><span class="n">CV_TERMCRIT_EPS</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">0.1</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cvrtrees">
+<h2>CvRTrees<a class="headerlink" href="#cvrtrees" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="CvRTrees : public CvStatModel">
+<em class="property">class </em><code class="descname">CvRTrees</code> : <em class="property">public</em> <code class="descname">CvStatModel</code><a class="headerlink" href="#CvRTrees : public CvStatModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>The class implements the random forest predictor as described in the beginning of this section.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="cvrtrees-train">
+<h2>CvRTrees::train<a class="headerlink" href="#cvrtrees-train" title="Permalink to this headline">¶</a></h2>
+<p>Trains the Random Trees model.</p>
+<dl class="function">
+<dt id="bool CvRTrees::train(const Mat&amp; trainData, int tflag, const Mat&amp; responses, const Mat&amp; varIdx, const Mat&amp; sampleIdx, const Mat&amp; varType, const Mat&amp; missingDataMask, CvRTParams params)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CvRTrees::</code><code class="descname">train</code><span class="sig-paren">(</span>const Mat&amp; <strong>trainData</strong>, int <strong>tflag</strong>, const Mat&amp; <strong>responses</strong>, const Mat&amp; <strong>varIdx</strong>=Mat(), const Mat&amp; <strong>sampleIdx</strong>=Mat(), const Mat&amp; <strong>varType</strong>=Mat(), const Mat&amp; <strong>missingDataMask</strong>=Mat(), CvRTParams <strong>params</strong>=CvRTParams() <span class="sig-paren">)</span><a class="headerlink" href="#bool CvRTrees::train(const Mat& trainData, int tflag, const Mat& responses, const Mat& varIdx, const Mat& sampleIdx, const Mat& varType, const Mat& missingDataMask, CvRTParams params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bool CvRTrees::train(const CvMat* trainData, int tflag, const CvMat* responses, const CvMat* varIdx, const CvMat* sampleIdx, const CvMat* varType, const CvMat* missingDataMask, CvRTParams params)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CvRTrees::</code><code class="descname">train</code><span class="sig-paren">(</span>const CvMat* <strong>trainData</strong>, int <strong>tflag</strong>, const CvMat* <strong>responses</strong>, const CvMat* <strong>varIdx</strong>=0, const CvMat* <strong>sampleIdx</strong>=0, const CvMat* <strong>varType</strong>=0, const CvMat* <strong>missingDataMask</strong>=0, CvRTParams <strong>params</strong>=CvRTParams() <span class="sig-paren">)</span><a class="headerlink" href="#bool CvRTrees::train(const CvMat* trainData, int tflag, const CvMat* responses, const CvMat* varIdx, const CvMat* sampleIdx, const CvMat* varType, const CvMat* missingDataMask, CvRTParams params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bool CvRTrees::train(CvMLData* data, CvRTParams params)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CvRTrees::</code><code class="descname">train</code><span class="sig-paren">(</span>CvMLData* <strong>data</strong>, CvRTParams <strong>params</strong>=CvRTParams() <span class="sig-paren">)</span><a class="headerlink" href="#bool CvRTrees::train(CvMLData* data, CvRTParams params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.RTrees.train">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.RTrees.</code><code class="descname">train</code><span class="sig-paren">(</span>trainData, tflag, responses<span class="optional">[</span>, varIdx<span class="optional">[</span>, sampleIdx<span class="optional">[</span>, varType<span class="optional">[</span>, missingDataMask<span class="optional">[</span>, params<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.RTrees.train" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The method <a class="reference internal" href="#bool CvRTrees::train(const Mat&amp; trainData, int tflag, const Mat&amp; responses, const Mat&amp; varIdx, const Mat&amp; sampleIdx, const Mat&amp; varType, const Mat&amp; missingDataMask, CvRTParams params)" title="bool CvRTrees::train(const Mat&amp; trainData, int tflag, const Mat&amp; responses, const Mat&amp; varIdx, const Mat&amp; sampleIdx, const Mat&amp; varType, const Mat&amp; missingDataMask, CvRTParams params)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvRTrees::train()</span></code></a> is very similar to the method <a class="reference internal" href="decision_trees.html#bool CvDTree::train(const Mat&amp; trainData, int tflag, const Mat&amp; responses, const Mat&amp; varIdx, const Mat&amp; sampleIdx, const Mat&amp; varType, const Mat&amp; missingDataMask, CvDTreeParams params)" title="bool CvDTree::train(const Mat&amp; trainData, int tflag, const Mat&amp; responses, const Mat&amp; varIdx, const Mat&amp; sampleIdx, const Mat&amp; varType, const Mat&amp; missingDataMask, CvDTreeParams params)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvDTree::train()</span></code></a> and follows the generic method <a class="reference internal" href="statistical_models.html#bool CvStatModel::train(const Mat&amp; train_data, [int tflag,] ..., const Mat&amp; responses, ..., [const Mat&amp; var_idx,] ..., [const Mat&amp; sample_idx,] ... [const Mat&amp; var_type,] ..., [const Mat&amp; missing_mask,] &lt;misc_training_alg_params&gt; ...)" title="bool CvStatModel::train(const Mat&amp; train_data, [int tflag,] ..., const Mat&amp; responses, ..., [const Mat&amp; var_idx,] ..., [const Mat&amp; sample_idx,] ... [const Mat&amp; var_type,] ..., [const Mat&amp; missing_mask,] &lt;misc_training_alg_params&gt; ...)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvStatModel::train()</span></code></a> conventions. All the parameters specific to the algorithm training are passed as a <code class="xref ocv ocv-class docutils literal"><span class="pre">CvRTParams</span></code> instance. The estimate of the training error (<code class="docutils literal"><span class="pre">oob-error</span></code>) is stored in the protected class member <code class="docutils literal"><span class="pre">oob_error</span></code>.</p>
+<p>The function is parallelized with the TBB library.</p>
+</div>
+<div class="section" id="cvrtrees-predict">
+<h2>CvRTrees::predict<a class="headerlink" href="#cvrtrees-predict" title="Permalink to this headline">¶</a></h2>
+<p>Predicts the output for an input sample.</p>
+<dl class="function">
+<dt id="float CvRTrees::predict(const Mat&amp; sample, const Mat&amp; missing) const">
+<strong>C++:</strong><code class="descname"> </code>float <code class="descclassname">CvRTrees::</code><code class="descname">predict</code><span class="sig-paren">(</span>const Mat&amp; <strong>sample</strong>, const Mat&amp; <strong>missing</strong>=Mat() <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#float CvRTrees::predict(const Mat& sample, const Mat& missing) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="float CvRTrees::predict(const CvMat* sample, const CvMat* missing) const">
+<strong>C++:</strong><code class="descname"> </code>float <code class="descclassname">CvRTrees::</code><code class="descname">predict</code><span class="sig-paren">(</span>const CvMat* <strong>sample</strong>, const CvMat* <strong>missing</strong>=0 <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#float CvRTrees::predict(const CvMat* sample, const CvMat* missing) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.RTrees.predict">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.RTrees.</code><code class="descname">predict</code><span class="sig-paren">(</span>sample<span class="optional">[</span>, missing<span class="optional">]</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.RTrees.predict" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sample</strong> &#8211; Sample for classification.</li>
+<li><strong>missing</strong> &#8211; Optional missing measurement mask of the sample.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The input parameters of the prediction method are the same as in <a class="reference internal" href="decision_trees.html#CvDTreeNode* CvDTree::predict(const Mat&amp; sample, const Mat&amp; missingDataMask, bool preprocessedInput) const" title="CvDTreeNode* CvDTree::predict(const Mat&amp; sample, const Mat&amp; missingDataMask, bool preprocessedInput) const"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvDTree::predict()</span></code></a>  but the return value type is different. This method returns the cumulative result from all the trees in the forest (the class that receives the majority of voices, or the mean of the regression function estimates).</p>
+</div>
+<div class="section" id="cvrtrees-predict-prob">
+<h2>CvRTrees::predict_prob<a class="headerlink" href="#cvrtrees-predict-prob" title="Permalink to this headline">¶</a></h2>
+<p>Returns a fuzzy-predicted class label.</p>
+<dl class="function">
+<dt id="float CvRTrees::predict_prob(const cv::Mat&amp; sample, const cv::Mat&amp; missing) const">
+<strong>C++:</strong><code class="descname"> </code>float <code class="descclassname">CvRTrees::</code><code class="descname">predict_prob</code><span class="sig-paren">(</span>const cv::Mat&amp; <strong>sample</strong>, const cv::Mat&amp; <strong>missing</strong>=cv::Mat() <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#float CvRTrees::predict_prob(const cv::Mat& sample, const cv::Mat& missing) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="float CvRTrees::predict_prob(const CvMat* sample, const CvMat* missing) const">
+<strong>C++:</strong><code class="descname"> </code>float <code class="descclassname">CvRTrees::</code><code class="descname">predict_prob</code><span class="sig-paren">(</span>const CvMat* <strong>sample</strong>, const CvMat* <strong>missing</strong>=0 <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#float CvRTrees::predict_prob(const CvMat* sample, const CvMat* missing) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.RTrees.predict_prob">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.RTrees.</code><code class="descname">predict_prob</code><span class="sig-paren">(</span>sample<span class="optional">[</span>, missing<span class="optional">]</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.RTrees.predict_prob" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sample</strong> &#8211; Sample for classification.</li>
+<li><strong>missing</strong> &#8211; Optional missing measurement mask of the sample.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function works for binary classification problems only. It returns the number between 0 and 1. This number represents probability or confidence of the sample belonging to the second class. It is calculated as the proportion of decision trees that classified the sample to the second class.</p>
+</div>
+<div class="section" id="cvrtrees-getvarimportance">
+<h2>CvRTrees::getVarImportance<a class="headerlink" href="#cvrtrees-getvarimportance" title="Permalink to this headline">¶</a></h2>
+<p>Returns the variable importance array.</p>
+<dl class="function">
+<dt id="Mat CvRTrees::getVarImportance()">
+<strong>C++:</strong><code class="descname"> </code>Mat <code class="descclassname">CvRTrees::</code><code class="descname">getVarImportance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Mat CvRTrees::getVarImportance()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="const CvMat* CvRTrees::get_var_importance()">
+<strong>C++:</strong><code class="descname"> </code>const CvMat* <code class="descclassname">CvRTrees::</code><code class="descname">get_var_importance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#const CvMat* CvRTrees::get_var_importance()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.RTrees.getVarImportance">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.RTrees.</code><code class="descname">getVarImportance</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.RTrees.getVarImportance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The method returns the variable importance vector, computed at the training stage when <code class="docutils literal"><span class="pre">CvRTParams::calc_var_importance</span></code> is set to true. If this flag was set to false, the <code class="docutils literal"><span class="pre">NULL</span></code> pointer is returned. This differs from the decision trees where variable importance can be computed anytime after the training.</p>
+</div>
+<div class="section" id="cvrtrees-get-proximity">
+<h2>CvRTrees::get_proximity<a class="headerlink" href="#cvrtrees-get-proximity" title="Permalink to this headline">¶</a></h2>
+<p>Retrieves the proximity measure between two training samples.</p>
+<dl class="function">
+<dt id="float CvRTrees::get_proximity(const CvMat* sample1, const CvMat* sample2, const CvMat* missing1 , const CvMat* missing2) const">
+<strong>C++:</strong><code class="descname"> </code>float <code class="descclassname">CvRTrees::</code><code class="descname">get_proximity</code><span class="sig-paren">(</span>const CvMat* <strong>sample1</strong>, const CvMat* <strong>sample2</strong>, const CvMat* <strong>missing1</strong>=0, const CvMat* <strong>missing2</strong>=0 <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#float CvRTrees::get_proximity(const CvMat* sample1, const CvMat* sample2, const CvMat* missing1 , const CvMat* missing2) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sample1</strong> &#8211; The first sample.</li>
+<li><strong>sample2</strong> &#8211; The second sample.</li>
+<li><strong>missing1</strong> &#8211; Optional missing measurement mask of the first sample.</li>
+<li><strong>missing2</strong> &#8211; Optional missing measurement mask of the second sample.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method returns proximity measure between any two samples. This is a ratio of those trees in the ensemble, in which the samples fall into the same leaf node, to the total number of the trees.</p>
+</div>
+<div class="section" id="cvrtrees-calc-error">
+<h2>CvRTrees::calc_error<a class="headerlink" href="#cvrtrees-calc-error" title="Permalink to this headline">¶</a></h2>
+<p>Returns error of the random forest.</p>
+<dl class="function">
+<dt id="float CvRTrees::calc_error(CvMLData* data, int type, std::vector&lt;float&gt;* resp)">
+<strong>C++:</strong><code class="descname"> </code>float <code class="descclassname">CvRTrees::</code><code class="descname">calc_error</code><span class="sig-paren">(</span>CvMLData* <strong>data</strong>, int <strong>type</strong>, std::vector&lt;float&gt;* <strong>resp</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#float CvRTrees::calc_error(CvMLData* data, int type, std::vector<float>* resp)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The method is identical to <a class="reference internal" href="decision_trees.html#float CvDTree::calc_error(CvMLData* trainData, int type, std::vector&lt;float&gt; *resp)" title="float CvDTree::calc_error(CvMLData* trainData, int type, std::vector&lt;float&gt; *resp)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvDTree::calc_error()</span></code></a> but uses the random forest as predictor.</p>
+</div>
+<div class="section" id="cvrtrees-get-train-error">
+<h2>CvRTrees::get_train_error<a class="headerlink" href="#cvrtrees-get-train-error" title="Permalink to this headline">¶</a></h2>
+<p>Returns the train error.</p>
+<dl class="function">
+<dt id="float CvRTrees::get_train_error()">
+<strong>C++:</strong><code class="descname"> </code>float <code class="descclassname">CvRTrees::</code><code class="descname">get_train_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#float CvRTrees::get_train_error()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The method works for classification problems only. It returns the proportion of incorrectly classified train samples.</p>
+</div>
+<div class="section" id="cvrtrees-get-rng">
+<h2>CvRTrees::get_rng<a class="headerlink" href="#cvrtrees-get-rng" title="Permalink to this headline">¶</a></h2>
+<p>Returns the state of the used random number generator.</p>
+<dl class="function">
+<dt id="CvRNG* CvRTrees::get_rng()">
+<strong>C++:</strong><code class="descname"> </code>CvRNG* <code class="descclassname">CvRTrees::</code><code class="descname">get_rng</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CvRNG* CvRTrees::get_rng()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cvrtrees-get-tree-count">
+<h2>CvRTrees::get_tree_count<a class="headerlink" href="#cvrtrees-get-tree-count" title="Permalink to this headline">¶</a></h2>
+<p>Returns the number of trees in the constructed random forest.</p>
+<dl class="function">
+<dt id="int CvRTrees::get_tree_count() const">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">CvRTrees::</code><code class="descname">get_tree_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#int CvRTrees::get_tree_count() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cvrtrees-get-tree">
+<h2>CvRTrees::get_tree<a class="headerlink" href="#cvrtrees-get-tree" title="Permalink to this headline">¶</a></h2>
+<p>Returns the specific decision tree in the constructed random forest.</p>
+<dl class="function">
+<dt id="CvForestTree* CvRTrees::get_tree(int i) const">
+<strong>C++:</strong><code class="descname"> </code>CvForestTree* <code class="descclassname">CvRTrees::</code><code class="descname">get_tree</code><span class="sig-paren">(</span>int <strong>i</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#CvForestTree* CvRTrees::get_tree(int i) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>i</strong> &#8211; Index of the decision tree.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Random Trees</a><ul>
+<li><a class="reference internal" href="#cvrtparams">CvRTParams</a></li>
+<li><a class="reference internal" href="#cvrtparams-cvrtparams">CvRTParams::CvRTParams:</a></li>
+<li><a class="reference internal" href="#cvrtrees">CvRTrees</a></li>
+<li><a class="reference internal" href="#cvrtrees-train">CvRTrees::train</a></li>
+<li><a class="reference internal" href="#cvrtrees-predict">CvRTrees::predict</a></li>
+<li><a class="reference internal" href="#cvrtrees-predict-prob">CvRTrees::predict_prob</a></li>
+<li><a class="reference internal" href="#cvrtrees-getvarimportance">CvRTrees::getVarImportance</a></li>
+<li><a class="reference internal" href="#cvrtrees-get-proximity">CvRTrees::get_proximity</a></li>
+<li><a class="reference internal" href="#cvrtrees-calc-error">CvRTrees::calc_error</a></li>
+<li><a class="reference internal" href="#cvrtrees-get-train-error">CvRTrees::get_train_error</a></li>
+<li><a class="reference internal" href="#cvrtrees-get-rng">CvRTrees::get_rng</a></li>
+<li><a class="reference internal" href="#cvrtrees-get-tree-count">CvRTrees::get_tree_count</a></li>
+<li><a class="reference internal" href="#cvrtrees-get-tree">CvRTrees::get_tree</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="gradient_boosted_trees.html"
+                        title="previous chapter">Gradient Boosted Trees</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ertrees.html"
+                        title="next chapter">Extremely randomized trees</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/ml/doc/random_trees.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="ertrees.html" title="Extremely randomized trees"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="gradient_boosted_trees.html" title="Gradient Boosted Trees"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" >ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

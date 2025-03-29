@@ -1,0 +1,629 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>OpenFABMAP &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="contrib. Contributed/Experimental Stuff" href="contrib.html" />
+    <link rel="next" title="legacy. Deprecated stuff" href="../../legacy/doc/legacy.html" />
+    <link rel="prev" title="Retina : a Bio mimetic human retina model" href="retina/index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../legacy/doc/legacy.html" title="legacy. Deprecated stuff"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="retina/index.html" title="Retina : a Bio mimetic human retina model"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="contrib.html" accesskey="U">contrib. Contributed/Experimental Stuff</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="openfabmap">
+<h1>OpenFABMAP<a class="headerlink" href="#openfabmap" title="Permalink to this headline">¶</a></h1>
+<p>The openFABMAP package has been integrated into OpenCV from the openFABMAP &lt;<a class="reference external" href="http://code.google.com/p/openfabmap/">http://code.google.com/p/openfabmap/</a>&gt; project <a class="reference internal" href="#icra2011" id="id1">[ICRA2011]</a>. OpenFABMAP is an open and modifiable code-source which implements the Fast Appearance-based Mapping algorithm (FAB-MAP) developed by Mark Cummins and Paul Newman. The algorithms used in openFABMAP were developed using only the relevant FAB-MAP publications.</p>
+<p>FAB-MAP is an approach to appearance-based place recognition. FAB-MAP compares images of locations that have been visited and determines the probability of re-visiting a location, as well as providing a measure of the probability of being at a new, previously unvisited location. Camera images form the sole input to the system, from which visual bag-of-words models are formed through the extraction of appearance-based (e.g. SURF) features.</p>
+<p>openFABMAP requires training data (e.g. a collection of images from a similar but not identical environment) to construct a visual vocabulary for the visual bag-of-words model, along with a Chow-Liu tree representation of feature likelihood and for use in the Sampled new place method (see below).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example using the openFABMAP package can be found at opencv_source_code/samples/cpp/fabmap_sample.cpp</li>
+</ul>
+</div>
+<div class="section" id="of2-fabmap">
+<h2>of2::FabMap<a class="headerlink" href="#of2-fabmap" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="of2::FabMap">
+<em class="property">class </em><code class="descclassname">of2::</code><code class="descname">FabMap</code><a class="headerlink" href="#of2::FabMap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The main FabMap class performs the comparison between visual bags-of-words extracted from one or more images. The FabMap class is instantiated as one of the four inherited FabMap classes (FabMap1, FabMapLUT, FabMapFBO, FabMap2). Each inherited class performs the comparison differently based on algorithm iterations as published (see each class below for specifics). A Chow-Liu tree, detector model parameters and some option flags are common to all Fabmap variants and are supplied on class creation. Training data (visual bag-of-words) is supplied to the class if using the SAMPLED new place method. Test data (visual bag-of-words) is supplied as images to which query bag-of-words are compared against. The common flags are listed below:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">enum</span> <span class="p">{</span>
+    <span class="n">MEAN_FIELD</span><span class="p">,</span>
+    <span class="n">SAMPLED</span><span class="p">,</span>
+    <span class="n">NAIVE_BAYES</span><span class="p">,</span>
+    <span class="n">CHOW_LIU</span><span class="p">,</span>
+    <span class="n">MOTION_MODEL</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li>MEAN_FIELD: Use the Mean Field approximation to determine the new place likelihood (cannot be used for FabMap2).</li>
+<li>SAMPLED: Use the Sampled approximation to determine the new place likelihood. Requires training data (see below).</li>
+<li>NAIVE_BAYES: Assume a naive Bayes approximation to feature distribution (i.e. all features are independent). Note that a Chow-Liu tree is still required but only the absolute word probabilities are used, feature co-occurrance information is discarded.</li>
+<li>CHOW_LIU: Use the full Chow-Liu tree to approximate feature distribution.</li>
+<li>MOTION_MODEL: Update the location distribution using the previous distribution as a (weak) prior. Used for matching in sequences (i.e. successive video frames).</li>
+</ol>
+<div class="section" id="training-data">
+<h3>Training Data<a class="headerlink" href="#training-data" title="Permalink to this headline">¶</a></h3>
+<p>Training data is required to use the SAMPLED new place method. The SAMPLED method was shown to have improved performance over the alternative MEAN_FIELD method. Training data can be added singularly or as a batch.</p>
+<dl class="function">
+<dt id="virtual void addTraining(const Mat&amp; queryImgDescriptor)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">virtual</em> void <code class="descname">addTraining</code><span class="sig-paren">(</span>const Mat&amp; <strong>queryImgDescriptor</strong><span class="sig-paren">)</span><a class="headerlink" href="#virtual void addTraining(const Mat& queryImgDescriptor)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>queryImgDescriptor</strong> &#8211; bag-of-words image descriptors stored as rows in a Mat</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="virtual void addTraining(const vector&lt;Mat&gt;&amp; queryImgDescriptors)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">virtual</em> void <code class="descname">addTraining</code><span class="sig-paren">(</span>const vector&lt;Mat&gt;&amp; <strong>queryImgDescriptors</strong><span class="sig-paren">)</span><a class="headerlink" href="#virtual void addTraining(const vector<Mat>& queryImgDescriptors)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>queryImgDescriptors</strong> &#8211; a vector containing multiple bag-of-words image descriptors</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="const vector&lt;Mat&gt;&amp; getTrainingImgDescriptors() const">
+<strong>C++:</strong><code class="descname"> </code>const vector&lt;Mat&gt;&amp; <code class="descname">getTrainingImgDescriptors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#const vector<Mat>& getTrainingImgDescriptors() const" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a vector containing multiple bag-of-words image descriptors</p>
+</dd></dl>
+
+</div>
+<div class="section" id="test-data">
+<h3>Test Data<a class="headerlink" href="#test-data" title="Permalink to this headline">¶</a></h3>
+<p>Test Data is the database of images represented using bag-of-words models. When a compare function is called, each query point is compared to the test data.</p>
+<dl class="function">
+<dt id="virtual void add(const Mat&amp; queryImgDescriptor)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">virtual</em> void <code class="descname">add</code><span class="sig-paren">(</span>const Mat&amp; <strong>queryImgDescriptor</strong><span class="sig-paren">)</span><a class="headerlink" href="#virtual void add(const Mat& queryImgDescriptor)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>queryImgDescriptor</strong> &#8211; bag-of-words image descriptors stored as rows in a Mat</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="virtual void add(const vector&lt;Mat&gt;&amp; queryImgDescriptors)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">virtual</em> void <code class="descname">add</code><span class="sig-paren">(</span>const vector&lt;Mat&gt;&amp; <strong>queryImgDescriptors</strong><span class="sig-paren">)</span><a class="headerlink" href="#virtual void add(const vector<Mat>& queryImgDescriptors)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>queryImgDescriptors</strong> &#8211; a vector containing multiple bag-of-words image descriptors</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="const vector&lt;Mat&gt;&amp; getTestImgDescriptors() const">
+<strong>C++:</strong><code class="descname"> </code>const vector&lt;Mat&gt;&amp; <code class="descname">getTestImgDescriptors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#const vector<Mat>& getTestImgDescriptors() const" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a vector containing multiple bag-of-words image descriptors</p>
+</dd></dl>
+
+</div>
+<div class="section" id="image-comparison">
+<h3>Image Comparison<a class="headerlink" href="#image-comparison" title="Permalink to this headline">¶</a></h3>
+<p>Image matching is performed calling the compare function. Query bag-of-words image descriptors are provided and compared to test data added to the FabMap class. Alternatively test data can be provided with the call to compare to which the comparison is performed. Results are written to the &#8216;matches&#8217; argument.</p>
+<dl class="function">
+<dt id="void compare(const Mat&amp; queryImgDescriptor, vector&lt;IMatch&gt;&amp; matches, bool addQuery , const Mat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">compare</code><span class="sig-paren">(</span>const Mat&amp; <strong>queryImgDescriptor</strong>, vector&lt;IMatch&gt;&amp; <strong>matches</strong>, bool <strong>addQuery</strong>=false, const Mat&amp; <strong>mask</strong>=Mat()<span class="sig-paren">)</span><a class="headerlink" href="#void compare(const Mat& queryImgDescriptor, vector<IMatch>& matches, bool addQuery , const Mat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>queryImgDescriptor</strong> &#8211; bag-of-words image descriptors stored as rows in a Mat</li>
+<li><strong>matches</strong> &#8211; a vector of image match probabilities</li>
+<li><strong>addQuery</strong> &#8211; if true the queryImg Descriptor is added to the test data after the comparison is performed.</li>
+<li><strong>mask</strong> &#8211; <em>not implemented</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="void compare(const Mat&amp; queryImgDescriptor, const Mat&amp; testImgDescriptors, vector&lt;IMatch&gt;&amp; matches, const Mat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">compare</code><span class="sig-paren">(</span>const Mat&amp; <strong>queryImgDescriptor</strong>, const Mat&amp; <strong>testImgDescriptors</strong>, vector&lt;IMatch&gt;&amp; <strong>matches</strong>, const Mat&amp; <strong>mask</strong>=Mat()<span class="sig-paren">)</span><a class="headerlink" href="#void compare(const Mat& queryImgDescriptor, const Mat& testImgDescriptors, vector<IMatch>& matches, const Mat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>testImgDescriptors</strong> &#8211; bag-of-words image descriptors stored as rows in a Mat</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="void compare(const Mat&amp; queryImgDescriptor, const vector&lt;Mat&gt;&amp; testImgDescriptors, vector&lt;IMatch&gt;&amp; matches, const Mat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">compare</code><span class="sig-paren">(</span>const Mat&amp; <strong>queryImgDescriptor</strong>, const vector&lt;Mat&gt;&amp; <strong>testImgDescriptors</strong>, vector&lt;IMatch&gt;&amp; <strong>matches</strong>, const Mat&amp; <strong>mask</strong>=Mat()<span class="sig-paren">)</span><a class="headerlink" href="#void compare(const Mat& queryImgDescriptor, const vector<Mat>& testImgDescriptors, vector<IMatch>& matches, const Mat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>testImgDescriptors</strong> &#8211; a vector of multiple bag-of-words image descriptors</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="void compare(const vector&lt;Mat&gt;&amp; queryImgDescriptors, vector&lt;IMatch&gt;&amp; matches, bool addQuery , const Mat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">compare</code><span class="sig-paren">(</span>const vector&lt;Mat&gt;&amp; <strong>queryImgDescriptors</strong>, vector&lt;IMatch&gt;&amp; <strong>matches</strong>, bool <strong>addQuery</strong>=false, const Mat&amp; <strong>mask</strong>=Mat()<span class="sig-paren">)</span><a class="headerlink" href="#void compare(const vector<Mat>& queryImgDescriptors, vector<IMatch>& matches, bool addQuery , const Mat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>queryImgDescriptors</strong> &#8211; a vector of multiple bag-of-words image descriptors</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="void compare(const vector&lt;Mat&gt;&amp; queryImgDescriptors, const vector&lt;Mat&gt;&amp; testImgDescriptors, vector&lt;IMatch&gt;&amp; matches, const Mat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">compare</code><span class="sig-paren">(</span>const vector&lt;Mat&gt;&amp; <strong>queryImgDescriptors</strong>, const vector&lt;Mat&gt;&amp; <strong>testImgDescriptors</strong>, vector&lt;IMatch&gt;&amp; <strong>matches</strong>, const Mat&amp; <strong>mask</strong>=Mat()<span class="sig-paren">)</span><a class="headerlink" href="#void compare(const vector<Mat>& queryImgDescriptors, const vector<Mat>& testImgDescriptors, vector<IMatch>& matches, const Mat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="fabmap-classes">
+<h3>FabMap classes<a class="headerlink" href="#fabmap-classes" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="FabMap1 : public FabMap">
+<em class="property">class </em><code class="descname">FabMap1</code> : <em class="property">public</em> <code class="descname">FabMap</code><a class="headerlink" href="#FabMap1 : public FabMap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The original FAB-MAP algorithm without any computational improvements as published in <a class="reference internal" href="#ijrr2008" id="id2">[IJRR2008]</a></p>
+<dl class="function">
+<dt id="FabMap1::FabMap1(const Mat&amp; clTree, double PzGe, double PzGNe, int flags, int numSamples)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">FabMap1::</code><code class="descname">FabMap1</code><span class="sig-paren">(</span>const Mat&amp; <strong>clTree</strong>, double <strong>PzGe</strong>, double <strong>PzGNe</strong>, int <strong>flags</strong>, int <strong>numSamples</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#FabMap1::FabMap1(const Mat& clTree, double PzGe, double PzGNe, int flags, int numSamples)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>clTree</strong> &#8211; a Chow-Liu tree class</li>
+<li><strong>PzGe</strong> &#8211; the dector model recall. The probability of the feature detector extracting a feature from an object given it is in the scene. This is used to account for detector noise.</li>
+<li><strong>PzGNe</strong> &#8211; the dector model precision. The probability of the feature detector falsing extracting a feature representing an object that is not in the scene.</li>
+<li><strong>numSamples</strong> &#8211; the number of samples to use for the SAMPLED new place calculation</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="FabMapLUT : public FabMap">
+<em class="property">class </em><code class="descname">FabMapLUT</code> : <em class="property">public</em> <code class="descname">FabMap</code><a class="headerlink" href="#FabMapLUT : public FabMap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The original FAB-MAP algorithm implemented as a look-up table for speed enhancements <a class="reference internal" href="#icra2011" id="id3">[ICRA2011]</a></p>
+<dl class="function">
+<dt id="FabMapLUT::FabMapLUT(const Mat&amp; clTree, double PzGe, double PzGNe, int flags, int numSamples , int precision)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">FabMapLUT::</code><code class="descname">FabMapLUT</code><span class="sig-paren">(</span>const Mat&amp; <strong>clTree</strong>, double <strong>PzGe</strong>, double <strong>PzGNe</strong>, int <strong>flags</strong>, int <strong>numSamples</strong>=0, int <strong>precision</strong>=6<span class="sig-paren">)</span><a class="headerlink" href="#FabMapLUT::FabMapLUT(const Mat& clTree, double PzGe, double PzGNe, int flags, int numSamples , int precision)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>precision</strong> &#8211; the precision with which to store the pre-computed likelihoods</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="FabMapFBO : public FabMap">
+<em class="property">class </em><code class="descname">FabMapFBO</code> : <em class="property">public</em> <code class="descname">FabMap</code><a class="headerlink" href="#FabMapFBO : public FabMap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The accelerated FAB-MAP using a &#8216;fast bail-out&#8217; approach as in <a class="reference internal" href="#tro2010" id="id4">[TRO2010]</a></p>
+<dl class="function">
+<dt id="FabMapFBO::FabMapFBO(const Mat&amp; clTree, double PzGe, double PzGNe, int flags, int numSamples , double rejectionThreshold , double PsGd , int bisectionStart , int bisectionIts)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">FabMapFBO::</code><code class="descname">FabMapFBO</code><span class="sig-paren">(</span>const Mat&amp; <strong>clTree</strong>, double <strong>PzGe</strong>, double <strong>PzGNe</strong>, int <strong>flags</strong>, int <strong>numSamples</strong>=0, double <strong>rejectionThreshold</strong>=1e-8, double <strong>PsGd</strong>=1e-8, int <strong>bisectionStart</strong>=512, int <strong>bisectionIts</strong>=9<span class="sig-paren">)</span><a class="headerlink" href="#FabMapFBO::FabMapFBO(const Mat& clTree, double PzGe, double PzGNe, int flags, int numSamples , double rejectionThreshold , double PsGd , int bisectionStart , int bisectionIts)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>rejectionThreshold</strong> &#8211; images are not considered a match when the likelihood falls below the Bennett bound by the amount given by the rejectionThreshold. The threshold provides a speed/accuracy trade-off. A lower bound will be more accurate</li>
+<li><strong>PsGd</strong> &#8211; used to calculate the Bennett bound. Provides a speed/accuracy trade-off. A lower bound will be more accurate</li>
+<li><strong>bisectionStart</strong> &#8211; Used to estimate the bound using the bisection method. Must be larger than the largest expected difference between maximum and minimum image likelihoods</li>
+<li><strong>bisectionIts</strong> &#8211; The number of iterations for which to perform the bisection method</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="FabMap2 : public FabMap">
+<em class="property">class </em><code class="descname">FabMap2</code> : <em class="property">public</em> <code class="descname">FabMap</code><a class="headerlink" href="#FabMap2 : public FabMap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The inverted index FAB-MAP as in <a class="reference internal" href="#ijrr2010" id="id5">[IJRR2010]</a>. This version of FAB-MAP is the fastest without any loss of accuracy.</p>
+<dl class="function">
+<dt id="FabMap2::FabMap2(const Mat&amp; clTree, double PzGe, double PzGNe, int flags)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">FabMap2::</code><code class="descname">FabMap2</code><span class="sig-paren">(</span>const Mat&amp; <strong>clTree</strong>, double <strong>PzGe</strong>, double <strong>PzGNe</strong>, int <strong>flags</strong><span class="sig-paren">)</span><a class="headerlink" href="#FabMap2::FabMap2(const Mat& clTree, double PzGe, double PzGNe, int flags)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<table class="docutils citation" frame="void" id="ijrr2008" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[IJRR2008]</a></td><td><ol class="first last upperalpha simple" start="13">
+<li>Cummins and P. Newman, &#8220;FAB-MAP: Probabilistic Localization and Mapping in the Space of Appearance,&#8221; The International Journal of Robotics Research, vol. 27(6), pp. 647-665, 2008</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="tro2010" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[TRO2010]</a></td><td><ol class="first last upperalpha simple" start="13">
+<li>Cummins and P. Newman, &#8220;Accelerating FAB-MAP with concentration inequalities,&#8221; IEEE Transactions on Robotics, vol. 26(6), pp. 1042-1050, 2010</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="ijrr2010" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[IJRR2010]</td><td><em>(<a class="fn-backref" href="#id5">1</a>, <a class="fn-backref" href="#id7">2</a>)</em> <ol class="last upperalpha simple" start="13">
+<li>Cummins and P. Newman, &#8220;Appearance-only SLAM at large scale with FAB-MAP 2.0,&#8221; The International Journal of Robotics Research, vol. 30(9), pp. 1100-1123, 2010</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="icra2011" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[ICRA2011]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id3">2</a>)</em> <ol class="last upperalpha simple">
+<li>Glover, et al., &#8220;OpenFABMAP: An Open Source Toolbox for Appearance-based Loop Closure Detection,&#8221; in IEEE International Conference on Robotics and Automation, St Paul, Minnesota, 2011</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="of2-imatch">
+<h2>of2::IMatch<a class="headerlink" href="#of2-imatch" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="of2::IMatch">
+<em class="property">struct </em><code class="descclassname">of2::</code><code class="descname">IMatch</code><a class="headerlink" href="#of2::IMatch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>FAB-MAP comparison results are stored in a vector of IMatch structs. Each IMatch structure provides the index of the provided query bag-of-words, the index of the test bag-of-words, the raw log-likelihood of the match (independent of other comparisons), and the match probability (normalised over other comparison likelihoods).</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">IMatch</span> <span class="p">{</span>
+
+    <span class="n">IMatch</span><span class="p">()</span> <span class="o">:</span>
+        <span class="n">queryIdx</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">imgIdx</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">likelihood</span><span class="p">(</span><span class="o">-</span><span class="n">DBL_MAX</span><span class="p">),</span> <span class="n">match</span><span class="p">(</span><span class="o">-</span><span class="n">DBL_MAX</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="n">IMatch</span><span class="p">(</span><span class="kt">int</span> <span class="n">_queryIdx</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_imgIdx</span><span class="p">,</span> <span class="kt">double</span> <span class="n">_likelihood</span><span class="p">,</span> <span class="kt">double</span> <span class="n">_match</span><span class="p">)</span> <span class="o">:</span>
+        <span class="n">queryIdx</span><span class="p">(</span><span class="n">_queryIdx</span><span class="p">),</span> <span class="n">imgIdx</span><span class="p">(</span><span class="n">_imgIdx</span><span class="p">),</span> <span class="n">likelihood</span><span class="p">(</span><span class="n">_likelihood</span><span class="p">),</span> <span class="n">match</span><span class="p">(</span>
+                <span class="n">_match</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+
+    <span class="kt">int</span> <span class="n">queryIdx</span><span class="p">;</span>    <span class="c1">//query index</span>
+    <span class="kt">int</span> <span class="n">imgIdx</span><span class="p">;</span>      <span class="c1">//test index</span>
+
+    <span class="kt">double</span> <span class="n">likelihood</span><span class="p">;</span>  <span class="c1">//raw loglikelihood</span>
+    <span class="kt">double</span> <span class="n">match</span><span class="p">;</span>      <span class="c1">//normalised probability</span>
+
+    <span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">IMatch</span><span class="o">&amp;</span> <span class="n">m</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">match</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">.</span><span class="n">match</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="of2-chowliutree">
+<h2>of2::ChowLiuTree<a class="headerlink" href="#of2-chowliutree" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="of2::ChowLiuTree">
+<em class="property">class </em><code class="descclassname">of2::</code><code class="descname">ChowLiuTree</code><a class="headerlink" href="#of2::ChowLiuTree" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The Chow-Liu tree is a probabilistic model of the environment in terms of feature occurance and co-occurance. The Chow-Liu tree is a form of Bayesian network. FAB-MAP uses the model when calculating bag-of-words similarity by taking into account feature saliency. Training data is provided to the ChowLiuTree class in the form of bag-of-words image descriptors. The make function produces a cv::Mat that encodes the tree structure.</p>
+<dl class="function">
+<dt id="of2::ChowLiuTree::ChowLiuTree()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">of2::ChowLiuTree::</code><code class="descname">ChowLiuTree</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#of2::ChowLiuTree::ChowLiuTree()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void of2::ChowLiuTree::add(const Mat&amp; imgDescriptor)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">of2::ChowLiuTree::</code><code class="descname">add</code><span class="sig-paren">(</span>const Mat&amp; <strong>imgDescriptor</strong><span class="sig-paren">)</span><a class="headerlink" href="#void of2::ChowLiuTree::add(const Mat& imgDescriptor)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>imgDescriptor</strong> &#8211; bag-of-words image descriptors stored as rows in a Mat</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="void of2::ChowLiuTree::add(const vector&lt;Mat&gt;&amp; imgDescriptors)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">of2::ChowLiuTree::</code><code class="descname">add</code><span class="sig-paren">(</span>const vector&lt;Mat&gt;&amp; <strong>imgDescriptors</strong><span class="sig-paren">)</span><a class="headerlink" href="#void of2::ChowLiuTree::add(const vector<Mat>& imgDescriptors)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>imgDescriptors</strong> &#8211; a vector containing multiple bag-of-words image descriptors</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="const vector&lt;Mat&gt;&amp; of2::ChowLiuTree::getImgDescriptors() const">
+<strong>C++:</strong><code class="descname"> </code>const vector&lt;Mat&gt;&amp; <code class="descclassname">of2::ChowLiuTree::</code><code class="descname">getImgDescriptors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#const vector<Mat>& of2::ChowLiuTree::getImgDescriptors() const" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a vector containing multiple bag-of-words image descriptors</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Mat of2::ChowLiuTree::make(double infoThreshold)">
+<strong>C++:</strong><code class="descname"> </code>Mat <code class="descclassname">of2::ChowLiuTree::</code><code class="descname">make</code><span class="sig-paren">(</span>double <strong>infoThreshold</strong>=0.0<span class="sig-paren">)</span><a class="headerlink" href="#Mat of2::ChowLiuTree::make(double infoThreshold)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>infoThreshold</strong> &#8211; a threshold can be set to reduce the amount of memory used when making the Chow-Liu tree, which can occur with large vocabulary sizes. This function can fail if the threshold is set too high. If memory is an issue the value must be set by trial and error (~0.0005)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="of2-bowmsctrainer">
+<h2>of2::BOWMSCTrainer<a class="headerlink" href="#of2-bowmsctrainer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="of2::BOWMSCTrainer : public of2::BOWTrainer">
+<em class="property">class </em><code class="descclassname">of2::</code><code class="descname">BOWMSCTrainer</code> : <em class="property">public</em> <code class="descclassname">of2::</code><code class="descname">BOWTrainer</code><a class="headerlink" href="#of2::BOWMSCTrainer : public of2::BOWTrainer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>BOWMSCTrainer is a custom clustering algorithm used to produce the feature vocabulary required to create bag-of-words representations. The algorithm is an implementation of <a class="reference internal" href="#avc2007" id="id6">[AVC2007]</a>. Arguments against using K-means for the FAB-MAP algorithm are discussed in <a class="reference internal" href="#ijrr2010" id="id7">[IJRR2010]</a>. The BOWMSCTrainer inherits from the cv::BOWTrainer class, overwriting the cluster function.</p>
+<dl class="function">
+<dt id="of2::BOWMSCTrainer::BOWMSCTrainer(double clusterSize)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">of2::BOWMSCTrainer::</code><code class="descname">BOWMSCTrainer</code><span class="sig-paren">(</span>double <strong>clusterSize</strong>=0.4<span class="sig-paren">)</span><a class="headerlink" href="#of2::BOWMSCTrainer::BOWMSCTrainer(double clusterSize)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>clusterSize</strong> &#8211; the specificity of the vocabulary produced. A smaller cluster size will instigate a larger vocabulary.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="virtual Mat of2::BOWMSCTrainer::cluster() const">
+<strong>C++:</strong><code class="descname"> </code><em class="property">virtual</em> Mat <code class="descclassname">of2::BOWMSCTrainer::</code><code class="descname">cluster</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#virtual Mat of2::BOWMSCTrainer::cluster() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Cluster using features added to the class</p>
+<dl class="function">
+<dt id="virtual Mat of2::BOWMSCTrainer::cluster(const Mat&amp; descriptors) const">
+<strong>C++:</strong><code class="descname"> </code><em class="property">virtual</em> Mat <code class="descclassname">of2::BOWMSCTrainer::</code><code class="descname">cluster</code><span class="sig-paren">(</span>const Mat&amp; <strong>descriptors</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#virtual Mat of2::BOWMSCTrainer::cluster(const Mat& descriptors) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>descriptors</strong> &#8211; feature descriptors provided as rows of the Mat.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<table class="docutils citation" frame="void" id="avc2007" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[AVC2007]</a></td><td>Alexandra Teynor and Hans Burkhardt, &#8220;Fast Codebook Generation by Sequential Data Analysis for Object Classification&#8221;, in Advances in Visual Computing, pp. 610-620, 2007</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">OpenFABMAP</a><ul>
+<li><a class="reference internal" href="#of2-fabmap">of2::FabMap</a><ul>
+<li><a class="reference internal" href="#training-data">Training Data</a></li>
+<li><a class="reference internal" href="#test-data">Test Data</a></li>
+<li><a class="reference internal" href="#image-comparison">Image Comparison</a></li>
+<li><a class="reference internal" href="#fabmap-classes">FabMap classes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#of2-imatch">of2::IMatch</a></li>
+<li><a class="reference internal" href="#of2-chowliutree">of2::ChowLiuTree</a></li>
+<li><a class="reference internal" href="#of2-bowmsctrainer">of2::BOWMSCTrainer</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="retina/index.html"
+                        title="previous chapter">Retina : a Bio mimetic human retina model</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../legacy/doc/legacy.html"
+                        title="next chapter">legacy. Deprecated stuff</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/contrib/doc/openfabmap.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../legacy/doc/legacy.html" title="legacy. Deprecated stuff"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="retina/index.html" title="Retina : a Bio mimetic human retina model"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="contrib.html" >contrib. Contributed/Experimental Stuff</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

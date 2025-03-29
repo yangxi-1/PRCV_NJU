@@ -1,0 +1,703 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Video Input with OpenCV and similarity measurement &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="highgui module. High Level GUI and Media" href="../table_of_content_highgui/table_of_content_highgui.html" />
+    <link rel="next" title="Creating a video with OpenCV" href="../video-write/video-write.html" />
+    <link rel="prev" title="Adding a Trackbar to our applications!" href="../trackbar/trackbar.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../video-write/video-write.html" title="Creating a video with OpenCV"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../trackbar/trackbar.html" title="Adding a Trackbar to our applications!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_highgui/table_of_content_highgui.html" accesskey="U"><em>highgui</em> module. High Level GUI and Media</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="video-input-with-opencv-and-similarity-measurement">
+<span id="videoinputpsnrmssim"></span><h1>Video Input with OpenCV and similarity measurement<a class="headerlink" href="#video-input-with-opencv-and-similarity-measurement" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>Today it is common to have a digital video recording system at your disposal. Therefore, you will eventually come to the situation that you no longer process a batch of images, but video streams. These may be of two kinds: real-time image feed (in the case of a webcam) or prerecorded and hard disk drive stored files. Luckily OpenCV threats these two in the same manner, with the same C++ class. So here&#8217;s what you&#8217;ll learn in this tutorial:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>How to open and read video streams</li>
+<li>Two ways for checking image similarity: PSNR and SSIM</li>
+</ul>
+</div>
+</div>
+<div class="section" id="the-source-code">
+<h2>The source code<a class="headerlink" href="#the-source-code" title="Permalink to this headline">¶</a></h2>
+<p>As a test case where to show off these using OpenCV I&#8217;ve created a small program that reads in two video files and performs a similarity check between them. This is something you could use to check just how well a new video compressing algorithms works. Let there be a reference (original) video like <a class="reference download internal" href="../../../../_downloads/Megamind.avi" download=""><code class="xref download docutils literal"><span class="pre">this</span> <span class="pre">small</span> <span class="pre">Megamind</span> <span class="pre">clip</span></code></a> and <a class="reference download internal" href="../../../../_downloads/Megamind_bugy.avi" download=""><code class="xref download docutils literal"><span class="pre">a</span> <span class="pre">compressed</span> <span class="pre">version</span> <span class="pre">of</span> <span class="pre">it</span></code></a>. You may also find the source code and these video file in the <code class="file docutils literal"><span class="pre">samples/cpp/tutorial_code/HighGUI/video-input-psnr-ssim/</span></code> folder of the OpenCV source library.</p>
+<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt; // for standard I/O</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;   // for strings</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iomanip&gt;  // for controlling float print precision</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;  // string to number conversion</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;opencv2/core/core.hpp&gt;        // Basic OpenCV structures (cv::Mat, Scalar)</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;opencv2/imgproc/imgproc.hpp&gt;  // Gaussian Blur</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;  // OpenCV window I/O</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="kt">double</span> <span class="nf">getPSNR</span> <span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">I1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">I2</span><span class="p">);</span>
+<span class="n">Scalar</span> <span class="nf">getMSSIM</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">I1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">I2</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+    <span class="n">help</span><span class="p">();</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">!=</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Not enough parameters&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">stringstream</span> <span class="n">conv</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="n">string</span> <span class="n">sourceReference</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sourceCompareWith</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+    <span class="kt">int</span> <span class="n">psnrTriggerValue</span><span class="p">,</span> <span class="n">delay</span><span class="p">;</span>
+    <span class="n">conv</span> <span class="o">&lt;&lt;</span> <span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">argv</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>       <span class="c1">// put in the strings</span>
+    <span class="n">conv</span> <span class="o">&gt;&gt;</span> <span class="n">psnrTriggerValue</span> <span class="o">&gt;&gt;</span> <span class="n">delay</span><span class="p">;</span>        <span class="c1">// take out the numbers</span>
+
+    <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">frameNum</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>          <span class="c1">// Frame counter</span>
+
+    <span class="n">VideoCapture</span> <span class="nf">captRefrnc</span><span class="p">(</span><span class="n">sourceReference</span><span class="p">),</span> <span class="n">captUndTst</span><span class="p">(</span><span class="n">sourceCompareWith</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">captRefrnc</span><span class="p">.</span><span class="n">isOpened</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="n">cout</span>  <span class="o">&lt;&lt;</span> <span class="s">&quot;Could not open reference &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">sourceReference</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">captUndTst</span><span class="p">.</span><span class="n">isOpened</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="n">cout</span>  <span class="o">&lt;&lt;</span> <span class="s">&quot;Could not open case test &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">sourceCompareWith</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">Size</span> <span class="n">refS</span> <span class="o">=</span> <span class="n">Size</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">captRefrnc</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">CV_CAP_PROP_FRAME_WIDTH</span><span class="p">),</span>
+                     <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">captRefrnc</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">CV_CAP_PROP_FRAME_HEIGHT</span><span class="p">)),</span>
+         <span class="n">uTSi</span> <span class="o">=</span> <span class="n">Size</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">captUndTst</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">CV_CAP_PROP_FRAME_WIDTH</span><span class="p">),</span>
+                     <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">captUndTst</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">CV_CAP_PROP_FRAME_HEIGHT</span><span class="p">));</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">refS</span> <span class="o">!=</span> <span class="n">uTSi</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Inputs have different size!!! Closing.&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">WIN_UT</span> <span class="o">=</span> <span class="s">&quot;Under Test&quot;</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">WIN_RF</span> <span class="o">=</span> <span class="s">&quot;Reference&quot;</span><span class="p">;</span>
+
+    <span class="c1">// Windows</span>
+    <span class="n">namedWindow</span><span class="p">(</span><span class="n">WIN_RF</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span><span class="p">);</span>
+    <span class="n">namedWindow</span><span class="p">(</span><span class="n">WIN_UT</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span><span class="p">);</span>
+    <span class="n">cvMoveWindow</span><span class="p">(</span><span class="n">WIN_RF</span><span class="p">,</span> <span class="mi">400</span>       <span class="p">,</span> <span class="mi">0</span><span class="p">);</span>         <span class="c1">//750,  2 (bernat =0)</span>
+    <span class="n">cvMoveWindow</span><span class="p">(</span><span class="n">WIN_UT</span><span class="p">,</span> <span class="n">refS</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>         <span class="c1">//1500, 2</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Reference frame resolution: Width=&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">refS</span><span class="p">.</span><span class="n">width</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;  Height=&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">refS</span><span class="p">.</span><span class="n">height</span>
+         <span class="o">&lt;&lt;</span> <span class="s">&quot; of nr#: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">captRefrnc</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">CV_CAP_PROP_FRAME_COUNT</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;PSNR trigger value &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">setiosflags</span><span class="p">(</span><span class="n">ios</span><span class="o">::</span><span class="n">fixed</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">setprecision</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+         <span class="o">&lt;&lt;</span> <span class="n">psnrTriggerValue</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">Mat</span> <span class="n">frameReference</span><span class="p">,</span> <span class="n">frameUnderTest</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">psnrV</span><span class="p">;</span>
+    <span class="n">Scalar</span> <span class="n">mssimV</span><span class="p">;</span>
+
+    <span class="k">for</span><span class="p">(;;)</span> <span class="c1">//Show the image captured in the window and repeat</span>
+    <span class="p">{</span>
+        <span class="n">captRefrnc</span> <span class="o">&gt;&gt;</span> <span class="n">frameReference</span><span class="p">;</span>
+        <span class="n">captUndTst</span> <span class="o">&gt;&gt;</span> <span class="n">frameUnderTest</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">frameReference</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">||</span> <span class="n">frameUnderTest</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &lt; &lt; &lt;  Game over!  &gt; &gt; &gt; &quot;</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="o">++</span><span class="n">frameNum</span><span class="p">;</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Frame: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">frameNum</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;# &quot;</span><span class="p">;</span>
+
+        <span class="c1">///////////////////////////////// PSNR ////////////////////////////////////////////////////</span>
+        <span class="n">psnrV</span> <span class="o">=</span> <span class="n">getPSNR</span><span class="p">(</span><span class="n">frameReference</span><span class="p">,</span><span class="n">frameUnderTest</span><span class="p">);</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setiosflags</span><span class="p">(</span><span class="n">ios</span><span class="o">::</span><span class="n">fixed</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">setprecision</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">psnrV</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;dB&quot;</span><span class="p">;</span>
+
+        <span class="c1">//////////////////////////////////// MSSIM /////////////////////////////////////////////////</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">psnrV</span> <span class="o">&lt;</span> <span class="n">psnrTriggerValue</span> <span class="o">&amp;&amp;</span> <span class="n">psnrV</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">mssimV</span> <span class="o">=</span> <span class="n">getMSSIM</span><span class="p">(</span><span class="n">frameReference</span><span class="p">,</span> <span class="n">frameUnderTest</span><span class="p">);</span>
+
+            <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; MSSIM: &quot;</span>
+                <span class="o">&lt;&lt;</span> <span class="s">&quot; R &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">setiosflags</span><span class="p">(</span><span class="n">ios</span><span class="o">::</span><span class="n">fixed</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">setprecision</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">mssimV</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;%&quot;</span>
+                <span class="o">&lt;&lt;</span> <span class="s">&quot; G &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">setiosflags</span><span class="p">(</span><span class="n">ios</span><span class="o">::</span><span class="n">fixed</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">setprecision</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">mssimV</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;%&quot;</span>
+                <span class="o">&lt;&lt;</span> <span class="s">&quot; B &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">setiosflags</span><span class="p">(</span><span class="n">ios</span><span class="o">::</span><span class="n">fixed</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">setprecision</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">mssimV</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;%&quot;</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+        <span class="c1">////////////////////////////////// Show Image /////////////////////////////////////////////</span>
+        <span class="n">imshow</span><span class="p">(</span><span class="n">WIN_RF</span><span class="p">,</span> <span class="n">frameReference</span><span class="p">);</span>
+        <span class="n">imshow</span><span class="p">(</span><span class="n">WIN_UT</span><span class="p">,</span> <span class="n">frameUnderTest</span><span class="p">);</span>
+
+        <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">cvWaitKey</span><span class="p">(</span><span class="n">delay</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="mi">27</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">double</span> <span class="n">getPSNR</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">I1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">I2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Mat</span> <span class="n">s1</span><span class="p">;</span>
+    <span class="n">absdiff</span><span class="p">(</span><span class="n">I1</span><span class="p">,</span> <span class="n">I2</span><span class="p">,</span> <span class="n">s1</span><span class="p">);</span>       <span class="c1">// |I1 - I2|</span>
+    <span class="n">s1</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">);</span>  <span class="c1">// cannot make a square on 8 bits</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">s1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">s1</span><span class="p">);</span>           <span class="c1">// |I1 - I2|^2</span>
+
+    <span class="n">Scalar</span> <span class="n">s</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">s1</span><span class="p">);</span>        <span class="c1">// sum elements per channel</span>
+
+    <span class="kt">double</span> <span class="n">sse</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">s</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">s</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span> <span class="c1">// sum channels</span>
+
+    <span class="k">if</span><span class="p">(</span> <span class="n">sse</span> <span class="o">&lt;=</span> <span class="mf">1e-10</span><span class="p">)</span> <span class="c1">// for small values return zero</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="kt">double</span> <span class="n">mse</span>  <span class="o">=</span> <span class="n">sse</span> <span class="o">/</span> <span class="p">(</span><span class="kt">double</span><span class="p">)(</span><span class="n">I1</span><span class="p">.</span><span class="n">channels</span><span class="p">()</span> <span class="o">*</span> <span class="n">I1</span><span class="p">.</span><span class="n">total</span><span class="p">());</span>
+        <span class="kt">double</span> <span class="n">psnr</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">log10</span><span class="p">((</span><span class="mi">255</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span> <span class="o">/</span> <span class="n">mse</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">psnr</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">Scalar</span> <span class="n">getMSSIM</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">i1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">i2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">C1</span> <span class="o">=</span> <span class="mf">6.5025</span><span class="p">,</span> <span class="n">C2</span> <span class="o">=</span> <span class="mf">58.5225</span><span class="p">;</span>
+    <span class="cm">/***************************** INITS **********************************/</span>
+    <span class="kt">int</span> <span class="n">d</span> <span class="o">=</span> <span class="n">CV_32F</span><span class="p">;</span>
+
+    <span class="n">Mat</span> <span class="n">I1</span><span class="p">,</span> <span class="n">I2</span><span class="p">;</span>
+    <span class="n">i1</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">I1</span><span class="p">,</span> <span class="n">d</span><span class="p">);</span>            <span class="c1">// cannot calculate on one byte large values</span>
+    <span class="n">i2</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">I2</span><span class="p">,</span> <span class="n">d</span><span class="p">);</span>
+
+    <span class="n">Mat</span> <span class="n">I2_2</span>   <span class="o">=</span> <span class="n">I2</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">I2</span><span class="p">);</span>        <span class="c1">// I2^2</span>
+    <span class="n">Mat</span> <span class="n">I1_2</span>   <span class="o">=</span> <span class="n">I1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">I1</span><span class="p">);</span>        <span class="c1">// I1^2</span>
+    <span class="n">Mat</span> <span class="n">I1_I2</span>  <span class="o">=</span> <span class="n">I1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">I2</span><span class="p">);</span>        <span class="c1">// I1 * I2</span>
+
+    <span class="cm">/*************************** END INITS **********************************/</span>
+
+    <span class="n">Mat</span> <span class="n">mu1</span><span class="p">,</span> <span class="n">mu2</span><span class="p">;</span>                   <span class="c1">// PRELIMINARY COMPUTING</span>
+    <span class="n">GaussianBlur</span><span class="p">(</span><span class="n">I1</span><span class="p">,</span> <span class="n">mu1</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+    <span class="n">GaussianBlur</span><span class="p">(</span><span class="n">I2</span><span class="p">,</span> <span class="n">mu2</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+
+    <span class="n">Mat</span> <span class="n">mu1_2</span>   <span class="o">=</span>   <span class="n">mu1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">mu1</span><span class="p">);</span>
+    <span class="n">Mat</span> <span class="n">mu2_2</span>   <span class="o">=</span>   <span class="n">mu2</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">mu2</span><span class="p">);</span>
+    <span class="n">Mat</span> <span class="n">mu1_mu2</span> <span class="o">=</span>   <span class="n">mu1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">mu2</span><span class="p">);</span>
+
+    <span class="n">Mat</span> <span class="n">sigma1_2</span><span class="p">,</span> <span class="n">sigma2_2</span><span class="p">,</span> <span class="n">sigma12</span><span class="p">;</span>
+
+    <span class="n">GaussianBlur</span><span class="p">(</span><span class="n">I1_2</span><span class="p">,</span> <span class="n">sigma1_2</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+    <span class="n">sigma1_2</span> <span class="o">-=</span> <span class="n">mu1_2</span><span class="p">;</span>
+
+    <span class="n">GaussianBlur</span><span class="p">(</span><span class="n">I2_2</span><span class="p">,</span> <span class="n">sigma2_2</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+    <span class="n">sigma2_2</span> <span class="o">-=</span> <span class="n">mu2_2</span><span class="p">;</span>
+
+    <span class="n">GaussianBlur</span><span class="p">(</span><span class="n">I1_I2</span><span class="p">,</span> <span class="n">sigma12</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+    <span class="n">sigma12</span> <span class="o">-=</span> <span class="n">mu1_mu2</span><span class="p">;</span>
+
+    <span class="c1">///////////////////////////////// FORMULA ////////////////////////////////</span>
+    <span class="n">Mat</span> <span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">t3</span><span class="p">;</span>
+
+    <span class="n">t1</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">mu1_mu2</span> <span class="o">+</span> <span class="n">C1</span><span class="p">;</span>
+    <span class="n">t2</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">sigma12</span> <span class="o">+</span> <span class="n">C2</span><span class="p">;</span>
+    <span class="n">t3</span> <span class="o">=</span> <span class="n">t1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">t2</span><span class="p">);</span>                 <span class="c1">// t3 = ((2*mu1_mu2 + C1).*(2*sigma12 + C2))</span>
+
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">mu1_2</span> <span class="o">+</span> <span class="n">mu2_2</span> <span class="o">+</span> <span class="n">C1</span><span class="p">;</span>
+    <span class="n">t2</span> <span class="o">=</span> <span class="n">sigma1_2</span> <span class="o">+</span> <span class="n">sigma2_2</span> <span class="o">+</span> <span class="n">C2</span><span class="p">;</span>
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">t1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">t2</span><span class="p">);</span>                 <span class="c1">// t1 =((mu1_2 + mu2_2 + C1).*(sigma1_2 + sigma2_2 + C2))</span>
+
+    <span class="n">Mat</span> <span class="n">ssim_map</span><span class="p">;</span>
+    <span class="n">divide</span><span class="p">(</span><span class="n">t3</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">ssim_map</span><span class="p">);</span>        <span class="c1">// ssim_map =  t3./t1;</span>
+
+    <span class="n">Scalar</span> <span class="n">mssim</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">ssim_map</span><span class="p">);</span>   <span class="c1">// mssim = average of ssim map</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="how-to-read-a-video-stream-online-camera-or-offline-file">
+<h2>How to read a video stream (online-camera or offline-file)?<a class="headerlink" href="#how-to-read-a-video-stream-online-camera-or-offline-file" title="Permalink to this headline">¶</a></h2>
+<p>Essentially, all the functionalities required for video manipulation is integrated in the <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videocapture">VideoCapture</a> C++ class. This on itself builds on the FFmpeg open source library. This is a basic dependency of OpenCV so you shouldn&#8217;t need to worry about this. A video is composed of a succession of images, we refer to these in the literature as frames. In case of a video file there is a <em>frame rate</em> specifying just how long is between two frames. While for the video cameras usually there is a limit of just how many frames they can digitalize per second, this property is less important as at any time the camera sees the current snapshot of the world.</p>
+<p>The first task you need to do is to assign to a <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videocapture">VideoCapture</a> class its source. You can do this either via the <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videocapture-videocapture">constructor</a> or its <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videocapture-open">open</a> function. If this argument is an integer then you will bind the class to a camera, a device. The number passed here is the ID of the device, assigned by the operating system. If you have a single camera attached to your system its ID will probably be zero and further ones increasing from there. If the parameter passed to these is a string it will refer to a video file, and the string points to the location and name of the file. For example, to the upper source code a valid command line is:</p>
+<div class="highlight-bash"><div class="highlight"><pre>video/Megamind.avi video/Megamind_bug.avi  <span class="m">35</span> 10
+</pre></div>
+</div>
+<p>We do a similarity check. This requires a reference and a test case video file. The first two arguments refer to this. Here we use a relative address. This means that the application will look into its current working directory and open the video folder and try to find inside this the <em>Megamind.avi</em> and the <em>Megamind_bug.avi</em>.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">const</span> <span class="n">string</span> <span class="n">sourceReference</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">sourceCompareWith</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+
+<span class="n">VideoCapture</span> <span class="nf">captRefrnc</span><span class="p">(</span><span class="n">sourceReference</span><span class="p">);</span>
+<span class="c1">// or</span>
+<span class="n">VideoCapture</span> <span class="n">captUndTst</span><span class="p">;</span>
+<span class="n">captUndTst</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">sourceCompareWith</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>To check if the binding of the class to a video source was successful or not use the <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#video-isopened">isOpened</a> function:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">captRefrnc</span><span class="p">.</span><span class="n">isOpened</span><span class="p">())</span>
+  <span class="p">{</span>
+  <span class="n">cout</span>  <span class="o">&lt;&lt;</span> <span class="s">&quot;Could not open reference &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">sourceReference</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+  <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+<p>Closing the video is automatic when the objects destructor is called. However, if you want to close it before this you need to call its <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videocapture-release">release</a> function. The frames of the video are just simple images. Therefore, we just need to extract them from the <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videocapture">VideoCapture</a> object and put them inside a <em>Mat</em> one. The video streams are sequential. You may get the frames one after another by the <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videocapture-read">read</a> or the overloaded &gt;&gt; operator:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">frameReference</span><span class="p">,</span> <span class="n">frameUnderTest</span><span class="p">;</span>
+<span class="n">captRefrnc</span> <span class="o">&gt;&gt;</span> <span class="n">frameReference</span><span class="p">;</span>
+<span class="n">captUndTst</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">frameUnderTest</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The upper read operations will leave empty the <em>Mat</em> objects if no frame could be acquired (either cause the video stream was closed or you got to the end of the video file). We can check this with a simple if:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">if</span><span class="p">(</span> <span class="n">frameReference</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span>  <span class="o">||</span> <span class="n">frameUnderTest</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="p">{</span>
+ <span class="c1">// exit the program</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>A read method is made of a frame grab and a decoding applied on that. You may call explicitly these two by using the <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videocapture-grab">grab</a> and then the <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videocapture-retrieve">retrieve</a> functions.</p>
+<p>Videos have many-many information attached to them besides the content of the frames. These are usually numbers, however in some case it may be short character sequences (4 bytes or less). Due to this to acquire these information there is a general function named <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videocapture-get">get</a> that returns double values containing these properties. Use bitwise operations to decode the characters from a double type and conversions where valid values are only integers. Its single argument is the ID of the queried property. For example, here we get the size of the frames in the reference and test case video file; plus the number of frames inside the reference.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Size</span> <span class="n">refS</span> <span class="o">=</span> <span class="n">Size</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">captRefrnc</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">CV_CAP_PROP_FRAME_WIDTH</span><span class="p">),</span>
+                 <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">captRefrnc</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">CV_CAP_PROP_FRAME_HEIGHT</span><span class="p">)),</span>
+
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Reference frame resolution: Width=&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">refS</span><span class="p">.</span><span class="n">width</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;  Height=&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">refS</span><span class="p">.</span><span class="n">height</span>
+     <span class="o">&lt;&lt;</span> <span class="s">&quot; of nr#: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">captRefrnc</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">CV_CAP_PROP_FRAME_COUNT</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>When you are working with videos you may often want to control these values yourself. To do this there is a <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videocapture-set">set</a> function. Its first argument remains the name of the property you want to change and there is a second of double type containing the value to be set. It will return true if it succeeds and false otherwise. Good examples for this is seeking in a video file to a given time or frame:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">captRefrnc</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">CV_CAP_PROP_POS_MSEC</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">);</span>  <span class="c1">// go to the 1.2 second in the video</span>
+<span class="n">captRefrnc</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">CV_CAP_PROP_POS_FRAMES</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span> <span class="c1">// go to the 10th frame of the video</span>
+<span class="c1">// now a read operation would read the frame at the set position</span>
+</pre></div>
+</div>
+<p>For properties you can read and change look into the documentation of the <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videocapture-get">get</a> and <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videocapture-set">set</a> functions.</p>
+</div>
+<div class="section" id="image-similarity-psnr-and-ssim">
+<h2>Image similarity - PSNR and SSIM<a class="headerlink" href="#image-similarity-psnr-and-ssim" title="Permalink to this headline">¶</a></h2>
+<p>We want to check just how imperceptible our video converting operation went, therefore we need a system to check frame by frame the similarity or differences. The most common algorithm used for this is the PSNR (aka <strong>Peak signal-to-noise ratio</strong>). The simplest definition of this starts out from the <em>mean squad error</em>. Let there be two images: I1 and I2; with a two dimensional size i and j, composed of c number of channels.</p>
+<div class="math">
+<p><img src="../../../../_images/math/7c19db97f9d5ef88b1959d3ff916b483bd590015.png" alt="MSE = \frac{1}{c*i*j} \sum{(I_1-I_2)^2}"/></p>
+</div><p>Then the PSNR is expressed as:</p>
+<div class="math">
+<p><img src="../../../../_images/math/481d056e0a0c8288b0bf9566176639bb36274ad7.png" alt="PSNR = 10 \cdot \log_{10} \left( \frac{MAX_I^2}{MSE} \right)"/></p>
+</div><p>Here the <img class="math" src="../../../../_images/math/aa12e5248979da3a8172329ef99d06f577faa7f3.png" alt="MAX_I"/> is the maximum valid value for a pixel. In case of the simple single byte image per pixel per channel this is 255. When two images are the same the MSE will give zero, resulting in an invalid divide by zero operation in the PSNR formula. In this case the PSNR is undefined and as we&#8217;ll need to handle this case separately. The transition to a logarithmic scale is made because the pixel values have a very wide dynamic range. All this translated to OpenCV and a C++ function looks like:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">double</span> <span class="nf">getPSNR</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">I1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">I2</span><span class="p">)</span>
+<span class="p">{</span>
+ <span class="n">Mat</span> <span class="n">s1</span><span class="p">;</span>
+ <span class="n">absdiff</span><span class="p">(</span><span class="n">I1</span><span class="p">,</span> <span class="n">I2</span><span class="p">,</span> <span class="n">s1</span><span class="p">);</span>       <span class="c1">// |I1 - I2|</span>
+ <span class="n">s1</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">);</span>  <span class="c1">// cannot make a square on 8 bits</span>
+ <span class="n">s1</span> <span class="o">=</span> <span class="n">s1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">s1</span><span class="p">);</span>           <span class="c1">// |I1 - I2|^2</span>
+
+ <span class="n">Scalar</span> <span class="n">s</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">s1</span><span class="p">);</span>         <span class="c1">// sum elements per channel</span>
+
+ <span class="kt">double</span> <span class="n">sse</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">s</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">s</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span> <span class="c1">// sum channels</span>
+
+ <span class="k">if</span><span class="p">(</span> <span class="n">sse</span> <span class="o">&lt;=</span> <span class="mf">1e-10</span><span class="p">)</span> <span class="c1">// for small values return zero</span>
+     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+ <span class="k">else</span>
+ <span class="p">{</span>
+     <span class="kt">double</span>  <span class="n">mse</span> <span class="o">=</span><span class="n">sse</span> <span class="o">/</span><span class="p">(</span><span class="kt">double</span><span class="p">)(</span><span class="n">I1</span><span class="p">.</span><span class="n">channels</span><span class="p">()</span> <span class="o">*</span> <span class="n">I1</span><span class="p">.</span><span class="n">total</span><span class="p">());</span>
+     <span class="kt">double</span> <span class="n">psnr</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">log10</span><span class="p">((</span><span class="mi">255</span><span class="o">*</span><span class="mi">255</span><span class="p">)</span><span class="o">/</span><span class="n">mse</span><span class="p">);</span>
+     <span class="k">return</span> <span class="n">psnr</span><span class="p">;</span>
+ <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Typically result values are anywhere between 30 and 50 for video compression, where higher is better. If the images significantly differ you&#8217;ll get much lower ones like 15 and so. This similarity check is easy and fast to calculate, however in practice it may turn out somewhat inconsistent with human eye perception. The <strong>structural similarity</strong> algorithm aims to correct this.</p>
+<p>Describing the methods goes well beyond the purpose of this tutorial. For that I invite you to read the article introducing it. Nevertheless, you can get a good image of it by looking at the OpenCV implementation below.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">SSIM is described more in-depth in the: &#8220;Z. Wang, A. C. Bovik, H. R. Sheikh and E. P. Simoncelli, &#8220;Image quality assessment: From error visibility to structural similarity,&#8221; IEEE Transactions on Image Processing, vol. 13, no. 4, pp. 600-612, Apr. 2004.&#8221; article.</p>
+</div>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Scalar</span> <span class="nf">getMSSIM</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">i1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">i2</span><span class="p">)</span>
+<span class="p">{</span>
+ <span class="k">const</span> <span class="kt">double</span> <span class="n">C1</span> <span class="o">=</span> <span class="mf">6.5025</span><span class="p">,</span> <span class="n">C2</span> <span class="o">=</span> <span class="mf">58.5225</span><span class="p">;</span>
+ <span class="cm">/***************************** INITS **********************************/</span>
+ <span class="kt">int</span> <span class="n">d</span>     <span class="o">=</span> <span class="n">CV_32F</span><span class="p">;</span>
+
+ <span class="n">Mat</span> <span class="n">I1</span><span class="p">,</span> <span class="n">I2</span><span class="p">;</span>
+ <span class="n">i1</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">I1</span><span class="p">,</span> <span class="n">d</span><span class="p">);</span>           <span class="c1">// cannot calculate on one byte large values</span>
+ <span class="n">i2</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">I2</span><span class="p">,</span> <span class="n">d</span><span class="p">);</span>
+
+ <span class="n">Mat</span> <span class="n">I2_2</span>   <span class="o">=</span> <span class="n">I2</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">I2</span><span class="p">);</span>        <span class="c1">// I2^2</span>
+ <span class="n">Mat</span> <span class="n">I1_2</span>   <span class="o">=</span> <span class="n">I1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">I1</span><span class="p">);</span>        <span class="c1">// I1^2</span>
+ <span class="n">Mat</span> <span class="n">I1_I2</span>  <span class="o">=</span> <span class="n">I1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">I2</span><span class="p">);</span>        <span class="c1">// I1 * I2</span>
+
+ <span class="cm">/***********************PRELIMINARY COMPUTING ******************************/</span>
+
+ <span class="n">Mat</span> <span class="n">mu1</span><span class="p">,</span> <span class="n">mu2</span><span class="p">;</span>   <span class="c1">//</span>
+ <span class="n">GaussianBlur</span><span class="p">(</span><span class="n">I1</span><span class="p">,</span> <span class="n">mu1</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+ <span class="n">GaussianBlur</span><span class="p">(</span><span class="n">I2</span><span class="p">,</span> <span class="n">mu2</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+
+ <span class="n">Mat</span> <span class="n">mu1_2</span>   <span class="o">=</span>   <span class="n">mu1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">mu1</span><span class="p">);</span>
+ <span class="n">Mat</span> <span class="n">mu2_2</span>   <span class="o">=</span>   <span class="n">mu2</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">mu2</span><span class="p">);</span>
+ <span class="n">Mat</span> <span class="n">mu1_mu2</span> <span class="o">=</span>   <span class="n">mu1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">mu2</span><span class="p">);</span>
+
+ <span class="n">Mat</span> <span class="n">sigma1_2</span><span class="p">,</span> <span class="n">sigma2_2</span><span class="p">,</span> <span class="n">sigma12</span><span class="p">;</span>
+
+ <span class="n">GaussianBlur</span><span class="p">(</span><span class="n">I1_2</span><span class="p">,</span> <span class="n">sigma1_2</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+ <span class="n">sigma1_2</span> <span class="o">-=</span> <span class="n">mu1_2</span><span class="p">;</span>
+
+ <span class="n">GaussianBlur</span><span class="p">(</span><span class="n">I2_2</span><span class="p">,</span> <span class="n">sigma2_2</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+ <span class="n">sigma2_2</span> <span class="o">-=</span> <span class="n">mu2_2</span><span class="p">;</span>
+
+ <span class="n">GaussianBlur</span><span class="p">(</span><span class="n">I1_I2</span><span class="p">,</span> <span class="n">sigma12</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+ <span class="n">sigma12</span> <span class="o">-=</span> <span class="n">mu1_mu2</span><span class="p">;</span>
+
+ <span class="c1">///////////////////////////////// FORMULA ////////////////////////////////</span>
+ <span class="n">Mat</span> <span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">t3</span><span class="p">;</span>
+
+ <span class="n">t1</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">mu1_mu2</span> <span class="o">+</span> <span class="n">C1</span><span class="p">;</span>
+ <span class="n">t2</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">sigma12</span> <span class="o">+</span> <span class="n">C2</span><span class="p">;</span>
+ <span class="n">t3</span> <span class="o">=</span> <span class="n">t1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">t2</span><span class="p">);</span>              <span class="c1">// t3 = ((2*mu1_mu2 + C1).*(2*sigma12 + C2))</span>
+
+ <span class="n">t1</span> <span class="o">=</span> <span class="n">mu1_2</span> <span class="o">+</span> <span class="n">mu2_2</span> <span class="o">+</span> <span class="n">C1</span><span class="p">;</span>
+ <span class="n">t2</span> <span class="o">=</span> <span class="n">sigma1_2</span> <span class="o">+</span> <span class="n">sigma2_2</span> <span class="o">+</span> <span class="n">C2</span><span class="p">;</span>
+ <span class="n">t1</span> <span class="o">=</span> <span class="n">t1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">t2</span><span class="p">);</span>               <span class="c1">// t1 =((mu1_2 + mu2_2 + C1).*(sigma1_2 + sigma2_2 + C2))</span>
+
+ <span class="n">Mat</span> <span class="n">ssim_map</span><span class="p">;</span>
+ <span class="n">divide</span><span class="p">(</span><span class="n">t3</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">ssim_map</span><span class="p">);</span>      <span class="c1">// ssim_map =  t3./t1;</span>
+
+ <span class="n">Scalar</span> <span class="n">mssim</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span> <span class="n">ssim_map</span> <span class="p">);</span> <span class="c1">// mssim = average of ssim map</span>
+ <span class="k">return</span> <span class="n">mssim</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This will return a similarity index for each channel of the image. This value is between zero and one, where one corresponds to perfect fit. Unfortunately, the many Gaussian blurring is quite costly, so while the PSNR may work in a real time like environment (24 frame per second) this will take significantly more than to accomplish similar performance results.</p>
+<p>Therefore, the source code presented at the start of the tutorial will perform the PSNR measurement for each frame, and the SSIM only for the frames where the PSNR falls below an input value. For visualization purpose we show both images in an OpenCV window and print the PSNR and MSSIM values to the console. Expect to see something like:</p>
+<img alt="A sample output" class="align-center" src="../../../../_images/outputVideoInput.png" />
+<p>You may observe a runtime instance of this on the <a class="reference external" href="https://www.youtube.com/watch?v=iOcNljutOgg">YouTube here</a>.</p>
+<div align="center">
+<iframe title="Video Input with OpenCV (Plus PSNR and MSSIM)" width="560" height="349" src="https://www.youtube.com/embed/iOcNljutOgg?rel=0&loop=1" frameborder="0" allowfullscreen align="middle"></iframe>
+</div></div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Video Input with OpenCV and similarity measurement</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#the-source-code">The source code</a></li>
+<li><a class="reference internal" href="#how-to-read-a-video-stream-online-camera-or-offline-file">How to read a video stream (online-camera or offline-file)?</a></li>
+<li><a class="reference internal" href="#image-similarity-psnr-and-ssim">Image similarity - PSNR and SSIM</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../trackbar/trackbar.html"
+                        title="previous chapter">Adding a Trackbar to our applications!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../video-write/video-write.html"
+                        title="next chapter">Creating a video with OpenCV</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/highgui/video-input-psnr-ssim/video-input-psnr-ssim.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../video-write/video-write.html" title="Creating a video with OpenCV"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../trackbar/trackbar.html" title="Adding a Trackbar to our applications!"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_highgui/table_of_content_highgui.html" ><em>highgui</em> module. High Level GUI and Media</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

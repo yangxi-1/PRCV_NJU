@@ -1,0 +1,502 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Initalization and Information &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="gpu. GPU-accelerated Computer Vision" href="gpu.html" />
+    <link rel="next" title="Data Structures" href="data_structures.html" />
+    <link rel="prev" title="GPU Module Introduction" href="introduction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="data_structures.html" title="Data Structures"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="GPU Module Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="gpu.html" accesskey="U">gpu. GPU-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="initalization-and-information">
+<h1>Initalization and Information<a class="headerlink" href="#initalization-and-information" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gpu-getcudaenableddevicecount">
+<h2>gpu::getCudaEnabledDeviceCount<a class="headerlink" href="#gpu-getcudaenableddevicecount" title="Permalink to this headline">¶</a></h2>
+<p>Returns the number of installed CUDA-enabled devices.</p>
+<dl class="function">
+<dt id="int gpu::getCudaEnabledDeviceCount()">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">gpu::</code><code class="descname">getCudaEnabledDeviceCount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#int gpu::getCudaEnabledDeviceCount()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Use this function before any other GPU functions calls. If OpenCV is compiled without GPU support, this function returns 0.</p>
+</div>
+<div class="section" id="gpu-setdevice">
+<h2>gpu::setDevice<a class="headerlink" href="#gpu-setdevice" title="Permalink to this headline">¶</a></h2>
+<p>Sets a device and initializes it for the current thread.</p>
+<dl class="function">
+<dt id="void gpu::setDevice(int device)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">setDevice</code><span class="sig-paren">(</span>int <strong>device</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::setDevice(int device)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>device</strong> &#8211; System index of a GPU device starting with 0.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>If the call of this function is omitted, a default device is initialized at the fist GPU usage.</p>
+</div>
+<div class="section" id="gpu-getdevice">
+<h2>gpu::getDevice<a class="headerlink" href="#gpu-getdevice" title="Permalink to this headline">¶</a></h2>
+<p>Returns the current device index set by <a class="reference internal" href="#void gpu::setDevice(int device)" title="void gpu::setDevice(int device)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::setDevice()</span></code></a> or initialized by default.</p>
+<dl class="function">
+<dt id="int gpu::getDevice()">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">gpu::</code><code class="descname">getDevice</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#int gpu::getDevice()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-resetdevice">
+<h2>gpu::resetDevice<a class="headerlink" href="#gpu-resetdevice" title="Permalink to this headline">¶</a></h2>
+<p>Explicitly destroys and cleans up all resources associated with the current device in the current process.</p>
+<dl class="function">
+<dt id="void gpu::resetDevice()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">resetDevice</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::resetDevice()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Any subsequent API call to this device will reinitialize the device.</p>
+</div>
+<div class="section" id="gpu-featureset">
+<h2>gpu::FeatureSet<a class="headerlink" href="#gpu-featureset" title="Permalink to this headline">¶</a></h2>
+<p>Enumeration providing GPU computing features.</p>
+<dl class="enum">
+<dt id="gpu::FeatureSet">
+<strong>C++:</strong><code class="descname"> </code><em class="property">enum </em><code class="descclassname">gpu::</code><code class="descname">FeatureSet</code><a class="headerlink" href="#gpu::FeatureSet" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="emember">
+<dt id="FEATURE_SET_COMPUTE_10">
+<code class="descname">FEATURE_SET_COMPUTE_10</code><a class="headerlink" href="#FEATURE_SET_COMPUTE_10" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="FEATURE_SET_COMPUTE_11">
+<code class="descname">FEATURE_SET_COMPUTE_11</code><a class="headerlink" href="#FEATURE_SET_COMPUTE_11" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="FEATURE_SET_COMPUTE_12">
+<code class="descname">FEATURE_SET_COMPUTE_12</code><a class="headerlink" href="#FEATURE_SET_COMPUTE_12" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="FEATURE_SET_COMPUTE_13">
+<code class="descname">FEATURE_SET_COMPUTE_13</code><a class="headerlink" href="#FEATURE_SET_COMPUTE_13" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="FEATURE_SET_COMPUTE_20">
+<code class="descname">FEATURE_SET_COMPUTE_20</code><a class="headerlink" href="#FEATURE_SET_COMPUTE_20" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="FEATURE_SET_COMPUTE_21">
+<code class="descname">FEATURE_SET_COMPUTE_21</code><a class="headerlink" href="#FEATURE_SET_COMPUTE_21" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="GLOBAL_ATOMICS">
+<code class="descname">GLOBAL_ATOMICS</code><a class="headerlink" href="#GLOBAL_ATOMICS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="SHARED_ATOMICS">
+<code class="descname">SHARED_ATOMICS</code><a class="headerlink" href="#SHARED_ATOMICS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="NATIVE_DOUBLE">
+<code class="descname">NATIVE_DOUBLE</code><a class="headerlink" href="#NATIVE_DOUBLE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-targetarchs">
+<h2>gpu::TargetArchs<a class="headerlink" href="#gpu-targetarchs" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::TargetArchs">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">TargetArchs</code><a class="headerlink" href="#gpu::TargetArchs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class providing a set of static methods to check what NVIDIA* card architecture the GPU module was built for.</p>
+<p>The following method checks whether the module was built with the support of the given feature:</p>
+<blockquote>
+<div><dl class="function">
+<dt id="static bool gpu::TargetArchs::builtWith(FeatureSet feature_set)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> bool <code class="descclassname">gpu::TargetArchs::</code><code class="descname">builtWith</code><span class="sig-paren">(</span>FeatureSet <strong>feature_set</strong><span class="sig-paren">)</span><a class="headerlink" href="#static bool gpu::TargetArchs::builtWith(FeatureSet feature_set)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>feature_set</strong> &#8211; Features to be checked. See <a class="reference internal" href="#gpu::FeatureSet" title="gpu::FeatureSet"><code class="xref ocv ocv-enum docutils literal"><span class="pre">gpu::FeatureSet</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div></blockquote>
+<p>There is a set of methods to check whether the module contains intermediate (PTX) or binary GPU code for the given architecture(s):</p>
+<blockquote>
+<div><dl class="function">
+<dt id="static bool gpu::TargetArchs::has(int major, int minor)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> bool <code class="descclassname">gpu::TargetArchs::</code><code class="descname">has</code><span class="sig-paren">(</span>int <strong>major</strong>, int <strong>minor</strong><span class="sig-paren">)</span><a class="headerlink" href="#static bool gpu::TargetArchs::has(int major, int minor)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="static bool gpu::TargetArchs::hasPtx(int major, int minor)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> bool <code class="descclassname">gpu::TargetArchs::</code><code class="descname">hasPtx</code><span class="sig-paren">(</span>int <strong>major</strong>, int <strong>minor</strong><span class="sig-paren">)</span><a class="headerlink" href="#static bool gpu::TargetArchs::hasPtx(int major, int minor)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="static bool gpu::TargetArchs::hasBin(int major, int minor)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> bool <code class="descclassname">gpu::TargetArchs::</code><code class="descname">hasBin</code><span class="sig-paren">(</span>int <strong>major</strong>, int <strong>minor</strong><span class="sig-paren">)</span><a class="headerlink" href="#static bool gpu::TargetArchs::hasBin(int major, int minor)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="static bool gpu::TargetArchs::hasEqualOrLessPtx(int major, int minor)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> bool <code class="descclassname">gpu::TargetArchs::</code><code class="descname">hasEqualOrLessPtx</code><span class="sig-paren">(</span>int <strong>major</strong>, int <strong>minor</strong><span class="sig-paren">)</span><a class="headerlink" href="#static bool gpu::TargetArchs::hasEqualOrLessPtx(int major, int minor)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="static bool gpu::TargetArchs::hasEqualOrGreater(int major, int minor)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> bool <code class="descclassname">gpu::TargetArchs::</code><code class="descname">hasEqualOrGreater</code><span class="sig-paren">(</span>int <strong>major</strong>, int <strong>minor</strong><span class="sig-paren">)</span><a class="headerlink" href="#static bool gpu::TargetArchs::hasEqualOrGreater(int major, int minor)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="static bool gpu::TargetArchs::hasEqualOrGreaterPtx(int major, int minor)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> bool <code class="descclassname">gpu::TargetArchs::</code><code class="descname">hasEqualOrGreaterPtx</code><span class="sig-paren">(</span>int <strong>major</strong>, int <strong>minor</strong><span class="sig-paren">)</span><a class="headerlink" href="#static bool gpu::TargetArchs::hasEqualOrGreaterPtx(int major, int minor)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="static bool gpu::TargetArchs::hasEqualOrGreaterBin(int major, int minor)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> bool <code class="descclassname">gpu::TargetArchs::</code><code class="descname">hasEqualOrGreaterBin</code><span class="sig-paren">(</span>int <strong>major</strong>, int <strong>minor</strong><span class="sig-paren">)</span><a class="headerlink" href="#static bool gpu::TargetArchs::hasEqualOrGreaterBin(int major, int minor)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>major</strong> &#8211; Major compute capability version.</li>
+<li><strong>minor</strong> &#8211; Minor compute capability version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div></blockquote>
+<p>According to the CUDA C Programming Guide Version 3.2: &#8220;PTX code produced for some specific compute capability can always be compiled to binary code of greater or equal compute capability&#8221;.</p>
+</div>
+<div class="section" id="gpu-deviceinfo">
+<h2>gpu::DeviceInfo<a class="headerlink" href="#gpu-deviceinfo" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::DeviceInfo">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">DeviceInfo</code><a class="headerlink" href="#gpu::DeviceInfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class providing functionality for querying the specified GPU properties.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">DeviceInfo</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">DeviceInfo</span><span class="p">();</span>
+    <span class="n">DeviceInfo</span><span class="p">(</span><span class="kt">int</span> <span class="n">device_id</span><span class="p">);</span>
+
+    <span class="n">string</span> <span class="nf">name</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="nf">majorVersion</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="nf">minorVersion</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="nf">multiProcessorCount</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">size_t</span> <span class="nf">freeMemory</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">size_t</span> <span class="nf">totalMemory</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">bool</span> <span class="nf">supports</span><span class="p">(</span><span class="n">FeatureSet</span> <span class="n">feature</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="nf">isCompatible</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="nf">deviceID</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gpu-deviceinfo-deviceinfo">
+<h2>gpu::DeviceInfo::DeviceInfo<a class="headerlink" href="#gpu-deviceinfo-deviceinfo" title="Permalink to this headline">¶</a></h2>
+<p>The constructors.</p>
+<dl class="function">
+<dt id="gpu::DeviceInfo::DeviceInfo()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::DeviceInfo::</code><code class="descname">DeviceInfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gpu::DeviceInfo::DeviceInfo()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="gpu::DeviceInfo::DeviceInfo(int device_id)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::DeviceInfo::</code><code class="descname">DeviceInfo</code><span class="sig-paren">(</span>int <strong>device_id</strong><span class="sig-paren">)</span><a class="headerlink" href="#gpu::DeviceInfo::DeviceInfo(int device_id)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>device_id</strong> &#8211; System index of the GPU device starting with 0.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Constructs the <code class="docutils literal"><span class="pre">DeviceInfo</span></code> object for the specified device. If <code class="docutils literal"><span class="pre">device_id</span></code> parameter is missed, it constructs an object for the current device.</p>
+</div>
+<div class="section" id="gpu-deviceinfo-name">
+<h2>gpu::DeviceInfo::name<a class="headerlink" href="#gpu-deviceinfo-name" title="Permalink to this headline">¶</a></h2>
+<p>Returns the device name.</p>
+<dl class="function">
+<dt id="string gpu::DeviceInfo::name() const">
+<strong>C++:</strong><code class="descname"> </code>string <code class="descclassname">gpu::DeviceInfo::</code><code class="descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#string gpu::DeviceInfo::name() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-deviceinfo-majorversion">
+<h2>gpu::DeviceInfo::majorVersion<a class="headerlink" href="#gpu-deviceinfo-majorversion" title="Permalink to this headline">¶</a></h2>
+<p>Returns the major compute capability version.</p>
+<dl class="function">
+<dt id="int gpu::DeviceInfo::majorVersion()">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">gpu::DeviceInfo::</code><code class="descname">majorVersion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#int gpu::DeviceInfo::majorVersion()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-deviceinfo-minorversion">
+<h2>gpu::DeviceInfo::minorVersion<a class="headerlink" href="#gpu-deviceinfo-minorversion" title="Permalink to this headline">¶</a></h2>
+<p>Returns the minor compute capability version.</p>
+<dl class="function">
+<dt id="int gpu::DeviceInfo::minorVersion()">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">gpu::DeviceInfo::</code><code class="descname">minorVersion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#int gpu::DeviceInfo::minorVersion()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-deviceinfo-multiprocessorcount">
+<h2>gpu::DeviceInfo::multiProcessorCount<a class="headerlink" href="#gpu-deviceinfo-multiprocessorcount" title="Permalink to this headline">¶</a></h2>
+<p>Returns the number of streaming multiprocessors.</p>
+<dl class="function">
+<dt id="int gpu::DeviceInfo::multiProcessorCount()">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">gpu::DeviceInfo::</code><code class="descname">multiProcessorCount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#int gpu::DeviceInfo::multiProcessorCount()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-deviceinfo-freememory">
+<h2>gpu::DeviceInfo::freeMemory<a class="headerlink" href="#gpu-deviceinfo-freememory" title="Permalink to this headline">¶</a></h2>
+<p>Returns the amount of free memory in bytes.</p>
+<dl class="function">
+<dt id="size_t gpu::DeviceInfo::freeMemory()">
+<strong>C++:</strong><code class="descname"> </code>size_t <code class="descclassname">gpu::DeviceInfo::</code><code class="descname">freeMemory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#size_t gpu::DeviceInfo::freeMemory()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-deviceinfo-totalmemory">
+<h2>gpu::DeviceInfo::totalMemory<a class="headerlink" href="#gpu-deviceinfo-totalmemory" title="Permalink to this headline">¶</a></h2>
+<p>Returns the amount of total memory in bytes.</p>
+<dl class="function">
+<dt id="size_t gpu::DeviceInfo::totalMemory()">
+<strong>C++:</strong><code class="descname"> </code>size_t <code class="descclassname">gpu::DeviceInfo::</code><code class="descname">totalMemory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#size_t gpu::DeviceInfo::totalMemory()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-deviceinfo-supports">
+<h2>gpu::DeviceInfo::supports<a class="headerlink" href="#gpu-deviceinfo-supports" title="Permalink to this headline">¶</a></h2>
+<p>Provides information on GPU feature support.</p>
+<dl class="function">
+<dt id="bool gpu::DeviceInfo::supports(FeatureSet feature_set) const">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">gpu::DeviceInfo::</code><code class="descname">supports</code><span class="sig-paren">(</span>FeatureSet <strong>feature_set</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#bool gpu::DeviceInfo::supports(FeatureSet feature_set) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>feature_set</strong> &#8211; Features to be checked. See <a class="reference internal" href="#gpu::FeatureSet" title="gpu::FeatureSet"><code class="xref ocv ocv-enum docutils literal"><span class="pre">gpu::FeatureSet</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function returns <code class="docutils literal"><span class="pre">true</span></code> if the device has the specified GPU feature. Otherwise, it returns <code class="docutils literal"><span class="pre">false</span></code> .</p>
+</div>
+<div class="section" id="gpu-deviceinfo-iscompatible">
+<h2>gpu::DeviceInfo::isCompatible<a class="headerlink" href="#gpu-deviceinfo-iscompatible" title="Permalink to this headline">¶</a></h2>
+<p>Checks the GPU module and device compatibility.</p>
+<dl class="function">
+<dt id="bool gpu::DeviceInfo::isCompatible()">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">gpu::DeviceInfo::</code><code class="descname">isCompatible</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bool gpu::DeviceInfo::isCompatible()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This function returns <code class="docutils literal"><span class="pre">true</span></code> if the GPU module can be run on the specified device. Otherwise, it returns <code class="docutils literal"><span class="pre">false</span></code> .</p>
+</div>
+<div class="section" id="gpu-deviceinfo-deviceid">
+<h2>gpu::DeviceInfo::deviceID<a class="headerlink" href="#gpu-deviceinfo-deviceid" title="Permalink to this headline">¶</a></h2>
+<p>Returns system index of the GPU device starting with 0.</p>
+<dl class="function">
+<dt id="int gpu::DeviceInfo::deviceID()">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">gpu::DeviceInfo::</code><code class="descname">deviceID</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#int gpu::DeviceInfo::deviceID()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Initalization and Information</a><ul>
+<li><a class="reference internal" href="#gpu-getcudaenableddevicecount">gpu::getCudaEnabledDeviceCount</a></li>
+<li><a class="reference internal" href="#gpu-setdevice">gpu::setDevice</a></li>
+<li><a class="reference internal" href="#gpu-getdevice">gpu::getDevice</a></li>
+<li><a class="reference internal" href="#gpu-resetdevice">gpu::resetDevice</a></li>
+<li><a class="reference internal" href="#gpu-featureset">gpu::FeatureSet</a></li>
+<li><a class="reference internal" href="#gpu-targetarchs">gpu::TargetArchs</a></li>
+<li><a class="reference internal" href="#gpu-deviceinfo">gpu::DeviceInfo</a></li>
+<li><a class="reference internal" href="#gpu-deviceinfo-deviceinfo">gpu::DeviceInfo::DeviceInfo</a></li>
+<li><a class="reference internal" href="#gpu-deviceinfo-name">gpu::DeviceInfo::name</a></li>
+<li><a class="reference internal" href="#gpu-deviceinfo-majorversion">gpu::DeviceInfo::majorVersion</a></li>
+<li><a class="reference internal" href="#gpu-deviceinfo-minorversion">gpu::DeviceInfo::minorVersion</a></li>
+<li><a class="reference internal" href="#gpu-deviceinfo-multiprocessorcount">gpu::DeviceInfo::multiProcessorCount</a></li>
+<li><a class="reference internal" href="#gpu-deviceinfo-freememory">gpu::DeviceInfo::freeMemory</a></li>
+<li><a class="reference internal" href="#gpu-deviceinfo-totalmemory">gpu::DeviceInfo::totalMemory</a></li>
+<li><a class="reference internal" href="#gpu-deviceinfo-supports">gpu::DeviceInfo::supports</a></li>
+<li><a class="reference internal" href="#gpu-deviceinfo-iscompatible">gpu::DeviceInfo::isCompatible</a></li>
+<li><a class="reference internal" href="#gpu-deviceinfo-deviceid">gpu::DeviceInfo::deviceID</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="introduction.html"
+                        title="previous chapter">GPU Module Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="data_structures.html"
+                        title="next chapter">Data Structures</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/gpu/doc/initalization_and_information.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="data_structures.html" title="Data Structures"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="GPU Module Introduction"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="gpu.html" >gpu. GPU-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

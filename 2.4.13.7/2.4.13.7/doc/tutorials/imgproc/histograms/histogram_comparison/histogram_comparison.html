@@ -1,0 +1,472 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Histogram Comparison &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../../index.html" />
+    <link rel="up" title="imgproc module. Image Processing" href="../../table_of_content_imgproc/table_of_content_imgproc.html" />
+    <link rel="next" title="Back Projection" href="../back_projection/back_projection.html" />
+    <link rel="prev" title="Histogram Calculation" href="../histogram_calculation/histogram_calculation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../back_projection/back_projection.html" title="Back Projection"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../histogram_calculation/histogram_calculation.html" title="Histogram Calculation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" accesskey="U"><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="histogram-comparison">
+<span id="id1"></span><h1>Histogram Comparison<a class="headerlink" href="#histogram-comparison" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Use the function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/histograms.html?highlight=comparehist#comparehist">compareHist</a> to get a numerical parameter that express how well two histograms match with each other.</li>
+<li>Use different metrics to compare histograms</li>
+</ul>
+</div>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first">To compare two histograms ( <img class="math" src="../../../../../_images/math/deac6ba7c811ba780bac6a886b62c70880ee6c46.png" alt="H_{1}"/> and <img class="math" src="../../../../../_images/math/a27550b337e18a1387287903ee8894a50e3a9e6f.png" alt="H_{2}"/> ), first we have to choose a <em>metric</em> (<img class="math" src="../../../../../_images/math/4389e4db3ec38fefedf4b36c66c71af23aeaa0e0.png" alt="d(H_{1}, H_{2})"/>) to express how well both histograms match.</p>
+</li>
+<li><p class="first">OpenCV implements the function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/histograms.html?highlight=comparehist#comparehist">compareHist</a> to perform a comparison. It also offers 4 different metrics to compute the matching:</p>
+<ol class="loweralpha">
+<li><p class="first"><strong>Correlation ( CV_COMP_CORREL )</strong></p>
+<div class="math">
+<p><img src="../../../../../_images/math/a97f7b5144b192bd40b04c165665c9eb1f5cceef.png" alt="d(H_1,H_2) =  \frac{\sum_I (H_1(I) - \bar{H_1}) (H_2(I) - \bar{H_2})}{\sqrt{\sum_I(H_1(I) - \bar{H_1})^2 \sum_I(H_2(I) - \bar{H_2})^2}}"/></p>
+</div><p>where</p>
+<div class="math">
+<p><img src="../../../../../_images/math/438152c292378fc2e75dfa048289aaefe29756d2.png" alt="\bar{H_k} =  \frac{1}{N} \sum _J H_k(J)"/></p>
+</div><p>and <img class="math" src="../../../../../_images/math/b7fa5a60940a885027b1a7928d7b1d3f7431c8a2.png" alt="N"/> is the total number of histogram bins.</p>
+</li>
+<li><p class="first"><strong>Chi-Square ( CV_COMP_CHISQR )</strong></p>
+<div class="math">
+<p><img src="../../../../../_images/math/c82acb01d80c0ee1526bcad1d4fec46b51521981.png" alt="d(H_1,H_2) =  \sum _I  \frac{\left(H_1(I)-H_2(I)\right)^2}{H_1(I)}"/></p>
+</div></li>
+<li><p class="first"><strong>Intersection ( method=CV_COMP_INTERSECT )</strong></p>
+<div class="math">
+<p><img src="../../../../../_images/math/2634df3b72d53fc8247948d3a0b33c1eaa81cc4b.png" alt="d(H_1,H_2) =  \sum _I  \min (H_1(I), H_2(I))"/></p>
+</div></li>
+<li><p class="first"><strong>Bhattacharyya distance ( CV_COMP_BHATTACHARYYA )</strong></p>
+<div class="math">
+<p><img src="../../../../../_images/math/2962ee11d544acbb1a5f97d00a4a8bd24a4e1e11.png" alt="d(H_1,H_2) =  \sqrt{1 - \frac{1}{\sqrt{\bar{H_1} \bar{H_2} N^2}} \sum_I \sqrt{H_1(I) \cdot H_2(I)}}"/></p>
+</div></li>
+</ol>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first"><strong>What does this program do?</strong></p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Loads a <em>base image</em> and 2 <em>test images</em> to be compared with it.</li>
+<li>Generate 1 image that is the lower half of the <em>base image</em></li>
+<li>Convert the images to HSV format</li>
+<li>Calculate the H-S histogram for all the images and normalize them in order to compare them.</li>
+<li>Compare the histogram of the <em>base image</em> with respect to the 2 test histograms, the histogram of the lower half base image and with the same base image histogram.</li>
+<li>Display the numerical matching parameters obtained.</li>
+</ul>
+</div>
+</li>
+<li><p class="first"><strong>Downloadable code</strong>:
+Click <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/tutorial_code/Histograms_Matching/compareHist_Demo.cpp">here</a></p>
+</li>
+<li><p class="first"><strong>Code at glance:</strong></p>
+</li>
+</ul>
+</div>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @file compareHist_Demo.cpp</span>
+<span class="cm"> * @brief Sample code to use the function compareHist</span>
+<span class="cm"> * @author OpenCV team</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/highgui/highgui.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/imgproc/imgproc.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @function main</span>
+<span class="cm"> */</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Mat</span> <span class="n">src_base</span><span class="p">,</span> <span class="n">hsv_base</span><span class="p">;</span>
+    <span class="n">Mat</span> <span class="n">src_test1</span><span class="p">,</span> <span class="n">hsv_test1</span><span class="p">;</span>
+    <span class="n">Mat</span> <span class="n">src_test2</span><span class="p">,</span> <span class="n">hsv_test2</span><span class="p">;</span>
+    <span class="n">Mat</span> <span class="n">hsv_half_down</span><span class="p">;</span>
+
+    <span class="c1">/// Load three images with different environment settings</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">argc</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;** Error. Usage: ./compareHist_Demo &lt;image_settings0&gt; &lt;image_setting1&gt; &lt;image_settings2&gt;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">src_base</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">src_test1</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">src_test2</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+
+    <span class="c1">/// Convert to HSV</span>
+    <span class="n">cvtColor</span><span class="p">(</span> <span class="n">src_base</span><span class="p">,</span> <span class="n">hsv_base</span><span class="p">,</span> <span class="n">COLOR_BGR2HSV</span> <span class="p">);</span>
+    <span class="n">cvtColor</span><span class="p">(</span> <span class="n">src_test1</span><span class="p">,</span> <span class="n">hsv_test1</span><span class="p">,</span> <span class="n">COLOR_BGR2HSV</span> <span class="p">);</span>
+    <span class="n">cvtColor</span><span class="p">(</span> <span class="n">src_test2</span><span class="p">,</span> <span class="n">hsv_test2</span><span class="p">,</span> <span class="n">COLOR_BGR2HSV</span> <span class="p">);</span>
+
+    <span class="n">hsv_half_down</span> <span class="o">=</span> <span class="n">hsv_base</span><span class="p">(</span> <span class="n">Range</span><span class="p">(</span> <span class="n">hsv_base</span><span class="p">.</span><span class="n">rows</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">hsv_base</span><span class="p">.</span><span class="n">rows</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">),</span> <span class="n">Range</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">hsv_base</span><span class="p">.</span><span class="n">cols</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">)</span> <span class="p">);</span>
+
+    <span class="c1">/// Using 50 bins for hue and 60 for saturation</span>
+    <span class="kt">int</span> <span class="n">h_bins</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span> <span class="kt">int</span> <span class="n">s_bins</span> <span class="o">=</span> <span class="mi">60</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">histSize</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="n">h_bins</span><span class="p">,</span> <span class="n">s_bins</span> <span class="p">};</span>
+
+    <span class="c1">// hue varies from 0 to 179, saturation from 0 to 255</span>
+    <span class="kt">float</span> <span class="n">h_ranges</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">180</span> <span class="p">};</span>
+    <span class="kt">float</span> <span class="n">s_ranges</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span> <span class="p">};</span>
+
+    <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">ranges</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="n">h_ranges</span><span class="p">,</span> <span class="n">s_ranges</span> <span class="p">};</span>
+
+    <span class="c1">// Use the o-th and 1-st channels</span>
+    <span class="kt">int</span> <span class="n">channels</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="p">};</span>
+
+
+    <span class="c1">/// Histograms</span>
+    <span class="n">MatND</span> <span class="n">hist_base</span><span class="p">;</span>
+    <span class="n">MatND</span> <span class="n">hist_half_down</span><span class="p">;</span>
+    <span class="n">MatND</span> <span class="n">hist_test1</span><span class="p">;</span>
+    <span class="n">MatND</span> <span class="n">hist_test2</span><span class="p">;</span>
+
+    <span class="c1">/// Calculate the histograms for the HSV images</span>
+    <span class="n">calcHist</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">hsv_base</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">hist_base</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">histSize</span><span class="p">,</span> <span class="n">ranges</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">false</span> <span class="p">);</span>
+    <span class="n">normalize</span><span class="p">(</span> <span class="n">hist_base</span><span class="p">,</span> <span class="n">hist_base</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">NORM_MINMAX</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+
+    <span class="n">calcHist</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">hsv_half_down</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">hist_half_down</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">histSize</span><span class="p">,</span> <span class="n">ranges</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">false</span> <span class="p">);</span>
+    <span class="n">normalize</span><span class="p">(</span> <span class="n">hist_half_down</span><span class="p">,</span> <span class="n">hist_half_down</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">NORM_MINMAX</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+
+    <span class="n">calcHist</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">hsv_test1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">hist_test1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">histSize</span><span class="p">,</span> <span class="n">ranges</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">false</span> <span class="p">);</span>
+    <span class="n">normalize</span><span class="p">(</span> <span class="n">hist_test1</span><span class="p">,</span> <span class="n">hist_test1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">NORM_MINMAX</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+
+    <span class="n">calcHist</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">hsv_test2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">hist_test2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">histSize</span><span class="p">,</span> <span class="n">ranges</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">false</span> <span class="p">);</span>
+    <span class="n">normalize</span><span class="p">(</span> <span class="n">hist_test2</span><span class="p">,</span> <span class="n">hist_test2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">NORM_MINMAX</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+
+    <span class="c1">/// Apply the histogram comparison methods</span>
+    <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">compare_method</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="kt">double</span> <span class="n">base_base</span> <span class="o">=</span> <span class="n">compareHist</span><span class="p">(</span> <span class="n">hist_base</span><span class="p">,</span> <span class="n">hist_base</span><span class="p">,</span> <span class="n">compare_method</span> <span class="p">);</span>
+        <span class="kt">double</span> <span class="n">base_half</span> <span class="o">=</span> <span class="n">compareHist</span><span class="p">(</span> <span class="n">hist_base</span><span class="p">,</span> <span class="n">hist_half_down</span><span class="p">,</span> <span class="n">compare_method</span> <span class="p">);</span>
+        <span class="kt">double</span> <span class="n">base_test1</span> <span class="o">=</span> <span class="n">compareHist</span><span class="p">(</span> <span class="n">hist_base</span><span class="p">,</span> <span class="n">hist_test1</span><span class="p">,</span> <span class="n">compare_method</span> <span class="p">);</span>
+        <span class="kt">double</span> <span class="n">base_test2</span> <span class="o">=</span> <span class="n">compareHist</span><span class="p">(</span> <span class="n">hist_base</span><span class="p">,</span> <span class="n">hist_test2</span><span class="p">,</span> <span class="n">compare_method</span> <span class="p">);</span>
+
+        <span class="n">printf</span><span class="p">(</span> <span class="s">&quot; Method [%d] Perfect, Base-Half, Base-Test(1), Base-Test(2) : %f, %f, %f, %f </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">base_base</span><span class="p">,</span> <span class="n">base_half</span> <span class="p">,</span> <span class="n">base_test1</span><span class="p">,</span> <span class="n">base_test2</span> <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Done </span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Declare variables such as the matrices to store the base image and the two other images to compare ( BGR and HSV )</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">src_base</span><span class="p">,</span> <span class="n">hsv_base</span><span class="p">;</span>
+<span class="n">Mat</span> <span class="n">src_test1</span><span class="p">,</span> <span class="n">hsv_test1</span><span class="p">;</span>
+<span class="n">Mat</span> <span class="n">src_test2</span><span class="p">,</span> <span class="n">hsv_test2</span><span class="p">;</span>
+<span class="n">Mat</span> <span class="n">hsv_half_down</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Load the base image (src_base) and the other two test images:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">if</span><span class="p">(</span> <span class="n">argc</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="p">)</span>
+  <span class="p">{</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;** Error. Usage: ./compareHist_Demo &lt;image_settings0&gt; &lt;image_setting1&gt; &lt;image_settings2&gt;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+
+<span class="n">src_base</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+<span class="n">src_test1</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+<span class="n">src_test2</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Convert them to HSV format:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">cvtColor</span><span class="p">(</span> <span class="n">src_base</span><span class="p">,</span> <span class="n">hsv_base</span><span class="p">,</span> <span class="n">CV_BGR2HSV</span> <span class="p">);</span>
+<span class="n">cvtColor</span><span class="p">(</span> <span class="n">src_test1</span><span class="p">,</span> <span class="n">hsv_test1</span><span class="p">,</span> <span class="n">CV_BGR2HSV</span> <span class="p">);</span>
+<span class="n">cvtColor</span><span class="p">(</span> <span class="n">src_test2</span><span class="p">,</span> <span class="n">hsv_test2</span><span class="p">,</span> <span class="n">CV_BGR2HSV</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Also, create an image of half the base image (in HSV format):</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">hsv_half_down</span> <span class="o">=</span> <span class="n">hsv_base</span><span class="p">(</span> <span class="n">Range</span><span class="p">(</span> <span class="n">hsv_base</span><span class="p">.</span><span class="n">rows</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">hsv_base</span><span class="p">.</span><span class="n">rows</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">),</span> <span class="n">Range</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">hsv_base</span><span class="p">.</span><span class="n">cols</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">)</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Initialize the arguments to calculate the histograms (bins, ranges and channels H and S ).</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">int</span> <span class="n">h_bins</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span> <span class="kt">int</span> <span class="n">s_bins</span> <span class="o">=</span> <span class="mi">60</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">histSize</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="n">h_bins</span><span class="p">,</span> <span class="n">s_bins</span> <span class="p">};</span>
+
+<span class="kt">float</span> <span class="n">h_ranges</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">180</span> <span class="p">};</span>
+<span class="kt">float</span> <span class="n">s_ranges</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span> <span class="p">};</span>
+
+<span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">ranges</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="n">h_ranges</span><span class="p">,</span> <span class="n">s_ranges</span> <span class="p">};</span>
+
+<span class="kt">int</span> <span class="n">channels</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="p">};</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create the MatND objects to store the histograms:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">MatND</span> <span class="n">hist_base</span><span class="p">;</span>
+<span class="n">MatND</span> <span class="n">hist_half_down</span><span class="p">;</span>
+<span class="n">MatND</span> <span class="n">hist_test1</span><span class="p">;</span>
+<span class="n">MatND</span> <span class="n">hist_test2</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Calculate the Histograms for the base image, the 2 test images and the half-down base image:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">calcHist</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">hsv_base</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">hist_base</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">histSize</span><span class="p">,</span> <span class="n">ranges</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">false</span> <span class="p">);</span>
+<span class="n">normalize</span><span class="p">(</span> <span class="n">hist_base</span><span class="p">,</span> <span class="n">hist_base</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">NORM_MINMAX</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+
+<span class="n">calcHist</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">hsv_half_down</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">hist_half_down</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">histSize</span><span class="p">,</span> <span class="n">ranges</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">false</span> <span class="p">);</span>
+<span class="n">normalize</span><span class="p">(</span> <span class="n">hist_half_down</span><span class="p">,</span> <span class="n">hist_half_down</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">NORM_MINMAX</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+
+<span class="n">calcHist</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">hsv_test1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">hist_test1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">histSize</span><span class="p">,</span> <span class="n">ranges</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">false</span> <span class="p">);</span>
+<span class="n">normalize</span><span class="p">(</span> <span class="n">hist_test1</span><span class="p">,</span> <span class="n">hist_test1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">NORM_MINMAX</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+
+<span class="n">calcHist</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">hsv_test2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">hist_test2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">histSize</span><span class="p">,</span> <span class="n">ranges</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">false</span> <span class="p">);</span>
+<span class="n">normalize</span><span class="p">(</span> <span class="n">hist_test2</span><span class="p">,</span> <span class="n">hist_test2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">NORM_MINMAX</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Apply sequentially the 4 comparison methods between the histogram of the base image (hist_base) and the other histograms:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+   <span class="p">{</span> <span class="kt">int</span> <span class="n">compare_method</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+     <span class="kt">double</span> <span class="n">base_base</span> <span class="o">=</span> <span class="n">compareHist</span><span class="p">(</span> <span class="n">hist_base</span><span class="p">,</span> <span class="n">hist_base</span><span class="p">,</span> <span class="n">compare_method</span> <span class="p">);</span>
+     <span class="kt">double</span> <span class="n">base_half</span> <span class="o">=</span> <span class="n">compareHist</span><span class="p">(</span> <span class="n">hist_base</span><span class="p">,</span> <span class="n">hist_half_down</span><span class="p">,</span> <span class="n">compare_method</span> <span class="p">);</span>
+     <span class="kt">double</span> <span class="n">base_test1</span> <span class="o">=</span> <span class="n">compareHist</span><span class="p">(</span> <span class="n">hist_base</span><span class="p">,</span> <span class="n">hist_test1</span><span class="p">,</span> <span class="n">compare_method</span> <span class="p">);</span>
+     <span class="kt">double</span> <span class="n">base_test2</span> <span class="o">=</span> <span class="n">compareHist</span><span class="p">(</span> <span class="n">hist_base</span><span class="p">,</span> <span class="n">hist_test2</span><span class="p">,</span> <span class="n">compare_method</span> <span class="p">);</span>
+
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot; Method [%d] Perfect, Base-Half, Base-Test(1), Base-Test(2) : %f, %f, %f, %f </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">base_base</span><span class="p">,</span> <span class="n">base_half</span> <span class="p">,</span> <span class="n">base_test1</span><span class="p">,</span> <span class="n">base_test2</span> <span class="p">);</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">We use as input the following images:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><img alt="Base_0" class="align-middle" src="../../../../../_images/Histogram_Comparison_Source_0.jpg" /></td>
+<td><img alt="Test_1" class="align-middle" src="../../../../../_images/Histogram_Comparison_Source_1.jpg" /></td>
+<td><img alt="Test_2" class="align-middle" src="../../../../../_images/Histogram_Comparison_Source_2.jpg" /></td>
+</tr>
+</tbody>
+</table>
+<p>where the first one is the base (to be compared to the others), the other 2 are the test images. We will also compare the first image with respect to itself and with respect of half the base image.</p>
+</li>
+<li><p class="first">We should expect a perfect match when we compare the base image histogram with itself. Also, compared with the histogram of half the base image, it should present a high match since both are from the same source. For the other two test images, we can observe that they have very different lighting conditions, so the matching should not be very good:</p>
+</li>
+<li><p class="first">Here the numeric results:</p>
+</li>
+</ol>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><em>Method</em></th>
+<th class="head">Base - Base</th>
+<th class="head">Base - Half</th>
+<th class="head">Base - Test 1</th>
+<th class="head">Base - Test 2</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><em>Correlation</em></td>
+<td>1.000000</td>
+<td>0.930766</td>
+<td>0.182073</td>
+<td>0.120447</td>
+</tr>
+<tr class="row-odd"><td><em>Chi-square</em></td>
+<td>0.000000</td>
+<td>4.940466</td>
+<td>21.184536</td>
+<td>49.273437</td>
+</tr>
+<tr class="row-even"><td><em>Intersection</em></td>
+<td>24.391548</td>
+<td>14.959809</td>
+<td>3.889029</td>
+<td>5.775088</td>
+</tr>
+<tr class="row-odd"><td><em>Bhattacharyya</em></td>
+<td>0.000000</td>
+<td>0.222609</td>
+<td>0.646576</td>
+<td>0.801869</td>
+</tr>
+</tbody>
+</table>
+<p>For the <em>Correlation</em> and <em>Intersection</em> methods, the higher the metric, the more accurate the match. As we can see, the match <em>base-base</em> is the highest of all as expected. Also we can observe that the match <em>base-half</em> is the second best match (as we predicted). For the other two metrics, the less the result, the better the match. We can observe that the matches between the test 1 and test 2 with respect to the base are worse, which again, was expected.</p>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Histogram Comparison</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a></li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#results">Results</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../histogram_calculation/histogram_calculation.html"
+                        title="previous chapter">Histogram Calculation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../back_projection/back_projection.html"
+                        title="next chapter">Back Projection</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../../_sources/doc/tutorials/imgproc/histograms/histogram_comparison/histogram_comparison.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../back_projection/back_projection.html" title="Back Projection"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../histogram_calculation/histogram_calculation.html" title="Histogram Calculation"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" ><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

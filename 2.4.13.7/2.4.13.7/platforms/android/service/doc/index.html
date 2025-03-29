@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Android OpenCV Manager &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="OpenCV4Android Reference" href="../../refman.html" />
+    <link rel="next" title="Introduction" href="Intro.html" />
+    <link rel="prev" title="OpenCV4Android Reference" href="../../refman.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Intro.html" title="Introduction"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../../refman.html" title="OpenCV4Android Reference"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" accesskey="U">OpenCV4Android Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="android-opencv-manager">
+<span id="id1"></span><h1>Android OpenCV Manager<a class="headerlink" href="#android-opencv-manager" title="Permalink to this headline">¶</a></h1>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Intro.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Intro.html#usage-model-for-end-user">Usage model for end user</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Intro.html#architecture-of-opencv-manager">Architecture of OpenCV Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html">Manager Workflow</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="UseCases.html#how-to-select-the-proper-version-of-opencv-manager">How to select the proper version of OpenCV Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="UseCases.html#first-application-start">First application start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="UseCases.html#additional-library-package-installation">Additional library package installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="UseCases.html#regular-application-start">Regular application start</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="JavaHelper.html">Java OpenCV Loader</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="JavaHelper.html#boolean-initdebug">boolean initDebug()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="JavaHelper.html#boolean-initasync">boolean initAsync()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="JavaHelper.html#opencv-version-constants">OpenCV version constants</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="BaseLoaderCallback.html">Base Loader Callback Interface Implementation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="BaseLoaderCallback.html#using-in-java-activity">Using in Java Activity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BaseLoaderCallback.html#using-in-service">Using in Service</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="LoaderCallbackInterface.html">Loader Callback Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="LoaderCallbackInterface.html#void-onmanagerconnected">void onManagerConnected()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LoaderCallbackInterface.html#void-onpackageinstall">void onPackageInstall()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LoaderCallbackInterface.html#initialization-status-constants">Initialization status constants</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="InstallCallbackInterface.html">Install Callback Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="InstallCallbackInterface.html#string-getpackagename">String getPackageName()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="InstallCallbackInterface.html#void-install">void install()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="InstallCallbackInterface.html#void-cancel">void cancel()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="InstallCallbackInterface.html#void-wait-install">void wait_install()</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../../refman.html"
+                        title="previous chapter">OpenCV4Android Reference</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Intro.html"
+                        title="next chapter">Introduction</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/platforms/android/service/doc/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Intro.html" title="Introduction"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../../refman.html" title="OpenCV4Android Reference"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV4Android Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

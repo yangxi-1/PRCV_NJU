@@ -1,0 +1,283 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Kinect and OpenNI &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../index.html" />
+    <link rel="up" title="OpenCV User Guide" href="user_guide.html" />
+    <link rel="next" title="Cascade Classifier Training" href="ug_traincascade.html" />
+    <link rel="prev" title="Features2d" href="ug_features2d.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="ug_traincascade.html" title="Cascade Classifier Training"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ug_features2d.html" title="Features2d"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="user_guide.html" accesskey="U">OpenCV User Guide</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="kinect-and-openni">
+<h1>Kinect and OpenNI<a class="headerlink" href="#kinect-and-openni" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="using-kinect-and-other-openni-compatible-depth-sensors">
+<h2>Using Kinect and other OpenNI compatible depth sensors<a class="headerlink" href="#using-kinect-and-other-openni-compatible-depth-sensors" title="Permalink to this headline">¶</a></h2>
+<p>Depth sensors compatible with OpenNI (Kinect, XtionPRO, ...) are supported through <code class="docutils literal"><span class="pre">VideoCapture</span></code> class. Depth map, BGR image and some other formats of output can be retrieved by using familiar interface of <code class="docutils literal"><span class="pre">VideoCapture</span></code>.</p>
+<p>In order to use depth sensor with OpenCV you should do the following preliminary steps:</p>
+<ol class="arabic">
+<li><p class="first">Install OpenNI library (from here <a class="reference external" href="http://www.openni.org/downloadfiles">http://www.openni.org/downloadfiles</a>) and PrimeSensor Module for OpenNI (from here <a class="reference external" href="https://github.com/avin2/SensorKinect">https://github.com/avin2/SensorKinect</a>). The installation should be done to default folders listed in the instructions of these products, e.g.:</p>
+<div class="highlight-text"><div class="highlight"><pre>OpenNI:
+    Linux &amp; MacOSX:
+        Libs into: /usr/lib
+        Includes into: /usr/include/ni
+    Windows:
+        Libs into: c:/Program Files/OpenNI/Lib
+        Includes into: c:/Program Files/OpenNI/Include
+PrimeSensor Module:
+    Linux &amp; MacOSX:
+        Bins into: /usr/bin
+    Windows:
+        Bins into: c:/Program Files/Prime Sense/Sensor/Bin
+</pre></div>
+</div>
+<p>If one or both products were installed to the other folders, the user should change corresponding CMake variables <code class="docutils literal"><span class="pre">OPENNI_LIB_DIR</span></code>, <code class="docutils literal"><span class="pre">OPENNI_INCLUDE_DIR</span></code> or/and <code class="docutils literal"><span class="pre">OPENNI_PRIME_SENSOR_MODULE_BIN_DIR</span></code>.</p>
+</li>
+<li><p class="first">Configure OpenCV with OpenNI support by setting <code class="docutils literal"><span class="pre">WITH_OPENNI</span></code> flag in CMake. If OpenNI is found in install folders OpenCV will be built with OpenNI library (see a status <code class="docutils literal"><span class="pre">OpenNI</span></code> in CMake log) whereas PrimeSensor Modules can not be found (see a status <code class="docutils literal"><span class="pre">OpenNI</span> <span class="pre">PrimeSensor</span> <span class="pre">Modules</span></code> in CMake log). Without PrimeSensor module OpenCV will be successfully compiled with OpenNI library, but <code class="docutils literal"><span class="pre">VideoCapture</span></code> object will not grab data from Kinect sensor.</p>
+</li>
+<li><p class="first">Build OpenCV.</p>
+</li>
+</ol>
+<p>VideoCapture can retrieve the following data:</p>
+<ol class="arabic">
+<li><dl class="first docutils">
+<dt>data given from depth generator:</dt>
+<dd><ul class="first last simple">
+<li><code class="docutils literal"><span class="pre">CV_CAP_OPENNI_DEPTH_MAP</span></code>          - depth values in mm (CV_16UC1)</li>
+<li><code class="docutils literal"><span class="pre">CV_CAP_OPENNI_POINT_CLOUD_MAP</span></code>    - XYZ in meters (CV_32FC3)</li>
+<li><code class="docutils literal"><span class="pre">CV_CAP_OPENNI_DISPARITY_MAP</span></code>      - disparity in pixels (CV_8UC1)</li>
+<li><code class="docutils literal"><span class="pre">CV_CAP_OPENNI_DISPARITY_MAP_32F</span></code>  - disparity in pixels (CV_32FC1)</li>
+<li><code class="docutils literal"><span class="pre">CV_CAP_OPENNI_VALID_DEPTH_MASK</span></code>   - mask of valid pixels (not ocluded, not shaded etc.) (CV_8UC1)</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>data given from BGR image generator:</dt>
+<dd><ul class="first last simple">
+<li><code class="docutils literal"><span class="pre">CV_CAP_OPENNI_BGR_IMAGE</span></code>          - color image (CV_8UC3)</li>
+<li><code class="docutils literal"><span class="pre">CV_CAP_OPENNI_GRAY_IMAGE</span></code>         - gray image (CV_8UC1)</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<p>In order to get depth map from depth sensor use <code class="docutils literal"><span class="pre">VideoCapture::operator</span> <span class="pre">&gt;&gt;</span></code>, e. g.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">VideoCapture</span> <span class="nf">capture</span><span class="p">(</span> <span class="n">CV_CAP_OPENNI</span> <span class="p">);</span>
+<span class="k">for</span><span class="p">(;;)</span>
+<span class="p">{</span>
+    <span class="n">Mat</span> <span class="n">depthMap</span><span class="p">;</span>
+    <span class="n">capture</span> <span class="o">&gt;&gt;</span> <span class="n">depthMap</span><span class="p">;</span>
+
+    <span class="k">if</span><span class="p">(</span> <span class="n">waitKey</span><span class="p">(</span> <span class="mi">30</span> <span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">)</span>
+        <span class="k">break</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>For getting several data maps use <code class="docutils literal"><span class="pre">VideoCapture::grab</span></code> and <code class="docutils literal"><span class="pre">VideoCapture::retrieve</span></code>, e.g.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">VideoCapture</span> <span class="nf">capture</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="c1">// or CV_CAP_OPENNI</span>
+<span class="k">for</span><span class="p">(;;)</span>
+<span class="p">{</span>
+    <span class="n">Mat</span> <span class="n">depthMap</span><span class="p">;</span>
+    <span class="n">Mat</span> <span class="n">bgrImage</span><span class="p">;</span>
+
+    <span class="n">capture</span><span class="p">.</span><span class="n">grab</span><span class="p">();</span>
+
+    <span class="n">capture</span><span class="p">.</span><span class="n">retrieve</span><span class="p">(</span> <span class="n">depthMap</span><span class="p">,</span> <span class="n">CV_CAP_OPENNI_DEPTH_MAP</span> <span class="p">);</span>
+    <span class="n">capture</span><span class="p">.</span><span class="n">retrieve</span><span class="p">(</span> <span class="n">bgrImage</span><span class="p">,</span> <span class="n">CV_CAP_OPENNI_BGR_IMAGE</span> <span class="p">);</span>
+
+    <span class="k">if</span><span class="p">(</span> <span class="n">waitKey</span><span class="p">(</span> <span class="mi">30</span> <span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">)</span>
+        <span class="k">break</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>For setting and getting some property of sensor` data generators use <code class="docutils literal"><span class="pre">VideoCapture::set</span></code> and <code class="docutils literal"><span class="pre">VideoCapture::get</span></code> methods respectively, e.g.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">VideoCapture</span> <span class="nf">capture</span><span class="p">(</span> <span class="n">CV_CAP_OPENNI</span> <span class="p">);</span>
+<span class="n">capture</span><span class="p">.</span><span class="n">set</span><span class="p">(</span> <span class="n">CV_CAP_OPENNI_IMAGE_GENERATOR_OUTPUT_MODE</span><span class="p">,</span> <span class="n">CV_CAP_OPENNI_VGA_30HZ</span> <span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;FPS    &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">capture</span><span class="p">.</span><span class="n">get</span><span class="p">(</span> <span class="n">CV_CAP_OPENNI_IMAGE_GENERATOR</span><span class="o">+</span><span class="n">CV_CAP_PROP_FPS</span> <span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Since two types of sensor&#8217;s data generators are supported (image generator and depth generator), there are two flags that should be used to set/get property of the needed generator:</p>
+<ul class="simple">
+<li>CV_CAP_OPENNI_IMAGE_GENERATOR &#8211; A flag for access to the image generator properties.</li>
+<li>CV_CAP_OPENNI_DEPTH_GENERATOR &#8211; A flag for access to the depth generator properties. This flag value is assumed by default if neither of the two possible values of the property is not set.</li>
+</ul>
+<p>Some depth sensors (for example XtionPRO) do not have image generator. In order to check it you can get <code class="docutils literal"><span class="pre">CV_CAP_OPENNI_IMAGE_GENERATOR_PRESENT</span></code> property.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">bool</span> <span class="n">isImageGeneratorPresent</span> <span class="o">=</span> <span class="n">capture</span><span class="p">.</span><span class="n">get</span><span class="p">(</span> <span class="n">CV_CAP_PROP_OPENNI_IMAGE_GENERATOR_PRESENT</span> <span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// or == 1</span>
+</pre></div>
+</div>
+<p>Flags specifing the needed generator type must be used in combination with particular generator property. The following properties of cameras available through OpenNI interfaces are supported:</p>
+<ul>
+<li><p class="first">For image generator:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">CV_CAP_PROP_OPENNI_OUTPUT_MODE</span></code> &#8211; Three output modes are supported: <code class="docutils literal"><span class="pre">CV_CAP_OPENNI_VGA_30HZ</span></code> used by default (image generator returns images in VGA resolution with 30 FPS), <code class="docutils literal"><span class="pre">CV_CAP_OPENNI_SXGA_15HZ</span></code> (image generator returns images in SXGA resolution with 15 FPS) and <code class="docutils literal"><span class="pre">CV_CAP_OPENNI_SXGA_30HZ</span></code> (image generator returns images in SXGA resolution with 30 FPS, the mode is supported by XtionPRO Live); depth generator&#8217;s maps are always in VGA resolution.</li>
+</ul>
+</li>
+<li><p class="first">For depth generator:</p>
+<ul>
+<li><p class="first"><code class="docutils literal"><span class="pre">CV_CAP_PROP_OPENNI_REGISTRATION</span></code> &#8211; Flag that registers the remapping depth map to image map  by changing depth generator&#8217;s view point (if the flag is <code class="docutils literal"><span class="pre">&quot;on&quot;</span></code>) or sets this view point to its normal one (if the flag is <code class="docutils literal"><span class="pre">&quot;off&quot;</span></code>). The registration process’s resulting images are pixel-aligned,which means that every pixel in the image is aligned to a pixel in the depth image.</p>
+<p>Next properties are available for getting only:</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">CV_CAP_PROP_OPENNI_FRAME_MAX_DEPTH</span></code> &#8211; A maximum supported depth of Kinect in mm.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">CV_CAP_PROP_OPENNI_BASELINE</span></code> &#8211; Baseline value in mm.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">CV_CAP_PROP_OPENNI_FOCAL_LENGTH</span></code> &#8211; A focal length in pixels.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">CV_CAP_PROP_FRAME_WIDTH</span></code> &#8211; Frame width in pixels.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">CV_CAP_PROP_FRAME_HEIGHT</span></code> &#8211; Frame height in pixels.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">CV_CAP_PROP_FPS</span></code> &#8211; Frame rate in FPS.</p>
+</li>
+</ul>
+</li>
+<li><p class="first">Some typical flags combinations &#8220;generator type + property&#8221; are defined as single flags:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">CV_CAP_OPENNI_IMAGE_GENERATOR_OUTPUT_MODE</span> <span class="pre">=</span> <span class="pre">CV_CAP_OPENNI_IMAGE_GENERATOR</span> <span class="pre">+</span> <span class="pre">CV_CAP_PROP_OPENNI_OUTPUT_MODE</span></code></li>
+<li><code class="docutils literal"><span class="pre">CV_CAP_OPENNI_DEPTH_GENERATOR_BASELINE</span> <span class="pre">=</span> <span class="pre">CV_CAP_OPENNI_DEPTH_GENERATOR</span> <span class="pre">+</span> <span class="pre">CV_CAP_PROP_OPENNI_BASELINE</span></code></li>
+<li><code class="docutils literal"><span class="pre">CV_CAP_OPENNI_DEPTH_GENERATOR_FOCAL_LENGTH</span> <span class="pre">=</span> <span class="pre">CV_CAP_OPENNI_DEPTH_GENERATOR</span> <span class="pre">+</span> <span class="pre">CV_CAP_PROP_OPENNI_FOCAL_LENGTH</span></code></li>
+<li><code class="docutils literal"><span class="pre">CV_CAP_OPENNI_DEPTH_GENERATOR_REGISTRATION</span> <span class="pre">=</span> <span class="pre">CV_CAP_OPENNI_DEPTH_GENERATOR</span> <span class="pre">+</span> <span class="pre">CV_CAP_PROP_OPENNI_REGISTRATION</span></code></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>For more information please refer to the example of usage <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/openni_capture.cpp">openni_capture.cpp</a> in <code class="docutils literal"><span class="pre">opencv/samples/cpp</span></code> folder.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Kinect and OpenNI</a><ul>
+<li><a class="reference internal" href="#using-kinect-and-other-openni-compatible-depth-sensors">Using Kinect and other OpenNI compatible depth sensors</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ug_features2d.html"
+                        title="previous chapter">Features2d</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ug_traincascade.html"
+                        title="next chapter">Cascade Classifier Training</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/doc/user_guide/ug_kinect.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="ug_traincascade.html" title="Cascade Classifier Training"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ug_features2d.html" title="Features2d"
+             >previous</a> |</li>
+        <li><a href="../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="user_guide.html" >OpenCV User Guide</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

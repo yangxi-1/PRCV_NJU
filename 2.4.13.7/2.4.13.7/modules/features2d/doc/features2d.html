@@ -1,0 +1,255 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>features2d. 2D Features Framework &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="OpenCV API Reference" href="../../refman.html" />
+    <link rel="next" title="Feature Detection and Description" href="feature_detection_and_description.html" />
+    <link rel="prev" title="Camera Calibration and 3D Reconstruction" href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="feature_detection_and_description.html" title="Feature Detection and Description"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html" title="Camera Calibration and 3D Reconstruction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" accesskey="U">OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="features2d-2d-features-framework">
+<h1>features2d. 2D Features Framework<a class="headerlink" href="#features2d-2d-features-framework" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="feature_detection_and_description.html">Feature Detection and Description</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#fast">FAST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#mser">MSER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#mser-mser">MSER::MSER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#mser-operator">MSER::operator()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#orb">ORB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#orb-orb">ORB::ORB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#orb-operator">ORB::operator()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#brisk">BRISK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#brisk-brisk">BRISK::BRISK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#id7">BRISK::BRISK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#brisk-operator">BRISK::operator()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#freak">FREAK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#freak-freak">FREAK::FREAK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#freak-selectpairs">FREAK::selectPairs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="common_interfaces_of_feature_detectors.html">Common Interfaces of Feature Detectors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#keypoint">KeyPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#keypoint-keypoint">KeyPoint::KeyPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#featuredetector">FeatureDetector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#featuredetector-detect">FeatureDetector::detect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#featuredetector-create">FeatureDetector::create</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#fastfeaturedetector">FastFeatureDetector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#goodfeaturestotrackdetector">GoodFeaturesToTrackDetector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#mserfeaturedetector">MserFeatureDetector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#starfeaturedetector">StarFeatureDetector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#densefeaturedetector">DenseFeatureDetector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#simpleblobdetector">SimpleBlobDetector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#gridadaptedfeaturedetector">GridAdaptedFeatureDetector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#pyramidadaptedfeaturedetector">PyramidAdaptedFeatureDetector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#dynamicadaptedfeaturedetector">DynamicAdaptedFeatureDetector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#dynamicadaptedfeaturedetector-dynamicadaptedfeaturedetector">DynamicAdaptedFeatureDetector::DynamicAdaptedFeatureDetector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#adjusteradapter">AdjusterAdapter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#adjusteradapter-toofew">AdjusterAdapter::tooFew</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#adjusteradapter-toomany">AdjusterAdapter::tooMany</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#adjusteradapter-good">AdjusterAdapter::good</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#adjusteradapter-create">AdjusterAdapter::create</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#fastadjuster">FastAdjuster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#staradjuster">StarAdjuster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_feature_detectors.html#surfadjuster">SurfAdjuster</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="common_interfaces_of_descriptor_extractors.html">Common Interfaces of Descriptor Extractors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_extractors.html#descriptorextractor">DescriptorExtractor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_extractors.html#descriptorextractor-compute">DescriptorExtractor::compute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_extractors.html#descriptorextractor-create">DescriptorExtractor::create</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_extractors.html#opponentcolordescriptorextractor">OpponentColorDescriptorExtractor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_extractors.html#briefdescriptorextractor">BriefDescriptorExtractor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="common_interfaces_of_descriptor_matchers.html">Common Interfaces of Descriptor Matchers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_matchers.html#dmatch">DMatch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_matchers.html#descriptormatcher">DescriptorMatcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_matchers.html#descriptormatcher-add">DescriptorMatcher::add</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_matchers.html#descriptormatcher-gettraindescriptors">DescriptorMatcher::getTrainDescriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_matchers.html#descriptormatcher-clear">DescriptorMatcher::clear</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_matchers.html#descriptormatcher-empty">DescriptorMatcher::empty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_matchers.html#descriptormatcher-ismasksupported">DescriptorMatcher::isMaskSupported</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_matchers.html#descriptormatcher-train">DescriptorMatcher::train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_matchers.html#descriptormatcher-match">DescriptorMatcher::match</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_matchers.html#descriptormatcher-knnmatch">DescriptorMatcher::knnMatch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_matchers.html#descriptormatcher-radiusmatch">DescriptorMatcher::radiusMatch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_matchers.html#descriptormatcher-clone">DescriptorMatcher::clone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_matchers.html#descriptormatcher-create">DescriptorMatcher::create</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_matchers.html#bfmatcher">BFMatcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_matchers.html#bfmatcher-bfmatcher">BFMatcher::BFMatcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_matchers.html#flannbasedmatcher">FlannBasedMatcher</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html">Common Interfaces of Generic Descriptor Matchers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html#genericdescriptormatcher">GenericDescriptorMatcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html#genericdescriptormatcher-add">GenericDescriptorMatcher::add</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html#genericdescriptormatcher-gettrainimages">GenericDescriptorMatcher::getTrainImages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html#genericdescriptormatcher-gettrainkeypoints">GenericDescriptorMatcher::getTrainKeypoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html#genericdescriptormatcher-clear">GenericDescriptorMatcher::clear</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html#genericdescriptormatcher-train">GenericDescriptorMatcher::train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html#genericdescriptormatcher-ismasksupported">GenericDescriptorMatcher::isMaskSupported</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html#genericdescriptormatcher-classify">GenericDescriptorMatcher::classify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html#genericdescriptormatcher-match">GenericDescriptorMatcher::match</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html#genericdescriptormatcher-knnmatch">GenericDescriptorMatcher::knnMatch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html#genericdescriptormatcher-radiusmatch">GenericDescriptorMatcher::radiusMatch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html#genericdescriptormatcher-read">GenericDescriptorMatcher::read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html#genericdescriptormatcher-write">GenericDescriptorMatcher::write</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html#genericdescriptormatcher-clone">GenericDescriptorMatcher::clone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html#vectordescriptormatcher">VectorDescriptorMatcher</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="drawing_function_of_keypoints_and_matches.html">Drawing Function of Keypoints and Matches</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="drawing_function_of_keypoints_and_matches.html#drawmatches">drawMatches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drawing_function_of_keypoints_and_matches.html#drawkeypoints">drawKeypoints</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="object_categorization.html">Object Categorization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="object_categorization.html#bowtrainer">BOWTrainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_categorization.html#bowtrainer-add">BOWTrainer::add</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_categorization.html#bowtrainer-getdescriptors">BOWTrainer::getDescriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_categorization.html#bowtrainer-descripotorscount">BOWTrainer::descripotorsCount</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_categorization.html#bowtrainer-cluster">BOWTrainer::cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_categorization.html#bowkmeanstrainer">BOWKMeansTrainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_categorization.html#bowkmeanstrainer-bowkmeanstrainer">BOWKMeansTrainer::BOWKMeansTrainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_categorization.html#bowimgdescriptorextractor">BOWImgDescriptorExtractor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_categorization.html#bowimgdescriptorextractor-bowimgdescriptorextractor">BOWImgDescriptorExtractor::BOWImgDescriptorExtractor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_categorization.html#bowimgdescriptorextractor-setvocabulary">BOWImgDescriptorExtractor::setVocabulary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_categorization.html#bowimgdescriptorextractor-getvocabulary">BOWImgDescriptorExtractor::getVocabulary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_categorization.html#bowimgdescriptorextractor-compute">BOWImgDescriptorExtractor::compute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_categorization.html#bowimgdescriptorextractor-descriptorsize">BOWImgDescriptorExtractor::descriptorSize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_categorization.html#bowimgdescriptorextractor-descriptortype">BOWImgDescriptorExtractor::descriptorType</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html"
+                        title="previous chapter">Camera Calibration and 3D Reconstruction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="feature_detection_and_description.html"
+                        title="next chapter">Feature Detection and Description</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/features2d/doc/features2d.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="feature_detection_and_description.html" title="Feature Detection and Description"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html" title="Camera Calibration and 3D Reconstruction"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

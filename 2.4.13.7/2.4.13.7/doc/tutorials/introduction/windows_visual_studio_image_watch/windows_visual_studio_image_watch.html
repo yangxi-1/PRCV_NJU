@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Image Watch: viewing in-memory images in the Visual Studio debugger &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="Introduction to OpenCV" href="../table_of_content_introduction/table_of_content_introduction.html" />
+    <link rel="next" title="Introduction to Java Development" href="../desktop_java/java_dev_intro.html" />
+    <link rel="prev" title="How to build applications with OpenCV inside the Microsoft Visual Studio" href="../windows_visual_studio_Opencv/windows_visual_studio_Opencv.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../desktop_java/java_dev_intro.html" title="Introduction to Java Development"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../windows_visual_studio_Opencv/windows_visual_studio_Opencv.html" title="How to build applications with OpenCV inside the Microsoft Visual Studio"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_introduction/table_of_content_introduction.html" accesskey="U">Introduction to OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="image-watch-viewing-in-memory-images-in-the-visual-studio-debugger">
+<span id="windows-visual-studio-image-watch"></span><h1>Image Watch: viewing in-memory images in the Visual Studio debugger<a class="headerlink" href="#image-watch-viewing-in-memory-images-in-the-visual-studio-debugger" title="Permalink to this headline">¶</a></h1>
+<p>Image Watch is a plug-in for Microsoft Visual Studio that lets you to visualize in-memory images (<em>cv::Mat</em> or <em>IplImage_</em> objects, for example) while debugging an application. This can be helpful for tracking down bugs, or for simply understanding what a given piece of code is doing.</p>
+<div class="section" id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial assumes that you have the following available:</p>
+<ol class="arabic simple">
+<li>Visual Studio 2012 Professional (or better) with Update 1 installed. Update 1 can be downloaded <a class="reference external" href="http://www.microsoft.com/en-us/download/details.aspx?id=35774">here</a>.</li>
+<li>An OpenCV installation on your Windows machine (Tutorial: <a class="reference internal" href="../windows_install/windows_install.html#windows-installation"><span>Installation in Windows</span></a>).</li>
+<li>Ability to create and build OpenCV projects in Visual Studio (Tutorial: <a class="reference internal" href="../windows_visual_studio_Opencv/windows_visual_studio_Opencv.html#windows-visual-studio-how-to"><span>How to build applications with OpenCV inside the Microsoft Visual Studio</span></a>).</li>
+</ol>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://go.microsoft.com/fwlink/?LinkId=285460">Download</a> the Image Watch installer. The installer comes in a single file with extension .vsix (<em>Visual Studio Extension</em>). To launch it, simply double-click on the .vsix file in Windows Explorer. When the installer has finished, make sure to restart Visual Studio to complete the installation.</p>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>Image Watch works with any existing project that uses OpenCV image objects (for example, <em>cv::Mat</em>). In this example, we use a minimal test program that loads an image from a file and runs an edge detector. To build the program, create a console application project in Visual Studio, name it &#8220;image-watch-demo&#8221;, and insert the source code below.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="c1">// Test application for the Visual Studio Image Watch Debugger extension</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;                        // std::cout</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;opencv2/core/core.hpp&gt;           // cv::Mat</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;     // cv::imread()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;opencv2/imgproc/imgproc.hpp&gt;     // cv::Canny()</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">help</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">cout</span>
+        <span class="o">&lt;&lt;</span> <span class="s">&quot;----------------------------------------------------&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+        <span class="o">&lt;&lt;</span> <span class="s">&quot;This is a test program for the Image Watch Debugger &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+        <span class="o">&lt;&lt;</span> <span class="s">&quot;plug-in for Visual Studio. The program loads an     &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+        <span class="o">&lt;&lt;</span> <span class="s">&quot;image from a file and runs the Canny edge detector. &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+        <span class="o">&lt;&lt;</span> <span class="s">&quot;No output is displayed or written to disk.&quot;</span>
+        <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+        <span class="o">&lt;&lt;</span> <span class="s">&quot;Usage:&quot;</span>                                               <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+        <span class="o">&lt;&lt;</span> <span class="s">&quot;image-watch-demo inputimage&quot;</span>                          <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+        <span class="o">&lt;&lt;</span> <span class="s">&quot;----------------------------------------------------&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+        <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+    <span class="n">help</span><span class="p">();</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Wrong number of parameters&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Loading input image: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">Mat</span> <span class="n">input</span><span class="p">;</span>
+    <span class="n">input</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">CV_LOAD_IMAGE_COLOR</span><span class="p">);</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Detecting edges in input image&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">Mat</span> <span class="n">edges</span><span class="p">;</span>
+    <span class="n">Canny</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Make sure your active solution configuration (<span class="menuselection">Build ‣ Configuration Manager</span>) is set to a debug build (usually called &#8220;Debug&#8221;). This should disable compiler optimizations so that viewing variables in the debugger can work reliably.</p>
+<p>Build your solution (<span class="menuselection">Build ‣ Build Solution</span>, or press <em>F7</em>).</p>
+<p>Before continuing, do not forget to add the command line argument of your input image to your project (<span class="menuselection">Right click on project ‣ Properties ‣ Configuration Properties ‣ Debugging</span> and then set the field <code class="docutils literal"><span class="pre">Command</span> <span class="pre">Arguments</span></code> with the location of the image).</p>
+<p>Now set a breakpoint on the source line that says</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">edges</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>To set the breakpoint, right-click on the source line and select <span class="menuselection">Breakpoints ‣ Insert Breakpoint</span> from the context menu.</p>
+<p>Launch the program in the debugger (<span class="menuselection">Debug ‣ Start Debugging</span>, or hit <em>F5</em>). When the breakpoint is hit, the program is paused and Visual Studio displays a yellow instruction pointer at the breakpoint:</p>
+<img alt="../../../../_images/breakpoint.png" src="../../../../_images/breakpoint.png" />
+<p>Now you can inspect the state of you program. For example, you can bring up the <em>Locals</em> window (<span class="menuselection">Debug ‣ Windows ‣ Locals</span>), which will show the names and values of the variables in the current scope:</p>
+<img alt="../../../../_images/vs_locals.png" src="../../../../_images/vs_locals.png" />
+<p>Note that the built-in <em>Locals</em> window will display text only. This is where the Image Watch plug-in comes in. Image Watch is like another <em>Locals</em> window, but with an image viewer built into it. To bring up Image Watch, select <span class="menuselection">View ‣ Other Windows ‣ Image Watch</span>. Like Visual Studio&#8217;s <em>Locals</em> window, Image Watch can dock to the Visual Studio IDE. Also, Visual Studio will remember whether you had Image Watch open, and where it was located between debugging sessions. This means you only have to do this once&#8211;the next time you start debugging, Image Watch will be back where you left it. Here&#8217;s what the docked Image Watch window looks like at our breakpoint:</p>
+<a class="reference internal image-reference" href="../../../../_images/toolwindow.jpg"><img alt="../../../../_images/toolwindow.jpg" src="../../../../_images/toolwindow.jpg" style="height: 320pt;" /></a>
+<p>The radio button at the top left (<em>Locals/Watch</em>) selects what is shown in the <em>Image List</em> below: <em>Locals</em> lists all OpenCV image objects in the current scope (this list is automatically populated). <em>Watch</em> shows image expressions that have been pinned for continuous inspection (not described here, see <a class="reference external" href="http://go.microsoft.com/fwlink/?LinkId=285461">Image Watch documentation</a> for details). The image list shows basic information such as width, height, number of channels, and, if available, a thumbnail. In our example, the image list contains our two local image variables, <em>input</em> and <em>edges</em>.</p>
+<p>If an image has a thumbnail, left-clicking on that image will select it for detailed viewing in the <em>Image Viewer</em> on the right. The viewer lets you pan (drag mouse) and zoom (mouse wheel). It also displays the pixel coordinate and value at the current mouse position.</p>
+<a class="reference internal image-reference" href="../../../../_images/viewer.jpg"><img alt="../../../../_images/viewer.jpg" src="../../../../_images/viewer.jpg" style="height: 160pt;" /></a>
+<p>Note that the second image in the list, <em>edges</em>, is shown as &#8220;invalid&#8221;. This indicates that some data members of this image object have corrupt or invalid values (for example, a negative image width). This is expected at this point in the program, since the C++ constructor for <em>edges</em> has not run yet, and so its members have undefined values (in debug mode they are usually filled with &#8220;0xCD&#8221; bytes).</p>
+<p>From here you can single-step through your code (<span class="menuselection">Debug-&gt;Step Over</span>, or press <em>F10</em>) and watch the pixels change: if you step once, over the <em>Mat edges;</em> statement, the <em>edges</em> image will change from &#8220;invalid&#8221; to &#8220;empty&#8221;, which means that it is now in a valid state (default constructed), even though it has not been initialized yet (using <em>cv::Mat::create()</em>, for example). If you make one more step over the <em>cv::Canny()</em> call, you will see a thumbnail of the edge image appear in the image list.</p>
+<p>Now assume you want to do a visual sanity check of the <em>cv::Canny()</em> implementation. Bring the <em>edges</em> image into the viewer by selecting it in the <em>Image List</em> and zoom into a region with a clearly defined edge:</p>
+<a class="reference internal image-reference" href="../../../../_images/edges_zoom.png"><img alt="../../../../_images/edges_zoom.png" src="../../../../_images/edges_zoom.png" style="height: 160pt;" /></a>
+<p>Right-click on the <em>Image Viewer</em> to bring up the view context menu and enable <span class="menuselection">Link Views</span> (a check box next to the menu item indicates whether the option is enabled).</p>
+<a class="reference internal image-reference" href="../../../../_images/viewer_context_menu.png"><img alt="../../../../_images/viewer_context_menu.png" src="../../../../_images/viewer_context_menu.png" style="height: 120pt;" /></a>
+<p>The <span class="menuselection">Link Views</span> feature keeps the view region fixed when flipping between images of the same size. To see how this works, select the input image from the image list&#8211;you should now see the corresponding zoomed-in region in the input image:</p>
+<a class="reference internal image-reference" href="../../../../_images/input_zoom.png"><img alt="../../../../_images/input_zoom.png" src="../../../../_images/input_zoom.png" style="height: 160pt;" /></a>
+<p>You may also switch back and forth between viewing input and edges with your up/down cursor keys. That way you can easily  verify that the detected edges line up nicely with the data in the input image.</p>
+</div>
+<div class="section" id="more">
+<h2>More ...<a class="headerlink" href="#more" title="Permalink to this headline">¶</a></h2>
+<p>Image watch has a number of more advanced features, such as</p>
+<ol class="arabic simple">
+<li>pinning images to a <em>Watch</em> list for inspection across scopes or between debugging sessions</li>
+<li>clamping, thresholding, or diff&#8217;ing images directly inside the Watch window</li>
+<li>comparing an in-memory image against a reference image from a file</li>
+</ol>
+<p>Please refer to the online <a class="reference external" href="http://go.microsoft.com/fwlink/?LinkId=285461">Image Watch Documentation</a> for details&#8211;you also can get to the documentation page by clicking on the <em>Help</em> link in the Image Watch window:</p>
+<a class="reference internal image-reference" href="../../../../_images/help_button.jpg"><img alt="../../../../_images/help_button.jpg" src="../../../../_images/help_button.jpg" style="height: 80pt;" /></a>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Image Watch: viewing in-memory images in the Visual Studio debugger</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#more">More ...</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../windows_visual_studio_Opencv/windows_visual_studio_Opencv.html"
+                        title="previous chapter">How to build applications with OpenCV inside the <em>Microsoft Visual Studio</em></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../desktop_java/java_dev_intro.html"
+                        title="next chapter">Introduction to Java Development</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/introduction/windows_visual_studio_image_watch/windows_visual_studio_image_watch.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../desktop_java/java_dev_intro.html" title="Introduction to Java Development"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../windows_visual_studio_Opencv/windows_visual_studio_Opencv.html" title="How to build applications with OpenCV inside the Microsoft Visual Studio"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_introduction/table_of_content_introduction.html" >Introduction to OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

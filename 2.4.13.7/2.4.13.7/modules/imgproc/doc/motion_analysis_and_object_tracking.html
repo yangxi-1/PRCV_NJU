@@ -1,0 +1,451 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Motion Analysis and Object Tracking &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="imgproc. Image Processing" href="imgproc.html" />
+    <link rel="next" title="Feature Detection" href="feature_detection.html" />
+    <link rel="prev" title="Structural Analysis and Shape Descriptors" href="structural_analysis_and_shape_descriptors.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="feature_detection.html" title="Feature Detection"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="structural_analysis_and_shape_descriptors.html" title="Structural Analysis and Shape Descriptors"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="imgproc.html" accesskey="U">imgproc. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="motion-analysis-and-object-tracking">
+<h1>Motion Analysis and Object Tracking<a class="headerlink" href="#motion-analysis-and-object-tracking" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="accumulate">
+<h2>accumulate<a class="headerlink" href="#accumulate" title="Permalink to this headline">¶</a></h2>
+<p>Adds an image to the accumulator.</p>
+<dl class="function">
+<dt id="void accumulate(InputArray src, InputOutputArray dst, InputArray mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">accumulate</code><span class="sig-paren">(</span>InputArray <strong>src</strong>, InputOutputArray <strong>dst</strong>, InputArray <strong>mask</strong>=noArray() <span class="sig-paren">)</span><a class="headerlink" href="#void accumulate(InputArray src, InputOutputArray dst, InputArray mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.accumulate">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">accumulate</code><span class="sig-paren">(</span>src, dst<span class="optional">[</span>, mask<span class="optional">]</span><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv2.accumulate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvAcc(const CvArr* image, CvArr* sum, const CvArr* mask)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvAcc</code><span class="sig-paren">(</span>const CvArr* <strong>image</strong>, CvArr* <strong>sum</strong>, const CvArr* <strong>mask</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#void cvAcc(const CvArr* image, CvArr* sum, const CvArr* mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Acc">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Acc</code><span class="sig-paren">(</span>image, sum, mask=None<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.Acc" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input image as 1- or 3-channel, 8-bit or 32-bit floating point.</li>
+<li><strong>dst</strong> &#8211; Accumulator image with the same number of channels as input image, 32-bit or 64-bit floating-point.</li>
+<li><strong>mask</strong> &#8211; Optional operation mask.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function adds <code class="docutils literal"><span class="pre">src</span></code>  or some of its elements to <code class="docutils literal"><span class="pre">dst</span></code> :</p>
+<div class="math">
+<p><img src="../../../_images/math/8e3d3883dc647d1d5ec8979b30673ca160f6b72d.png" alt="\texttt{dst} (x,y)  \leftarrow \texttt{dst} (x,y) +  \texttt{src} (x,y)  \quad \text{if} \quad \texttt{mask} (x,y)  \ne 0"/></p>
+</div><p>The function supports multi-channel images. Each channel is processed independently.</p>
+<p>The functions <code class="docutils literal"><span class="pre">accumulate*</span></code> can be used, for example, to collect statistics of a scene background viewed by a still camera and for the further foreground-background segmentation.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void accumulateSquare(InputArray src, InputOutputArray dst, InputArray mask)" title="void accumulateSquare(InputArray src, InputOutputArray dst, InputArray mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">accumulateSquare()</span></code></a>,
+<a class="reference internal" href="#void accumulateProduct(InputArray src1, InputArray src2, InputOutputArray dst, InputArray mask)" title="void accumulateProduct(InputArray src1, InputArray src2, InputOutputArray dst, InputArray mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">accumulateProduct()</span></code></a>,
+<a class="reference internal" href="#void accumulateWeighted(InputArray src, InputOutputArray dst, double alpha, InputArray mask)" title="void accumulateWeighted(InputArray src, InputOutputArray dst, double alpha, InputArray mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">accumulateWeighted()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="accumulatesquare">
+<h2>accumulateSquare<a class="headerlink" href="#accumulatesquare" title="Permalink to this headline">¶</a></h2>
+<p>Adds the square of a source image to the accumulator.</p>
+<dl class="function">
+<dt id="void accumulateSquare(InputArray src, InputOutputArray dst, InputArray mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">accumulateSquare</code><span class="sig-paren">(</span>InputArray <strong>src</strong>, InputOutputArray <strong>dst</strong>, InputArray <strong>mask</strong>=noArray() <span class="sig-paren">)</span><a class="headerlink" href="#void accumulateSquare(InputArray src, InputOutputArray dst, InputArray mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.accumulateSquare">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">accumulateSquare</code><span class="sig-paren">(</span>src, dst<span class="optional">[</span>, mask<span class="optional">]</span><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv2.accumulateSquare" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvSquareAcc(const CvArr* image, CvArr* sqsum, const CvArr* mask)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSquareAcc</code><span class="sig-paren">(</span>const CvArr* <strong>image</strong>, CvArr* <strong>sqsum</strong>, const CvArr* <strong>mask</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#void cvSquareAcc(const CvArr* image, CvArr* sqsum, const CvArr* mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.SquareAcc">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">SquareAcc</code><span class="sig-paren">(</span>image, sqsum, mask=None<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.SquareAcc" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input image as 1- or 3-channel, 8-bit or 32-bit floating point.</li>
+<li><strong>dst</strong> &#8211; Accumulator image with the same number of channels as input image, 32-bit or 64-bit floating-point.</li>
+<li><strong>mask</strong> &#8211; Optional operation mask.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function adds the input image <code class="docutils literal"><span class="pre">src</span></code> or its selected region, raised to a power of 2, to the accumulator <code class="docutils literal"><span class="pre">dst</span></code> :</p>
+<div class="math">
+<p><img src="../../../_images/math/71d23d5e1a386d5d152dbb867d607b28310c3094.png" alt="\texttt{dst} (x,y)  \leftarrow \texttt{dst} (x,y) +  \texttt{src} (x,y)^2  \quad \text{if} \quad \texttt{mask} (x,y)  \ne 0"/></p>
+</div><p>The function supports multi-channel images. Each channel is processed independently.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void accumulateSquare(InputArray src, InputOutputArray dst, InputArray mask)" title="void accumulateSquare(InputArray src, InputOutputArray dst, InputArray mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">accumulateSquare()</span></code></a>,
+<a class="reference internal" href="#void accumulateProduct(InputArray src1, InputArray src2, InputOutputArray dst, InputArray mask)" title="void accumulateProduct(InputArray src1, InputArray src2, InputOutputArray dst, InputArray mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">accumulateProduct()</span></code></a>,
+<a class="reference internal" href="#void accumulateWeighted(InputArray src, InputOutputArray dst, double alpha, InputArray mask)" title="void accumulateWeighted(InputArray src, InputOutputArray dst, double alpha, InputArray mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">accumulateWeighted()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="accumulateproduct">
+<h2>accumulateProduct<a class="headerlink" href="#accumulateproduct" title="Permalink to this headline">¶</a></h2>
+<p>Adds the per-element product of two input images to the accumulator.</p>
+<dl class="function">
+<dt id="void accumulateProduct(InputArray src1, InputArray src2, InputOutputArray dst, InputArray mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">accumulateProduct</code><span class="sig-paren">(</span>InputArray <strong>src1</strong>, InputArray <strong>src2</strong>, InputOutputArray <strong>dst</strong>, InputArray <strong>mask</strong>=noArray() <span class="sig-paren">)</span><a class="headerlink" href="#void accumulateProduct(InputArray src1, InputArray src2, InputOutputArray dst, InputArray mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.accumulateProduct">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">accumulateProduct</code><span class="sig-paren">(</span>src1, src2, dst<span class="optional">[</span>, mask<span class="optional">]</span><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv2.accumulateProduct" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvMultiplyAcc(const CvArr* image1, const CvArr* image2, CvArr* acc, const CvArr* mask)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvMultiplyAcc</code><span class="sig-paren">(</span>const CvArr* <strong>image1</strong>, const CvArr* <strong>image2</strong>, CvArr* <strong>acc</strong>, const CvArr* <strong>mask</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#void cvMultiplyAcc(const CvArr* image1, const CvArr* image2, CvArr* acc, const CvArr* mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.MultiplyAcc">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">MultiplyAcc</code><span class="sig-paren">(</span>image1, image2, acc, mask=None<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.MultiplyAcc" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; First input image, 1- or 3-channel, 8-bit or 32-bit floating point.</li>
+<li><strong>src2</strong> &#8211; Second input image of the same type and the same size as  <code class="docutils literal"><span class="pre">src1</span></code> .</li>
+<li><strong>dst</strong> &#8211; Accumulator with the same number of channels as input images, 32-bit or 64-bit floating-point.</li>
+<li><strong>mask</strong> &#8211; Optional operation mask.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function adds the product of two images or their selected regions to the accumulator <code class="docutils literal"><span class="pre">dst</span></code> :</p>
+<div class="math">
+<p><img src="../../../_images/math/3096e21a92da55dbc75a3b455e9471d98799f42a.png" alt="\texttt{dst} (x,y)  \leftarrow \texttt{dst} (x,y) +  \texttt{src1} (x,y)  \cdot \texttt{src2} (x,y)  \quad \text{if} \quad \texttt{mask} (x,y)  \ne 0"/></p>
+</div><p>The function supports multi-channel images. Each channel is processed independently.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void accumulate(InputArray src, InputOutputArray dst, InputArray mask)" title="void accumulate(InputArray src, InputOutputArray dst, InputArray mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">accumulate()</span></code></a>,
+<a class="reference internal" href="#void accumulateSquare(InputArray src, InputOutputArray dst, InputArray mask)" title="void accumulateSquare(InputArray src, InputOutputArray dst, InputArray mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">accumulateSquare()</span></code></a>,
+<a class="reference internal" href="#void accumulateWeighted(InputArray src, InputOutputArray dst, double alpha, InputArray mask)" title="void accumulateWeighted(InputArray src, InputOutputArray dst, double alpha, InputArray mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">accumulateWeighted()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="accumulateweighted">
+<h2>accumulateWeighted<a class="headerlink" href="#accumulateweighted" title="Permalink to this headline">¶</a></h2>
+<p>Updates a running average.</p>
+<dl class="function">
+<dt id="void accumulateWeighted(InputArray src, InputOutputArray dst, double alpha, InputArray mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">accumulateWeighted</code><span class="sig-paren">(</span>InputArray <strong>src</strong>, InputOutputArray <strong>dst</strong>, double <strong>alpha</strong>, InputArray <strong>mask</strong>=noArray() <span class="sig-paren">)</span><a class="headerlink" href="#void accumulateWeighted(InputArray src, InputOutputArray dst, double alpha, InputArray mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.accumulateWeighted">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">accumulateWeighted</code><span class="sig-paren">(</span>src, dst, alpha<span class="optional">[</span>, mask<span class="optional">]</span><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv2.accumulateWeighted" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvRunningAvg(const CvArr* image, CvArr* acc, double alpha, const CvArr* mask)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvRunningAvg</code><span class="sig-paren">(</span>const CvArr* <strong>image</strong>, CvArr* <strong>acc</strong>, double <strong>alpha</strong>, const CvArr* <strong>mask</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#void cvRunningAvg(const CvArr* image, CvArr* acc, double alpha, const CvArr* mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.RunningAvg">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">RunningAvg</code><span class="sig-paren">(</span>image, acc, alpha, mask=None<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.RunningAvg" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input image as 1- or 3-channel, 8-bit or 32-bit floating point.</li>
+<li><strong>dst</strong> &#8211; Accumulator image with the same number of channels as input image, 32-bit or 64-bit floating-point.</li>
+<li><strong>alpha</strong> &#8211; Weight of the input image.</li>
+<li><strong>mask</strong> &#8211; Optional operation mask.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function calculates the weighted sum of the input image <code class="docutils literal"><span class="pre">src</span></code> and the accumulator <code class="docutils literal"><span class="pre">dst</span></code> so that <code class="docutils literal"><span class="pre">dst</span></code> becomes a running average of a frame sequence:</p>
+<div class="math">
+<p><img src="../../../_images/math/7480f2f9ee402e9e85823d2644b8e1f8c263191a.png" alt="\texttt{dst} (x,y)  \leftarrow (1- \texttt{alpha} )  \cdot \texttt{dst} (x,y) +  \texttt{alpha} \cdot \texttt{src} (x,y)  \quad \text{if} \quad \texttt{mask} (x,y)  \ne 0"/></p>
+</div><p>That is, <code class="docutils literal"><span class="pre">alpha</span></code> regulates the update speed (how fast the accumulator &#8220;forgets&#8221; about earlier images).
+The function supports multi-channel images. Each channel is processed independently.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void accumulate(InputArray src, InputOutputArray dst, InputArray mask)" title="void accumulate(InputArray src, InputOutputArray dst, InputArray mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">accumulate()</span></code></a>,
+<a class="reference internal" href="#void accumulateSquare(InputArray src, InputOutputArray dst, InputArray mask)" title="void accumulateSquare(InputArray src, InputOutputArray dst, InputArray mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">accumulateSquare()</span></code></a>,
+<a class="reference internal" href="#void accumulateProduct(InputArray src1, InputArray src2, InputOutputArray dst, InputArray mask)" title="void accumulateProduct(InputArray src1, InputArray src2, InputOutputArray dst, InputArray mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">accumulateProduct()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="phasecorrelate">
+<h2>phaseCorrelate<a class="headerlink" href="#phasecorrelate" title="Permalink to this headline">¶</a></h2>
+<p>The function is used to detect translational shifts that occur between two images. The operation takes advantage of the Fourier shift theorem for detecting the translational shift in the frequency domain. It can be used for fast image registration as well as motion estimation. For more information please see <a class="reference external" href="http://en.wikipedia.org/wiki/Phase_correlation">http://en.wikipedia.org/wiki/Phase_correlation</a> .</p>
+<p>Calculates the cross-power spectrum of two supplied source arrays. The arrays are padded if needed with <a class="reference internal" href="../../core/doc/operations_on_arrays.html#int getOptimalDFTSize(int vecsize)" title="int getOptimalDFTSize(int vecsize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getOptimalDFTSize()</span></code></a>.</p>
+<dl class="function">
+<dt id="Point2d phaseCorrelate(InputArray src1, InputArray src2, InputArray window)">
+<strong>C++:</strong><code class="descname"> </code>Point2d <code class="descname">phaseCorrelate</code><span class="sig-paren">(</span>InputArray <strong>src1</strong>, InputArray <strong>src2</strong>, InputArray <strong>window</strong>=noArray()<span class="sig-paren">)</span><a class="headerlink" href="#Point2d phaseCorrelate(InputArray src1, InputArray src2, InputArray window)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Point2d phaseCorrelateRes(InputArray src1, InputArray src2, InputArray window, double* response)">
+<strong>C++:</strong><code class="descname"> </code>Point2d <code class="descname">phaseCorrelateRes</code><span class="sig-paren">(</span>InputArray <strong>src1</strong>, InputArray <strong>src2</strong>, InputArray <strong>window</strong>, double* <strong>response</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#Point2d phaseCorrelateRes(InputArray src1, InputArray src2, InputArray window, double* response)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; Source floating point array (CV_32FC1 or CV_64FC1)</li>
+<li><strong>src2</strong> &#8211; Source floating point array (CV_32FC1 or CV_64FC1)</li>
+<li><strong>window</strong> &#8211; Floating point array with windowing coefficients to reduce edge effects (optional).</li>
+<li><strong>response</strong> &#8211; Signal power within the 5x5 centroid around the peak, between 0 and 1 (optional).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Return value: detected phase shift (sub-pixel) between the two arrays.</p>
+<p>The function performs the following equations</p>
+<ul>
+<li><p class="first">First it applies a Hanning window (see <a class="reference external" href="http://en.wikipedia.org/wiki/Hann_function">http://en.wikipedia.org/wiki/Hann_function</a>) to each image to remove possible edge effects. This window is cached until the array size changes to speed up processing time.</p>
+</li>
+<li><p class="first">Next it computes the forward DFTs of each source array:</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/a87330ade5f29288f105c5be68e8c76a09fbe005.png" alt="\mathbf{G}_a = \mathcal{F}\{src_1\}, \; \mathbf{G}_b = \mathcal{F}\{src_2\}"/></p>
+</div></div></blockquote>
+<p>where
+<img class="math" src="../../../_images/math/3326f79a3237cb076700251de17ce831fe62c316.png" alt="\mathcal{F}"/> is the forward DFT.</p>
+</li>
+<li><p class="first">It then computes the cross-power spectrum of each frequency domain array:</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/bdc1df022f81f6ee22888c7ad4f9ca5e0c52cb39.png" alt="R = \frac{ \mathbf{G}_a \mathbf{G}_b^*}{|\mathbf{G}_a \mathbf{G}_b^*|}"/></p>
+</div></div></blockquote>
+</li>
+<li><p class="first">Next the cross-correlation is converted back into the time domain via the inverse DFT:</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/309670aff238498ebf0134efd04155fc070be6cf.png" alt="r = \mathcal{F}^{-1}\{R\}"/></p>
+</div></div></blockquote>
+</li>
+<li><p class="first">Finally, it computes the peak location and computes a 5x5 weighted centroid around the peak to achieve sub-pixel accuracy.</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/d35c784bef8d6eafdbbac329d492fd89330b5ccc.png" alt="(\Delta x, \Delta y) = \texttt{weightedCentroid} \{\arg \max_{(x, y)}\{r\}\}"/></p>
+</div></div></blockquote>
+</li>
+<li><p class="first">If non-zero, the response parameter is computed as the sum of the elements of r within the 5x5 centroid around the peak location. It is normalized to a maximum of 1 (meaning there is a single peak) and will be smaller when there are multiple peaks.</p>
+</li>
+</ul>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void dft(InputArray src, OutputArray dst, int flags, int nonzeroRows)" title="void dft(InputArray src, OutputArray dst, int flags, int nonzeroRows)"><code class="xref ocv ocv-func docutils literal"><span class="pre">dft()</span></code></a>,
+<a class="reference internal" href="../../core/doc/operations_on_arrays.html#int getOptimalDFTSize(int vecsize)" title="int getOptimalDFTSize(int vecsize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getOptimalDFTSize()</span></code></a>,
+<a class="reference internal" href="../../core/doc/operations_on_arrays.html#void idft(InputArray src, OutputArray dst, int flags, int nonzeroRows)" title="void idft(InputArray src, OutputArray dst, int flags, int nonzeroRows)"><code class="xref ocv ocv-func docutils literal"><span class="pre">idft()</span></code></a>,
+<a class="reference internal" href="../../core/doc/operations_on_arrays.html#void mulSpectrums(InputArray a, InputArray b, OutputArray c, int flags, bool conjB)" title="void mulSpectrums(InputArray a, InputArray b, OutputArray c, int flags, bool conjB)"><code class="xref ocv ocv-func docutils literal"><span class="pre">mulSpectrums()</span></code></a>
+<a class="reference internal" href="#void createHanningWindow(OutputArray dst, Size winSize, int type)" title="void createHanningWindow(OutputArray dst, Size winSize, int type)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createHanningWindow()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="createhanningwindow">
+<h2>createHanningWindow<a class="headerlink" href="#createhanningwindow" title="Permalink to this headline">¶</a></h2>
+<p>This function computes a Hanning window coefficients in two dimensions. See <a class="reference external" href="http://en.wikipedia.org/wiki/Hann_function">http://en.wikipedia.org/wiki/Hann_function</a> and <a class="reference external" href="http://en.wikipedia.org/wiki/Window_function">http://en.wikipedia.org/wiki/Window_function</a> for more information.</p>
+<dl class="function">
+<dt id="void createHanningWindow(OutputArray dst, Size winSize, int type)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">createHanningWindow</code><span class="sig-paren">(</span>OutputArray <strong>dst</strong>, Size <strong>winSize</strong>, int <strong>type</strong><span class="sig-paren">)</span><a class="headerlink" href="#void createHanningWindow(OutputArray dst, Size winSize, int type)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dst</strong> &#8211; Destination array to place Hann coefficients in</li>
+<li><strong>winSize</strong> &#8211; The window size specifications</li>
+<li><strong>type</strong> &#8211; Created array type</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>An example is shown below:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// create hanning window of size 100x100 and type CV_32F</span>
+<span class="n">Mat</span> <span class="n">hann</span><span class="p">;</span>
+<span class="n">createHanningWindow</span><span class="p">(</span><span class="n">hann</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">CV_32F</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#Point2d phaseCorrelate(InputArray src1, InputArray src2, InputArray window)" title="Point2d phaseCorrelate(InputArray src1, InputArray src2, InputArray window)"><code class="xref ocv ocv-func docutils literal"><span class="pre">phaseCorrelate()</span></code></a></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Motion Analysis and Object Tracking</a><ul>
+<li><a class="reference internal" href="#accumulate">accumulate</a></li>
+<li><a class="reference internal" href="#accumulatesquare">accumulateSquare</a></li>
+<li><a class="reference internal" href="#accumulateproduct">accumulateProduct</a></li>
+<li><a class="reference internal" href="#accumulateweighted">accumulateWeighted</a></li>
+<li><a class="reference internal" href="#phasecorrelate">phaseCorrelate</a></li>
+<li><a class="reference internal" href="#createhanningwindow">createHanningWindow</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="structural_analysis_and_shape_descriptors.html"
+                        title="previous chapter">Structural Analysis and Shape Descriptors</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="feature_detection.html"
+                        title="next chapter">Feature Detection</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/imgproc/doc/motion_analysis_and_object_tracking.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="feature_detection.html" title="Feature Detection"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="structural_analysis_and_shape_descriptors.html" title="Structural Analysis and Shape Descriptors"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="imgproc.html" >imgproc. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

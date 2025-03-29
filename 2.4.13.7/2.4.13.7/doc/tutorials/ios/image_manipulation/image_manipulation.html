@@ -1,0 +1,260 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>OpenCV iOS - Image Processing &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="OpenCV iOS" href="../table_of_content_ios/table_of_content_ios.html" />
+    <link rel="next" title="OpenCV iOS - Video Processing" href="../video_processing/video_processing.html" />
+    <link rel="prev" title="OpenCV iOS Hello" href="../hello/hello.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../video_processing/video_processing.html" title="OpenCV iOS - Video Processing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../hello/hello.html" title="OpenCV iOS Hello"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_ios/table_of_content_ios.html" accesskey="U"><strong>OpenCV iOS</strong></a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="opencv-ios-image-processing">
+<span id="opencviosimagemanipulation"></span><h1>OpenCV iOS - Image Processing<a class="headerlink" href="#opencv-ios-image-processing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial we will learn how to do basic image processing using OpenCV in iOS.</p>
+</div>
+<div class="section" id="introduction">
+<h2><em>Introduction</em><a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>In <em>OpenCV</em> all the image processing operations are usually carried out on the <em>Mat</em> structure. In iOS however, to render an image on screen it have to be an instance of the <em>UIImage</em> class. To convert an <em>OpenCV Mat</em> to an <em>UIImage</em> we use the <em>Core Graphics</em> framework available in iOS. Below is the code needed to covert back and forth between Mat&#8217;s and UIImage&#8217;s.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="o">-</span> <span class="p">(</span><span class="n">cv</span><span class="o">::</span><span class="n">Mat</span><span class="p">)</span><span class="nl">cvMatFromUIImage</span><span class="p">:(</span><span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="n">image</span>
+<span class="p">{</span>
+  <span class="n">CGColorSpaceRef</span> <span class="n">colorSpace</span> <span class="o">=</span> <span class="n">CGImageGetColorSpace</span><span class="p">(</span><span class="n">image</span><span class="p">.</span><span class="n">CGImage</span><span class="p">);</span>
+  <span class="n">CGFloat</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span><span class="p">;</span>
+  <span class="n">CGFloat</span> <span class="n">rows</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="p">;</span>
+
+  <span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">cvMat</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">CV_8UC4</span><span class="p">);</span> <span class="c1">// 8 bits per component, 4 channels (color channels + alpha)</span>
+
+  <span class="n">CGContextRef</span> <span class="n">contextRef</span> <span class="o">=</span> <span class="n">CGBitmapContextCreate</span><span class="p">(</span><span class="n">cvMat</span><span class="p">.</span><span class="n">data</span><span class="p">,</span>                 <span class="c1">// Pointer to  data</span>
+                                                 <span class="n">cols</span><span class="p">,</span>                       <span class="c1">// Width of bitmap</span>
+                                                 <span class="n">rows</span><span class="p">,</span>                       <span class="c1">// Height of bitmap</span>
+                                                 <span class="mi">8</span><span class="p">,</span>                          <span class="c1">// Bits per component</span>
+                                                 <span class="n">cvMat</span><span class="p">.</span><span class="n">step</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>              <span class="c1">// Bytes per row</span>
+                                                 <span class="n">colorSpace</span><span class="p">,</span>                 <span class="c1">// Colorspace</span>
+                                                 <span class="n">kCGImageAlphaNoneSkipLast</span> <span class="o">|</span>
+                                                 <span class="n">kCGBitmapByteOrderDefault</span><span class="p">);</span> <span class="c1">// Bitmap info flags</span>
+
+  <span class="n">CGContextDrawImage</span><span class="p">(</span><span class="n">contextRef</span><span class="p">,</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">rows</span><span class="p">),</span> <span class="n">image</span><span class="p">.</span><span class="n">CGImage</span><span class="p">);</span>
+  <span class="n">CGContextRelease</span><span class="p">(</span><span class="n">contextRef</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="n">cvMat</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="o">-</span> <span class="p">(</span><span class="n">cv</span><span class="o">::</span><span class="n">Mat</span><span class="p">)</span><span class="nl">cvMatGrayFromUIImage</span><span class="p">:(</span><span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="n">image</span>
+<span class="p">{</span>
+  <span class="n">CGColorSpaceRef</span> <span class="n">colorSpace</span> <span class="o">=</span> <span class="n">CGImageGetColorSpace</span><span class="p">(</span><span class="n">image</span><span class="p">.</span><span class="n">CGImage</span><span class="p">);</span>
+  <span class="n">CGFloat</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span><span class="p">;</span>
+  <span class="n">CGFloat</span> <span class="n">rows</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="p">;</span>
+
+  <span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">cvMat</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">CV_8UC1</span><span class="p">);</span> <span class="c1">// 8 bits per component, 1 channels</span>
+
+  <span class="n">CGContextRef</span> <span class="n">contextRef</span> <span class="o">=</span> <span class="n">CGBitmapContextCreate</span><span class="p">(</span><span class="n">cvMat</span><span class="p">.</span><span class="n">data</span><span class="p">,</span>                 <span class="c1">// Pointer to data</span>
+                                                 <span class="n">cols</span><span class="p">,</span>                       <span class="c1">// Width of bitmap</span>
+                                                 <span class="n">rows</span><span class="p">,</span>                       <span class="c1">// Height of bitmap</span>
+                                                 <span class="mi">8</span><span class="p">,</span>                          <span class="c1">// Bits per component</span>
+                                                 <span class="n">cvMat</span><span class="p">.</span><span class="n">step</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>              <span class="c1">// Bytes per row</span>
+                                                 <span class="n">colorSpace</span><span class="p">,</span>                 <span class="c1">// Colorspace</span>
+                                                 <span class="n">kCGImageAlphaNoneSkipLast</span> <span class="o">|</span>
+                                                 <span class="n">kCGBitmapByteOrderDefault</span><span class="p">);</span> <span class="c1">// Bitmap info flags</span>
+
+  <span class="n">CGContextDrawImage</span><span class="p">(</span><span class="n">contextRef</span><span class="p">,</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">rows</span><span class="p">),</span> <span class="n">image</span><span class="p">.</span><span class="n">CGImage</span><span class="p">);</span>
+  <span class="n">CGContextRelease</span><span class="p">(</span><span class="n">contextRef</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="n">cvMat</span><span class="p">;</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+<p>After the processing we need to convert it back to UIImage. The code below can handle both gray-scale and color image conversions (determined by the number of channels in the <em>if</em> statement).</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">greyMat</span><span class="p">;</span>
+<span class="n">cv</span><span class="o">::</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">inputMat</span><span class="p">,</span> <span class="n">greyMat</span><span class="p">,</span> <span class="n">CV_BGR2GRAY</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>After the processing we need to convert it back to UIImage.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="o">-</span><span class="p">(</span><span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nl">UIImageFromCVMat</span><span class="p">:(</span><span class="n">cv</span><span class="o">::</span><span class="n">Mat</span><span class="p">)</span><span class="n">cvMat</span>
+<span class="p">{</span>
+  <span class="n">NSData</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSData</span> <span class="nl">dataWithBytes</span><span class="p">:</span><span class="n">cvMat</span><span class="p">.</span><span class="n">data</span> <span class="nl">length</span><span class="p">:</span><span class="n">cvMat</span><span class="p">.</span><span class="n">elemSize</span><span class="p">()</span><span class="o">*</span><span class="n">cvMat</span><span class="p">.</span><span class="n">total</span><span class="p">()];</span>
+  <span class="n">CGColorSpaceRef</span> <span class="n">colorSpace</span><span class="p">;</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">cvMat</span><span class="p">.</span><span class="n">elemSize</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">colorSpace</span> <span class="o">=</span> <span class="n">CGColorSpaceCreateDeviceGray</span><span class="p">();</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">colorSpace</span> <span class="o">=</span> <span class="n">CGColorSpaceCreateDeviceRGB</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="n">CGDataProviderRef</span> <span class="n">provider</span> <span class="o">=</span> <span class="n">CGDataProviderCreateWithCFData</span><span class="p">((</span><span class="n">__bridge</span> <span class="n">CFDataRef</span><span class="p">)</span><span class="n">data</span><span class="p">);</span>
+
+  <span class="c1">// Creating CGImage from cv::Mat</span>
+  <span class="n">CGImageRef</span> <span class="n">imageRef</span> <span class="o">=</span> <span class="n">CGImageCreate</span><span class="p">(</span><span class="n">cvMat</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span>                                 <span class="c1">//width</span>
+                                     <span class="n">cvMat</span><span class="p">.</span><span class="n">rows</span><span class="p">,</span>                                 <span class="c1">//height</span>
+                                     <span class="mi">8</span><span class="p">,</span>                                          <span class="c1">//bits per component</span>
+                                     <span class="mi">8</span> <span class="o">*</span> <span class="n">cvMat</span><span class="p">.</span><span class="n">elemSize</span><span class="p">(),</span>                       <span class="c1">//bits per pixel</span>
+                                     <span class="n">cvMat</span><span class="p">.</span><span class="n">step</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>                            <span class="c1">//bytesPerRow</span>
+                                     <span class="n">colorSpace</span><span class="p">,</span>                                 <span class="c1">//colorspace</span>
+                                     <span class="n">kCGImageAlphaNone</span><span class="o">|</span><span class="n">kCGBitmapByteOrderDefault</span><span class="p">,</span><span class="c1">// bitmap info</span>
+                                     <span class="n">provider</span><span class="p">,</span>                                   <span class="c1">//CGDataProviderRef</span>
+                                     <span class="nb">NULL</span><span class="p">,</span>                                       <span class="c1">//decode</span>
+                                     <span class="nb">false</span><span class="p">,</span>                                      <span class="c1">//should interpolate</span>
+                                     <span class="n">kCGRenderingIntentDefault</span>                   <span class="c1">//intent</span>
+                                     <span class="p">);</span>
+
+
+  <span class="c1">// Getting UIImage from CGImage</span>
+  <span class="n">UIImage</span> <span class="o">*</span><span class="n">finalImage</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIImage</span> <span class="nl">imageWithCGImage</span><span class="p">:</span><span class="n">imageRef</span><span class="p">];</span>
+  <span class="n">CGImageRelease</span><span class="p">(</span><span class="n">imageRef</span><span class="p">);</span>
+  <span class="n">CGDataProviderRelease</span><span class="p">(</span><span class="n">provider</span><span class="p">);</span>
+  <span class="n">CGColorSpaceRelease</span><span class="p">(</span><span class="n">colorSpace</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="n">finalImage</span><span class="p">;</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="output">
+<h2><em>Output</em><a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
+<img alt="header" class="align-center" src="../../../../_images/output.jpg" />
+<p>Check out an instance of running code with more Image Effects on <a class="reference external" href="https://www.youtube.com/watch?v=Ko3K_xdhJ1I">YouTube</a> .</p>
+ <div align="center">
+<iframe width="560" height="350" src="https://www.youtube.com/embed/Ko3K_xdhJ1I" frameborder="0" allowfullscreen></iframe>
+ </div></div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">OpenCV iOS - Image Processing</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#introduction"><em>Introduction</em></a></li>
+<li><a class="reference internal" href="#output"><em>Output</em></a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../hello/hello.html"
+                        title="previous chapter">OpenCV iOS Hello</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../video_processing/video_processing.html"
+                        title="next chapter">OpenCV iOS - Video Processing</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/ios/image_manipulation/image_manipulation.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../video_processing/video_processing.html" title="OpenCV iOS - Video Processing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../hello/hello.html" title="OpenCV iOS Hello"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_ios/table_of_content_ios.html" ><strong>OpenCV iOS</strong></a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

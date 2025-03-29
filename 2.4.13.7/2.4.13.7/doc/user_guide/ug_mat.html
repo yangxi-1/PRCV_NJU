@@ -1,0 +1,315 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Operations with images &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../index.html" />
+    <link rel="up" title="OpenCV User Guide" href="user_guide.html" />
+    <link rel="next" title="Features2d" href="ug_features2d.html" />
+    <link rel="prev" title="OpenCV User Guide" href="user_guide.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="ug_features2d.html" title="Features2d"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="user_guide.html" title="OpenCV User Guide"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="user_guide.html" accesskey="U">OpenCV User Guide</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="operations-with-images">
+<h1>Operations with images<a class="headerlink" href="#operations-with-images" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="input-output">
+<h2>Input/Output<a class="headerlink" href="#input-output" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="images">
+<h3>Images<a class="headerlink" href="#images" title="Permalink to this headline">¶</a></h3>
+<p>Load an image from a file:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">img</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you read a jpg file, a 3 channel image is created by default. If you need a grayscale image, use:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">img</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">format of the file is determined by its content (first few bytes)</p>
+</div>
+<p>Save an image to a file:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">imwrite</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">img</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">format of the file is determined by its extension.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">use <code class="docutils literal"><span class="pre">imdecode</span></code> and <code class="docutils literal"><span class="pre">imencode</span></code> to read and write image from/to memory rather than a file.</p>
+</div>
+</div>
+<div class="section" id="xml-yaml">
+<h3>XML/YAML<a class="headerlink" href="#xml-yaml" title="Permalink to this headline">¶</a></h3>
+<p>TBD</p>
+</div>
+</div>
+<div class="section" id="basic-operations-with-images">
+<h2>Basic operations with images<a class="headerlink" href="#basic-operations-with-images" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="accessing-pixel-intensity-values">
+<h3>Accessing pixel intensity values<a class="headerlink" href="#accessing-pixel-intensity-values" title="Permalink to this headline">¶</a></h3>
+<p>In order to get pixel intensity value, you have to know the type of an image and the number of channels. Here is an example for a single channel grey scale image (type 8UC1) and pixel coordinates x and y:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Scalar</span> <span class="n">intensity</span> <span class="o">=</span> <span class="n">img</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">intensity.val[0]</span></code> contains a value from 0 to 255. Note the ordering of <code class="docutils literal"><span class="pre">x</span></code> and <code class="docutils literal"><span class="pre">y</span></code>. Since in OpenCV images are represented by the same structure as matrices, we use the same convention for both cases - the 0-based row index (or y-coordinate) goes first and the 0-based column index (or x-coordinate) follows it. Alternatively, you can use the following notation:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Scalar</span> <span class="n">intensity</span> <span class="o">=</span> <span class="n">img</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Now let us consider a 3 channel image with <code class="docutils literal"><span class="pre">BGR</span></code> color ordering (the default format returned by <code class="docutils literal"><span class="pre">imread</span></code>):</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Vec3b</span> <span class="n">intensity</span> <span class="o">=</span> <span class="n">img</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">Vec3b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
+<span class="n">uchar</span> <span class="n">blue</span> <span class="o">=</span> <span class="n">intensity</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="n">uchar</span> <span class="n">green</span> <span class="o">=</span> <span class="n">intensity</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="n">uchar</span> <span class="n">red</span> <span class="o">=</span> <span class="n">intensity</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>You can use the same method for floating-point images (for example, you can get such an image by running Sobel on a 3 channel image):</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Vec3f</span> <span class="n">intensity</span> <span class="o">=</span> <span class="n">img</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">Vec3f</span><span class="o">&gt;</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
+<span class="kt">float</span> <span class="n">blue</span> <span class="o">=</span> <span class="n">intensity</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="kt">float</span> <span class="n">green</span> <span class="o">=</span> <span class="n">intensity</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="kt">float</span> <span class="n">red</span> <span class="o">=</span> <span class="n">intensity</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>The same method can be used to change pixel intensities:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">img</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="mi">128</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>There are functions in OpenCV, especially from calib3d module, such as <code class="docutils literal"><span class="pre">projectPoints</span></code>, that take an array of 2D or 3D points in the form of <code class="docutils literal"><span class="pre">Mat</span></code>. Matrix should contain exactly one column, each row corresponds to a point, matrix type should be 32FC2 or 32FC3 correspondingly. Such a matrix can be easily constructed from <code class="docutils literal"><span class="pre">std::vector</span></code>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point2f</span><span class="o">&gt;</span> <span class="n">points</span><span class="p">;</span>
+<span class="c1">//... fill the array</span>
+<span class="n">Mat</span> <span class="n">pointsMat</span> <span class="o">=</span> <span class="n">Mat</span><span class="p">(</span><span class="n">points</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>One can access a point in this matrix using the same method <code class="docutils literal"><span class="pre">Mat::at</span></code> :</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Point2f</span> <span class="n">point</span> <span class="o">=</span> <span class="n">pointsMat</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">Point2f</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="memory-management-and-reference-counting">
+<h3>Memory management and reference counting<a class="headerlink" href="#memory-management-and-reference-counting" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">Mat</span></code> is a structure that keeps matrix/image characteristics (rows and columns number, data type etc) and a pointer to data. So nothing prevents us from having several instances of <code class="docutils literal"><span class="pre">Mat</span></code> corresponding to the same data. A <code class="docutils literal"><span class="pre">Mat</span></code> keeps a reference count that tells if data has to be deallocated when a particular instance of <code class="docutils literal"><span class="pre">Mat</span></code> is destroyed. Here is an example of creating two matrices without copying data:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point3f</span><span class="o">&gt;</span> <span class="n">points</span><span class="p">;</span>
+<span class="c1">// .. fill the array</span>
+<span class="n">Mat</span> <span class="n">pointsMat</span> <span class="o">=</span> <span class="n">Mat</span><span class="p">(</span><span class="n">points</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>As a result we get a 32FC1 matrix with 3 columns instead of 32FC3 matrix with 1 column. <code class="docutils literal"><span class="pre">pointsMat</span></code> uses data from <code class="docutils literal"><span class="pre">points</span></code> and will not deallocate the memory when destroyed. In this particular instance, however, developer has to make sure that lifetime of <code class="docutils literal"><span class="pre">points</span></code> is longer than of <code class="docutils literal"><span class="pre">pointsMat</span></code>.
+If we need to copy the data, this is done using, for example, <code class="docutils literal"><span class="pre">Mat::copyTo</span></code> or <code class="docutils literal"><span class="pre">Mat::clone</span></code>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">img</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&quot;image.jpg&quot;</span><span class="p">);</span>
+<span class="n">Mat</span> <span class="n">img1</span> <span class="o">=</span> <span class="n">img</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>To the contrary with C API where an output image had to be created by developer, an empty output <code class="docutils literal"><span class="pre">Mat</span></code> can be supplied to each function. Each implementation calls <code class="docutils literal"><span class="pre">Mat::create</span></code> for a destination matrix. This method allocates data for a matrix if it is empty. If it is not empty and has the correct size and type, the method does nothing. If, however, size or type are different from input arguments, the data is deallocated (and lost) and a new data is allocated. For example:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">img</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&quot;image.jpg&quot;</span><span class="p">);</span>
+<span class="n">Mat</span> <span class="n">sobelx</span><span class="p">;</span>
+<span class="n">Sobel</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">sobelx</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="primitive-operations">
+<h3>Primitive operations<a class="headerlink" href="#primitive-operations" title="Permalink to this headline">¶</a></h3>
+<p>There is a number of convenient operators defined on a matrix. For example, here is how we can make a black image from an existing greyscale image <code class="docutils literal"><span class="pre">img</span></code>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">img</span> <span class="o">=</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Selecting a region of interest:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Rect</span> <span class="nf">r</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+<span class="n">Mat</span> <span class="n">smallImg</span> <span class="o">=</span> <span class="n">img</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>A convertion from <code class="docutils literal"><span class="pre">Mat</span></code> to C API data structures:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">img</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&quot;image.jpg&quot;</span><span class="p">);</span>
+<span class="n">IplImage</span> <span class="n">img1</span> <span class="o">=</span> <span class="n">img</span><span class="p">;</span>
+<span class="n">CvMat</span> <span class="n">m</span> <span class="o">=</span> <span class="n">img</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Note that there is no data copying here.</p>
+<p>Conversion from color to grey scale:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">img</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&quot;image.jpg&quot;</span><span class="p">);</span> <span class="c1">// loading a 8UC3 image</span>
+<span class="n">Mat</span> <span class="n">grey</span><span class="p">;</span>
+<span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">grey</span><span class="p">,</span> <span class="n">CV_BGR2GRAY</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Change image type from 8UC1 to 32FC1:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">src</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="visualizing-images">
+<h3>Visualizing images<a class="headerlink" href="#visualizing-images" title="Permalink to this headline">¶</a></h3>
+<p>It is very useful to see intermediate results of your algorithm during development process. OpenCV provides a convenient way of visualizing images. A 8U image can be shown using:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">img</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&quot;image.jpg&quot;</span><span class="p">);</span>
+
+<span class="n">namedWindow</span><span class="p">(</span><span class="s">&quot;image&quot;</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span><span class="p">);</span>
+<span class="n">imshow</span><span class="p">(</span><span class="s">&quot;image&quot;</span><span class="p">,</span> <span class="n">img</span><span class="p">);</span>
+<span class="n">waitKey</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>A call to <code class="docutils literal"><span class="pre">waitKey()</span></code> starts a message passing cycle that waits for a key stroke in the <code class="docutils literal"><span class="pre">&quot;image&quot;</span></code> window. A <code class="docutils literal"><span class="pre">32F</span></code> image needs to be converted to <code class="docutils literal"><span class="pre">8U</span></code> type. For example:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">img</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&quot;image.jpg&quot;</span><span class="p">);</span>
+<span class="n">Mat</span> <span class="n">grey</span><span class="p">;</span>
+<span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">grey</span><span class="p">,</span> <span class="n">CV_BGR2GRAY</span><span class="p">);</span>
+
+<span class="n">Mat</span> <span class="n">sobelx</span><span class="p">;</span>
+<span class="n">Sobel</span><span class="p">(</span><span class="n">grey</span><span class="p">,</span> <span class="n">sobelx</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="kt">double</span> <span class="n">minVal</span><span class="p">,</span> <span class="n">maxVal</span><span class="p">;</span>
+<span class="n">minMaxLoc</span><span class="p">(</span><span class="n">sobelx</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">minVal</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">maxVal</span><span class="p">);</span> <span class="c1">//find minimum and maximum intensities</span>
+<span class="n">Mat</span> <span class="n">draw</span><span class="p">;</span>
+<span class="n">sobelx</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">draw</span><span class="p">,</span> <span class="n">CV_8U</span><span class="p">,</span> <span class="mf">255.0</span><span class="o">/</span><span class="p">(</span><span class="n">maxVal</span> <span class="o">-</span> <span class="n">minVal</span><span class="p">),</span> <span class="o">-</span><span class="n">minVal</span> <span class="o">*</span> <span class="mf">255.0</span><span class="o">/</span><span class="p">(</span><span class="n">maxVal</span> <span class="o">-</span> <span class="n">minVal</span><span class="p">));</span>
+
+<span class="n">namedWindow</span><span class="p">(</span><span class="s">&quot;image&quot;</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span><span class="p">);</span>
+<span class="n">imshow</span><span class="p">(</span><span class="s">&quot;image&quot;</span><span class="p">,</span> <span class="n">draw</span><span class="p">);</span>
+<span class="n">waitKey</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Operations with images</a><ul>
+<li><a class="reference internal" href="#input-output">Input/Output</a><ul>
+<li><a class="reference internal" href="#images">Images</a></li>
+<li><a class="reference internal" href="#xml-yaml">XML/YAML</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#basic-operations-with-images">Basic operations with images</a><ul>
+<li><a class="reference internal" href="#accessing-pixel-intensity-values">Accessing pixel intensity values</a></li>
+<li><a class="reference internal" href="#memory-management-and-reference-counting">Memory management and reference counting</a></li>
+<li><a class="reference internal" href="#primitive-operations">Primitive operations</a></li>
+<li><a class="reference internal" href="#visualizing-images">Visualizing images</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="user_guide.html"
+                        title="previous chapter">OpenCV User Guide</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ug_features2d.html"
+                        title="next chapter">Features2d</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/doc/user_guide/ug_mat.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="ug_features2d.html" title="Features2d"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="user_guide.html" title="OpenCV User Guide"
+             >previous</a> |</li>
+        <li><a href="../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="user_guide.html" >OpenCV User Guide</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

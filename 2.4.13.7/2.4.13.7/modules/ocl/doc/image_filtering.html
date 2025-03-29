@@ -1,0 +1,1121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Image Filtering &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="ocl. OpenCL-accelerated Computer Vision" href="ocl.html" />
+    <link rel="next" title="Image Processing" href="image_processing.html" />
+    <link rel="prev" title="Matrix Reductions" href="matrix_reductions.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="image_processing.html" title="Image Processing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="matrix_reductions.html" title="Matrix Reductions"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" accesskey="U">ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="image-filtering">
+<h1>Image Filtering<a class="headerlink" href="#image-filtering" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ocl-baserowfilter-gpu">
+<h2>ocl::BaseRowFilter_GPU<a class="headerlink" href="#ocl-baserowfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ocl::BaseRowFilter_GPU">
+<em class="property">class </em><code class="descclassname">ocl::</code><code class="descname">BaseRowFilter_GPU</code><a class="headerlink" href="#ocl::BaseRowFilter_GPU" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for linear or non-linear filters that processes rows of 2D arrays. Such filters are used for the &#8220;horizontal&#8221; filtering passes in separable filters.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">BaseRowFilter_GPU</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">BaseRowFilter_GPU</span><span class="p">(</span><span class="kt">int</span> <span class="n">ksize_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">anchor_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">bordertype_</span><span class="p">)</span> <span class="o">:</span> <span class="n">ksize</span><span class="p">(</span><span class="n">ksize_</span><span class="p">),</span> <span class="n">anchor</span><span class="p">(</span><span class="n">anchor_</span><span class="p">),</span> <span class="n">bordertype</span><span class="p">(</span><span class="n">bordertype_</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">BaseRowFilter_GPU</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">src</span><span class="p">,</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">dst</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">ksize</span><span class="p">,</span> <span class="n">anchor</span><span class="p">,</span> <span class="n">bordertype</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This class does not allocate memory for a destination image. Usually this class is used inside <a class="reference internal" href="#ocl::FilterEngine_GPU" title="class ocl::FilterEngine_GPU"><code class="xref ocv ocv-class docutils literal"><span class="pre">ocl::FilterEngine_GPU</span></code></a>.</p>
+</div>
+</div>
+<div class="section" id="ocl-basecolumnfilter-gpu">
+<h2>ocl::BaseColumnFilter_GPU<a class="headerlink" href="#ocl-basecolumnfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ocl::BaseColumnFilter_GPU">
+<em class="property">class </em><code class="descclassname">ocl::</code><code class="descname">BaseColumnFilter_GPU</code><a class="headerlink" href="#ocl::BaseColumnFilter_GPU" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for linear or non-linear filters that processes columns of 2D arrays. Such filters are used for the &#8220;vertical&#8221; filtering passes in separable filters.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">BaseColumnFilter_GPU</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">BaseColumnFilter_GPU</span><span class="p">(</span><span class="kt">int</span> <span class="n">ksize_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">anchor_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">bordertype_</span><span class="p">)</span> <span class="o">:</span> <span class="n">ksize</span><span class="p">(</span><span class="n">ksize_</span><span class="p">),</span> <span class="n">anchor</span><span class="p">(</span><span class="n">anchor_</span><span class="p">),</span> <span class="n">bordertype</span><span class="p">(</span><span class="n">bordertype_</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">BaseColumnFilter_GPU</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">src</span><span class="p">,</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">dst</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">ksize</span><span class="p">,</span> <span class="n">anchor</span><span class="p">,</span> <span class="n">bordertype</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This class does not allocate memory for a destination image. Usually this class is used inside <a class="reference internal" href="#ocl::FilterEngine_GPU" title="class ocl::FilterEngine_GPU"><code class="xref ocv ocv-class docutils literal"><span class="pre">ocl::FilterEngine_GPU</span></code></a>.</p>
+</div>
+</div>
+<div class="section" id="ocl-basefilter-gpu">
+<h2>ocl::BaseFilter_GPU<a class="headerlink" href="#ocl-basefilter-gpu" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ocl::BaseFilter_GPU">
+<em class="property">class </em><code class="descclassname">ocl::</code><code class="descname">BaseFilter_GPU</code><a class="headerlink" href="#ocl::BaseFilter_GPU" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for non-separable 2D filters.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">BaseFilter_GPU</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">BaseFilter_GPU</span><span class="p">(</span><span class="k">const</span> <span class="n">Size</span> <span class="o">&amp;</span><span class="n">ksize_</span><span class="p">,</span> <span class="k">const</span> <span class="n">Point</span> <span class="o">&amp;</span><span class="n">anchor_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">borderType_</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">ksize</span><span class="p">(</span><span class="n">ksize_</span><span class="p">),</span> <span class="n">anchor</span><span class="p">(</span><span class="n">anchor_</span><span class="p">),</span> <span class="n">borderType</span><span class="p">(</span><span class="n">borderType_</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">BaseFilter_GPU</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">src</span><span class="p">,</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">dst</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">Size</span> <span class="n">ksize</span><span class="p">;</span>
+    <span class="n">Point</span> <span class="n">anchor</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">borderType</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This class does not allocate memory for a destination image. Usually this class is used inside <a class="reference internal" href="#ocl::FilterEngine_GPU" title="class ocl::FilterEngine_GPU"><code class="xref ocv ocv-class docutils literal"><span class="pre">ocl::FilterEngine_GPU</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-filterengine-gpu">
+<h2>ocl::FilterEngine_GPU<a class="headerlink" href="#ocl-filterengine-gpu" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ocl::FilterEngine_GPU">
+<em class="property">class </em><code class="descclassname">ocl::</code><code class="descname">FilterEngine_GPU</code><a class="headerlink" href="#ocl::FilterEngine_GPU" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for the Filter Engine.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">FilterEngine_GPU</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">FilterEngine_GPU</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">apply</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">src</span><span class="p">,</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">dst</span><span class="p">,</span> <span class="n">Rect</span> <span class="n">roi</span> <span class="o">=</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class can be used to apply an arbitrary filtering operation to an image. It contains all the necessary intermediate buffers. Pointers to the initialized <code class="docutils literal"><span class="pre">FilterEngine_GPU</span></code> instances are returned by various <code class="docutils literal"><span class="pre">create*Filter_GPU</span></code> functions (see below), and they are used inside high-level functions such as <a class="reference internal" href="#void ocl::filter2D(const oclMat &amp;src, oclMat &amp;dst, int ddepth, const Mat &amp;kernel, Point anchor , double delta , int borderType)" title="void ocl::filter2D(const oclMat &amp;src, oclMat &amp;dst, int ddepth, const Mat &amp;kernel, Point anchor , double delta , int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::filter2D()</span></code></a>, <a class="reference internal" href="#void ocl::erode(const oclMat &amp;src, oclMat &amp;dst, const Mat &amp;kernel, Point anchor , int iterations , int borderType , const Scalar &amp;borderValue)" title="void ocl::erode(const oclMat &amp;src, oclMat &amp;dst, const Mat &amp;kernel, Point anchor , int iterations , int borderType , const Scalar &amp;borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::erode()</span></code></a>, <a class="reference internal" href="#void ocl::Sobel(const oclMat &amp;src, oclMat &amp;dst, int ddepth, int dx, int dy, int ksize , double scale , double delta , int bordertype)" title="void ocl::Sobel(const oclMat &amp;src, oclMat &amp;dst, int ddepth, int dx, int dy, int ksize , double scale , double delta , int bordertype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::Sobel()</span></code></a> , and others.</p>
+<p>By using <code class="docutils literal"><span class="pre">FilterEngine_GPU</span></code> instead of functions you can avoid unnecessary memory allocation for intermediate buffers and get better performance:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">while</span> <span class="p">(...)</span>
+<span class="p">{</span>
+    <span class="n">ocl</span><span class="o">::</span><span class="n">oclMat</span> <span class="n">src</span> <span class="o">=</span> <span class="n">getImg</span><span class="p">();</span>
+    <span class="n">ocl</span><span class="o">::</span><span class="n">oclMat</span> <span class="n">dst</span><span class="p">;</span>
+    <span class="c1">// Allocate and release buffers at each iterations</span>
+    <span class="n">ocl</span><span class="o">::</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">ksize</span><span class="p">,</span> <span class="n">sigma1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Allocate buffers only once</span>
+<span class="n">cv</span><span class="o">::</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">ocl</span><span class="o">::</span><span class="n">FilterEngine_GPU</span><span class="o">&gt;</span> <span class="n">filter</span> <span class="o">=</span>
+    <span class="n">ocl</span><span class="o">::</span><span class="n">createGaussianFilter_GPU</span><span class="p">(</span><span class="n">CV_8UC4</span><span class="p">,</span> <span class="n">ksize</span><span class="p">,</span> <span class="n">sigma1</span><span class="p">);</span>
+<span class="k">while</span> <span class="p">(...)</span>
+<span class="p">{</span>
+    <span class="n">ocl</span><span class="o">::</span><span class="n">oclMat</span> <span class="n">src</span> <span class="o">=</span> <span class="n">getImg</span><span class="p">();</span>
+    <span class="n">ocl</span><span class="o">::</span><span class="n">oclMat</span> <span class="n">dst</span><span class="p">;</span>
+    <span class="n">filter</span><span class="o">-&gt;</span><span class="n">apply</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">cv</span><span class="o">::</span><span class="n">Rect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="c1">// Release buffers only once</span>
+<span class="n">filter</span><span class="p">.</span><span class="n">release</span><span class="p">();</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">FilterEngine_GPU</span></code> can process a rectangular sub-region of an image. By default, if <code class="docutils literal"><span class="pre">roi</span> <span class="pre">==</span> <span class="pre">Rect(0,0,-1,-1)</span></code> , <code class="docutils literal"><span class="pre">FilterEngine_GPU</span></code> processes the inner region of an image ( <code class="docutils literal"><span class="pre">Rect(anchor.x,</span> <span class="pre">anchor.y,</span> <span class="pre">src_size.width</span> <span class="pre">-</span> <span class="pre">ksize.width,</span> <span class="pre">src_size.height</span> <span class="pre">-</span> <span class="pre">ksize.height)</span></code> ) because some filters do not check whether indices are outside the image for better performance. See below to understand which filters support processing the whole image and which do not and identify image type limitations.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The GPU filters do not support the in-place mode.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#ocl::BaseRowFilter_GPU" title="class ocl::BaseRowFilter_GPU"><code class="xref ocv ocv-class docutils literal"><span class="pre">ocl::BaseRowFilter_GPU</span></code></a>, <a class="reference internal" href="#ocl::BaseColumnFilter_GPU" title="class ocl::BaseColumnFilter_GPU"><code class="xref ocv ocv-class docutils literal"><span class="pre">ocl::BaseColumnFilter_GPU</span></code></a>, <a class="reference internal" href="#ocl::BaseFilter_GPU" title="class ocl::BaseFilter_GPU"><code class="xref ocv ocv-class docutils literal"><span class="pre">ocl::BaseFilter_GPU</span></code></a>, <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; ocl::createFilter2D_GPU(const Ptr&lt;BaseFilter_GPU&gt; filter2D)" title="Ptr&lt;FilterEngine_GPU&gt; ocl::createFilter2D_GPU(const Ptr&lt;BaseFilter_GPU&gt; filter2D)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::createFilter2D_GPU()</span></code></a>, <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; ocl::createSeparableFilter_GPU(const Ptr&lt;BaseRowFilter_GPU&gt; &amp;rowFilter, const Ptr&lt;BaseColumnFilter_GPU&gt; &amp;columnFilter)" title="Ptr&lt;FilterEngine_GPU&gt; ocl::createSeparableFilter_GPU(const Ptr&lt;BaseRowFilter_GPU&gt; &amp;rowFilter, const Ptr&lt;BaseColumnFilter_GPU&gt; &amp;columnFilter)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::createSeparableFilter_GPU()</span></code></a>, <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; ocl::createBoxFilter_GPU(int srcType, int dstType, const Size &amp;ksize, const Point &amp;anchor , int borderType)" title="Ptr&lt;FilterEngine_GPU&gt; ocl::createBoxFilter_GPU(int srcType, int dstType, const Size &amp;ksize, const Point &amp;anchor , int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::createBoxFilter_GPU()</span></code></a>, <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; ocl::createMorphologyFilter_GPU(int op, int type, const Mat &amp;kernel, const Point &amp;anchor , int iterations)" title="Ptr&lt;FilterEngine_GPU&gt; ocl::createMorphologyFilter_GPU(int op, int type, const Mat &amp;kernel, const Point &amp;anchor , int iterations)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::createMorphologyFilter_GPU()</span></code></a>, <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; ocl::createLinearFilter_GPU(int srcType, int dstType, const Mat &amp;kernel, const Point &amp;anchor , int borderType)" title="Ptr&lt;FilterEngine_GPU&gt; ocl::createLinearFilter_GPU(int srcType, int dstType, const Mat &amp;kernel, const Point &amp;anchor , int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::createLinearFilter_GPU()</span></code></a>, <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; ocl::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat &amp;rowKernel, const Mat &amp;columnKernel, const Point &amp;anchor , double delta , int bordertype , Size imgSize)" title="Ptr&lt;FilterEngine_GPU&gt; ocl::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat &amp;rowKernel, const Mat &amp;columnKernel, const Point &amp;anchor , double delta , int bordertype , Size imgSize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::createSeparableLinearFilter_GPU()</span></code></a>, <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; ocl::createDerivFilter_GPU(int srcType, int dstType, int dx, int dy, int ksize, int borderType , Size imgSize)" title="Ptr&lt;FilterEngine_GPU&gt; ocl::createDerivFilter_GPU(int srcType, int dstType, int dx, int dy, int ksize, int borderType , Size imgSize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::createDerivFilter_GPU()</span></code></a>, <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; ocl::createGaussianFilter_GPU(int type, Size ksize, double sigma1, double sigma2 , int bordertype , Size imgSize)" title="Ptr&lt;FilterEngine_GPU&gt; ocl::createGaussianFilter_GPU(int type, Size ksize, double sigma1, double sigma2 , int bordertype , Size imgSize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::createGaussianFilter_GPU()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-createfilter2d-gpu">
+<h2>ocl::createFilter2D_GPU<a class="headerlink" href="#ocl-createfilter2d-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a non-separable filter engine with the specified filter.</p>
+<dl class="function">
+<dt id="Ptr&lt;FilterEngine_GPU&gt; ocl::createFilter2D_GPU(const Ptr&lt;BaseFilter_GPU&gt; filter2D)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FilterEngine_GPU&gt; <code class="descclassname">ocl::</code><code class="descname">createFilter2D_GPU</code><span class="sig-paren">(</span>const Ptr&lt;BaseFilter_GPU&gt; <strong>filter2D</strong><span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FilterEngine_GPU> ocl::createFilter2D_GPU(const Ptr<BaseFilter_GPU> filter2D)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filter2D</strong> &#8211; Non-separable 2D filter.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Usually this function is used inside such high-level functions as <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; ocl::createLinearFilter_GPU(int srcType, int dstType, const Mat &amp;kernel, const Point &amp;anchor , int borderType)" title="Ptr&lt;FilterEngine_GPU&gt; ocl::createLinearFilter_GPU(int srcType, int dstType, const Mat &amp;kernel, const Point &amp;anchor , int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::createLinearFilter_GPU()</span></code></a>, <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; ocl::createBoxFilter_GPU(int srcType, int dstType, const Size &amp;ksize, const Point &amp;anchor , int borderType)" title="Ptr&lt;FilterEngine_GPU&gt; ocl::createBoxFilter_GPU(int srcType, int dstType, const Size &amp;ksize, const Point &amp;anchor , int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::createBoxFilter_GPU()</span></code></a>.</p>
+</div>
+<div class="section" id="ocl-createseparablefilter-gpu">
+<h2>ocl::createSeparableFilter_GPU<a class="headerlink" href="#ocl-createseparablefilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a separable filter engine with the specified filters.</p>
+<dl class="function">
+<dt id="Ptr&lt;FilterEngine_GPU&gt; ocl::createSeparableFilter_GPU(const Ptr&lt;BaseRowFilter_GPU&gt; &amp;rowFilter, const Ptr&lt;BaseColumnFilter_GPU&gt; &amp;columnFilter)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FilterEngine_GPU&gt; <code class="descclassname">ocl::</code><code class="descname">createSeparableFilter_GPU</code><span class="sig-paren">(</span>const Ptr&lt;BaseRowFilter_GPU&gt;&amp; <strong>rowFilter</strong>, const Ptr&lt;BaseColumnFilter_GPU&gt;&amp; <strong>columnFilter</strong><span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FilterEngine_GPU> ocl::createSeparableFilter_GPU(const Ptr<BaseRowFilter_GPU> &rowFilter, const Ptr<BaseColumnFilter_GPU> &columnFilter)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>rowFilter</strong> &#8211; &#8220;Horizontal&#8221; 1D filter.</li>
+<li><strong>columnFilter</strong> &#8211; &#8220;Vertical&#8221; 1D filter.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Usually this function is used inside such high-level functions as <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; ocl::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat &amp;rowKernel, const Mat &amp;columnKernel, const Point &amp;anchor , double delta , int bordertype , Size imgSize)" title="Ptr&lt;FilterEngine_GPU&gt; ocl::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat &amp;rowKernel, const Mat &amp;columnKernel, const Point &amp;anchor , double delta , int bordertype , Size imgSize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::createSeparableLinearFilter_GPU()</span></code></a>.</p>
+</div>
+<div class="section" id="ocl-createboxfilter-gpu">
+<h2>ocl::createBoxFilter_GPU<a class="headerlink" href="#ocl-createboxfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a normalized 2D box filter.</p>
+<dl class="function">
+<dt id="Ptr&lt;FilterEngine_GPU&gt; ocl::createBoxFilter_GPU(int srcType, int dstType, const Size &amp;ksize, const Point &amp;anchor , int borderType)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FilterEngine_GPU&gt; <code class="descclassname">ocl::</code><code class="descname">createBoxFilter_GPU</code><span class="sig-paren">(</span>int <strong>srcType</strong>, int <strong>dstType</strong>, const Size&amp; <strong>ksize</strong>, const Point&amp; <strong>anchor</strong>=Point(-1, -1), int <strong>borderType</strong>=BORDER_DEFAULT<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FilterEngine_GPU> ocl::createBoxFilter_GPU(int srcType, int dstType, const Size &ksize, const Point &anchor , int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Ptr&lt;BaseFilter_GPU&gt; ocl::getBoxFilter_GPU(int srcType, int dstType, const Size &amp;ksize, Point anchor , int borderType)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;BaseFilter_GPU&gt; <code class="descclassname">ocl::</code><code class="descname">getBoxFilter_GPU</code><span class="sig-paren">(</span>int <strong>srcType</strong>, int <strong>dstType</strong>, const Size&amp; <strong>ksize</strong>, Point <strong>anchor</strong>=Point(-1, -1), int <strong>borderType</strong>=BORDER_DEFAULT<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<BaseFilter_GPU> ocl::getBoxFilter_GPU(int srcType, int dstType, const Size &ksize, Point anchor , int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>srcType</strong> &#8211; Input image type.</li>
+<li><strong>dstType</strong> &#8211; Output image type.  It supports only the same values as the source type.</li>
+<li><strong>ksize</strong> &#8211; Kernel size.</li>
+<li><strong>anchor</strong> &#8211; Anchor point. The default value <code class="docutils literal"><span class="pre">Point(-1,</span> <span class="pre">-1)</span></code> means that the anchor is at the kernel center.</li>
+<li><strong>borderType</strong> &#8211; Border type.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#void boxFilter(InputArray src, OutputArray dst, int ddepth, Size ksize, Point anchor, bool normalize, int borderType)" title="void boxFilter(InputArray src, OutputArray dst, int ddepth, Size ksize, Point anchor, bool normalize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">boxFilter()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-boxfilter">
+<h2>ocl::boxFilter<a class="headerlink" href="#ocl-boxfilter" title="Permalink to this headline">¶</a></h2>
+<p>Smooths the image using the normalized box filter.</p>
+<dl class="function">
+<dt id="void ocl::boxFilter(const oclMat &amp;src, oclMat &amp;dst, int ddepth, Size ksize, Point anchor , int borderType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">boxFilter</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong>, int <strong>ddepth</strong>, Size <strong>ksize</strong>, Point <strong>anchor</strong>=Point(-1, -1), int <strong>borderType</strong>=BORDER_DEFAULT<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::boxFilter(const oclMat &src, oclMat &dst, int ddepth, Size ksize, Point anchor , int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input image.</li>
+<li><strong>dst</strong> &#8211; Output image type. The size and type is the same as <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>ddepth</strong> &#8211; Desired depth of the destination image. If it is negative, it is the same as  <code class="docutils literal"><span class="pre">src.depth()</span></code> . It supports only the same depth as the source image depth.</li>
+<li><strong>ksize</strong> &#8211; Kernel size.</li>
+<li><strong>anchor</strong> &#8211; Anchor point. The default value <code class="docutils literal"><span class="pre">Point(-1,</span> <span class="pre">-1)</span></code> means that the anchor is at the kernel center.</li>
+<li><strong>borderType</strong> &#8211; Border type.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Smoothes image using box filter.</p>
+</div>
+<div class="section" id="ocl-blur">
+<h2>ocl::blur<a class="headerlink" href="#ocl-blur" title="Permalink to this headline">¶</a></h2>
+<p>Acts as a synonym for the normalized box filter.</p>
+<dl class="function">
+<dt id="void ocl::blur(const oclMat &amp;src, oclMat &amp;dst, Size ksize, Point anchor , int borderType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">blur</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong>, Size <strong>ksize</strong>, Point <strong>anchor</strong>=Point(-1, -1), int <strong>borderType</strong>=BORDER_CONSTANT<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::blur(const oclMat &src, oclMat &dst, Size ksize, Point anchor , int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input image.</li>
+<li><strong>dst</strong> &#8211; Output image type with the same size and type as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>ksize</strong> &#8211; Kernel size.</li>
+<li><strong>anchor</strong> &#8211; Anchor point. The default value Point(-1, -1) means that the anchor is at the kernel center.</li>
+<li><strong>borderType</strong> &#8211; Border type.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#void blur(InputArray src, OutputArray dst, Size ksize, Point anchor, int borderType)" title="void blur(InputArray src, OutputArray dst, Size ksize, Point anchor, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">blur()</span></code></a>, <a class="reference internal" href="#void ocl::boxFilter(const oclMat &amp;src, oclMat &amp;dst, int ddepth, Size ksize, Point anchor , int borderType)" title="void ocl::boxFilter(const oclMat &amp;src, oclMat &amp;dst, int ddepth, Size ksize, Point anchor , int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::boxFilter()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-createmorphologyfilter-gpu">
+<h2>ocl::createMorphologyFilter_GPU<a class="headerlink" href="#ocl-createmorphologyfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a 2D morphological filter.</p>
+<dl class="function">
+<dt id="Ptr&lt;FilterEngine_GPU&gt; ocl::createMorphologyFilter_GPU(int op, int type, const Mat &amp;kernel, const Point &amp;anchor , int iterations)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FilterEngine_GPU&gt; <code class="descclassname">ocl::</code><code class="descname">createMorphologyFilter_GPU</code><span class="sig-paren">(</span>int <strong>op</strong>, int <strong>type</strong>, const Mat&amp; <strong>kernel</strong>, const Point&amp; <strong>anchor</strong>=Point(-1, -1), int <strong>iterations</strong>=1<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FilterEngine_GPU> ocl::createMorphologyFilter_GPU(int op, int type, const Mat &kernel, const Point &anchor , int iterations)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Ptr&lt;BaseFilter_GPU&gt; ocl::getMorphologyFilter_GPU(int op, int type, const Mat &amp;kernel, const Size &amp;ksize, Point anchor)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;BaseFilter_GPU&gt; <code class="descclassname">ocl::</code><code class="descname">getMorphologyFilter_GPU</code><span class="sig-paren">(</span>int <strong>op</strong>, int <strong>type</strong>, const Mat&amp; <strong>kernel</strong>, const Size&amp; <strong>ksize</strong>, Point <strong>anchor</strong>=Point(-1, -1)<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<BaseFilter_GPU> ocl::getMorphologyFilter_GPU(int op, int type, const Mat &kernel, const Size &ksize, Point anchor)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>op</strong> &#8211; Morphology operation id. Only <code class="docutils literal"><span class="pre">MORPH_ERODE</span></code> and <code class="docutils literal"><span class="pre">MORPH_DILATE</span></code> are supported.</li>
+<li><strong>type</strong> &#8211; Input/output image type. Only  <code class="docutils literal"><span class="pre">CV_8UC1</span></code>  and  <code class="docutils literal"><span class="pre">CV_8UC4</span></code>  are supported.</li>
+<li><strong>kernel</strong> &#8211; 2D 8-bit structuring element for the morphological operation.</li>
+<li><strong>ksize</strong> &#8211; Size of a horizontal or vertical structuring element used for separable morphological operations.</li>
+<li><strong>anchor</strong> &#8211; Anchor position within the structuring element. Negative values mean that the anchor is at the center.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This filter does not check out-of-border accesses, so only a proper sub-matrix of a bigger matrix has to be passed to it.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#Ptr&lt;FilterEngine&gt; createMorphologyFilter(int op, int type, InputArray kernel, Point anchor, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)" title="Ptr&lt;FilterEngine&gt; createMorphologyFilter(int op, int type, InputArray kernel, Point anchor, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createMorphologyFilter()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-createlinearfilter-gpu">
+<h2>ocl::createLinearFilter_GPU<a class="headerlink" href="#ocl-createlinearfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a non-separable linear filter.</p>
+<dl class="function">
+<dt id="Ptr&lt;FilterEngine_GPU&gt; ocl::createLinearFilter_GPU(int srcType, int dstType, const Mat &amp;kernel, const Point &amp;anchor , int borderType)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FilterEngine_GPU&gt; <code class="descclassname">ocl::</code><code class="descname">createLinearFilter_GPU</code><span class="sig-paren">(</span>int <strong>srcType</strong>, int <strong>dstType</strong>, const Mat&amp; <strong>kernel</strong>, const Point&amp; <strong>anchor</strong>=Point(-1, -1), int <strong>borderType</strong>=BORDER_DEFAULT<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FilterEngine_GPU> ocl::createLinearFilter_GPU(int srcType, int dstType, const Mat &kernel, const Point &anchor , int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>srcType</strong> &#8211; Input image type..</li>
+<li><strong>dstType</strong> &#8211; Output image type. The same type as <code class="docutils literal"><span class="pre">src</span></code> is supported.</li>
+<li><strong>kernel</strong> &#8211; 2D array of filter coefficients.</li>
+<li><strong>anchor</strong> &#8211; Anchor point. The default value Point(-1, -1) means that the anchor is at the kernel center.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. For details, see <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#Ptr&lt;FilterEngine&gt; createLinearFilter(int srcType, int dstType, InputArray kernel, Point _anchor, double delta, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)" title="Ptr&lt;FilterEngine&gt; createLinearFilter(int srcType, int dstType, InputArray kernel, Point _anchor, double delta, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createLinearFilter()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-filter2d">
+<h2>ocl::filter2D<a class="headerlink" href="#ocl-filter2d" title="Permalink to this headline">¶</a></h2>
+<p>Applies the non-separable 2D linear filter to an image.</p>
+<dl class="function">
+<dt id="void ocl::filter2D(const oclMat &amp;src, oclMat &amp;dst, int ddepth, const Mat &amp;kernel, Point anchor , double delta , int borderType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">filter2D</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong>, int <strong>ddepth</strong>, const Mat&amp; <strong>kernel</strong>, Point <strong>anchor</strong>=Point(-1, -1), double <strong>delta</strong>=0.0, int <strong>borderType</strong>=BORDER_DEFAULT<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::filter2D(const oclMat &src, oclMat &dst, int ddepth, const Mat &kernel, Point anchor , double delta , int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.</li>
+<li><strong>dst</strong> &#8211; Destination image. The size and the number of channels is the same as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>ddepth</strong> &#8211; Desired depth of the destination image. If it is negative, it is the same as  <code class="docutils literal"><span class="pre">src.depth()</span></code> . It supports only the same depth as the source image depth.</li>
+<li><strong>kernel</strong> &#8211; 2D array of filter coefficients.</li>
+<li><strong>anchor</strong> &#8211; Anchor of the kernel that indicates the relative position of a filtered point within the kernel. The anchor resides within the kernel. The special default value (-1,-1) means that the anchor is at the kernel center.</li>
+<li><strong>delta</strong> &#8211; optional value added to the filtered pixels before storing them in <code class="docutils literal"><span class="pre">dst</span></code>. Value &#8216;0&#8217; is supported only.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. For details, see <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-getlinearrowfilter-gpu">
+<h2>ocl::getLinearRowFilter_GPU<a class="headerlink" href="#ocl-getlinearrowfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a primitive row filter with the specified kernel.</p>
+<dl class="function">
+<dt id="Ptr&lt;BaseRowFilter_GPU&gt; ocl::getLinearRowFilter_GPU(int srcType, int bufType, const Mat &amp;rowKernel, int anchor , int bordertype)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;BaseRowFilter_GPU&gt; <code class="descclassname">ocl::</code><code class="descname">getLinearRowFilter_GPU</code><span class="sig-paren">(</span>int <strong>srcType</strong>, int <strong>bufType</strong>, const Mat&amp; <strong>rowKernel</strong>, int <strong>anchor</strong>=-1, int <strong>bordertype</strong>=BORDER_DEFAULT<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<BaseRowFilter_GPU> ocl::getLinearRowFilter_GPU(int srcType, int bufType, const Mat &rowKernel, int anchor , int bordertype)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>srcType</strong> &#8211; Source array type. Only  <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC4</span></code> , <code class="docutils literal"><span class="pre">CV_16SC1</span></code> , <code class="docutils literal"><span class="pre">CV_16SC2</span></code> , <code class="docutils literal"><span class="pre">CV_16SC3</span></code> , <code class="docutils literal"><span class="pre">CV_32SC1</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code>  source types are supported.</li>
+<li><strong>bufType</strong> &#8211; Intermediate buffer type with as many channels as  <code class="docutils literal"><span class="pre">srcType</span></code> .</li>
+<li><strong>rowKernel</strong> &#8211; Filter coefficients. Support kernels with <code class="docutils literal"><span class="pre">size</span> <span class="pre">&lt;=</span> <span class="pre">16</span></code> .</li>
+<li><strong>anchor</strong> &#8211; Anchor position within the kernel. Negative values mean that the anchor is positioned at the aperture center.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. For details, see <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#Ptr&lt;FilterEngine&gt; createSeparableLinearFilter(int srcType, int dstType, InputArray rowKernel, InputArray columnKernel, Point anchor, double delta, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)" title="Ptr&lt;FilterEngine&gt; createSeparableLinearFilter(int srcType, int dstType, InputArray rowKernel, InputArray columnKernel, Point anchor, double delta, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createSeparableLinearFilter()</span></code></a> .</p>
+</div>
+</div>
+<div class="section" id="ocl-getlinearcolumnfilter-gpu">
+<h2>ocl::getLinearColumnFilter_GPU<a class="headerlink" href="#ocl-getlinearcolumnfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a primitive column filter with the specified kernel.</p>
+<dl class="function">
+<dt id="Ptr&lt;BaseColumnFilter_GPU&gt; ocl::getLinearColumnFilter_GPU(int bufType, int dstType, const Mat &amp;columnKernel, int anchor , int bordertype , double delta)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;BaseColumnFilter_GPU&gt; <code class="descclassname">ocl::</code><code class="descname">getLinearColumnFilter_GPU</code><span class="sig-paren">(</span>int <strong>bufType</strong>, int <strong>dstType</strong>, const Mat&amp; <strong>columnKernel</strong>, int <strong>anchor</strong>=-1, int <strong>bordertype</strong>=BORDER_DEFAULT, double <strong>delta</strong>=0.0<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<BaseColumnFilter_GPU> ocl::getLinearColumnFilter_GPU(int bufType, int dstType, const Mat &columnKernel, int anchor , int bordertype , double delta)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>bufType</strong> &#8211; Intermediate buffer type with as many channels as  <code class="docutils literal"><span class="pre">dstType</span></code> .</li>
+<li><strong>dstType</strong> &#8211; Destination array type. <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC4</span></code> , <code class="docutils literal"><span class="pre">CV_16SC1</span></code> , <code class="docutils literal"><span class="pre">CV_16SC2</span></code> , <code class="docutils literal"><span class="pre">CV_16SC3</span></code> , <code class="docutils literal"><span class="pre">CV_32SC1</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code> destination types are supported.</li>
+<li><strong>columnKernel</strong> &#8211; Filter coefficients. Support kernels with <code class="docutils literal"><span class="pre">size</span> <span class="pre">&lt;=</span> <span class="pre">16</span></code> .</li>
+<li><strong>anchor</strong> &#8211; Anchor position within the kernel. Negative values mean that the anchor is positioned at the aperture center.</li>
+<li><strong>bordertype</strong> &#8211; Pixel extrapolation method. For details, see  <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a> .</li>
+<li><strong>delta</strong> &#8211; default value is 0.0.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#Ptr&lt;BaseRowFilter_GPU&gt; ocl::getLinearRowFilter_GPU(int srcType, int bufType, const Mat &amp;rowKernel, int anchor , int bordertype)" title="Ptr&lt;BaseRowFilter_GPU&gt; ocl::getLinearRowFilter_GPU(int srcType, int bufType, const Mat &amp;rowKernel, int anchor , int bordertype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::getLinearRowFilter_GPU()</span></code></a>, <a class="reference internal" href="../../imgproc/doc/filtering.html#Ptr&lt;FilterEngine&gt; createSeparableLinearFilter(int srcType, int dstType, InputArray rowKernel, InputArray columnKernel, Point anchor, double delta, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)" title="Ptr&lt;FilterEngine&gt; createSeparableLinearFilter(int srcType, int dstType, InputArray rowKernel, InputArray columnKernel, Point anchor, double delta, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createSeparableLinearFilter()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-createseparablelinearfilter-gpu">
+<h2>ocl::createSeparableLinearFilter_GPU<a class="headerlink" href="#ocl-createseparablelinearfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a separable linear filter engine.</p>
+<dl class="function">
+<dt id="Ptr&lt;FilterEngine_GPU&gt; ocl::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat &amp;rowKernel, const Mat &amp;columnKernel, const Point &amp;anchor , double delta , int bordertype , Size imgSize)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FilterEngine_GPU&gt; <code class="descclassname">ocl::</code><code class="descname">createSeparableLinearFilter_GPU</code><span class="sig-paren">(</span>int <strong>srcType</strong>, int <strong>dstType</strong>, const Mat&amp; <strong>rowKernel</strong>, const Mat&amp; <strong>columnKernel</strong>, const Point&amp; <strong>anchor</strong>=Point(-1, -1), double <strong>delta</strong>=0.0, int <strong>bordertype</strong>=BORDER_DEFAULT, Size <strong>imgSize</strong>=Size(-1,-1) <span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FilterEngine_GPU> ocl::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat &rowKernel, const Mat &columnKernel, const Point &anchor , double delta , int bordertype , Size imgSize)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>srcType</strong> &#8211; Source array type.  <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC4</span></code> , <code class="docutils literal"><span class="pre">CV_16SC1</span></code> , <code class="docutils literal"><span class="pre">CV_16SC2</span></code> , <code class="docutils literal"><span class="pre">CV_16SC3</span></code> , <code class="docutils literal"><span class="pre">CV_32SC1</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code>  source types are supported.</li>
+<li><strong>dstType</strong> &#8211; Destination array type.  <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC4</span></code> , <code class="docutils literal"><span class="pre">CV_16SC1</span></code> , <code class="docutils literal"><span class="pre">CV_16SC2</span></code> , <code class="docutils literal"><span class="pre">CV_16SC3</span></code> , <code class="docutils literal"><span class="pre">CV_32SC1</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code>  destination types are supported.</li>
+<li><strong>rowKernel</strong> &#8211; Horizontal filter coefficients. Support kernels with <code class="docutils literal"><span class="pre">size</span> <span class="pre">&lt;=</span> <span class="pre">16</span></code> .</li>
+<li><strong>columnKernel</strong> &#8211; Vertical filter coefficients. Support kernels with <code class="docutils literal"><span class="pre">size</span> <span class="pre">&lt;=</span> <span class="pre">16</span></code> .</li>
+<li><strong>anchor</strong> &#8211; Anchor position within the kernel. Negative values mean that anchor is positioned at the aperture center.</li>
+<li><strong>delta</strong> &#8211; default value is 0.0.</li>
+<li><strong>bordertype</strong> &#8211; Pixel extrapolation method.</li>
+<li><strong>imgSize</strong> &#8211; Source image size to choose optimal method for processing.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#Ptr&lt;BaseRowFilter_GPU&gt; ocl::getLinearRowFilter_GPU(int srcType, int bufType, const Mat &amp;rowKernel, int anchor , int bordertype)" title="Ptr&lt;BaseRowFilter_GPU&gt; ocl::getLinearRowFilter_GPU(int srcType, int bufType, const Mat &amp;rowKernel, int anchor , int bordertype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::getLinearRowFilter_GPU()</span></code></a>, <a class="reference internal" href="#Ptr&lt;BaseColumnFilter_GPU&gt; ocl::getLinearColumnFilter_GPU(int bufType, int dstType, const Mat &amp;columnKernel, int anchor , int bordertype , double delta)" title="Ptr&lt;BaseColumnFilter_GPU&gt; ocl::getLinearColumnFilter_GPU(int bufType, int dstType, const Mat &amp;columnKernel, int anchor , int bordertype , double delta)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::getLinearColumnFilter_GPU()</span></code></a>, <a class="reference internal" href="../../imgproc/doc/filtering.html#Ptr&lt;FilterEngine&gt; createSeparableLinearFilter(int srcType, int dstType, InputArray rowKernel, InputArray columnKernel, Point anchor, double delta, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)" title="Ptr&lt;FilterEngine&gt; createSeparableLinearFilter(int srcType, int dstType, InputArray rowKernel, InputArray columnKernel, Point anchor, double delta, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createSeparableLinearFilter()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-sepfilter2d">
+<h2>ocl::sepFilter2D<a class="headerlink" href="#ocl-sepfilter2d" title="Permalink to this headline">¶</a></h2>
+<p>Applies a separable 2D linear filter to an image.</p>
+<dl class="function">
+<dt id="void ocl::sepFilter2D(const oclMat &amp;src, oclMat &amp;dst, int ddepth, const Mat &amp;kernelX, const Mat &amp;kernelY, Point anchor , double delta , int bordertype)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">sepFilter2D</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong>, int <strong>ddepth</strong>, const Mat&amp; <strong>kernelX</strong>, const Mat&amp; <strong>kernelY</strong>, Point <strong>anchor</strong>=Point(-1, -1), double <strong>delta</strong>=0.0, int <strong>bordertype</strong>=BORDER_DEFAULT<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::sepFilter2D(const oclMat &src, oclMat &dst, int ddepth, const Mat &kernelX, const Mat &kernelY, Point anchor , double delta , int bordertype)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.  <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC4</span></code> , <code class="docutils literal"><span class="pre">CV_16SC1</span></code> , <code class="docutils literal"><span class="pre">CV_16SC2</span></code> , <code class="docutils literal"><span class="pre">CV_32SC1</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code>  source types are supported.</li>
+<li><strong>dst</strong> &#8211; Destination image with the same size and number of channels as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>ddepth</strong> &#8211; Destination image depth.  <code class="docutils literal"><span class="pre">CV_8U</span></code> , <code class="docutils literal"><span class="pre">CV_16S</span></code> , <code class="docutils literal"><span class="pre">CV_32S</span></code> , and  <code class="docutils literal"><span class="pre">CV_32F</span></code> are supported.</li>
+<li><strong>kernelX</strong> &#8211; Horizontal filter coefficients.</li>
+<li><strong>kernelY</strong> &#8211; Vertical filter coefficients.</li>
+<li><strong>anchor</strong> &#8211; Anchor position within the kernel. The default value <code class="docutils literal"><span class="pre">(-1,</span> <span class="pre">1)</span></code> means that the anchor is at the kernel center.</li>
+<li><strong>delta</strong> &#8211; default value is 0.0.</li>
+<li><strong>bordertype</strong> &#8211; Pixel extrapolation method. For details, see  <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; ocl::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat &amp;rowKernel, const Mat &amp;columnKernel, const Point &amp;anchor , double delta , int bordertype , Size imgSize)" title="Ptr&lt;FilterEngine_GPU&gt; ocl::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat &amp;rowKernel, const Mat &amp;columnKernel, const Point &amp;anchor , double delta , int bordertype , Size imgSize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::createSeparableLinearFilter_GPU()</span></code></a>, <a class="reference internal" href="../../imgproc/doc/filtering.html#void sepFilter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernelX, InputArray kernelY, Point anchor, double delta, int borderType)" title="void sepFilter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernelX, InputArray kernelY, Point anchor, double delta, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">sepFilter2D()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-createderivfilter-gpu">
+<h2>ocl::createDerivFilter_GPU<a class="headerlink" href="#ocl-createderivfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a filter engine for the generalized Sobel operator.</p>
+<dl class="function">
+<dt id="Ptr&lt;FilterEngine_GPU&gt; ocl::createDerivFilter_GPU(int srcType, int dstType, int dx, int dy, int ksize, int borderType , Size imgSize)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FilterEngine_GPU&gt; <code class="descclassname">ocl::</code><code class="descname">createDerivFilter_GPU</code><span class="sig-paren">(</span>int <strong>srcType</strong>, int <strong>dstType</strong>, int <strong>dx</strong>, int <strong>dy</strong>, int <strong>ksize</strong>, int <strong>borderType</strong>=BORDER_DEFAULT, Size <strong>imgSize</strong>=Size(-1,-1) <span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FilterEngine_GPU> ocl::createDerivFilter_GPU(int srcType, int dstType, int dx, int dy, int ksize, int borderType , Size imgSize)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>srcType</strong> &#8211; Source image type.  <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC4</span></code> , <code class="docutils literal"><span class="pre">CV_16SC1</span></code> , <code class="docutils literal"><span class="pre">CV_16SC2</span></code> , <code class="docutils literal"><span class="pre">CV_16SC3</span></code> , <code class="docutils literal"><span class="pre">CV_32SC1</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code>  source types are supported.</li>
+<li><strong>dstType</strong> &#8211; Destination image type with as many channels as  <code class="docutils literal"><span class="pre">srcType</span></code> ,  <code class="docutils literal"><span class="pre">CV_8U</span></code> , <code class="docutils literal"><span class="pre">CV_16S</span></code> , <code class="docutils literal"><span class="pre">CV_32S</span></code> , and  <code class="docutils literal"><span class="pre">CV_32F</span></code>  depths are supported.</li>
+<li><strong>dx</strong> &#8211; Derivative order in respect of x.</li>
+<li><strong>dy</strong> &#8211; Derivative order in respect of y.</li>
+<li><strong>ksize</strong> &#8211; Aperture size. See  <a class="reference internal" href="../../imgproc/doc/filtering.html#void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)" title="void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getDerivKernels()</span></code></a> for details.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. For details, see  <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a>.</li>
+<li><strong>imgSize</strong> &#8211; Source image size to choose optimal method for processing.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; ocl::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat &amp;rowKernel, const Mat &amp;columnKernel, const Point &amp;anchor , double delta , int bordertype , Size imgSize)" title="Ptr&lt;FilterEngine_GPU&gt; ocl::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat &amp;rowKernel, const Mat &amp;columnKernel, const Point &amp;anchor , double delta , int bordertype , Size imgSize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::createSeparableLinearFilter_GPU()</span></code></a>, <a class="reference internal" href="../../imgproc/doc/filtering.html#Ptr&lt;FilterEngine&gt; createDerivFilter(int srcType, int dstType, int dx, int dy, int ksize, int borderType)" title="Ptr&lt;FilterEngine&gt; createDerivFilter(int srcType, int dstType, int dx, int dy, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createDerivFilter()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-sobel">
+<h2>ocl::Sobel<a class="headerlink" href="#ocl-sobel" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::Sobel(const oclMat &amp;src, oclMat &amp;dst, int ddepth, int dx, int dy, int ksize , double scale , double delta , int bordertype)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">Sobel</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong>, int <strong>ddepth</strong>, int <strong>dx</strong>, int <strong>dy</strong>, int <strong>ksize</strong>=3, double <strong>scale</strong>=1, double <strong>delta</strong>=0.0, int <strong>bordertype</strong>=BORDER_DEFAULT<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::Sobel(const oclMat &src, oclMat &dst, int ddepth, int dx, int dy, int ksize , double scale , double delta , int bordertype)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; The source image</li>
+<li><strong>dst</strong> &#8211; The destination image; It will have the same size as src</li>
+<li><strong>ddepth</strong> &#8211; The destination image depth</li>
+<li><strong>dx</strong> &#8211; Order of the derivative x</li>
+<li><strong>dy</strong> &#8211; Order of the derivative y</li>
+<li><strong>ksize</strong> &#8211; Size of the extended Sobel kernel</li>
+<li><strong>scale</strong> &#8211; The optional scale factor for the computed derivative values(by default, no scaling is applied)</li>
+<li><strong>delta</strong> &#8211; The optional delta value, added to the results prior to storing them in dst</li>
+<li><strong>bordertype</strong> &#8211; Pixel extrapolation method.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function computes the first x- or y- spatial image derivative using Sobel operator. Surpport 8UC1 8UC4 32SC1 32SC4 32FC1 32FC4 data type.</p>
+</div>
+<div class="section" id="ocl-scharr">
+<h2>ocl::Scharr<a class="headerlink" href="#ocl-scharr" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::Scharr(const oclMat &amp;src, oclMat &amp;dst, int ddepth, int dx, int dy, double scale , double delta , int bordertype)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">Scharr</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong>, int <strong>ddepth</strong>, int <strong>dx</strong>, int <strong>dy</strong>, double <strong>scale</strong>=1, double <strong>delta</strong>=0.0, int <strong>bordertype</strong>=BORDER_DEFAULT<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::Scharr(const oclMat &src, oclMat &dst, int ddepth, int dx, int dy, double scale , double delta , int bordertype)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; The source image</li>
+<li><strong>dst</strong> &#8211; The destination image; It will have the same size as src</li>
+<li><strong>ddepth</strong> &#8211; The destination image depth</li>
+<li><strong>dx</strong> &#8211; Order of the derivative x</li>
+<li><strong>dy</strong> &#8211; Order of the derivative y</li>
+<li><strong>scale</strong> &#8211; The optional scale factor for the computed derivative values(by default, no scaling is applied)</li>
+<li><strong>delta</strong> &#8211; The optional delta value, added to the results prior to storing them in dst</li>
+<li><strong>bordertype</strong> &#8211; Pixel extrapolation method.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function computes the first x- or y- spatial image derivative using Scharr operator. Surpport 8UC1 8UC4 32SC1 32SC4 32FC1 32FC4 data type.</p>
+</div>
+<div class="section" id="ocl-creategaussianfilter-gpu">
+<h2>ocl::createGaussianFilter_GPU<a class="headerlink" href="#ocl-creategaussianfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a Gaussian filter engine.</p>
+<dl class="function">
+<dt id="Ptr&lt;FilterEngine_GPU&gt; ocl::createGaussianFilter_GPU(int type, Size ksize, double sigma1, double sigma2 , int bordertype , Size imgSize)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FilterEngine_GPU&gt; <code class="descclassname">ocl::</code><code class="descname">createGaussianFilter_GPU</code><span class="sig-paren">(</span>int <strong>type</strong>, Size <strong>ksize</strong>, double <strong>sigma1</strong>, double <strong>sigma2</strong>=0, int <strong>bordertype</strong>=BORDER_DEFAULT, Size <strong>imgSize</strong>=Size(-1,-1) <span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FilterEngine_GPU> ocl::createGaussianFilter_GPU(int type, Size ksize, double sigma1, double sigma2 , int bordertype , Size imgSize)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>type</strong> &#8211; Source and destination image type.  <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC4</span></code> , <code class="docutils literal"><span class="pre">CV_16SC1</span></code> , <code class="docutils literal"><span class="pre">CV_16SC2</span></code> , <code class="docutils literal"><span class="pre">CV_16SC3</span></code> , <code class="docutils literal"><span class="pre">CV_32SC1</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code> are supported.</li>
+<li><strong>ksize</strong> &#8211; Aperture size. See  <a class="reference internal" href="../../imgproc/doc/filtering.html#Mat getGaussianKernel(int ksize, double sigma, int ktype)" title="Mat getGaussianKernel(int ksize, double sigma, int ktype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getGaussianKernel()</span></code></a> for details.</li>
+<li><strong>sigma1</strong> &#8211; Gaussian sigma in the horizontal direction. See  <a class="reference internal" href="../../imgproc/doc/filtering.html#Mat getGaussianKernel(int ksize, double sigma, int ktype)" title="Mat getGaussianKernel(int ksize, double sigma, int ktype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getGaussianKernel()</span></code></a> for details.</li>
+<li><strong>sigma2</strong> &#8211; Gaussian sigma in the vertical direction. If 0, then  <img class="math" src="../../../_images/math/746d45695d9afb38c7654245424b3152d29e956e.png" alt="\texttt{sigma2}\leftarrow\texttt{sigma1}"/> .</li>
+<li><strong>bordertype</strong> &#8211; Pixel extrapolation method. For details, see  <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a>.</li>
+<li><strong>imgSize</strong> &#8211; Source image size to choose optimal method for processing.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; ocl::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat &amp;rowKernel, const Mat &amp;columnKernel, const Point &amp;anchor , double delta , int bordertype , Size imgSize)" title="Ptr&lt;FilterEngine_GPU&gt; ocl::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat &amp;rowKernel, const Mat &amp;columnKernel, const Point &amp;anchor , double delta , int bordertype , Size imgSize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::createSeparableLinearFilter_GPU()</span></code></a>, <a class="reference internal" href="../../imgproc/doc/filtering.html#Ptr&lt;FilterEngine&gt; createGaussianFilter(int type, Size ksize, double sigma1, double sigma2, int borderType)" title="Ptr&lt;FilterEngine&gt; createGaussianFilter(int type, Size ksize, double sigma1, double sigma2, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createGaussianFilter()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-gaussianblur">
+<h2>ocl::GaussianBlur<a class="headerlink" href="#ocl-gaussianblur" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::GaussianBlur(const oclMat &amp;src, oclMat &amp;dst, Size ksize, double sigma1, double sigma2 , int bordertype)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">GaussianBlur</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong>, Size <strong>ksize</strong>, double <strong>sigma1</strong>, double <strong>sigma2</strong>=0, int <strong>bordertype</strong>=BORDER_DEFAULT<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::GaussianBlur(const oclMat &src, oclMat &dst, Size ksize, double sigma1, double sigma2 , int bordertype)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; The source image</li>
+<li><strong>dst</strong> &#8211; The destination image; It will have the same size and the same type as src</li>
+<li><strong>ksize</strong> &#8211; The Gaussian kernel size; ksize.width and ksize.height can differ, but they both must be positive and odd. Or, they can be zero&#8217;s, then they are computed from sigma</li>
+<li><strong>sigma1sigma2</strong> &#8211; The Gaussian kernel standard deviations in X and Y direction. If sigmaY is zero, it is set to be equal to sigmaX. If they are both zeros, they are computed from ksize.width and ksize.height. To fully control the result regardless of possible future modification of all this semantics, it is recommended to specify all of ksize, sigmaX and sigmaY</li>
+<li><strong>bordertype</strong> &#8211; Pixel extrapolation method.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function convolves the source image with the specified Gaussian kernel. In-place filtering is supported.  Surpport 8UC1 8UC4 32SC1 32SC4 32FC1 32FC4 data type.</p>
+</div>
+<div class="section" id="ocl-laplacian">
+<h2>ocl::Laplacian<a class="headerlink" href="#ocl-laplacian" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::Laplacian(const oclMat &amp;src, oclMat &amp;dst, int ddepth, int ksize , double scale , double delta , int borderType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">Laplacian</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong>, int <strong>ddepth</strong>, int <strong>ksize</strong>=1, double <strong>scale</strong>=1, double <strong>delta</strong>=0, int <strong>borderType</strong>=BORDER_DEFAULT<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::Laplacian(const oclMat &src, oclMat &dst, int ddepth, int ksize , double scale , double delta , int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; The source image</li>
+<li><strong>dst</strong> &#8211; The destination image; It will have the same size and the same type as src</li>
+<li><strong>ddepth</strong> &#8211; The desired depth of the destination image</li>
+<li><strong>ksize</strong> &#8211; The aperture size used to compute the second-derivative filters. It must be positive and odd</li>
+<li><strong>scale</strong> &#8211; The optional scale factor for the computed Laplacian values (by default, no scaling is applied</li>
+<li><strong>delta</strong> &#8211; Optional delta value that is added to the results prior to storing them in  <code class="docutils literal"><span class="pre">dst</span></code> . Supported value is 0 only.</li>
+<li><strong>bordertype</strong> &#8211; Pixel extrapolation method.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function calculates the Laplacian of the source image by adding up the second x and y derivatives calculated using the Sobel operator.</p>
+</div>
+<div class="section" id="ocl-convolve">
+<h2>ocl::convolve<a class="headerlink" href="#ocl-convolve" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::convolve(const oclMat &amp;image, const oclMat &amp;temp1, oclMat &amp;result)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">convolve</code><span class="sig-paren">(</span>const oclMat&amp; <strong>image</strong>, const oclMat&amp; <strong>temp1</strong>, oclMat&amp; <strong>result</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::convolve(const oclMat &image, const oclMat &temp1, oclMat &result)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; The source image. Only  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> images are supported for now.</li>
+<li><strong>temp1</strong> &#8211; Convolution kernel, a single-channel floating point matrix. The size is not greater than the  <code class="docutils literal"><span class="pre">image</span></code> size. The type is the same as  <code class="docutils literal"><span class="pre">image</span></code>.</li>
+<li><strong>result</strong> &#8211; The destination image</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Convolves an image with the kernel. Supports only CV_32FC1 data types and do not support ROI.</p>
+</div>
+<div class="section" id="ocl-bilateralfilter">
+<h2>ocl::bilateralFilter<a class="headerlink" href="#ocl-bilateralfilter" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::bilateralFilter(const oclMat &amp;src, oclMat &amp;dst, int d, double sigmaColor, double sigmaSpace, int borderType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">bilateralFilter</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong>, int <strong>d</strong>, double <strong>sigmaColor</strong>, double <strong>sigmaSpace</strong>, int <strong>borderType</strong>=BORDER_DEFAULT<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::bilateralFilter(const oclMat &src, oclMat &dst, int d, double sigmaColor, double sigmaSpace, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; The source image</li>
+<li><strong>dst</strong> &#8211; The destination image; will have the same size and the same type as src</li>
+<li><strong>d</strong> &#8211; The diameter of each pixel neighborhood, that is used during filtering. If it is non-positive, it&#8217;s computed from sigmaSpace</li>
+<li><strong>sigmaColor</strong> &#8211; Filter sigma in the color space. Larger value of the parameter means that farther colors within the pixel neighborhood (see sigmaSpace) will be mixed together, resulting in larger areas of semi-equal color</li>
+<li><strong>sigmaSpave</strong> &#8211; Filter sigma in the coordinate space. Larger value of the parameter means that farther pixels will influence each other (as long as their colors are close enough; see sigmaColor). Then d&gt;0, it specifies the neighborhood size regardless of sigmaSpace, otherwise d is proportional to sigmaSpace.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Applies bilateral filter to the image. Supports 8UC1 8UC4 data types.</p>
+</div>
+<div class="section" id="ocl-adaptivebilateralfilter">
+<h2>ocl::adaptiveBilateralFilter<a class="headerlink" href="#ocl-adaptivebilateralfilter" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::adaptiveBilateralFilter(const oclMat&amp; src, oclMat&amp; dst, Size ksize, double sigmaSpace, double maxSigmaColor , Point anchor , int borderType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">adaptiveBilateralFilter</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong>, Size <strong>ksize</strong>, double <strong>sigmaSpace</strong>, double <strong>maxSigmaColor</strong>=20.0, Point <strong>anchor</strong>=Point(-1, -1), int <strong>borderType</strong>=BORDER_DEFAULT<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::adaptiveBilateralFilter(const oclMat& src, oclMat& dst, Size ksize, double sigmaSpace, double maxSigmaColor , Point anchor , int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; The source image</li>
+<li><strong>dst</strong> &#8211; The destination image; will have the same size and the same type as src</li>
+<li><strong>ksize</strong> &#8211; The kernel size. This is the neighborhood where the local variance will be calculated, and where pixels will contribute (in a weighted manner).</li>
+<li><strong>sigmaSpace</strong> &#8211; Filter sigma in the coordinate space. Larger value of the parameter means that farther pixels will influence each other (as long as their colors are close enough; see sigmaColor). Then d&gt;0, it specifies the neighborhood size regardless of sigmaSpace, otherwise d is proportional to sigmaSpace.</li>
+<li><strong>maxSigmaColor</strong> &#8211; Maximum allowed sigma color (will clamp the value calculated in the ksize neighborhood. Larger value of the parameter means that more dissimilar pixels will influence each other (as long as their colors are close enough; see sigmaColor). Then d&gt;0, it specifies the neighborhood size regardless of sigmaSpace, otherwise d is proportional to sigmaSpace.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>A main part of our strategy will be to load each raw pixel once, and reuse it to calculate all pixels in the output (filtered) image that need this pixel value. The math of the filter is that of the usual bilateral filter, except that the sigma color is calculated in the neighborhood, and clamped by the optional input value.</p>
+<p>Local memory organization</p>
+<a class="reference internal image-reference" href="../../../_images/adaptiveBilateralFilter.jpg"><img alt="Introduction Icon" src="../../../_images/adaptiveBilateralFilter.jpg" style="width: 350pt; height: 250pt;" /></a>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We partition the image to non-overlapping blocks of size (Ux, Uy). Each such block will correspond to the pixel locations where we will calculate the filter result in one workgroup. Considering neighbourhoods of sizes (kx, ky), where kx = 2 dx + 1, and ky = 2 dy + 1 (in image ML, dx = dy = 1, and kx = ky = 3), it is clear that we need to load data of size Wx = Ux + 2 dx, Wy = Uy + 2 dy. Furthermore, if (Sx, Sy) is the top left pixel coordinates for a particular block, and (Sx + Ux - 1, Sy + Uy -1) is to botom right coordinate of the block, we need to load data starting at top left coordinate (PSx, PSy) = (Sx - dx, Sy - dy), and ending at bottom right coordinate (Sx + Ux - 1 + dx, Sy + Uy - 1 + dy). The workgroup layout is (Wx,1). However, to take advantage of the natural hardware properties (preferred wavefront sizes), we restrict Wx to be a multiple of that preferred wavefront size (for current AMD hardware this is typically 64). Each thread in the workgroup will load Wy elements (under the constraint that Wx*Wy*pixel width &lt;= max local memory).</p>
+</div>
+<p>Applies bilateral filter to the image. Supports 8UC1 8UC3 data types.</p>
+</div>
+<div class="section" id="ocl-copymakeborder">
+<h2>ocl::copyMakeBorder<a class="headerlink" href="#ocl-copymakeborder" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::copyMakeBorder(const oclMat &amp;src, oclMat &amp;dst, int top, int bottom, int left, int right, int boardtype, const Scalar &amp;value)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">copyMakeBorder</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong>, int <strong>top</strong>, int <strong>bottom</strong>, int <strong>left</strong>, int <strong>right</strong>, int <strong>boardtype</strong>, const Scalar&amp; <strong>value</strong>=Scalar()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::copyMakeBorder(const oclMat &src, oclMat &dst, int top, int bottom, int left, int right, int boardtype, const Scalar &value)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; The source image</li>
+<li><strong>dst</strong> &#8211; The destination image; will have the same type as src and the size size(src.cols+left+right, src.rows+top+bottom)</li>
+<li><strong>topbottomleftright</strong> &#8211; Specify how much pixels in each direction from the source image rectangle one needs to extrapolate, e.g. top=1, bottom=1, left=1, right=1mean that 1 pixel-wide border needs to be built</li>
+<li><strong>bordertype</strong> &#8211; Pixel extrapolation method.</li>
+<li><strong>value</strong> &#8211; The border value if borderType==BORDER CONSTANT</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Forms a border around the image. Supports 8UC1 8UC4 32SC1 32SC4 32FC1 32FC4 data types.</p>
+</div>
+<div class="section" id="ocl-dilate">
+<h2>ocl::dilate<a class="headerlink" href="#ocl-dilate" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::dilate(const oclMat &amp;src, oclMat &amp;dst, const Mat &amp;kernel, Point anchor , int iterations , int borderType , const Scalar &amp;borderValue)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">dilate</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong>, const Mat&amp; <strong>kernel</strong>, Point <strong>anchor</strong>=Point(-1, -1), int <strong>iterations</strong>=1, int <strong>borderType</strong>=BORDER_CONSTANT, const Scalar&amp; <strong>borderValue</strong>=morphologyDefaultBorderValue()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::dilate(const oclMat &src, oclMat &dst, const Mat &kernel, Point anchor , int iterations , int borderType , const Scalar &borderValue)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; The source image</li>
+<li><strong>dst</strong> &#8211; The destination image; It will have the same size and the same type as src</li>
+<li><strong>kernel</strong> &#8211; The structuring element used for dilation. If element=Mat(), a 3times 3 rectangular structuring element is used</li>
+<li><strong>anchor</strong> &#8211; Position of the anchor within the element. The default value (-1, -1) means that the anchor is at the element center, only default value is supported</li>
+<li><strong>iterations</strong> &#8211; The number of times dilation is applied</li>
+<li><strong>bordertype</strong> &#8211; Pixel extrapolation method.</li>
+<li><strong>value</strong> &#8211; The border value if borderType==BORDER CONSTANT</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function dilates the source image using the specified structuring element that determines the shape of a pixel neighborhood over which the maximum is taken. Supports 8UC1 8UC4 data types.</p>
+</div>
+<div class="section" id="ocl-erode">
+<h2>ocl::erode<a class="headerlink" href="#ocl-erode" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::erode(const oclMat &amp;src, oclMat &amp;dst, const Mat &amp;kernel, Point anchor , int iterations , int borderType , const Scalar &amp;borderValue)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">erode</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong>, const Mat&amp; <strong>kernel</strong>, Point <strong>anchor</strong>=Point(-1, -1), int <strong>iterations</strong>=1, int <strong>borderType</strong>=BORDER_CONSTANT, const Scalar&amp; <strong>borderValue</strong>=morphologyDefaultBorderValue()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::erode(const oclMat &src, oclMat &dst, const Mat &kernel, Point anchor , int iterations , int borderType , const Scalar &borderValue)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; The source image</li>
+<li><strong>dst</strong> &#8211; The destination image; It will have the same size and the same type as src</li>
+<li><strong>kernel</strong> &#8211; The structuring element used for dilation. If element=Mat(), a 3times 3 rectangular structuring element is used</li>
+<li><strong>anchor</strong> &#8211; Position of the anchor within the element. The default value (-1, -1) means that the anchor is at the element center, only default value is supported</li>
+<li><strong>iterations</strong> &#8211; The number of times dilation is applied</li>
+<li><strong>bordertype</strong> &#8211; Pixel extrapolation method.</li>
+<li><strong>value</strong> &#8211; The border value if borderType==BORDER CONSTANT</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function erodes the source image using the specified structuring element that determines the shape of a pixel neighborhood over which the minimum is taken. Supports 8UC1 8UC4 data types.</p>
+</div>
+<div class="section" id="ocl-morphologyex">
+<h2>ocl::morphologyEx<a class="headerlink" href="#ocl-morphologyex" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::morphologyEx(const oclMat &amp;src, oclMat &amp;dst, int op, const Mat &amp;kernel, Point anchor , int iterations , int borderType , const Scalar &amp;borderValue)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">morphologyEx</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong>, int <strong>op</strong>, const Mat&amp; <strong>kernel</strong>, Point <strong>anchor</strong>=Point(-1, -1), int <strong>iterations</strong>=1, int <strong>borderType</strong>=BORDER_CONSTANT, const Scalar&amp; <strong>borderValue</strong>=morphologyDefaultBorderValue()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::morphologyEx(const oclMat &src, oclMat &dst, int op, const Mat &kernel, Point anchor , int iterations , int borderType , const Scalar &borderValue)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; The source image</li>
+<li><strong>dst</strong> &#8211; The destination image; It will have the same size and the same type as src</li>
+<li><strong>op</strong> &#8211; Type of morphological operation, one of the following: ERODE DILTATE OPEN CLOSE GRADIENT TOPHAT BLACKHAT</li>
+<li><strong>kernel</strong> &#8211; The structuring element used for dilation. If element=Mat(), a 3times 3 rectangular structuring element is used</li>
+<li><strong>anchor</strong> &#8211; Position of the anchor within the element. The default value (-1, -1) means that the anchor is at the element center, only default value is supported</li>
+<li><strong>iterations</strong> &#8211; The number of times dilation is applied</li>
+<li><strong>bordertype</strong> &#8211; Pixel extrapolation method.</li>
+<li><strong>value</strong> &#8211; The border value if borderType==BORDER CONSTANT</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>A wrapper for erode and dilate. Supports 8UC1 8UC4 data types.</p>
+</div>
+<div class="section" id="ocl-pyrdown">
+<h2>ocl::pyrDown<a class="headerlink" href="#ocl-pyrdown" title="Permalink to this headline">¶</a></h2>
+<p>Smoothes an image and downsamples it.</p>
+<dl class="function">
+<dt id="void ocl::pyrDown(const oclMat&amp; src, oclMat&amp; dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">pyrDown</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::pyrDown(const oclMat& src, oclMat& dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.</li>
+<li><strong>dst</strong> &#8211; Destination image. Will have <code class="docutils literal"><span class="pre">Size((src.cols+1)/2,</span> <span class="pre">(src.rows+1)/2)</span></code> size and the same type as <code class="docutils literal"><span class="pre">src</span></code> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#void pyrDown(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)" title="void pyrDown(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">pyrDown()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-pyrup">
+<h2>ocl::pyrUp<a class="headerlink" href="#ocl-pyrup" title="Permalink to this headline">¶</a></h2>
+<p>Upsamples an image and then smoothes it.</p>
+<dl class="function">
+<dt id="void ocl::pyrUp(const oclMat&amp; src, oclMat&amp; dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">pyrUp</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::pyrUp(const oclMat& src, oclMat& dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.</li>
+<li><strong>dst</strong> &#8211; Destination image. Will have <code class="docutils literal"><span class="pre">Size(src.cols*2,</span> <span class="pre">src.rows*2)</span></code> size and the same type as <code class="docutils literal"><span class="pre">src</span></code> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#void pyrUp(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)" title="void pyrUp(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">pyrUp()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-columnsum">
+<h2>ocl::columnSum<a class="headerlink" href="#ocl-columnsum" title="Permalink to this headline">¶</a></h2>
+<p>Computes a vertical (column) sum.</p>
+<dl class="function">
+<dt id="void ocl::columnSum(const oclMat&amp; src, oclMat&amp; sum)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">columnSum</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>sum</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::columnSum(const oclMat& src, oclMat& sum)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Only  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> images are supported for now.</li>
+<li><strong>sum</strong> &#8211; Destination image of the  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> type.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-blendlinear">
+<h2>ocl::blendLinear<a class="headerlink" href="#ocl-blendlinear" title="Permalink to this headline">¶</a></h2>
+<p>Performs linear blending of two images.</p>
+<dl class="function">
+<dt id="void ocl::blendLinear(const oclMat&amp; img1, const oclMat&amp; img2, const oclMat&amp; weights1, const oclMat&amp; weights2, oclMat&amp; result)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">blendLinear</code><span class="sig-paren">(</span>const oclMat&amp; <strong>img1</strong>, const oclMat&amp; <strong>img2</strong>, const oclMat&amp; <strong>weights1</strong>, const oclMat&amp; <strong>weights2</strong>, oclMat&amp; <strong>result</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::blendLinear(const oclMat& img1, const oclMat& img2, const oclMat& weights1, const oclMat& weights2, oclMat& result)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img1</strong> &#8211; First image. Supports only <code class="docutils literal"><span class="pre">CV_8U</span></code> and <code class="docutils literal"><span class="pre">CV_32F</span></code> depth.</li>
+<li><strong>img2</strong> &#8211; Second image. Must have the same size and the same type as <code class="docutils literal"><span class="pre">img1</span></code> .</li>
+<li><strong>weights1</strong> &#8211; Weights for first image. Must have tha same size as <code class="docutils literal"><span class="pre">img1</span></code> . Supports only <code class="docutils literal"><span class="pre">CV_32F</span></code> type.</li>
+<li><strong>weights2</strong> &#8211; Weights for second image. Must have tha same size as <code class="docutils literal"><span class="pre">img2</span></code> . Supports only <code class="docutils literal"><span class="pre">CV_32F</span></code> type.</li>
+<li><strong>result</strong> &#8211; Destination image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-medianfilter">
+<h2>ocl::medianFilter<a class="headerlink" href="#ocl-medianfilter" title="Permalink to this headline">¶</a></h2>
+<p>Blurs an image using the median filter.</p>
+<dl class="function">
+<dt id="void ocl::medianFilter(const oclMat &amp;src, oclMat &amp;dst, int m)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">medianFilter</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, oclMat&amp; <strong>dst</strong>, int <strong>m</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::medianFilter(const oclMat &src, oclMat &dst, int m)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; input <code class="docutils literal"><span class="pre">`1-`</span></code> or <code class="docutils literal"><span class="pre">`4`</span></code>-channel image; the image depth should be <code class="docutils literal"><span class="pre">`CV_8U`</span></code>, <code class="docutils literal"><span class="pre">`CV_32F`</span></code>.</li>
+<li><strong>dst</strong> &#8211; destination array of the same size and type as <code class="docutils literal"><span class="pre">`src`</span></code>.</li>
+<li><strong>m</strong> &#8211; aperture linear size; it must be odd and greater than <code class="docutils literal"><span class="pre">`1`</span></code>. Currently only <code class="docutils literal"><span class="pre">`3`</span></code>, <code class="docutils literal"><span class="pre">`5`</span></code> are supported.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function smoothes an image using the median filter with the texttt{m} times texttt{m} aperture. Each channel of a multi-channel image is processed independently. In-place operation is supported.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Image Filtering</a><ul>
+<li><a class="reference internal" href="#ocl-baserowfilter-gpu">ocl::BaseRowFilter_GPU</a></li>
+<li><a class="reference internal" href="#ocl-basecolumnfilter-gpu">ocl::BaseColumnFilter_GPU</a></li>
+<li><a class="reference internal" href="#ocl-basefilter-gpu">ocl::BaseFilter_GPU</a></li>
+<li><a class="reference internal" href="#ocl-filterengine-gpu">ocl::FilterEngine_GPU</a></li>
+<li><a class="reference internal" href="#ocl-createfilter2d-gpu">ocl::createFilter2D_GPU</a></li>
+<li><a class="reference internal" href="#ocl-createseparablefilter-gpu">ocl::createSeparableFilter_GPU</a></li>
+<li><a class="reference internal" href="#ocl-createboxfilter-gpu">ocl::createBoxFilter_GPU</a></li>
+<li><a class="reference internal" href="#ocl-boxfilter">ocl::boxFilter</a></li>
+<li><a class="reference internal" href="#ocl-blur">ocl::blur</a></li>
+<li><a class="reference internal" href="#ocl-createmorphologyfilter-gpu">ocl::createMorphologyFilter_GPU</a></li>
+<li><a class="reference internal" href="#ocl-createlinearfilter-gpu">ocl::createLinearFilter_GPU</a></li>
+<li><a class="reference internal" href="#ocl-filter2d">ocl::filter2D</a></li>
+<li><a class="reference internal" href="#ocl-getlinearrowfilter-gpu">ocl::getLinearRowFilter_GPU</a></li>
+<li><a class="reference internal" href="#ocl-getlinearcolumnfilter-gpu">ocl::getLinearColumnFilter_GPU</a></li>
+<li><a class="reference internal" href="#ocl-createseparablelinearfilter-gpu">ocl::createSeparableLinearFilter_GPU</a></li>
+<li><a class="reference internal" href="#ocl-sepfilter2d">ocl::sepFilter2D</a></li>
+<li><a class="reference internal" href="#ocl-createderivfilter-gpu">ocl::createDerivFilter_GPU</a></li>
+<li><a class="reference internal" href="#ocl-sobel">ocl::Sobel</a></li>
+<li><a class="reference internal" href="#ocl-scharr">ocl::Scharr</a></li>
+<li><a class="reference internal" href="#ocl-creategaussianfilter-gpu">ocl::createGaussianFilter_GPU</a></li>
+<li><a class="reference internal" href="#ocl-gaussianblur">ocl::GaussianBlur</a></li>
+<li><a class="reference internal" href="#ocl-laplacian">ocl::Laplacian</a></li>
+<li><a class="reference internal" href="#ocl-convolve">ocl::convolve</a></li>
+<li><a class="reference internal" href="#ocl-bilateralfilter">ocl::bilateralFilter</a></li>
+<li><a class="reference internal" href="#ocl-adaptivebilateralfilter">ocl::adaptiveBilateralFilter</a></li>
+<li><a class="reference internal" href="#ocl-copymakeborder">ocl::copyMakeBorder</a></li>
+<li><a class="reference internal" href="#ocl-dilate">ocl::dilate</a></li>
+<li><a class="reference internal" href="#ocl-erode">ocl::erode</a></li>
+<li><a class="reference internal" href="#ocl-morphologyex">ocl::morphologyEx</a></li>
+<li><a class="reference internal" href="#ocl-pyrdown">ocl::pyrDown</a></li>
+<li><a class="reference internal" href="#ocl-pyrup">ocl::pyrUp</a></li>
+<li><a class="reference internal" href="#ocl-columnsum">ocl::columnSum</a></li>
+<li><a class="reference internal" href="#ocl-blendlinear">ocl::blendLinear</a></li>
+<li><a class="reference internal" href="#ocl-medianfilter">ocl::medianFilter</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="matrix_reductions.html"
+                        title="previous chapter">Matrix Reductions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="image_processing.html"
+                        title="next chapter">Image Processing</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/ocl/doc/image_filtering.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="image_processing.html" title="Image Processing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="matrix_reductions.html" title="Matrix Reductions"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" >ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

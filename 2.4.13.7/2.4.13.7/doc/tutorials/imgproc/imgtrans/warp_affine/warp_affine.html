@@ -1,0 +1,423 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Affine Transformations &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../../index.html" />
+    <link rel="up" title="imgproc module. Image Processing" href="../../table_of_content_imgproc/table_of_content_imgproc.html" />
+    <link rel="next" title="Histogram Equalization" href="../../histograms/histogram_equalization/histogram_equalization.html" />
+    <link rel="prev" title="Remapping" href="../remap/remap.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../histograms/histogram_equalization/histogram_equalization.html" title="Histogram Equalization"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../remap/remap.html" title="Remapping"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" accesskey="U"><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="affine-transformations">
+<span id="warp-affine"></span><h1>Affine Transformations<a class="headerlink" href="#affine-transformations" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<ol class="loweralpha simple">
+<li>Use the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/geometric_transformations.html?highlight=warpaffine#warpaffine">warpAffine</a> to implement simple remapping routines.</li>
+<li>Use the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/geometric_transformations.html?highlight=getrotationmatrix2d#getrotationmatrix2d">getRotationMatrix2D</a> to obtain a <img class="math" src="../../../../../_images/math/f1f16ce7385b2d3da848512fba020c85ce9d8c67.png" alt="2 \times 3"/> rotation matrix</li>
+</ol>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="what-is-an-affine-transformation">
+<h3>What is an Affine Transformation?<a class="headerlink" href="#what-is-an-affine-transformation" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">It is any transformation that can be expressed in the form of a <em>matrix multiplication</em> (linear transformation) followed by a <em>vector addition</em> (translation).</p>
+</li>
+<li><p class="first">From the above, We can use an Affine Transformation to express:</p>
+<ol class="loweralpha simple">
+<li>Rotations (linear transformation)</li>
+<li>Translations (vector addition)</li>
+<li>Scale operations (linear transformation)</li>
+</ol>
+<p>you can see that, in essence, an Affine Transformation represents a <strong>relation</strong> between two images.</p>
+</li>
+<li><p class="first">The usual way to represent an Affine Transform is by using a <img class="math" src="../../../../../_images/math/f1f16ce7385b2d3da848512fba020c85ce9d8c67.png" alt="2 \times 3"/> matrix.</p>
+<div class="math">
+<p><img src="../../../../../_images/math/fc19c2f2f07a2cdd98eb692c1edd8167c18ff564.png" alt="A = \begin{bmatrix}
+     a_{00} &amp; a_{01} \\
+     a_{10} &amp; a_{11}
+     \end{bmatrix}_{2 \times 2}
+ B = \begin{bmatrix}
+     b_{00} \\
+     b_{10}
+     \end{bmatrix}_{2 \times 1}
+
+ M = \begin{bmatrix}
+     A &amp; B
+     \end{bmatrix}
+ =
+\begin{bmatrix}
+     a_{00} &amp; a_{01} &amp; b_{00} \\
+     a_{10} &amp; a_{11} &amp; b_{10}
+\end{bmatrix}_{2 \times 3}"/></p>
+</div><p>Considering that we want to transform a 2D vector <img class="math" src="../../../../../_images/math/e591c361e5a8004f0e6034cddd20b7700b291076.png" alt="X = \begin{bmatrix}x \\ y\end{bmatrix}"/> by using <img class="math" src="../../../../../_images/math/a4a22711db10ba4f6c1c70ad5f01fcc7f29a10ba.png" alt="A"/> and <img class="math" src="../../../../../_images/math/a899bd9a55bd983bd0cd87dd2d1328f9eb72286b.png" alt="B"/>, we can do it equivalently with:</p>
+<p><img class="math" src="../../../../../_images/math/8edd32457bff5f837275f41d0bf2903468f727aa.png" alt="T = A \cdot \begin{bmatrix}x \\ y\end{bmatrix} + B"/> or   <img class="math" src="../../../../../_images/math/ef3e171d4694b8b7118211e97963e5aded6f6eb8.png" alt="T = M \cdot  [x, y, 1]^{T}"/></p>
+<div class="math">
+<p><img src="../../../../../_images/math/496bd8cf235532da15357d8179154e0ba9615755.png" alt="T =  \begin{bmatrix}
+    a_{00}x + a_{01}y + b_{00} \\
+    a_{10}x + a_{11}y + b_{10}
+    \end{bmatrix}"/></p>
+</div></li>
+</ol>
+</div>
+<div class="section" id="how-do-we-get-an-affine-transformation">
+<h3>How do we get an Affine Transformation?<a class="headerlink" href="#how-do-we-get-an-affine-transformation" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">Excellent question. We mentioned that an Affine Transformation is basically a <strong>relation</strong> between two images. The information about this relation can come,  roughly, in two ways:</p>
+<ol class="loweralpha simple">
+<li>We know both <img class="math" src="../../../../../_images/math/fafd29e009c7f1dad892ccedf94e8d48d8a94c45.png" alt="X"/> and <cite>T</cite> and we also know that they are related. Then our job is to find <img class="math" src="../../../../../_images/math/336950fdbecc1771997c5eb48994a4b7056f3b81.png" alt="M"/></li>
+<li>We know <img class="math" src="../../../../../_images/math/336950fdbecc1771997c5eb48994a4b7056f3b81.png" alt="M"/> and <img class="math" src="../../../../../_images/math/fafd29e009c7f1dad892ccedf94e8d48d8a94c45.png" alt="X"/>. To obtain <img class="math" src="../../../../../_images/math/87804527283a4539e1e17c5861df8cb92a97fd6d.png" alt="T"/> we only need to apply <img class="math" src="../../../../../_images/math/55ce8b423022328ac5dd8bf36d8fa40a93f754a2.png" alt="T = M \cdot X"/>. Our information for <img class="math" src="../../../../../_images/math/336950fdbecc1771997c5eb48994a4b7056f3b81.png" alt="M"/> may be explicit (i.e. have the 2-by-3 matrix) or it can come as a geometric relation between points.</li>
+</ol>
+</li>
+<li><p class="first">Let&#8217;s explain a little bit better (b). Since <img class="math" src="../../../../../_images/math/336950fdbecc1771997c5eb48994a4b7056f3b81.png" alt="M"/> relates 02 images, we can analyze the simplest case in which it relates three points in both images. Look at the figure below:</p>
+<a class="reference internal image-reference" href="../../../../../_images/Warp_Affine_Tutorial_Theory_0.jpg"><img alt="Theory of Warp Affine" class="align-center" src="../../../../../_images/Warp_Affine_Tutorial_Theory_0.jpg" style="width: 350pt;" /></a>
+<p>the points 1, 2 and 3 (forming a triangle in image 1) are mapped into image 2, still forming a triangle, but now they have changed notoriously. If we find the Affine Transformation with these 3 points (you can choose them as you like), then we can apply this found relation to the whole pixels in the image.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><strong>What does this program do?</strong><ul>
+<li>Loads an image</li>
+<li>Applies an Affine Transform to the image. This Transform is obtained from the relation between three points. We use the function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/geometric_transformations.html?highlight=warpaffine#warpaffine">warpAffine</a> for that purpose.</li>
+<li>Applies a Rotation to the image after being transformed. This rotation is with respect to the image center</li>
+<li>Waits until the user exits the program</li>
+</ul>
+</li>
+<li>The tutorial code&#8217;s is shown lines below. You can also download it from <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/tutorial_code/ImgTrans/Geometric_Transforms_Demo.cpp">here</a></li>
+</ol>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;opencv2/highgui/highgui.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/imgproc/imgproc.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="c1">/// Global variables</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">source_window</span> <span class="o">=</span> <span class="s">&quot;Source image&quot;</span><span class="p">;</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">warp_window</span> <span class="o">=</span> <span class="s">&quot;Warp&quot;</span><span class="p">;</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">warp_rotate_window</span> <span class="o">=</span> <span class="s">&quot;Warp + Rotate&quot;</span><span class="p">;</span>
+
+<span class="cm">/** @function main */</span>
+ <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+ <span class="p">{</span>
+   <span class="n">Point2f</span> <span class="n">srcTri</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+   <span class="n">Point2f</span> <span class="n">dstTri</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+
+   <span class="n">Mat</span> <span class="n">rot_mat</span><span class="p">(</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">CV_32FC1</span> <span class="p">);</span>
+   <span class="n">Mat</span> <span class="n">warp_mat</span><span class="p">(</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">CV_32FC1</span> <span class="p">);</span>
+   <span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">warp_dst</span><span class="p">,</span> <span class="n">warp_rotate_dst</span><span class="p">;</span>
+
+   <span class="c1">/// Load the image</span>
+   <span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+
+   <span class="c1">/// Set the dst image the same type and size as src</span>
+   <span class="n">warp_dst</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">type</span><span class="p">()</span> <span class="p">);</span>
+
+   <span class="c1">/// Set your 3 points to calculate the  Affine Transform</span>
+   <span class="n">srcTri</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point2f</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span> <span class="p">);</span>
+   <span class="n">srcTri</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point2f</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+   <span class="n">srcTri</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point2f</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">);</span>
+
+   <span class="n">dstTri</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point2f</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="o">*</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="o">*</span><span class="mf">0.33</span> <span class="p">);</span>
+   <span class="n">dstTri</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point2f</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="o">*</span><span class="mf">0.85</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="o">*</span><span class="mf">0.25</span> <span class="p">);</span>
+   <span class="n">dstTri</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point2f</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="o">*</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="o">*</span><span class="mf">0.7</span> <span class="p">);</span>
+
+   <span class="c1">/// Get the Affine Transform</span>
+   <span class="n">warp_mat</span> <span class="o">=</span> <span class="n">getAffineTransform</span><span class="p">(</span> <span class="n">srcTri</span><span class="p">,</span> <span class="n">dstTri</span> <span class="p">);</span>
+
+   <span class="c1">/// Apply the Affine Transform just found to the src image</span>
+   <span class="n">warpAffine</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">warp_dst</span><span class="p">,</span> <span class="n">warp_mat</span><span class="p">,</span> <span class="n">warp_dst</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="p">);</span>
+
+   <span class="cm">/** Rotating the image after Warp */</span>
+
+   <span class="c1">/// Compute a rotation matrix with respect to the center of the image</span>
+   <span class="n">Point</span> <span class="n">center</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="n">warp_dst</span><span class="p">.</span><span class="n">cols</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">warp_dst</span><span class="p">.</span><span class="n">rows</span><span class="o">/</span><span class="mi">2</span> <span class="p">);</span>
+   <span class="kt">double</span> <span class="n">angle</span> <span class="o">=</span> <span class="o">-</span><span class="mf">50.0</span><span class="p">;</span>
+   <span class="kt">double</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">;</span>
+
+   <span class="c1">/// Get the rotation matrix with the specifications above</span>
+   <span class="n">rot_mat</span> <span class="o">=</span> <span class="n">getRotationMatrix2D</span><span class="p">(</span> <span class="n">center</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">scale</span> <span class="p">);</span>
+
+   <span class="c1">/// Rotate the warped image</span>
+   <span class="n">warpAffine</span><span class="p">(</span> <span class="n">warp_dst</span><span class="p">,</span> <span class="n">warp_rotate_dst</span><span class="p">,</span> <span class="n">rot_mat</span><span class="p">,</span> <span class="n">warp_dst</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="p">);</span>
+
+   <span class="c1">/// Show what you got</span>
+   <span class="n">namedWindow</span><span class="p">(</span> <span class="n">source_window</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+   <span class="n">imshow</span><span class="p">(</span> <span class="n">source_window</span><span class="p">,</span> <span class="n">src</span> <span class="p">);</span>
+
+   <span class="n">namedWindow</span><span class="p">(</span> <span class="n">warp_window</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+   <span class="n">imshow</span><span class="p">(</span> <span class="n">warp_window</span><span class="p">,</span> <span class="n">warp_dst</span> <span class="p">);</span>
+
+   <span class="n">namedWindow</span><span class="p">(</span> <span class="n">warp_rotate_window</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+   <span class="n">imshow</span><span class="p">(</span> <span class="n">warp_rotate_window</span><span class="p">,</span> <span class="n">warp_rotate_dst</span> <span class="p">);</span>
+
+   <span class="c1">/// Wait until user exits the program</span>
+   <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Declare some variables we will use, such as the matrices to store our results and 2 arrays of points to store the 2D points that define our Affine Transform.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Point2f</span> <span class="n">srcTri</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+<span class="n">Point2f</span> <span class="n">dstTri</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+
+<span class="n">Mat</span> <span class="nf">rot_mat</span><span class="p">(</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">CV_32FC1</span> <span class="p">);</span>
+<span class="n">Mat</span> <span class="nf">warp_mat</span><span class="p">(</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">CV_32FC1</span> <span class="p">);</span>
+<span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">warp_dst</span><span class="p">,</span> <span class="n">warp_rotate_dst</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Load an image:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Initialize the destination image as having the same size and type as the source:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">warp_dst</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">type</span><span class="p">()</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>Affine Transform:</strong> As we explained lines above, we need two sets of 3 points to derive the affine transform relation. Take a look:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">srcTri</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point2f</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span> <span class="p">);</span>
+<span class="n">srcTri</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point2f</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+<span class="n">srcTri</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point2f</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">);</span>
+
+<span class="n">dstTri</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point2f</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="o">*</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="o">*</span><span class="mf">0.33</span> <span class="p">);</span>
+<span class="n">dstTri</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point2f</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="o">*</span><span class="mf">0.85</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="o">*</span><span class="mf">0.25</span> <span class="p">);</span>
+<span class="n">dstTri</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point2f</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="o">*</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="o">*</span><span class="mf">0.7</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>You may want to draw the points to make a better idea of how they change. Their locations are approximately the same as the ones depicted in the example figure (in the Theory section). You may note that the size and orientation of the triangle defined by the 3 points change.</p>
+</li>
+<li><p class="first">Armed with both sets of points, we calculate the Affine Transform by using OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/geometric_transformations.html?highlight=getaffinetransform#getaffinetransform">getAffineTransform</a>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">warp_mat</span> <span class="o">=</span> <span class="n">getAffineTransform</span><span class="p">(</span> <span class="n">srcTri</span><span class="p">,</span> <span class="n">dstTri</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>We get as an output a <img class="math" src="../../../../../_images/math/f1f16ce7385b2d3da848512fba020c85ce9d8c67.png" alt="2 \times 3"/> matrix (in this case <strong>warp_mat</strong>)</p>
+</li>
+<li><p class="first">We apply the Affine Transform just found to the src image</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">warpAffine</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">warp_dst</span><span class="p">,</span> <span class="n">warp_mat</span><span class="p">,</span> <span class="n">warp_dst</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>with the following arguments:</p>
+<ul class="simple">
+<li><strong>src</strong>: Input image</li>
+<li><strong>warp_dst</strong>: Output image</li>
+<li><strong>warp_mat</strong>: Affine transform</li>
+<li><strong>warp_dst.size()</strong>: The desired size of the output image</li>
+</ul>
+<p>We just got our first transformed image! We will display it in one bit. Before that, we also want to rotate it...</p>
+</li>
+<li><p class="first"><strong>Rotate:</strong>
+To rotate an image, we need to know two things:</p>
+<ol class="loweralpha simple">
+<li>The center with respect to which the image will rotate</li>
+<li>The angle to be rotated. In OpenCV a positive angle is counter-clockwise</li>
+<li><em>Optional:</em> A scale factor</li>
+</ol>
+<p>We define these parameters with the following snippet:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Point</span> <span class="n">center</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="n">warp_dst</span><span class="p">.</span><span class="n">cols</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">warp_dst</span><span class="p">.</span><span class="n">rows</span><span class="o">/</span><span class="mi">2</span> <span class="p">);</span>
+<span class="kt">double</span> <span class="n">angle</span> <span class="o">=</span> <span class="o">-</span><span class="mf">50.0</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">We generate the rotation matrix with the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/geometric_transformations.html?highlight=getrotationmatrix2d#getrotationmatrix2d">getRotationMatrix2D</a>, which returns a <img class="math" src="../../../../../_images/math/f1f16ce7385b2d3da848512fba020c85ce9d8c67.png" alt="2 \times 3"/> matrix (in this case <em>rot_mat</em>)</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">rot_mat</span> <span class="o">=</span> <span class="n">getRotationMatrix2D</span><span class="p">(</span> <span class="n">center</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">scale</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">We now apply the found rotation to the output of our previous Transformation.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">warpAffine</span><span class="p">(</span> <span class="n">warp_dst</span><span class="p">,</span> <span class="n">warp_rotate_dst</span><span class="p">,</span> <span class="n">rot_mat</span><span class="p">,</span> <span class="n">warp_dst</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Finally, we display our results in two windows plus the original image for good measure:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">namedWindow</span><span class="p">(</span> <span class="n">source_window</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+<span class="n">imshow</span><span class="p">(</span> <span class="n">source_window</span><span class="p">,</span> <span class="n">src</span> <span class="p">);</span>
+
+<span class="n">namedWindow</span><span class="p">(</span> <span class="n">warp_window</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+<span class="n">imshow</span><span class="p">(</span> <span class="n">warp_window</span><span class="p">,</span> <span class="n">warp_dst</span> <span class="p">);</span>
+
+<span class="n">namedWindow</span><span class="p">(</span> <span class="n">warp_rotate_window</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+<span class="n">imshow</span><span class="p">(</span> <span class="n">warp_rotate_window</span><span class="p">,</span> <span class="n">warp_rotate_dst</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">We just have to wait until the user exits the program</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="result">
+<h2>Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">After compiling the code above, we can give it the path of an image as argument. For instance, for a picture like:</p>
+<a class="reference internal image-reference" href="../../../../../_images/Warp_Affine_Tutorial_Original_Image.jpg"><img alt="Original image" class="align-center" src="../../../../../_images/Warp_Affine_Tutorial_Original_Image.jpg" style="width: 250pt;" /></a>
+<p>after applying the first Affine Transform we obtain:</p>
+<a class="reference internal image-reference" href="../../../../../_images/Warp_Affine_Tutorial_Result_Warp.jpg"><img alt="Original image" class="align-center" src="../../../../../_images/Warp_Affine_Tutorial_Result_Warp.jpg" style="width: 250pt;" /></a>
+<p>and finally, after applying a negative rotation (remember negative means clockwise) and a scale factor, we get:</p>
+<a class="reference internal image-reference" href="../../../../../_images/Warp_Affine_Tutorial_Result_Warp_Rotate.jpg"><img alt="Original image" class="align-center" src="../../../../../_images/Warp_Affine_Tutorial_Result_Warp_Rotate.jpg" style="width: 250pt;" /></a>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Affine Transformations</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a><ul>
+<li><a class="reference internal" href="#what-is-an-affine-transformation">What is an Affine Transformation?</a></li>
+<li><a class="reference internal" href="#how-do-we-get-an-affine-transformation">How do we get an Affine Transformation?</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#result">Result</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../remap/remap.html"
+                        title="previous chapter">Remapping</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../histograms/histogram_equalization/histogram_equalization.html"
+                        title="next chapter">Histogram Equalization</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../../_sources/doc/tutorials/imgproc/imgtrans/warp_affine/warp_affine.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../histograms/histogram_equalization/histogram_equalization.html" title="Histogram Equalization"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../remap/remap.html" title="Remapping"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" ><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

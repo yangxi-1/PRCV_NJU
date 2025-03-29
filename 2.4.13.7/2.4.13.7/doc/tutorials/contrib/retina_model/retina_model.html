@@ -1,0 +1,489 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Discovering the human retina and its use for image processing &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="contrib module. The additional contributions made available !" href="../table_of_content_contrib/table_of_content_contrib.html" />
+    <link rel="next" title="OpenCV iOS" href="../../ios/table_of_content_ios/table_of_content_ios.html" />
+    <link rel="prev" title="contrib module. The additional contributions made available !" href="../table_of_content_contrib/table_of_content_contrib.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../ios/table_of_content_ios/table_of_content_ios.html" title="OpenCV iOS"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../table_of_content_contrib/table_of_content_contrib.html" title="contrib module. The additional contributions made available !"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_contrib/table_of_content_contrib.html" accesskey="U"><em>contrib</em> module. The additional contributions made available !</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="discovering-the-human-retina-and-its-use-for-image-processing">
+<span id="retina-model"></span><h1>Discovering the human retina and its use for image processing<a class="headerlink" href="#discovering-the-human-retina-and-its-use-for-image-processing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>I present here a model of human retina that shows some interesting properties for image preprocessing and enhancement.
+In this tutorial you will learn how to:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>discover the main two channels outing from your retina</li>
+<li>see the basics to use the retina model</li>
+<li>discover some parameters tweaks</li>
+</ul>
+</div>
+</div>
+<div class="section" id="general-overview">
+<h2>General overview<a class="headerlink" href="#general-overview" title="Permalink to this headline">¶</a></h2>
+<p>The proposed model originates from Jeanny Herault&#8217;s research at <a class="reference external" href="http://www.gipsa-lab.inpg.fr">Gipsa</a>. It is involved in image processing applications with <a class="reference external" href="http://www.listic.univ-savoie.fr">Listic</a> (code maintainer) lab. This is not a complete model but it already present interesting properties that can be involved for enhanced image processing experience. The model allows the following human retina properties to be used :</p>
+<ul class="simple">
+<li>spectral whitening that has 3 important effects: high spatio-temporal frequency signals canceling (noise), mid-frequencies details enhancement and low frequencies luminance energy reduction. This <em>all in one</em> property directly allows visual signals cleaning of classical undesired distortions introduced by image sensors and input luminance range.</li>
+<li>local logarithmic luminance compression allows details to be enhanced even in low light conditions.</li>
+<li>decorrelation of the details information (Parvocellular output channel) and transient information (events, motion made available at the Magnocellular output channel).</li>
+</ul>
+<p>The first two points are illustrated below :</p>
+<p>In the figure below, the OpenEXR image sample <em>CrissyField.exr</em>, a High Dynamic Range image is shown. In order to make it visible on this web-page, the original input image is linearly rescaled to the classical image luminance range [0-255] and is converted to 8bit/channel format. Such strong conversion hides many details because of too strong local contrasts. Furthermore, noise energy is also strong and pollutes visual information.</p>
+<img alt="A High dynamic range image linearly rescaled within range [0-255]." class="align-center" src="../../../../_images/retina_TreeHdr_small.jpg" />
+<p>In the following image, as your retina does, local luminance adaptation, spatial noise removal and spectral whitening work together and transmit accurate information on lower range 8bit data channels. On this picture, noise in significantly removed, local details hidden by strong luminance contrasts are enhanced. Output image keeps its naturalness and visual content is enhanced.</p>
+<img alt="A High dynamic range image compressed within range [0-255] using the retina." class="align-center" src="../../../../_images/retina_TreeHdr_retina.jpg" />
+<p><em>Note :</em> image sample can be downloaded from the <a class="reference external" href="http://www.openexr.com">OpenEXR website</a>. Regarding this demonstration, before retina processing, input image has been linearly rescaled within 0-255 keeping its channels float format. 5% of its histogram ends has been cut (mostly removes wrong HDR pixels). Check out the sample <em>opencv/samples/cpp/OpenEXRimages_HDR_Retina_toneMapping.cpp</em> for similar processing. The following demonstration will only consider classical 8bit/channel images.</p>
+</div>
+<div class="section" id="the-retina-model-output-channels">
+<h2>The retina model output channels<a class="headerlink" href="#the-retina-model-output-channels" title="Permalink to this headline">¶</a></h2>
+<p>The retina model presents two outputs that benefit from the above cited behaviors.</p>
+<ul class="simple">
+<li>The first one is called the Parvocellular channel. It is mainly active in the foveal retina area (high resolution central vision with color sensitive photo-receptors), its aim is to provide accurate color vision for visual details remaining static on the retina. On the other hand objects moving on the retina projection are blurred.</li>
+<li>The second well known channel is the Magnocellular channel. It is mainly active in the retina peripheral vision and send signals related to change events (motion, transient events, etc.). These outing signals also help visual system to focus/center retina on &#8216;transient&#8217;/moving areas for more detailed analysis thus improving visual scene context and object classification.</li>
+</ul>
+<p><strong>NOTE :</strong> regarding the proposed model, contrary to the real retina, we apply these two channels on the entire input images using the same resolution. This allows enhanced visual details and motion information to be extracted on all the considered images... but remember, that these two channels are complementary. For example, if Magnocellular channel gives strong energy in an area, then, the Parvocellular channel is certainly blurred there since there is a transient event.</p>
+<p>As an illustration, we apply in the following the retina model on a webcam video stream of a dark visual scene. In this visual scene, captured in an amphitheater of the university, some students are moving while talking to the teacher.</p>
+<p>In this video sequence, because of the dark ambiance, signal to noise ratio is low and color artifacts are present on visual features edges because of the low quality image capture tool-chain.</p>
+<img alt="an input video stream extract sample" class="align-center" src="../../../../_images/studentsSample_input.jpg" />
+<p>Below is shown the retina foveal vision applied on the entire image. In the used retina configuration, global luminance is preserved and local contrasts are enhanced. Also, signal to noise ratio is improved : since high frequency spatio-temporal noise is reduced, enhanced details are not corrupted by any enhanced noise.</p>
+<img alt="the retina Parvocellular output. Enhanced details, luminance adaptation and noise removal. A processing tool for image analysis." class="align-center" src="../../../../_images/studentsSample_parvo.jpg" />
+<p>Below is the output of the Magnocellular output of the retina model. Its signals are strong where transient events occur. Here, a student is moving at the bottom of the image thus generating high energy. The remaining of the image is static however, it is corrupted by a strong noise. Here, the retina filters out most of the noise thus generating low false motion area &#8216;alarms&#8217;. This channel can be used as a transient/moving areas detector : it would provide relevant information for a low cost segmentation tool that would highlight areas in which an event is occurring.</p>
+<img alt="the retina Magnocellular output. Enhanced transient signals (motion, etc.). A preprocessing tool for event detection." class="align-center" src="../../../../_images/studentsSample_magno.jpg" />
+</div>
+<div class="section" id="retina-use-case">
+<h2>Retina use case<a class="headerlink" href="#retina-use-case" title="Permalink to this headline">¶</a></h2>
+<p>This model can be used basically for spatio-temporal video effects but also in the aim of :</p>
+<ul class="simple">
+<li>performing texture analysis with enhanced signal to noise ratio and enhanced details robust against input images luminance ranges (check out the Parvocellular retina channel output)</li>
+<li>performing motion analysis also taking benefit of the previously cited properties.</li>
+</ul>
+<p>For more information, refer to the following papers :</p>
+<ul class="simple">
+<li>Benoit A., Caplier A., Durette B., Herault, J., &#8220;Using Human Visual System Modeling For Bio-Inspired Low Level Image Processing&#8221;, Elsevier, Computer Vision and Image Understanding 114 (2010), pp. 758-773. DOI &lt;<a class="reference external" href="http://dx.doi.org/10.1016/j.cviu.2010.01.011">http://dx.doi.org/10.1016/j.cviu.2010.01.011</a>&gt;</li>
+<li>Please have a look at the reference work of Jeanny Herault that you can read in his book :</li>
+</ul>
+<p>Vision: Images, Signals and Neural Networks: Models of Neural Processing in Visual Perception (Progress in Neural Processing),By: Jeanny Herault, ISBN: 9814273686. WAPI (Tower ID): 113266891.</p>
+<p>This retina filter code includes the research contributions of phd/research collegues from which code has been redrawn by the author :</p>
+<ul class="simple">
+<li>take a look at the <em>retinacolor.hpp</em> module to discover Brice Chaix de Lavarene phD color mosaicing/demosaicing and his reference paper: B. Chaix de Lavarene, D. Alleysson, B. Durette, J. Herault (2007). &#8220;Efficient demosaicing through recursive filtering&#8221;, IEEE International Conference on Image Processing ICIP 2007</li>
+<li>take a look at <em>imagelogpolprojection.hpp</em> to discover retina spatial log sampling which originates from Barthelemy Durette phd with Jeanny Herault. A Retina / V1 cortex projection is also proposed and originates from Jeanny&#8217;s discussions. ====&gt; more information in the above cited Jeanny Heraults&#8217;s book.</li>
+</ul>
+</div>
+<div class="section" id="code-tutorial">
+<h2>Code tutorial<a class="headerlink" href="#code-tutorial" title="Permalink to this headline">¶</a></h2>
+<p>Please refer to the original tutorial source code in file <em>opencv_folder/samples/cpp/tutorial_code/contrib/retina_tutorial.cpp</em>.</p>
+<p>To compile it, assuming OpenCV is correctly installed, use the following command. It requires the opencv_core <em>(cv::Mat and friends objects management)</em>, opencv_highgui <em>(display and image/video read)</em> and opencv_contrib <em>(Retina description)</em> libraries to compile.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// compile</span>
+<span class="n">gcc</span> <span class="n">retina_tutorial</span><span class="p">.</span><span class="n">cpp</span> <span class="o">-</span><span class="n">o</span> <span class="n">Retina_tuto</span> <span class="o">-</span><span class="n">lopencv_core</span> <span class="o">-</span><span class="n">lopencv_highgui</span> <span class="o">-</span><span class="n">lopencv_contrib</span>
+
+<span class="c1">// Run commands : add &#39;log&#39; as a last parameter to apply a spatial log sampling (simulates retina sampling)</span>
+<span class="c1">// run on webcam</span>
+<span class="p">.</span><span class="o">/</span><span class="n">Retina_tuto</span> <span class="o">-</span><span class="n">video</span>
+<span class="c1">// run on video file</span>
+<span class="p">.</span><span class="o">/</span><span class="n">Retina_tuto</span> <span class="o">-</span><span class="n">video</span> <span class="n">myVideo</span><span class="p">.</span><span class="n">avi</span>
+<span class="c1">// run on an image</span>
+<span class="p">.</span><span class="o">/</span><span class="n">Retina_tuto</span> <span class="o">-</span><span class="n">image</span> <span class="n">myPicture</span><span class="p">.</span><span class="n">jpg</span>
+<span class="c1">// run on an image with log sampling</span>
+<span class="p">.</span><span class="o">/</span><span class="n">Retina_tuto</span> <span class="o">-</span><span class="n">image</span> <span class="n">myPicture</span><span class="p">.</span><span class="n">jpg</span> <span class="n">log</span>
+</pre></div>
+</div>
+<p>Here is a code explanation :</p>
+<p>Retina definition is present in the contrib package and a simple include allows to use it</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;opencv2/opencv.hpp&quot;</span><span class="cp"></span>
+</pre></div>
+</div>
+<p>Provide user some hints to run the program with a help function</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// the help procedure</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">help</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">errorMessage</span><span class="p">)</span>
+<span class="p">{</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;Program init error : &quot;</span><span class="o">&lt;&lt;</span><span class="n">errorMessage</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Program call procedure : retinaDemo [processing mode] [Optional : media target] [Optional LAST parameter: </span><span class="se">\&quot;</span><span class="s">log</span><span class="se">\&quot;</span><span class="s"> to activate retina log sampling]&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">[processing mode] :&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\t</span><span class="s"> -image : for still image processing&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\t</span><span class="s"> -video : for video stream processing&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">[Optional : media target] :&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\t</span><span class="s"> if processing an image or video file, then, specify the path and filename of the target to process&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\t</span><span class="s"> leave empty if processing video stream coming from a connected video device&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">[Optional : activate retina log sampling] : an optional last parameter can be specified for retina spatial log sampling&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\t</span><span class="s"> set </span><span class="se">\&quot;</span><span class="s">log</span><span class="se">\&quot;</span><span class="s"> without quotes to activate this sampling, output frame size will be divided by 4&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Examples:&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">-Image processing : ./retinaDemo -image lena.jpg&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">-Image processing with log sampling : ./retinaDemo -image lena.jpg log&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">-Video processing : ./retinaDemo -video myMovie.mp4&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">-Live video processing : ./retinaDemo -video&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Please start again with new parameters&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;****************************************************&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot; NOTE : this program generates the default retina parameters file &#39;RetinaDefaultParameters.xml&#39;&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot; =&gt; you can use this to fine tune parameters and load them if you save to file &#39;RetinaSpecificParameters.xml&#39;&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Then, start the main program and first declare a <em>cv::Mat</em> matrix in which input images will be loaded. Also allocate a <em>cv::VideoCapture</em> object ready to load video streams (if necessary)</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="c1">// declare the retina input buffer... that will be fed differently in regard of the input media</span>
+  <span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">inputFrame</span><span class="p">;</span>
+  <span class="n">cv</span><span class="o">::</span><span class="n">VideoCapture</span> <span class="n">videoCapture</span><span class="p">;</span> <span class="c1">// in case a video media is used, its manager is declared here</span>
+</pre></div>
+</div>
+<p>In the main program, before processing, first check input command parameters. Here it loads a first input image coming from a single loaded image (if user chose command <em>-image</em>) or from a video stream (if user chose command <em>-video</em>). Also, if the user added <em>log</em> command at the end of its program call, the spatial logarithmic image sampling performed by the retina is taken into account by the Boolean flag <em>useLogSampling</em>.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// welcome message</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;****************************************************&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;* Retina demonstration : demonstrates the use of is a wrapper class of the Gipsa/Listic Labs retina model.&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;* This demo will try to load the file &#39;RetinaSpecificParameters.xml&#39; (if exists).</span><span class="se">\n</span><span class="s">To create it, copy the autogenerated template &#39;RetinaDefaultParameters.xml&#39;.</span><span class="se">\n</span><span class="s">Then twaek it with your own retina parameters.&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="c1">// basic input arguments checking</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">argc</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">)</span>
+  <span class="p">{</span>
+      <span class="n">help</span><span class="p">(</span><span class="s">&quot;bad number of parameter&quot;</span><span class="p">);</span>
+      <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kt">bool</span> <span class="n">useLogSampling</span> <span class="o">=</span> <span class="o">!</span><span class="n">strcmp</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">argc</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s">&quot;log&quot;</span><span class="p">);</span> <span class="c1">// check if user wants retina log sampling processing</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">inputMediaType</span><span class="o">=</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+
+  <span class="c1">//////////////////////////////////////////////////////////////////////////////</span>
+  <span class="c1">// checking input media type (still image, video file, live video acquisition)</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">strcmp</span><span class="p">(</span><span class="n">inputMediaType</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="s">&quot;-image&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">argc</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">)</span>
+  <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;RetinaDemo: processing image &quot;</span><span class="o">&lt;&lt;</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+      <span class="c1">// image processing case</span>
+      <span class="n">inputFrame</span> <span class="o">=</span> <span class="n">cv</span><span class="o">::</span><span class="n">imread</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="mi">1</span><span class="p">);</span> <span class="c1">// load image in BGR color mode</span>
+  <span class="p">}</span><span class="k">else</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">strcmp</span><span class="p">(</span><span class="n">inputMediaType</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="s">&quot;-video&quot;</span><span class="p">))</span>
+      <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">==</span> <span class="mi">2</span> <span class="o">||</span> <span class="p">(</span><span class="n">argc</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">&amp;&amp;</span> <span class="n">useLogSampling</span><span class="p">))</span> <span class="c1">// attempt to grab images from a video capture device</span>
+          <span class="p">{</span>
+              <span class="n">videoCapture</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+          <span class="p">}</span><span class="k">else</span><span class="c1">// attempt to grab images from a video filestream</span>
+          <span class="p">{</span>
+              <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;RetinaDemo: processing video stream &quot;</span><span class="o">&lt;&lt;</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+              <span class="n">videoCapture</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+          <span class="p">}</span>
+
+          <span class="c1">// grab a first frame to check if everything is ok</span>
+          <span class="n">videoCapture</span><span class="o">&gt;&gt;</span><span class="n">inputFrame</span><span class="p">;</span>
+      <span class="p">}</span><span class="k">else</span>
+      <span class="p">{</span>
+          <span class="c1">// bad command parameter</span>
+          <span class="n">help</span><span class="p">(</span><span class="s">&quot;bad command parameter&quot;</span><span class="p">);</span>
+          <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+      <span class="p">}</span>
+</pre></div>
+</div>
+<p>Once all input parameters are processed, a first image should have been loaded, if not, display error and stop program :</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="n">inputFrame</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="p">{</span>
+    <span class="n">help</span><span class="p">(</span><span class="s">&quot;Input media could not be loaded, aborting&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Now, everything is ready to run the retina model. I propose here to allocate a retina instance and to manage the eventual log sampling option. The Retina constructor expects at least a cv::Size object that shows the input data size that will have to be managed. One can activate other options such as color and its related color multiplexing strategy (here Bayer multiplexing is chosen using enum cv::RETINA_COLOR_BAYER). If using log sampling, the image reduction factor (smaller output images) and log sampling strengh can be adjusted.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// pointer to a retina object</span>
+<span class="n">cv</span><span class="o">::</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">cv</span><span class="o">::</span><span class="n">Retina</span><span class="o">&gt;</span> <span class="n">myRetina</span><span class="p">;</span>
+
+<span class="c1">// if the last parameter is &#39;log&#39;, then activate log sampling (favour foveal vision and subsamples peripheral vision)</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">useLogSampling</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">myRetina</span> <span class="o">=</span> <span class="k">new</span> <span class="n">cv</span><span class="o">::</span><span class="n">Retina</span><span class="p">(</span><span class="n">inputFrame</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="nb">true</span><span class="p">,</span> <span class="n">cv</span><span class="o">::</span><span class="n">RETINA_COLOR_BAYER</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">else</span><span class="c1">// -&gt; else allocate &quot;classical&quot; retina :</span>
+    <span class="n">myRetina</span> <span class="o">=</span> <span class="k">new</span> <span class="n">cv</span><span class="o">::</span><span class="n">Retina</span><span class="p">(</span><span class="n">inputFrame</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+</pre></div>
+</div>
+<p>Once done, the proposed code writes a default xml file that contains the default parameters of the retina. This is useful to make your own config using this template. Here generated template xml file is called <em>RetinaDefaultParameters.xml</em>.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// save default retina parameters file in order to let you see this and maybe modify it and reload using method &quot;setup&quot;</span>
+<span class="n">myRetina</span><span class="o">-&gt;</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;RetinaDefaultParameters.xml&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>In the following line, the retina attempts to load another xml file called <em>RetinaSpecificParameters.xml</em>. If you created it and introduced your own setup, it will be loaded, in the other case, default retina parameters are used.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// load parameters if file exists</span>
+<span class="n">myRetina</span><span class="o">-&gt;</span><span class="n">setup</span><span class="p">(</span><span class="s">&quot;RetinaSpecificParameters.xml&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>It is not required here but just to show it is possible, you can reset the retina buffers to zero to force it to forget past events.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// reset all retina buffers (imagine you close your eyes for a long time)</span>
+<span class="n">myRetina</span><span class="o">-&gt;</span><span class="n">clearBuffers</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Now, it is time to run the retina ! First create some output buffers ready to receive the two retina channels outputs</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// declare retina output buffers</span>
+<span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">retinaOutput_parvo</span><span class="p">;</span>
+<span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">retinaOutput_magno</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Then, run retina in a loop, load new frames from video sequence if necessary and get retina outputs back to dedicated buffers.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// processing loop with no stop condition</span>
+<span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// if using video stream, then, grabbing a new frame, else, input remains the same</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">videoCapture</span><span class="p">.</span><span class="n">isOpened</span><span class="p">())</span>
+        <span class="n">videoCapture</span><span class="o">&gt;&gt;</span><span class="n">inputFrame</span><span class="p">;</span>
+
+    <span class="c1">// run retina filter on the loaded input frame</span>
+    <span class="n">myRetina</span><span class="o">-&gt;</span><span class="n">run</span><span class="p">(</span><span class="n">inputFrame</span><span class="p">);</span>
+    <span class="c1">// Retrieve and display retina output</span>
+    <span class="n">myRetina</span><span class="o">-&gt;</span><span class="n">getParvo</span><span class="p">(</span><span class="n">retinaOutput_parvo</span><span class="p">);</span>
+    <span class="n">myRetina</span><span class="o">-&gt;</span><span class="n">getMagno</span><span class="p">(</span><span class="n">retinaOutput_magno</span><span class="p">);</span>
+    <span class="n">cv</span><span class="o">::</span><span class="n">imshow</span><span class="p">(</span><span class="s">&quot;retina input&quot;</span><span class="p">,</span> <span class="n">inputFrame</span><span class="p">);</span>
+    <span class="n">cv</span><span class="o">::</span><span class="n">imshow</span><span class="p">(</span><span class="s">&quot;Retina Parvo&quot;</span><span class="p">,</span> <span class="n">retinaOutput_parvo</span><span class="p">);</span>
+    <span class="n">cv</span><span class="o">::</span><span class="n">imshow</span><span class="p">(</span><span class="s">&quot;Retina Magno&quot;</span><span class="p">,</span> <span class="n">retinaOutput_magno</span><span class="p">);</span>
+    <span class="n">cv</span><span class="o">::</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>That&#8217;s done ! But if you want to secure the system, take care and manage Exceptions. The retina can throw some when it sees irrelevant data (no input frame, wrong setup, etc.).
+Then, i recommend to surround all the retina code by a try/catch system like this :</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">try</span><span class="p">{</span>
+     <span class="c1">// pointer to a retina object</span>
+     <span class="n">cv</span><span class="o">::</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">cv</span><span class="o">::</span><span class="n">Retina</span><span class="o">&gt;</span> <span class="n">myRetina</span><span class="p">;</span>
+     <span class="p">[</span><span class="o">---</span><span class="p">]</span>
+     <span class="c1">// processing loop with no stop condition</span>
+     <span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span>
+     <span class="p">{</span>
+         <span class="p">[</span><span class="o">---</span><span class="p">]</span>
+     <span class="p">}</span>
+
+<span class="p">}</span><span class="k">catch</span><span class="p">(</span><span class="n">cv</span><span class="o">::</span><span class="n">Exception</span> <span class="n">e</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cerr</span><span class="o">&lt;&lt;</span><span class="s">&quot;Error using Retina : &quot;</span><span class="o">&lt;&lt;</span><span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">()</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="retina-parameters-what-to-do">
+<h2>Retina parameters, what to do ?<a class="headerlink" href="#retina-parameters-what-to-do" title="Permalink to this headline">¶</a></h2>
+<p>First, it is recommended to read the reference paper :</p>
+<ul class="simple">
+<li>Benoit A., Caplier A., Durette B., Herault, J., <em>&#8220;Using Human Visual System Modeling For Bio-Inspired Low Level Image Processing&#8221;</em>, Elsevier, Computer Vision and Image Understanding 114 (2010), pp. 758-773. DOI &lt;<a class="reference external" href="http://dx.doi.org/10.1016/j.cviu.2010.01.011">http://dx.doi.org/10.1016/j.cviu.2010.01.011</a>&gt;</li>
+</ul>
+<p>Once done open the configuration file <em>RetinaDefaultParameters.xml</em> generated by the demo and let&#8217;s have a look at it.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="o">&lt;?</span><span class="n">xml</span> <span class="n">version</span><span class="o">=</span><span class="s">&quot;1.0&quot;</span><span class="o">?&gt;</span>
+<span class="o">&lt;</span><span class="n">opencv_storage</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">OPLandIPLparvo</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">colorMode</span><span class="o">&gt;</span><span class="mi">1</span><span class="o">&lt;/</span><span class="n">colorMode</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">normaliseOutput</span><span class="o">&gt;</span><span class="mi">1</span><span class="o">&lt;/</span><span class="n">normaliseOutput</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">photoreceptorsLocalAdaptationSensitivity</span><span class="o">&gt;</span><span class="mf">7.0e-01</span><span class="o">&lt;/</span><span class="n">photoreceptorsLocalAdaptationSensitivity</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">photoreceptorsTemporalConstant</span><span class="o">&gt;</span><span class="mf">5.0e-01</span><span class="o">&lt;/</span><span class="n">photoreceptorsTemporalConstant</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">photoreceptorsSpatialConstant</span><span class="o">&gt;</span><span class="mf">5.3e-01</span><span class="o">&lt;/</span><span class="n">photoreceptorsSpatialConstant</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">horizontalCellsGain</span><span class="o">&gt;</span><span class="mf">0.</span><span class="o">&lt;/</span><span class="n">horizontalCellsGain</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">hcellsTemporalConstant</span><span class="o">&gt;</span><span class="mf">1.</span><span class="o">&lt;/</span><span class="n">hcellsTemporalConstant</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">hcellsSpatialConstant</span><span class="o">&gt;</span><span class="mf">7.</span><span class="o">&lt;/</span><span class="n">hcellsSpatialConstant</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">ganglionCellsSensitivity</span><span class="o">&gt;</span><span class="mf">7.0e-01</span><span class="o">&lt;/</span><span class="n">ganglionCellsSensitivity</span><span class="o">&gt;&lt;/</span><span class="n">OPLandIPLparvo</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">IPLmagno</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">normaliseOutput</span><span class="o">&gt;</span><span class="mi">1</span><span class="o">&lt;/</span><span class="n">normaliseOutput</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">parasolCells_beta</span><span class="o">&gt;</span><span class="mf">0.</span><span class="o">&lt;/</span><span class="n">parasolCells_beta</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">parasolCells_tau</span><span class="o">&gt;</span><span class="mf">0.</span><span class="o">&lt;/</span><span class="n">parasolCells_tau</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">parasolCells_k</span><span class="o">&gt;</span><span class="mf">7.</span><span class="o">&lt;/</span><span class="n">parasolCells_k</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">amacrinCellsTemporalCutFrequency</span><span class="o">&gt;</span><span class="mf">1.2e+00</span><span class="o">&lt;/</span><span class="n">amacrinCellsTemporalCutFrequency</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">V0CompressionParameter</span><span class="o">&gt;</span><span class="mf">9.5e-01</span><span class="o">&lt;/</span><span class="n">V0CompressionParameter</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">localAdaptintegration_tau</span><span class="o">&gt;</span><span class="mf">0.</span><span class="o">&lt;/</span><span class="n">localAdaptintegration_tau</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">localAdaptintegration_k</span><span class="o">&gt;</span><span class="mf">7.</span><span class="o">&lt;/</span><span class="n">localAdaptintegration_k</span><span class="o">&gt;&lt;/</span><span class="n">IPLmagno</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">opencv_storage</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Here are some hints but actually, the best parameter setup depends more on what you want to do with the retina rather than the images input that you give to retina. Apart from the more specific case of High Dynamic Range images (HDR) that require more specific setup for specific luminance compression objective, the retina behaviors should be rather stable from content to content. Note that OpenCV is able to manage such HDR format thanks to the OpenEXR images compatibility.</p>
+<p>Then, if the application target requires details enhancement prior to specific image processing, you need to know if mean luminance information is required or not. If not, the the retina can cancel or significantly reduce its energy thus giving more visibility to higher spatial frequency details.</p>
+<div class="section" id="basic-parameters">
+<h3>Basic parameters<a class="headerlink" href="#basic-parameters" title="Permalink to this headline">¶</a></h3>
+<p>The most simple parameters are the following :</p>
+<ul class="simple">
+<li><strong>colorMode</strong> : let the retina process color information (if 1) or gray scale images (if 0). In this last case, only the first channel of the input will be processed.</li>
+<li><strong>normaliseOutput</strong> : each channel has this parameter, if value is 1, then the considered channel output is rescaled between 0 and 255. Take care in this case at the Magnocellular output level (motion/transient channel detection). Residual noise will also be rescaled !</li>
+</ul>
+<p><strong>Note :</strong> using color requires color channels multiplexing/demultipexing which requires more processing. You can expect much faster processing using gray levels : it would require around 30 product per pixel for all the retina processes and it has recently been parallelized for multicore architectures.</p>
+</div>
+<div class="section" id="photo-receptors-parameters">
+<h3>Photo-receptors parameters<a class="headerlink" href="#photo-receptors-parameters" title="Permalink to this headline">¶</a></h3>
+<p>The following parameters act on the entry point of the retina - photo-receptors - and impact all the following processes. These sensors are low pass spatio-temporal filters that smooth temporal and spatial data and also adjust there sensitivity to local luminance thus improving details extraction and high frequency noise canceling.</p>
+<ul class="simple">
+<li><strong>photoreceptorsLocalAdaptationSensitivity</strong> between 0 and 1. Values close to 1 allow high luminance log compression effect at the photo-receptors level. Values closer to 0 give a more linear sensitivity. Increased alone, it can burn the <em>Parvo (details channel)</em> output image. If adjusted in collaboration with <strong>ganglionCellsSensitivity</strong> images can be very contrasted whatever the local luminance there is... at the price of a naturalness decrease.</li>
+<li><strong>photoreceptorsTemporalConstant</strong> this setups the temporal constant of the low pass filter effect at the entry of the retina. High value lead to strong temporal smoothing effect : moving objects are blurred and can disappear while static object are favored. But when starting the retina processing, stable state is reached lately.</li>
+<li><strong>photoreceptorsSpatialConstant</strong> specifies the spatial constant related to photo-receptors low pass filter effect. This parameters specify the minimum allowed spatial signal period allowed in the following. Typically, this filter should cut high frequency noise. Then a 0 value doesn&#8217;t cut anything noise while higher values start to cut high spatial frequencies and more and more lower frequencies... Then, do not go to high if you wanna see some details of the input images ! A good compromise for color images is 0.53 since this won&#8217;t affect too much the color spectrum. Higher values would lead to gray and blurred output images.</li>
+</ul>
+</div>
+<div class="section" id="horizontal-cells-parameters">
+<h3>Horizontal cells parameters<a class="headerlink" href="#horizontal-cells-parameters" title="Permalink to this headline">¶</a></h3>
+<p>This parameter set tunes the neural network connected to the photo-receptors, the horizontal cells. It modulates photo-receptors sensitivity and completes the processing for final spectral whitening (part of the spatial band pass effect thus favoring visual details enhancement).</p>
+<ul class="simple">
+<li><strong>horizontalCellsGain</strong> here is a critical parameter ! If you are not interested by the mean luminance and focus on details enhancement, then, set to zero. But if you want to keep some environment luminance data, let some low spatial frequencies pass into the system and set a higher value (&lt;1).</li>
+<li><strong>hcellsTemporalConstant</strong> similar to photo-receptors, this acts on the temporal constant of a low pass temporal filter that smooths input data. Here, a high value generates a high retina after effect while a lower value makes the retina more reactive.</li>
+<li><strong>hcellsSpatialConstant</strong> is the spatial constant of the low pass filter of these cells filter. It specifies the lowest spatial frequency allowed in the following. Visually, a high value leads to very low spatial frequencies processing and leads to salient halo effects. Lower values reduce this effect but the limit is : do not go lower than the value of <strong>photoreceptorsSpatialConstant</strong>. Those 2 parameters actually specify the spatial band-pass of the retina.</li>
+</ul>
+<p><strong>NOTE</strong> after the processing managed by the previous parameters, input data is cleaned from noise and luminance in already partly enhanced. The following parameters act on the last processing stages of the two outing retina signals.</p>
+</div>
+<div class="section" id="parvo-details-channel-dedicated-parameter">
+<h3>Parvo (details channel) dedicated parameter<a class="headerlink" href="#parvo-details-channel-dedicated-parameter" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>ganglionCellsSensitivity</strong> specifies the strength of the final local adaptation occurring at the output of this details dedicated channel. Parameter values remain between 0 and 1. Low value tend to give a linear response while higher values enforces the remaining low contrasted areas.</li>
+</ul>
+<p><strong>Note :</strong> this parameter can correct eventual burned images by favoring low energetic details of the visual scene, even in bright areas.</p>
+</div>
+<div class="section" id="ipl-magno-motion-transient-channel-parameters">
+<h3>IPL Magno (motion/transient channel) parameters<a class="headerlink" href="#ipl-magno-motion-transient-channel-parameters" title="Permalink to this headline">¶</a></h3>
+<p>Once image information is cleaned, this channel acts as a high pass temporal filter that only selects signals related to transient signals (events, motion, etc.). A low pass spatial filter smooths extracted transient data and a final logarithmic compression enhances low transient events thus enhancing event sensitivity.</p>
+<ul class="simple">
+<li><strong>parasolCells_beta</strong> generally set to zero, can be considered as an amplifier gain at the entry point of this processing stage. Generally set to 0.</li>
+<li><strong>parasolCells_tau</strong> the temporal smoothing effect that can be added</li>
+<li><strong>parasolCells_k</strong> the spatial constant of the spatial filtering effect, set it at a high value to favor low spatial frequency signals that are lower subject to residual noise.</li>
+<li><strong>amacrinCellsTemporalCutFrequency</strong> specifies the temporal constant of the high pass filter. High values let slow transient events to be selected.</li>
+<li><strong>V0CompressionParameter</strong> specifies the strength of the log compression. Similar behaviors to previous description but here it enforces sensitivity of transient events.</li>
+<li><strong>localAdaptintegration_tau</strong> generally set to 0, no real use here actually</li>
+<li><strong>localAdaptintegration_k</strong> specifies the size of the area on which local adaptation is performed. Low values lead to short range local adaptation (higher sensitivity to noise), high values secure log compression.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Discovering the human retina and its use for image processing</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#general-overview">General overview</a></li>
+<li><a class="reference internal" href="#the-retina-model-output-channels">The retina model output channels</a></li>
+<li><a class="reference internal" href="#retina-use-case">Retina use case</a></li>
+<li><a class="reference internal" href="#code-tutorial">Code tutorial</a></li>
+<li><a class="reference internal" href="#retina-parameters-what-to-do">Retina parameters, what to do ?</a><ul>
+<li><a class="reference internal" href="#basic-parameters">Basic parameters</a></li>
+<li><a class="reference internal" href="#photo-receptors-parameters">Photo-receptors parameters</a></li>
+<li><a class="reference internal" href="#horizontal-cells-parameters">Horizontal cells parameters</a></li>
+<li><a class="reference internal" href="#parvo-details-channel-dedicated-parameter">Parvo (details channel) dedicated parameter</a></li>
+<li><a class="reference internal" href="#ipl-magno-motion-transient-channel-parameters">IPL Magno (motion/transient channel) parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../table_of_content_contrib/table_of_content_contrib.html"
+                        title="previous chapter"><em>contrib</em> module. The additional contributions made available !</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../ios/table_of_content_ios/table_of_content_ios.html"
+                        title="next chapter"><strong>OpenCV iOS</strong></a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/contrib/retina_model/retina_model.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../ios/table_of_content_ios/table_of_content_ios.html" title="OpenCV iOS"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../table_of_content_contrib/table_of_content_contrib.html" title="contrib module. The additional contributions made available !"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_contrib/table_of_content_contrib.html" ><em>contrib</em> module. The additional contributions made available !</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

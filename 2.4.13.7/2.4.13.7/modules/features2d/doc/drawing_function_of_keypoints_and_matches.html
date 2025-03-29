@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Drawing Function of Keypoints and Matches &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="features2d. 2D Features Framework" href="features2d.html" />
+    <link rel="next" title="Object Categorization" href="object_categorization.html" />
+    <link rel="prev" title="Common Interfaces of Generic Descriptor Matchers" href="common_interfaces_of_generic_descriptor_matchers.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="object_categorization.html" title="Object Categorization"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="common_interfaces_of_generic_descriptor_matchers.html" title="Common Interfaces of Generic Descriptor Matchers"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="features2d.html" accesskey="U">features2d. 2D Features Framework</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="drawing-function-of-keypoints-and-matches">
+<h1>Drawing Function of Keypoints and Matches<a class="headerlink" href="#drawing-function-of-keypoints-and-matches" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="drawmatches">
+<h2>drawMatches<a class="headerlink" href="#drawmatches" title="Permalink to this headline">¶</a></h2>
+<p>Draws the found matches of keypoints from two images.</p>
+<dl class="function">
+<dt id="void drawMatches(const Mat&amp; img1, const vector&lt;KeyPoint&gt;&amp; keypoints1, const Mat&amp; img2, const vector&lt;KeyPoint&gt;&amp; keypoints2, const vector&lt;DMatch&gt;&amp; matches1to2, Mat&amp; outImg, const Scalar&amp; matchColor, const Scalar&amp; singlePointColor, const vector&lt;char&gt;&amp; matchesMask, int flags)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">drawMatches</code><span class="sig-paren">(</span>const Mat&amp; <strong>img1</strong>, const vector&lt;KeyPoint&gt;&amp; <strong>keypoints1</strong>, const Mat&amp; <strong>img2</strong>, const vector&lt;KeyPoint&gt;&amp; <strong>keypoints2</strong>, const vector&lt;DMatch&gt;&amp; <strong>matches1to2</strong>, Mat&amp; <strong>outImg</strong>, const Scalar&amp; <strong>matchColor</strong>=Scalar::all(-1), const Scalar&amp; <strong>singlePointColor</strong>=Scalar::all(-1), const vector&lt;char&gt;&amp; <strong>matchesMask</strong>=vector&lt;char&gt;(), int <strong>flags</strong>=DrawMatchesFlags::DEFAULT <span class="sig-paren">)</span><a class="headerlink" href="#void drawMatches(const Mat& img1, const vector<KeyPoint>& keypoints1, const Mat& img2, const vector<KeyPoint>& keypoints2, const vector<DMatch>& matches1to2, Mat& outImg, const Scalar& matchColor, const Scalar& singlePointColor, const vector<char>& matchesMask, int flags)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void drawMatches(const Mat&amp; img1, const vector&lt;KeyPoint&gt;&amp; keypoints1, const Mat&amp; img2, const vector&lt;KeyPoint&gt;&amp; keypoints2, const vector&lt;vector&lt;DMatch&gt; &gt;&amp; matches1to2, Mat&amp; outImg, const Scalar&amp; matchColor, const Scalar&amp; singlePointColor, const vector&lt;vector&lt;char&gt; &gt;&amp; matchesMask, int flags)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">drawMatches</code><span class="sig-paren">(</span>const Mat&amp; <strong>img1</strong>, const vector&lt;KeyPoint&gt;&amp; <strong>keypoints1</strong>, const Mat&amp; <strong>img2</strong>, const vector&lt;KeyPoint&gt;&amp; <strong>keypoints2</strong>, const vector&lt;vector&lt;DMatch&gt;&gt;&amp; <strong>matches1to2</strong>, Mat&amp; <strong>outImg</strong>, const Scalar&amp; <strong>matchColor</strong>=Scalar::all(-1), const Scalar&amp; <strong>singlePointColor</strong>=Scalar::all(-1), const vector&lt;vector&lt;char&gt;&gt;&amp; <strong>matchesMask</strong>=vector&lt;vector&lt;char&gt; &gt;(), int <strong>flags</strong>=DrawMatchesFlags::DEFAULT <span class="sig-paren">)</span><a class="headerlink" href="#void drawMatches(const Mat& img1, const vector<KeyPoint>& keypoints1, const Mat& img2, const vector<KeyPoint>& keypoints2, const vector<vector<DMatch> >& matches1to2, Mat& outImg, const Scalar& matchColor, const Scalar& singlePointColor, const vector<vector<char> >& matchesMask, int flags)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img1</strong> &#8211; First source image.</li>
+<li><strong>keypoints1</strong> &#8211; Keypoints from the first source image.</li>
+<li><strong>img2</strong> &#8211; Second source image.</li>
+<li><strong>keypoints2</strong> &#8211; Keypoints from the second source image.</li>
+<li><strong>matches1to2</strong> &#8211; Matches from the first image to the second one, which means that  <code class="docutils literal"><span class="pre">keypoints1[i]</span></code>  has a corresponding point in  <code class="docutils literal"><span class="pre">keypoints2[matches[i]]</span></code> .</li>
+<li><strong>outImg</strong> &#8211; Output image. Its content depends on the <code class="docutils literal"><span class="pre">flags</span></code>  value defining what is drawn in the output image. See possible  <code class="docutils literal"><span class="pre">flags</span></code>  bit values below.</li>
+<li><strong>matchColor</strong> &#8211; Color of matches (lines and connected keypoints). If  <code class="docutils literal"><span class="pre">matchColor==Scalar::all(-1)</span></code> , the color is generated randomly.</li>
+<li><strong>singlePointColor</strong> &#8211; Color of single keypoints (circles), which means that keypoints do not have the matches. If  <code class="docutils literal"><span class="pre">singlePointColor==Scalar::all(-1)</span></code> , the color is generated randomly.</li>
+<li><strong>matchesMask</strong> &#8211; Mask determining which matches are drawn. If the mask is empty, all matches are drawn.</li>
+<li><strong>flags</strong> &#8211; Flags setting drawing features. Possible  <code class="docutils literal"><span class="pre">flags</span></code>  bit values are defined by  <code class="docutils literal"><span class="pre">DrawMatchesFlags</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function draws matches of keypoints from two images in the output image. Match is a line connecting two keypoints (circles). The structure <code class="docutils literal"><span class="pre">DrawMatchesFlags</span></code> is defined as follows:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">DrawMatchesFlags</span>
+<span class="p">{</span>
+    <span class="k">enum</span>
+    <span class="p">{</span>
+        <span class="n">DEFAULT</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="c1">// Output image matrix will be created (Mat::create),</span>
+                     <span class="c1">// i.e. existing memory of output image may be reused.</span>
+                     <span class="c1">// Two source images, matches, and single keypoints</span>
+                     <span class="c1">// will be drawn.</span>
+                     <span class="c1">// For each keypoint, only the center point will be</span>
+                     <span class="c1">// drawn (without a circle around the keypoint with the</span>
+                     <span class="c1">// keypoint size and orientation).</span>
+        <span class="n">DRAW_OVER_OUTIMG</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="c1">// Output image matrix will not be</span>
+                       <span class="c1">// created (using Mat::create). Matches will be drawn</span>
+                       <span class="c1">// on existing content of output image.</span>
+        <span class="n">NOT_DRAW_SINGLE_POINTS</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="c1">// Single keypoints will not be drawn.</span>
+        <span class="n">DRAW_RICH_KEYPOINTS</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1">// For each keypoint, the circle around</span>
+                       <span class="c1">// keypoint with keypoint size and orientation will</span>
+                       <span class="c1">// be drawn.</span>
+    <span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="drawkeypoints">
+<h2>drawKeypoints<a class="headerlink" href="#drawkeypoints" title="Permalink to this headline">¶</a></h2>
+<p>Draws keypoints.</p>
+<dl class="function">
+<dt id="void drawKeypoints(const Mat&amp; image, const vector&lt;KeyPoint&gt;&amp; keypoints, Mat&amp; outImage, const Scalar&amp; color, int flags)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">drawKeypoints</code><span class="sig-paren">(</span>const Mat&amp; <strong>image</strong>, const vector&lt;KeyPoint&gt;&amp; <strong>keypoints</strong>, Mat&amp; <strong>outImage</strong>, const Scalar&amp; <strong>color</strong>=Scalar::all(-1), int <strong>flags</strong>=DrawMatchesFlags::DEFAULT <span class="sig-paren">)</span><a class="headerlink" href="#void drawKeypoints(const Mat& image, const vector<KeyPoint>& keypoints, Mat& outImage, const Scalar& color, int flags)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Source image.</li>
+<li><strong>keypoints</strong> &#8211; Keypoints from the source image.</li>
+<li><strong>outImage</strong> &#8211; Output image. Its content depends on  the <code class="docutils literal"><span class="pre">flags</span></code>  value defining what is drawn in the output image. See possible  <code class="docutils literal"><span class="pre">flags</span></code>  bit values below.</li>
+<li><strong>color</strong> &#8211; Color of keypoints.</li>
+<li><strong>flags</strong> &#8211; Flags setting drawing features. Possible  <code class="docutils literal"><span class="pre">flags</span></code>  bit values are defined by  <code class="docutils literal"><span class="pre">DrawMatchesFlags</span></code>. See details above in  <a class="reference internal" href="#void drawMatches(const Mat&amp; img1, const vector&lt;KeyPoint&gt;&amp; keypoints1, const Mat&amp; img2, const vector&lt;KeyPoint&gt;&amp; keypoints2, const vector&lt;DMatch&gt;&amp; matches1to2, Mat&amp; outImg, const Scalar&amp; matchColor, const Scalar&amp; singlePointColor, const vector&lt;char&gt;&amp; matchesMask, int flags)" title="void drawMatches(const Mat&amp; img1, const vector&lt;KeyPoint&gt;&amp; keypoints1, const Mat&amp; img2, const vector&lt;KeyPoint&gt;&amp; keypoints2, const vector&lt;DMatch&gt;&amp; matches1to2, Mat&amp; outImg, const Scalar&amp; matchColor, const Scalar&amp; singlePointColor, const vector&lt;char&gt;&amp; matchesMask, int flags)"><code class="xref ocv ocv-func docutils literal"><span class="pre">drawMatches()</span></code></a> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Drawing Function of Keypoints and Matches</a><ul>
+<li><a class="reference internal" href="#drawmatches">drawMatches</a></li>
+<li><a class="reference internal" href="#drawkeypoints">drawKeypoints</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="common_interfaces_of_generic_descriptor_matchers.html"
+                        title="previous chapter">Common Interfaces of Generic Descriptor Matchers</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="object_categorization.html"
+                        title="next chapter">Object Categorization</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/features2d/doc/drawing_function_of_keypoints_and_matches.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="object_categorization.html" title="Object Categorization"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="common_interfaces_of_generic_descriptor_matchers.html" title="Common Interfaces of Generic Descriptor Matchers"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="features2d.html" >features2d. 2D Features Framework</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Features2d &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../index.html" />
+    <link rel="up" title="OpenCV User Guide" href="user_guide.html" />
+    <link rel="next" title="Kinect and OpenNI" href="ug_kinect.html" />
+    <link rel="prev" title="Operations with images" href="ug_mat.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="ug_kinect.html" title="Kinect and OpenNI"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ug_mat.html" title="Operations with images"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="user_guide.html" accesskey="U">OpenCV User Guide</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="features2d">
+<h1>Features2d<a class="headerlink" href="#features2d" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="detectors">
+<h2>Detectors<a class="headerlink" href="#detectors" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="descriptors">
+<h2>Descriptors<a class="headerlink" href="#descriptors" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="matching-keypoints">
+<h2>Matching keypoints<a class="headerlink" href="#matching-keypoints" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="the-code">
+<h3>The code<a class="headerlink" href="#the-code" title="Permalink to this headline">¶</a></h3>
+<p>We will start with a short sample <code class="docutils literal"><span class="pre">opencv/samples/cpp/matcher_simple.cpp</span></code>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">img1</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">CV_LOAD_IMAGE_GRAYSCALE</span><span class="p">);</span>
+<span class="n">Mat</span> <span class="n">img2</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">CV_LOAD_IMAGE_GRAYSCALE</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="n">img1</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">||</span> <span class="n">img2</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Can&#39;t read one of the images</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// detecting keypoints</span>
+<span class="n">SurfFeatureDetector</span> <span class="n">detector</span><span class="p">(</span><span class="mi">400</span><span class="p">);</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;</span> <span class="n">keypoints1</span><span class="p">,</span> <span class="n">keypoints2</span><span class="p">;</span>
+<span class="n">detector</span><span class="p">.</span><span class="n">detect</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">keypoints1</span><span class="p">);</span>
+<span class="n">detector</span><span class="p">.</span><span class="n">detect</span><span class="p">(</span><span class="n">img2</span><span class="p">,</span> <span class="n">keypoints2</span><span class="p">);</span>
+
+<span class="c1">// computing descriptors</span>
+<span class="n">SurfDescriptorExtractor</span> <span class="n">extractor</span><span class="p">;</span>
+<span class="n">Mat</span> <span class="n">descriptors1</span><span class="p">,</span> <span class="n">descriptors2</span><span class="p">;</span>
+<span class="n">extractor</span><span class="p">.</span><span class="n">compute</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">keypoints1</span><span class="p">,</span> <span class="n">descriptors1</span><span class="p">);</span>
+<span class="n">extractor</span><span class="p">.</span><span class="n">compute</span><span class="p">(</span><span class="n">img2</span><span class="p">,</span> <span class="n">keypoints2</span><span class="p">,</span> <span class="n">descriptors2</span><span class="p">);</span>
+
+<span class="c1">// matching descriptors</span>
+<span class="n">BruteForceMatcher</span><span class="o">&lt;</span><span class="n">L2</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">matcher</span><span class="p">;</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="n">matches</span><span class="p">;</span>
+<span class="n">matcher</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="n">descriptors1</span><span class="p">,</span> <span class="n">descriptors2</span><span class="p">,</span> <span class="n">matches</span><span class="p">);</span>
+
+<span class="c1">// drawing the results</span>
+<span class="n">namedWindow</span><span class="p">(</span><span class="s">&quot;matches&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="n">Mat</span> <span class="n">img_matches</span><span class="p">;</span>
+<span class="n">drawMatches</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">keypoints1</span><span class="p">,</span> <span class="n">img2</span><span class="p">,</span> <span class="n">keypoints2</span><span class="p">,</span> <span class="n">matches</span><span class="p">,</span> <span class="n">img_matches</span><span class="p">);</span>
+<span class="n">imshow</span><span class="p">(</span><span class="s">&quot;matches&quot;</span><span class="p">,</span> <span class="n">img_matches</span><span class="p">);</span>
+<span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-code-explained">
+<h3>The code explained<a class="headerlink" href="#the-code-explained" title="Permalink to this headline">¶</a></h3>
+<p>Let us break the code down.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">img1</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">CV_LOAD_IMAGE_GRAYSCALE</span><span class="p">);</span>
+<span class="n">Mat</span> <span class="n">img2</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">CV_LOAD_IMAGE_GRAYSCALE</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="n">img1</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">||</span> <span class="n">img2</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Can&#39;t read one of the images</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We load two images and check if they are loaded correctly.:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// detecting keypoints</span>
+<span class="n">FastFeatureDetector</span> <span class="nf">detector</span><span class="p">(</span><span class="mi">15</span><span class="p">);</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;</span> <span class="n">keypoints1</span><span class="p">,</span> <span class="n">keypoints2</span><span class="p">;</span>
+<span class="n">detector</span><span class="p">.</span><span class="n">detect</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">keypoints1</span><span class="p">);</span>
+<span class="n">detector</span><span class="p">.</span><span class="n">detect</span><span class="p">(</span><span class="n">img2</span><span class="p">,</span> <span class="n">keypoints2</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>First, we create an instance of a keypoint detector. All detectors inherit the abstract <code class="docutils literal"><span class="pre">FeatureDetector</span></code> interface, but the constructors are algorithm-dependent. The first argument to each detector usually controls the balance between the amount of keypoints and their stability. The range of values is different for different detectors (For instance, <em>FAST</em> threshold has the meaning of pixel intensity difference and usually varies in the region <em>[0,40]</em>. <em>SURF</em> threshold is applied to a Hessian of an image and usually takes on values larger than <em>100</em>), so use defaults in case of doubt.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// computing descriptors</span>
+<span class="n">SurfDescriptorExtractor</span> <span class="n">extractor</span><span class="p">;</span>
+<span class="n">Mat</span> <span class="n">descriptors1</span><span class="p">,</span> <span class="n">descriptors2</span><span class="p">;</span>
+<span class="n">extractor</span><span class="p">.</span><span class="n">compute</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">keypoints1</span><span class="p">,</span> <span class="n">descriptors1</span><span class="p">);</span>
+<span class="n">extractor</span><span class="p">.</span><span class="n">compute</span><span class="p">(</span><span class="n">img2</span><span class="p">,</span> <span class="n">keypoints2</span><span class="p">,</span> <span class="n">descriptors2</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>We create an instance of descriptor extractor. The most of OpenCV descriptors inherit <code class="docutils literal"><span class="pre">DescriptorExtractor</span></code> abstract interface. Then we compute descriptors for each of the keypoints. The output <code class="docutils literal"><span class="pre">Mat</span></code> of the <code class="docutils literal"><span class="pre">DescriptorExtractor::compute</span></code> method contains a descriptor in a row <em>i</em> for each <em>i</em>-th keypoint. Note that the method can modify the keypoints vector by removing the keypoints such that a descriptor for them is not defined (usually these are the keypoints near image border). The method makes sure that the ouptut keypoints and descriptors are consistent with each other (so that the number of keypoints is equal to the descriptors row count).</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// matching descriptors</span>
+<span class="n">BruteForceMatcher</span><span class="o">&lt;</span><span class="n">L2</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">matcher</span><span class="p">;</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="n">matches</span><span class="p">;</span>
+<span class="n">matcher</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="n">descriptors1</span><span class="p">,</span> <span class="n">descriptors2</span><span class="p">,</span> <span class="n">matches</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Now that we have descriptors for both images, we can match them. First, we create a matcher that for each descriptor from image 2 does exhaustive search for the nearest descriptor in image 1 using Euclidean metric. Manhattan distance is also implemented as well as a Hamming distance for Brief descriptor. The output vector <code class="docutils literal"><span class="pre">matches</span></code> contains pairs of corresponding points indices.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// drawing the results</span>
+<span class="n">namedWindow</span><span class="p">(</span><span class="s">&quot;matches&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="n">Mat</span> <span class="n">img_matches</span><span class="p">;</span>
+<span class="n">drawMatches</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">keypoints1</span><span class="p">,</span> <span class="n">img2</span><span class="p">,</span> <span class="n">keypoints2</span><span class="p">,</span> <span class="n">matches</span><span class="p">,</span> <span class="n">img_matches</span><span class="p">);</span>
+<span class="n">imshow</span><span class="p">(</span><span class="s">&quot;matches&quot;</span><span class="p">,</span> <span class="n">img_matches</span><span class="p">);</span>
+<span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The final part of the sample is about visualizing the matching results.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Features2d</a><ul>
+<li><a class="reference internal" href="#detectors">Detectors</a></li>
+<li><a class="reference internal" href="#descriptors">Descriptors</a></li>
+<li><a class="reference internal" href="#matching-keypoints">Matching keypoints</a><ul>
+<li><a class="reference internal" href="#the-code">The code</a></li>
+<li><a class="reference internal" href="#the-code-explained">The code explained</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ug_mat.html"
+                        title="previous chapter">Operations with images</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ug_kinect.html"
+                        title="next chapter">Kinect and OpenNI</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/doc/user_guide/ug_features2d.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="ug_kinect.html" title="Kinect and OpenNI"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ug_mat.html" title="Operations with images"
+             >previous</a> |</li>
+        <li><a href="../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="user_guide.html" >OpenCV User Guide</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

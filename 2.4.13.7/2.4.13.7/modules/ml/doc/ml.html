@@ -1,0 +1,312 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ml. Machine Learning &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="OpenCV API Reference" href="../../refman.html" />
+    <link rel="next" title="Statistical Models" href="statistical_models.html" />
+    <link rel="prev" title="Latent SVM" href="../../objdetect/doc/latent_svm.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="statistical_models.html" title="Statistical Models"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../../objdetect/doc/latent_svm.html" title="Latent SVM"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" accesskey="U">OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ml-machine-learning">
+<h1>ml. Machine Learning<a class="headerlink" href="#ml-machine-learning" title="Permalink to this headline">¶</a></h1>
+<p>The Machine Learning Library (MLL) is a set of classes and functions for statistical classification, regression, and clustering of data.</p>
+<p>Most of the classification and regression algorithms are implemented as C++ classes. As the algorithms have different sets of features (like an ability to handle missing measurements or categorical input variables), there is a little common ground between the classes. This common ground is defined by the class <cite>CvStatModel</cite> that all the other ML classes are derived from.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statistical_models.html">Statistical Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="statistical_models.html#cvstatmodel">CvStatModel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="statistical_models.html#cvstatmodel-cvstatmodel">CvStatModel::CvStatModel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="statistical_models.html#id1">CvStatModel::CvStatModel(...)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="statistical_models.html#id2">CvStatModel::~CvStatModel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="statistical_models.html#cvstatmodel-clear">CvStatModel::clear</a></li>
+<li class="toctree-l2"><a class="reference internal" href="statistical_models.html#cvstatmodel-save">CvStatModel::save</a></li>
+<li class="toctree-l2"><a class="reference internal" href="statistical_models.html#cvstatmodel-load">CvStatModel::load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="statistical_models.html#cvstatmodel-write">CvStatModel::write</a></li>
+<li class="toctree-l2"><a class="reference internal" href="statistical_models.html#cvstatmodel-read">CvStatModel::read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="statistical_models.html#cvstatmodel-train">CvStatModel::train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="statistical_models.html#cvstatmodel-predict">CvStatModel::predict</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="normal_bayes_classifier.html">Normal Bayes Classifier</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="normal_bayes_classifier.html#cvnormalbayesclassifier">CvNormalBayesClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="normal_bayes_classifier.html#cvnormalbayesclassifier-cvnormalbayesclassifier">CvNormalBayesClassifier::CvNormalBayesClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="normal_bayes_classifier.html#cvnormalbayesclassifier-train">CvNormalBayesClassifier::train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="normal_bayes_classifier.html#cvnormalbayesclassifier-predict">CvNormalBayesClassifier::predict</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="k_nearest_neighbors.html">K-Nearest Neighbors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="k_nearest_neighbors.html#cvknearest">CvKNearest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="k_nearest_neighbors.html#cvknearest-cvknearest">CvKNearest::CvKNearest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="k_nearest_neighbors.html#cvknearest-train">CvKNearest::train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="k_nearest_neighbors.html#cvknearest-find-nearest">CvKNearest::find_nearest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="k_nearest_neighbors.html#cvknearest-get-max-k">CvKNearest::get_max_k</a></li>
+<li class="toctree-l2"><a class="reference internal" href="k_nearest_neighbors.html#cvknearest-get-var-count">CvKNearest::get_var_count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="k_nearest_neighbors.html#cvknearest-get-sample-count">CvKNearest::get_sample_count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="k_nearest_neighbors.html#cvknearest-is-regression">CvKNearest::is_regression</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="support_vector_machines.html">Support Vector Machines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="support_vector_machines.html#cvparamgrid">CvParamGrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support_vector_machines.html#cvparamgrid-cvparamgrid">CvParamGrid::CvParamGrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support_vector_machines.html#cvparamgrid-check">CvParamGrid::check</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support_vector_machines.html#cvsvmparams">CvSVMParams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support_vector_machines.html#cvsvmparams-cvsvmparams">CvSVMParams::CvSVMParams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support_vector_machines.html#cvsvm">CvSVM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support_vector_machines.html#cvsvm-cvsvm">CvSVM::CvSVM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support_vector_machines.html#cvsvm-train">CvSVM::train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support_vector_machines.html#cvsvm-train-auto">CvSVM::train_auto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support_vector_machines.html#cvsvm-predict">CvSVM::predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support_vector_machines.html#cvsvm-get-default-grid">CvSVM::get_default_grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support_vector_machines.html#cvsvm-get-params">CvSVM::get_params</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support_vector_machines.html#cvsvm-get-support-vector">CvSVM::get_support_vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support_vector_machines.html#cvsvm-get-var-count">CvSVM::get_var_count</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="decision_trees.html">Decision Trees</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="decision_trees.html#predicting-with-decision-trees">Predicting with Decision Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decision_trees.html#training-decision-trees">Training Decision Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decision_trees.html#variable-importance">Variable Importance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decision_trees.html#cvdtreesplit">CvDTreeSplit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decision_trees.html#cvdtreenode">CvDTreeNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decision_trees.html#cvdtreeparams">CvDTreeParams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decision_trees.html#cvdtreeparams-cvdtreeparams">CvDTreeParams::CvDTreeParams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decision_trees.html#cvdtreetraindata">CvDTreeTrainData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decision_trees.html#cvdtree">CvDTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decision_trees.html#cvdtree-train">CvDTree::train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decision_trees.html#cvdtree-predict">CvDTree::predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decision_trees.html#cvdtree-calc-error">CvDTree::calc_error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decision_trees.html#cvdtree-getvarimportance">CvDTree::getVarImportance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decision_trees.html#cvdtree-get-root">CvDTree::get_root</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decision_trees.html#cvdtree-get-pruned-tree-idx">CvDTree::get_pruned_tree_idx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decision_trees.html#cvdtree-get-data">CvDTree::get_data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="boosting.html">Boosting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="boosting.html#cvboostparams">CvBoostParams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boosting.html#cvboostparams-cvboostparams">CvBoostParams::CvBoostParams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boosting.html#cvboosttree">CvBoostTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boosting.html#cvboost">CvBoost</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boosting.html#cvboost-cvboost">CvBoost::CvBoost</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boosting.html#cvboost-train">CvBoost::train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boosting.html#cvboost-predict">CvBoost::predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boosting.html#cvboost-prune">CvBoost::prune</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boosting.html#cvboost-calc-error">CvBoost::calc_error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boosting.html#cvboost-get-weak-predictors">CvBoost::get_weak_predictors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boosting.html#cvboost-get-params">CvBoost::get_params</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boosting.html#cvboost-get-data">CvBoost::get_data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gradient_boosted_trees.html">Gradient Boosted Trees</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gradient_boosted_trees.html#training-the-gbt-model">Training the GBT model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gradient_boosted_trees.html#predicting-with-the-gbt-model">Predicting with the GBT Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gradient_boosted_trees.html#cvgbtreesparams">CvGBTreesParams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gradient_boosted_trees.html#cvgbtreesparams-cvgbtreesparams">CvGBTreesParams::CvGBTreesParams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gradient_boosted_trees.html#cvgbtrees">CvGBTrees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gradient_boosted_trees.html#cvgbtrees-cvgbtrees">CvGBTrees::CvGBTrees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gradient_boosted_trees.html#cvgbtrees-train">CvGBTrees::train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gradient_boosted_trees.html#cvgbtrees-predict">CvGBTrees::predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gradient_boosted_trees.html#cvgbtrees-clear">CvGBTrees::clear</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gradient_boosted_trees.html#cvgbtrees-calc-error">CvGBTrees::calc_error</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="random_trees.html">Random Trees</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="random_trees.html#cvrtparams">CvRTParams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="random_trees.html#cvrtparams-cvrtparams">CvRTParams::CvRTParams:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="random_trees.html#cvrtrees">CvRTrees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="random_trees.html#cvrtrees-train">CvRTrees::train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="random_trees.html#cvrtrees-predict">CvRTrees::predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="random_trees.html#cvrtrees-predict-prob">CvRTrees::predict_prob</a></li>
+<li class="toctree-l2"><a class="reference internal" href="random_trees.html#cvrtrees-getvarimportance">CvRTrees::getVarImportance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="random_trees.html#cvrtrees-get-proximity">CvRTrees::get_proximity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="random_trees.html#cvrtrees-calc-error">CvRTrees::calc_error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="random_trees.html#cvrtrees-get-train-error">CvRTrees::get_train_error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="random_trees.html#cvrtrees-get-rng">CvRTrees::get_rng</a></li>
+<li class="toctree-l2"><a class="reference internal" href="random_trees.html#cvrtrees-get-tree-count">CvRTrees::get_tree_count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="random_trees.html#cvrtrees-get-tree">CvRTrees::get_tree</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ertrees.html">Extremely randomized trees</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ertrees.html#cvertrees">CvERTrees</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="expectation_maximization.html">Expectation Maximization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#em">EM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#em-em">EM::EM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#em-train">EM::train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#em-predict">EM::predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#cvem-istrained">CvEM::isTrained</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#em-read-em-write">EM::read, EM::write</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#em-get-em-set">EM::get, EM::set</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="neural_networks.html">Neural Networks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="neural_networks.html#cvann-mlp-trainparams">CvANN_MLP_TrainParams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_networks.html#cvann-mlp-trainparams-cvann-mlp-trainparams">CvANN_MLP_TrainParams::CvANN_MLP_TrainParams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_networks.html#cvann-mlp">CvANN_MLP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_networks.html#cvann-mlp-cvann-mlp">CvANN_MLP::CvANN_MLP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_networks.html#cvann-mlp-create">CvANN_MLP::create</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_networks.html#cvann-mlp-train">CvANN_MLP::train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_networks.html#cvann-mlp-predict">CvANN_MLP::predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_networks.html#cvann-mlp-get-layer-count">CvANN_MLP::get_layer_count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_networks.html#cvann-mlp-get-layer-sizes">CvANN_MLP::get_layer_sizes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_networks.html#cvann-mlp-get-weights">CvANN_MLP::get_weights</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mldata.html">MLData</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata">CvMLData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-read-csv">CvMLData::read_csv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-get-values">CvMLData::get_values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-get-responses">CvMLData::get_responses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-get-missing">CvMLData::get_missing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-set-response-idx">CvMLData::set_response_idx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-get-response-idx">CvMLData::get_response_idx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-set-train-test-split">CvMLData::set_train_test_split</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-get-train-sample-idx">CvMLData::get_train_sample_idx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-get-test-sample-idx">CvMLData::get_test_sample_idx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-mix-train-and-test-idx">CvMLData::mix_train_and_test_idx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-get-var-idx">CvMLData::get_var_idx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-change-var-idx">CvMLData::change_var_idx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-get-var-types">CvMLData::get_var_types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-set-var-types">CvMLData::set_var_types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-get-var-type">CvMLData::get_var_type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-change-var-type">CvMLData::change_var_type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-set-delimiter">CvMLData::set_delimiter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-get-delimiter">CvMLData::get_delimiter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-set-miss-ch">CvMLData::set_miss_ch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-get-miss-ch">CvMLData::get_miss_ch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvmldata-get-class-labels-map">CvMLData::get_class_labels_map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mldata.html#cvtraintestsplit">CvTrainTestSplit</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../../objdetect/doc/latent_svm.html"
+                        title="previous chapter">Latent SVM</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="statistical_models.html"
+                        title="next chapter">Statistical Models</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/ml/doc/ml.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="statistical_models.html" title="Statistical Models"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../../objdetect/doc/latent_svm.html" title="Latent SVM"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

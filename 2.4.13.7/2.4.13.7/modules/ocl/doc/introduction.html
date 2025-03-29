@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>OpenCL Module Introduction &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="ocl. OpenCL-accelerated Computer Vision" href="ocl.html" />
+    <link rel="next" title="Data Structures and Utility Functions" href="structures_and_utility_functions.html" />
+    <link rel="prev" title="ocl. OpenCL-accelerated Computer Vision" href="ocl.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="structures_and_utility_functions.html" title="Data Structures and Utility Functions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ocl.html" title="ocl. OpenCL-accelerated Computer Vision"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" accesskey="U">ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="opencl-module-introduction">
+<h1>OpenCL Module Introduction<a class="headerlink" href="#opencl-module-introduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="general-information">
+<h2>General Information<a class="headerlink" href="#general-information" title="Permalink to this headline">¶</a></h2>
+<p>The OpenCV OCL module contains a set of classes and functions that implement and accelerate OpenCV functionality on OpenCL compatible devices. OpenCL is a Khronos standard, implemented by a variety of devices (CPUs, GPUs, FPGAs, ARM), abstracting the exact hardware details, while enabling vendors to provide native implementation for maximal acceleration on their hardware. The standard enjoys wide industry support, and the end user of the module will enjoy the data parallelism benefits that the specific platform/hardware may be capable of, in a platform/hardware independent manner.</p>
+<p>While in the future we hope to validate (and enable) the OCL module in all OpenCL capable devices, we currently develop and test on GPU devices only. This includes both discrete GPUs (NVidia, AMD), as well as integrated chips (AMD APU and Intel HD devices). Performance of any particular algorithm will depend on the particular platform characteristics and capabilities. However, currently, accuracy and  mathematical correctness has been verified to be identical to that of the pure CPU implementation on all tested GPU devices and platforms (both Windows and Linux).</p>
+<p>The OpenCV OCL module includes utility functions, low-level vision primitives, and high-level algorithms. The utility functions and low-level primitives provide a powerful infrastructure for developing fast vision algorithms taking advantage of OCL, whereas the high-level functionality (samples) includes some state-of-the-art algorithms (including LK Optical flow, and Face detection) ready to be used by the application developers. The module is also accompanied by an extensive performance and accuracy test suite.</p>
+<p>The OpenCV OCL module is designed for ease of use and does not require any knowledge of OpenCL. At a minimum level, it can be viewed as a set of accelerators, that can take advantage of the high compute throughput that GPU/APU devices can provide. However, it can also be viewed as a starting point to really integrate the built-in functionality with your own custom OpenCL kernels, with or without modifying the source of OpenCV-OCL. Of course, knowledge of OpenCL will certainly help, however we hope that OpenCV-OCL module, and the kernels it contains in source code, can be very useful as a means of actually learning openCL. Such a knowledge would be necessary to further fine-tune any of the existing OpenCL kernels, or for extending the framework with new kernels. As of OpenCV 2.4.4, we introduce interoperability with OpenCL, enabling easy use of custom OpenCL kernels within the OpenCV framework.</p>
+<p>To correctly run the OCL module, you need to have the OpenCL runtime provided by the device vendor, typically the device driver.</p>
+<p>To enable OCL support, configure OpenCV using CMake with <code class="docutils literal"><span class="pre">WITH_OPENCL=ON</span></code>. When the flag is set and if OpenCL SDK is installed, the full-featured OpenCV OCL module is built. Otherwise, the module may be not built. If you have AMD&#8217;S FFT and BLAS library, you can select it with <code class="docutils literal"><span class="pre">WITH_OPENCLAMDFFT=ON</span></code>, <code class="docutils literal"><span class="pre">WITH_OPENCLAMDBLAS=ON</span></code>.</p>
+<p>The ocl module can be found under the &#8220;modules&#8221; directory. In &#8220;modules/ocl/src&#8221; you can find the source code for the cpp class that wrap around the direct kernel invocation. The kernels themselves can be found in &#8220;modules/ocl/src/opencl&#8221;.  Samples can be found under &#8220;samples/ocl&#8221;. Accuracy tests can be found in &#8220;modules/ocl/test&#8221;, and performance tests under &#8220;module/ocl/perf&#8221;.</p>
+<p>Right now, the user can select OpenCL device by specifying the environment variable <code class="docutils literal"><span class="pre">OPENCV_OPENCL_DEVICE</span></code>. Variable format:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="o">&lt;</span><span class="n">Platform</span><span class="o">&gt;:&lt;</span><span class="n">CPU</span><span class="o">|</span><span class="n">GPU</span><span class="o">|</span><span class="n">ACCELERATOR</span><span class="o">|</span><span class="n">nothing</span><span class="o">=</span><span class="n">GPU</span><span class="o">/</span><span class="n">CPU</span><span class="o">&gt;:&lt;</span><span class="n">DeviceName</span> <span class="n">or</span> <span class="n">ID</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p><strong>Note:</strong> Device ID range is: 0..9 (only one digit, 10 - it is a part of name)</p>
+<p>Samples:</p>
+<div class="highlight-cpp"><div class="highlight"><pre>&#39;&#39; = &#39;:&#39; = &#39;::&#39; = &#39;:GPU|CPU:&#39;
+&#39;AMD:GPU|CPU:&#39;
+&#39;AMD::Tahiti&#39;
+&#39;:GPU:1&#39;
+&#39;:CPU:2&#39;
+</pre></div>
+</div>
+<p>Also the user can use <code class="docutils literal"><span class="pre">cv::ocl::setDevice</span></code> function (with <code class="docutils literal"><span class="pre">cv::ocl::getOpenCLPlatforms</span></code> and <code class="docutils literal"><span class="pre">cv::ocl::getOpenCLDevices</span></code>). This function initializes OpenCL runtime and setup the passed device as computing device.</p>
+<p>In the current version, all the thread share the same context and device so the multi-devices are not supported. We will add this feature soon. If a function support 4-channel operator, it should support 3-channel operator as well, because All the 3-channel matrix(i.e. RGB image) are represented by 4-channel matrix in <code class="docutils literal"><span class="pre">oclMat</span></code>. It means 3-channel image have 4-channel space with the last channel unused. We provide a transparent interface to handle the difference between OpenCV Mat and <code class="docutils literal"><span class="pre">oclMat</span></code>.</p>
+</div>
+<div class="section" id="developer-notes">
+<h2>Developer Notes<a class="headerlink" href="#developer-notes" title="Permalink to this headline">¶</a></h2>
+<p>In a heterogeneous device environment, there may be cost associated with data transfer. This would be the case, for example, when data needs to be moved from host memory (accessible to the CPU), to device memory (accessible to a discrete GPU). in the case of integrated graphics chips, there may be performance issues, relating to memory coherency between access from the GPU &#8220;part&#8221; of the integrated device, or the CPU &#8220;part.&#8221; For best performance, in either case, it is recommended that you do not introduce data transfers between CPU and the discrete GPU, except in the beginning and the end of the algorithmic pipeline.</p>
+<p>Some tidbits:</p>
+<ol class="arabic simple">
+<li>OpenCL version should be larger than 1.1 with FULL PROFILE.</li>
+<li>Currently there&#8217;s only one OpenCL context and command queue. We hope to implement multi device and multi queue support in the future.</li>
+<li>Many kernels use 256 as its workgroup size if possible, so the max work group size of the device must larger than 256. All GPU devices we are aware of indeed support 256 workitems in a workgroup, however non GPU devices may not. This will be improved in the future.</li>
+<li>If the device does not support double arithmetic, then functions&#8217; implementation generates an error.</li>
+<li>The <code class="docutils literal"><span class="pre">oclMat</span></code> uses buffer object, not image object.</li>
+<li>All the 3-channel matrices (i.e. RGB image) are represented by 4-channel matrices in <code class="docutils literal"><span class="pre">oclMat</span></code>, with the last channel unused. We provide a transparent interface to handle the difference between OpenCV Mat and <code class="docutils literal"><span class="pre">oclMat</span></code>.</li>
+<li>All the matrix in <code class="docutils literal"><span class="pre">oclMat</span></code> is aligned in column (now the alignment factor for <code class="docutils literal"><span class="pre">step</span></code> is 32+ byte). It means, m.cols * m.elemSize() &lt;= m.step.</li>
+<li>Data transfer between Mat and <code class="docutils literal"><span class="pre">oclMat</span></code>: If the CPU matrix is aligned in column, we will use faster API to transfer between Mat and <code class="docutils literal"><span class="pre">oclMat</span></code>, otherwise, we will use clEnqueueRead/WriteBufferRect to transfer data to guarantee the alignment. 3-channel matrix is an exception, it&#8217;s directly transferred to a temp buffer and then padded to 4-channel matrix(also aligned) when uploading and do the reverse operation when downloading.</li>
+<li>Data transfer between Mat and <code class="docutils literal"><span class="pre">oclMat</span></code>: ROI is a feature of OpenCV, which allow users process a sub rectangle of a matrix. When a CPU matrix which has ROI will be transfered to GPU, the whole matrix will be transfered and set ROI as CPU&#8217;s. In a word, we always transfer the whole matrix despite whether it has ROI or not.</li>
+<li>All the kernel file should locate in &#8220;modules/ocl/src/opencl/&#8221; with the extension &#8221;.cl&#8221;. All the kernel files are transformed to pure characters at compilation time in opencl_kernels.cpp, and the file name without extension is the name of the program sources.</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">OpenCL Module Introduction</a><ul>
+<li><a class="reference internal" href="#general-information">General Information</a></li>
+<li><a class="reference internal" href="#developer-notes">Developer Notes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ocl.html"
+                        title="previous chapter">ocl. OpenCL-accelerated Computer Vision</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="structures_and_utility_functions.html"
+                        title="next chapter">Data Structures and Utility Functions</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/ocl/doc/introduction.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="structures_and_utility_functions.html" title="Data Structures and Utility Functions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ocl.html" title="ocl. OpenCL-accelerated Computer Vision"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" >ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

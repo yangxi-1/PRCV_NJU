@@ -1,0 +1,872 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Drawing Functions &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="core. The Core Functionality" href="core.html" />
+    <link rel="next" title="XML/YAML Persistence" href="xml_yaml_persistence.html" />
+    <link rel="prev" title="Operations on Arrays" href="operations_on_arrays.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="xml_yaml_persistence.html" title="XML/YAML Persistence"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="operations_on_arrays.html" title="Operations on Arrays"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="core.html" accesskey="U">core. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="drawing-functions">
+<h1>Drawing Functions<a class="headerlink" href="#drawing-functions" title="Permalink to this headline">¶</a></h1>
+<p>Drawing functions work with matrices/images of arbitrary depth.
+The boundaries of the shapes can be rendered with antialiasing (implemented only for 8-bit images for now).
+All the functions include the parameter <code class="docutils literal"><span class="pre">color</span></code> that uses an RGB value (that may be constructed
+with <code class="docutils literal"><span class="pre">CV_RGB</span></code> or the  <a class="reference internal" href="basic_structures.html#Scalar_" title="class Scalar_"><code class="xref ocv ocv-class docutils literal"><span class="pre">Scalar_</span></code></a>  constructor
+) for color
+images and brightness for grayscale images. For color images, the channel ordering
+is normally <em>Blue, Green, Red</em>.
+This is what <a class="reference internal" href="../../highgui/doc/user_interface.html#void imshow(const string&amp; winname, InputArray mat)" title="void imshow(const string&amp; winname, InputArray mat)"><code class="xref ocv ocv-func docutils literal"><span class="pre">imshow()</span></code></a>, <a class="reference internal" href="../../highgui/doc/reading_and_writing_images_and_video.html#Mat imread(const string&amp; filename, int flags)" title="Mat imread(const string&amp; filename, int flags)"><code class="xref ocv ocv-func docutils literal"><span class="pre">imread()</span></code></a>, and <a class="reference internal" href="../../highgui/doc/reading_and_writing_images_and_video.html#bool imwrite(const string&amp; filename, InputArray img, const vector&lt;int&gt;&amp; params)" title="bool imwrite(const string&amp; filename, InputArray img, const vector&lt;int&gt;&amp; params)"><code class="xref ocv ocv-func docutils literal"><span class="pre">imwrite()</span></code></a> expect.
+So, if you form a color using the
+<code class="docutils literal"><span class="pre">Scalar</span></code> constructor, it should look like:</p>
+<div class="math">
+<p><img src="../../../_images/math/a804c822549a632edd22fd03307335a13f2eceac.png" alt="\texttt{Scalar} (blue \_ component, green \_ component, red \_ component[, alpha \_ component])"/></p>
+</div><p>If you are using your own image rendering and I/O functions, you can use any channel ordering. The drawing functions process each channel independently and do not depend on the channel order or even on the used color space. The whole image can be converted from BGR to RGB or to a different color space using
+<a class="reference internal" href="../../imgproc/doc/miscellaneous_transformations.html#void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)" title="void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cvtColor()</span></code></a> .</p>
+<p>If a drawn figure is partially or completely outside the image, the drawing functions clip it. Also, many drawing functions can handle pixel coordinates specified with sub-pixel accuracy. This means that the coordinates can be passed as fixed-point numbers encoded as integers. The number of fractional bits is specified by the <code class="docutils literal"><span class="pre">shift</span></code> parameter and the real point coordinates are calculated as
+<img class="math" src="../../../_images/math/ad8e4abc2a8f113077bb71d9ada0fa32d073042b.png" alt="\texttt{Point}(x,y)\rightarrow\texttt{Point2f}(x*2^{-shift},y*2^{-shift})"/> . This feature is especially effective when rendering antialiased shapes.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The functions do not support alpha-transparency when the target image is 4-channel. In this case, the <code class="docutils literal"><span class="pre">color[3]</span></code> is simply copied to the repainted pixels. Thus, if you want to paint semi-transparent shapes, you can paint them in a separate buffer and then blend it with the main image.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example on using variate drawing functions like line, rectangle, ... can be found at opencv_source_code/samples/cpp/drawing.cpp</li>
+</ul>
+</div>
+<div class="section" id="circle">
+<h2>circle<a class="headerlink" href="#circle" title="Permalink to this headline">¶</a></h2>
+<p>Draws a circle.</p>
+<dl class="function">
+<dt id="void circle(Mat&amp; img, Point center, int radius, const Scalar&amp; color, int thickness, int lineType, int shift)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">circle</code><span class="sig-paren">(</span>Mat&amp; <strong>img</strong>, Point <strong>center</strong>, int <strong>radius</strong>, const Scalar&amp; <strong>color</strong>, int <strong>thickness</strong>=1, int <strong>lineType</strong>=8, int <strong>shift</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#void circle(Mat& img, Point center, int radius, const Scalar& color, int thickness, int lineType, int shift)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.circle">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">circle</code><span class="sig-paren">(</span>img, center, radius, color<span class="optional">[</span>, thickness<span class="optional">[</span>, lineType<span class="optional">[</span>, shift<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv2.circle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvCircle(CvArr* img, CvPoint center, int radius, CvScalar color, int thickness, int line_type, int shift)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvCircle</code><span class="sig-paren">(</span>CvArr* <strong>img</strong>, CvPoint <strong>center</strong>, int <strong>radius</strong>, CvScalar <strong>color</strong>, int <strong>thickness</strong>=1, int <strong>line_type</strong>=8, int <strong>shift</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void cvCircle(CvArr* img, CvPoint center, int radius, CvScalar color, int thickness, int line_type, int shift)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Circle">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Circle</code><span class="sig-paren">(</span>img, center, radius, color, thickness=1, lineType=8, shift=0<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.Circle" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img</strong> &#8211; Image where the circle is drawn.</li>
+<li><strong>center</strong> &#8211; Center of the circle.</li>
+<li><strong>radius</strong> &#8211; Radius of the circle.</li>
+<li><strong>color</strong> &#8211; Circle color.</li>
+<li><strong>thickness</strong> &#8211; Thickness of the circle outline, if positive. Negative thickness means that a filled circle is to be drawn.</li>
+<li><strong>lineType</strong> &#8211; Type of the circle boundary. See the  <a class="reference internal" href="#void line(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)" title="void line(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)"><code class="xref ocv ocv-func docutils literal"><span class="pre">line()</span></code></a>  description.</li>
+<li><strong>shift</strong> &#8211; Number of fractional bits in the coordinates of the center and in the radius value.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">circle</span></code> draws a simple or filled circle with a given center and radius.</p>
+</div>
+<div class="section" id="clipline">
+<h2>clipLine<a class="headerlink" href="#clipline" title="Permalink to this headline">¶</a></h2>
+<p>Clips the line against the image rectangle.</p>
+<dl class="function">
+<dt id="bool clipLine(Size imgSize, Point&amp; pt1, Point&amp; pt2)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descname">clipLine</code><span class="sig-paren">(</span>Size <strong>imgSize</strong>, Point&amp; <strong>pt1</strong>, Point&amp; <strong>pt2</strong><span class="sig-paren">)</span><a class="headerlink" href="#bool clipLine(Size imgSize, Point& pt1, Point& pt2)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bool clipLine(Rect imgRect, Point&amp; pt1, Point&amp; pt2)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descname">clipLine</code><span class="sig-paren">(</span>Rect <strong>imgRect</strong>, Point&amp; <strong>pt1</strong>, Point&amp; <strong>pt2</strong><span class="sig-paren">)</span><a class="headerlink" href="#bool clipLine(Rect imgRect, Point& pt1, Point& pt2)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.clipLine">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">clipLine</code><span class="sig-paren">(</span>imgRect, pt1, pt2<span class="sig-paren">)</span> &rarr; retval, pt1, pt2<a class="headerlink" href="#cv2.clipLine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="int cvClipLine(CvSize img_size, CvPoint* pt1, CvPoint* pt2)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvClipLine</code><span class="sig-paren">(</span>CvSize <strong>img_size</strong>, CvPoint* <strong>pt1</strong>, CvPoint* <strong>pt2</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvClipLine(CvSize img_size, CvPoint* pt1, CvPoint* pt2)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.ClipLine">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">ClipLine</code><span class="sig-paren">(</span>imgSize, pt1, pt2) -&gt; (point1, point2<span class="sig-paren">)</span><a class="headerlink" href="#cv.ClipLine" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>imgSize</strong> &#8211; Image size. The image rectangle is  <code class="docutils literal"><span class="pre">Rect(0,</span> <span class="pre">0,</span> <span class="pre">imgSize.width,</span> <span class="pre">imgSize.height)</span></code> .</li>
+<li><strong>imgRect</strong> &#8211; Image rectangle.</li>
+<li><strong>pt1</strong> &#8211; First line point.</li>
+<li><strong>pt2</strong> &#8211; Second line point.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The functions <code class="docutils literal"><span class="pre">clipLine</span></code> calculate a part of the line segment that is entirely within the specified rectangle.
+They return <code class="docutils literal"><span class="pre">false</span></code> if the line segment is completely outside the rectangle. Otherwise, they return <code class="docutils literal"><span class="pre">true</span></code> .</p>
+</div>
+<div class="section" id="ellipse">
+<h2>ellipse<a class="headerlink" href="#ellipse" title="Permalink to this headline">¶</a></h2>
+<p>Draws a simple or thick elliptic arc or fills an ellipse sector.</p>
+<dl class="function">
+<dt id="void ellipse(Mat&amp; img, Point center, Size axes, double angle, double startAngle, double endAngle, const Scalar&amp; color, int thickness, int lineType, int shift)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">ellipse</code><span class="sig-paren">(</span>Mat&amp; <strong>img</strong>, Point <strong>center</strong>, Size <strong>axes</strong>, double <strong>angle</strong>, double <strong>startAngle</strong>, double <strong>endAngle</strong>, const Scalar&amp; <strong>color</strong>, int <strong>thickness</strong>=1, int <strong>lineType</strong>=8, int <strong>shift</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#void ellipse(Mat& img, Point center, Size axes, double angle, double startAngle, double endAngle, const Scalar& color, int thickness, int lineType, int shift)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ellipse(Mat&amp; img, const RotatedRect&amp; box, const Scalar&amp; color, int thickness, int lineType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">ellipse</code><span class="sig-paren">(</span>Mat&amp; <strong>img</strong>, const RotatedRect&amp; <strong>box</strong>, const Scalar&amp; <strong>color</strong>, int <strong>thickness</strong>=1, int <strong>lineType</strong>=8<span class="sig-paren">)</span><a class="headerlink" href="#void ellipse(Mat& img, const RotatedRect& box, const Scalar& color, int thickness, int lineType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.ellipse">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">ellipse</code><span class="sig-paren">(</span>img, center, axes, angle, startAngle, endAngle, color<span class="optional">[</span>, thickness<span class="optional">[</span>, lineType<span class="optional">[</span>, shift<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv2.ellipse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt>
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">ellipse</code><span class="sig-paren">(</span>img, box, color<span class="optional">[</span>, thickness<span class="optional">[</span>, lineType<span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; None</dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvEllipse(CvArr* img, CvPoint center, CvSize axes, double angle, double start_angle, double end_angle, CvScalar color, int thickness, int line_type, int shift)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvEllipse</code><span class="sig-paren">(</span>CvArr* <strong>img</strong>, CvPoint <strong>center</strong>, CvSize <strong>axes</strong>, double <strong>angle</strong>, double <strong>start_angle</strong>, double <strong>end_angle</strong>, CvScalar <strong>color</strong>, int <strong>thickness</strong>=1, int <strong>line_type</strong>=8, int <strong>shift</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void cvEllipse(CvArr* img, CvPoint center, CvSize axes, double angle, double start_angle, double end_angle, CvScalar color, int thickness, int line_type, int shift)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Ellipse">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Ellipse</code><span class="sig-paren">(</span>img, center, axes, angle, start_angle, end_angle, color, thickness=1, lineType=8, shift=0<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.Ellipse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvEllipseBox(CvArr* img, CvBox2D box, CvScalar color, int thickness, int line_type, int shift)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvEllipseBox</code><span class="sig-paren">(</span>CvArr* <strong>img</strong>, CvBox2D <strong>box</strong>, CvScalar <strong>color</strong>, int <strong>thickness</strong>=1, int <strong>line_type</strong>=8, int <strong>shift</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void cvEllipseBox(CvArr* img, CvBox2D box, CvScalar color, int thickness, int line_type, int shift)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.EllipseBox">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">EllipseBox</code><span class="sig-paren">(</span>img, box, color, thickness=1, lineType=8, shift=0<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.EllipseBox" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img</strong> &#8211; Image.</li>
+<li><strong>center</strong> &#8211; Center of the ellipse.</li>
+<li><strong>axes</strong> &#8211; Half of the size of the ellipse main axes.</li>
+<li><strong>angle</strong> &#8211; Ellipse rotation angle in degrees.</li>
+<li><strong>startAngle</strong> &#8211; Starting angle of the elliptic arc in degrees.</li>
+<li><strong>endAngle</strong> &#8211; Ending angle of the elliptic arc in degrees.</li>
+<li><strong>box</strong> &#8211; Alternative ellipse representation via  <a class="reference internal" href="basic_structures.html#RotatedRect" title="class RotatedRect"><code class="xref ocv ocv-class docutils literal"><span class="pre">RotatedRect</span></code></a> or <code class="docutils literal"><span class="pre">CvBox2D</span></code>. This means that the function draws an ellipse inscribed in the rotated rectangle.</li>
+<li><strong>color</strong> &#8211; Ellipse color.</li>
+<li><strong>thickness</strong> &#8211; Thickness of the ellipse arc outline, if positive. Otherwise, this indicates that a filled ellipse sector is to be drawn.</li>
+<li><strong>lineType</strong> &#8211; Type of the ellipse boundary. See the  <a class="reference internal" href="#void line(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)" title="void line(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)"><code class="xref ocv ocv-func docutils literal"><span class="pre">line()</span></code></a>  description.</li>
+<li><strong>shift</strong> &#8211; Number of fractional bits in the coordinates of the center and values of axes.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The functions <code class="docutils literal"><span class="pre">ellipse</span></code> with less parameters draw an ellipse outline, a filled ellipse, an elliptic arc, or a filled ellipse sector.
+A piecewise-linear curve is used to approximate the elliptic arc boundary. If you need more control of the ellipse rendering, you can retrieve the curve using
+<a class="reference internal" href="#void ellipse2Poly(Point center, Size axes, int angle, int arcStart, int arcEnd, int delta, vector&lt;Point&gt;&amp; pts)" title="void ellipse2Poly(Point center, Size axes, int angle, int arcStart, int arcEnd, int delta, vector&lt;Point&gt;&amp; pts)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ellipse2Poly()</span></code></a> and then render it with
+<a class="reference internal" href="#void polylines(Mat&amp; img, const Point** pts, const int* npts, int ncontours, bool isClosed, const Scalar&amp; color, int thickness, int lineType, int shift)" title="void polylines(Mat&amp; img, const Point** pts, const int* npts, int ncontours, bool isClosed, const Scalar&amp; color, int thickness, int lineType, int shift)"><code class="xref ocv ocv-func docutils literal"><span class="pre">polylines()</span></code></a> or fill it with
+<a class="reference internal" href="#void fillPoly(Mat&amp; img, const Point** pts, const int* npts, int ncontours, const Scalar&amp; color, int lineType, int shift, Point offset)" title="void fillPoly(Mat&amp; img, const Point** pts, const int* npts, int ncontours, const Scalar&amp; color, int lineType, int shift, Point offset)"><code class="xref ocv ocv-func docutils literal"><span class="pre">fillPoly()</span></code></a> . If you use the first variant of the function and want to draw the whole ellipse, not an arc, pass <code class="docutils literal"><span class="pre">startAngle=0</span></code> and <code class="docutils literal"><span class="pre">endAngle=360</span></code> . The figure below explains the meaning of the parameters.</p>
+<p><strong>Figure 1. Parameters of Elliptic Arc</strong></p>
+<img alt="../../../_images/ellipse.png" src="../../../_images/ellipse.png" />
+</div>
+<div class="section" id="ellipse2poly">
+<h2>ellipse2Poly<a class="headerlink" href="#ellipse2poly" title="Permalink to this headline">¶</a></h2>
+<p>Approximates an elliptic arc with a polyline.</p>
+<dl class="function">
+<dt id="void ellipse2Poly(Point center, Size axes, int angle, int arcStart, int arcEnd, int delta, vector&lt;Point&gt;&amp; pts)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">ellipse2Poly</code><span class="sig-paren">(</span>Point <strong>center</strong>, Size <strong>axes</strong>, int <strong>angle</strong>, int <strong>arcStart</strong>, int <strong>arcEnd</strong>, int <strong>delta</strong>, vector&lt;Point&gt;&amp; <strong>pts</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ellipse2Poly(Point center, Size axes, int angle, int arcStart, int arcEnd, int delta, vector<Point>& pts)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.ellipse2Poly">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">ellipse2Poly</code><span class="sig-paren">(</span>center, axes, angle, arcStart, arcEnd, delta<span class="sig-paren">)</span> &rarr; pts<a class="headerlink" href="#cv2.ellipse2Poly" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>center</strong> &#8211; Center of the arc.</li>
+<li><strong>axes</strong> &#8211; Half of the size of the ellipse main axes. See the  <a class="reference internal" href="#void ellipse(Mat&amp; img, Point center, Size axes, double angle, double startAngle, double endAngle, const Scalar&amp; color, int thickness, int lineType, int shift)" title="void ellipse(Mat&amp; img, Point center, Size axes, double angle, double startAngle, double endAngle, const Scalar&amp; color, int thickness, int lineType, int shift)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ellipse()</span></code></a>  for details.</li>
+<li><strong>angle</strong> &#8211; Rotation angle of the ellipse in degrees. See the  <a class="reference internal" href="#void ellipse(Mat&amp; img, Point center, Size axes, double angle, double startAngle, double endAngle, const Scalar&amp; color, int thickness, int lineType, int shift)" title="void ellipse(Mat&amp; img, Point center, Size axes, double angle, double startAngle, double endAngle, const Scalar&amp; color, int thickness, int lineType, int shift)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ellipse()</span></code></a>  for details.</li>
+<li><strong>arcStart</strong> &#8211; Starting angle of the elliptic arc in degrees.</li>
+<li><strong>arcEnd</strong> &#8211; Ending angle of the elliptic arc in degrees.</li>
+<li><strong>delta</strong> &#8211; Angle between the subsequent polyline vertices. It defines the approximation accuracy.</li>
+<li><strong>pts</strong> &#8211; Output vector of polyline vertices.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">ellipse2Poly</span></code> computes the vertices of a polyline that approximates the specified elliptic arc. It is used by
+<a class="reference internal" href="#void ellipse(Mat&amp; img, Point center, Size axes, double angle, double startAngle, double endAngle, const Scalar&amp; color, int thickness, int lineType, int shift)" title="void ellipse(Mat&amp; img, Point center, Size axes, double angle, double startAngle, double endAngle, const Scalar&amp; color, int thickness, int lineType, int shift)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ellipse()</span></code></a> .</p>
+</div>
+<div class="section" id="fillconvexpoly">
+<h2>fillConvexPoly<a class="headerlink" href="#fillconvexpoly" title="Permalink to this headline">¶</a></h2>
+<p>Fills a convex polygon.</p>
+<dl class="function">
+<dt id="void fillConvexPoly(Mat&amp; img, const Point* pts, int npts, const Scalar&amp; color, int lineType, int shift)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">fillConvexPoly</code><span class="sig-paren">(</span>Mat&amp; <strong>img</strong>, const Point* <strong>pts</strong>, int <strong>npts</strong>, const Scalar&amp; <strong>color</strong>, int <strong>lineType</strong>=8, int <strong>shift</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#void fillConvexPoly(Mat& img, const Point* pts, int npts, const Scalar& color, int lineType, int shift)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.fillConvexPoly">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">fillConvexPoly</code><span class="sig-paren">(</span>img, points, color<span class="optional">[</span>, lineType<span class="optional">[</span>, shift<span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv2.fillConvexPoly" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvFillConvexPoly(CvArr* img, const CvPoint* pts, int npts, CvScalar color, int line_type, int shift)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvFillConvexPoly</code><span class="sig-paren">(</span>CvArr* <strong>img</strong>, const CvPoint* <strong>pts</strong>, int <strong>npts</strong>, CvScalar <strong>color</strong>, int <strong>line_type</strong>=8, int <strong>shift</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void cvFillConvexPoly(CvArr* img, const CvPoint* pts, int npts, CvScalar color, int line_type, int shift)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.FillConvexPoly">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">FillConvexPoly</code><span class="sig-paren">(</span>img, pn, color, lineType=8, shift=0<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.FillConvexPoly" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img</strong> &#8211; Image.</li>
+<li><strong>pts</strong> &#8211; Polygon vertices.</li>
+<li><strong>npts</strong> &#8211; Number of polygon vertices.</li>
+<li><strong>color</strong> &#8211; Polygon color.</li>
+<li><strong>lineType</strong> &#8211; Type of the polygon boundaries. See the  <a class="reference internal" href="#void line(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)" title="void line(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)"><code class="xref ocv ocv-func docutils literal"><span class="pre">line()</span></code></a>  description.</li>
+<li><strong>shift</strong> &#8211; Number of fractional bits in the vertex coordinates.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">fillConvexPoly</span></code> draws a filled convex polygon.
+This function is much faster than the function <code class="docutils literal"><span class="pre">fillPoly</span></code> . It can fill not only convex polygons but any monotonic polygon without self-intersections,
+that is, a polygon whose contour intersects every horizontal line (scan line) twice at the most (though, its top-most and/or the bottom edge could be horizontal).</p>
+</div>
+<div class="section" id="fillpoly">
+<h2>fillPoly<a class="headerlink" href="#fillpoly" title="Permalink to this headline">¶</a></h2>
+<p>Fills the area bounded by one or more polygons.</p>
+<dl class="function">
+<dt id="void fillPoly(Mat&amp; img, const Point** pts, const int* npts, int ncontours, const Scalar&amp; color, int lineType, int shift, Point offset)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">fillPoly</code><span class="sig-paren">(</span>Mat&amp; <strong>img</strong>, const Point** <strong>pts</strong>, const int* <strong>npts</strong>, int <strong>ncontours</strong>, const Scalar&amp; <strong>color</strong>, int <strong>lineType</strong>=8, int <strong>shift</strong>=0, Point <strong>offset</strong>=Point() <span class="sig-paren">)</span><a class="headerlink" href="#void fillPoly(Mat& img, const Point** pts, const int* npts, int ncontours, const Scalar& color, int lineType, int shift, Point offset)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.fillPoly">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">fillPoly</code><span class="sig-paren">(</span>img, pts, color<span class="optional">[</span>, lineType<span class="optional">[</span>, shift<span class="optional">[</span>, offset<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv2.fillPoly" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvFillPoly(CvArr* img, CvPoint** pts, const int* npts, int contours, CvScalar color, int line_type, int shift)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvFillPoly</code><span class="sig-paren">(</span>CvArr* <strong>img</strong>, CvPoint** <strong>pts</strong>, const int* <strong>npts</strong>, int <strong>contours</strong>, CvScalar <strong>color</strong>, int <strong>line_type</strong>=8, int <strong>shift</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void cvFillPoly(CvArr* img, CvPoint** pts, const int* npts, int contours, CvScalar color, int line_type, int shift)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.FillPoly">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">FillPoly</code><span class="sig-paren">(</span>img, polys, color, lineType=8, shift=0<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.FillPoly" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img</strong> &#8211; Image.</li>
+<li><strong>pts</strong> &#8211; Array of polygons where each polygon is represented as an array of points.</li>
+<li><strong>npts</strong> &#8211; Array of polygon vertex counters.</li>
+<li><strong>ncontours</strong> &#8211; Number of contours that bind the filled region.</li>
+<li><strong>color</strong> &#8211; Polygon color.</li>
+<li><strong>lineType</strong> &#8211; Type of the polygon boundaries. See the  <a class="reference internal" href="#void line(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)" title="void line(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)"><code class="xref ocv ocv-func docutils literal"><span class="pre">line()</span></code></a>  description.</li>
+<li><strong>shift</strong> &#8211; Number of fractional bits in the vertex coordinates.</li>
+<li><strong>offset</strong> &#8211; Optional offset of all points of the contours.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">fillPoly</span></code> fills an area bounded by several polygonal contours. The function can fill complex areas, for example,
+areas with holes, contours with self-intersections (some of their parts), and so forth.</p>
+</div>
+<div class="section" id="gettextsize">
+<h2>getTextSize<a class="headerlink" href="#gettextsize" title="Permalink to this headline">¶</a></h2>
+<p>Calculates the width and height of a text string.</p>
+<dl class="function">
+<dt id="Size getTextSize(const string&amp; text, int fontFace, double fontScale, int thickness, int* baseLine)">
+<strong>C++:</strong><code class="descname"> </code>Size <code class="descname">getTextSize</code><span class="sig-paren">(</span>const string&amp; <strong>text</strong>, int <strong>fontFace</strong>, double <strong>fontScale</strong>, int <strong>thickness</strong>, int* <strong>baseLine</strong><span class="sig-paren">)</span><a class="headerlink" href="#Size getTextSize(const string& text, int fontFace, double fontScale, int thickness, int* baseLine)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.getTextSize">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">getTextSize</code><span class="sig-paren">(</span>text, fontFace, fontScale, thickness<span class="sig-paren">)</span> &rarr; retval, baseLine<a class="headerlink" href="#cv2.getTextSize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvGetTextSize(const char* text_string, const CvFont* font, CvSize* text_size, int* baseline)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvGetTextSize</code><span class="sig-paren">(</span>const char* <strong>text_string</strong>, const CvFont* <strong>font</strong>, CvSize* <strong>text_size</strong>, int* <strong>baseline</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvGetTextSize(const char* text_string, const CvFont* font, CvSize* text_size, int* baseline)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.GetTextSize">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">GetTextSize</code><span class="sig-paren">(</span>textString, font)-&gt; (textSize, baseline<span class="sig-paren">)</span><a class="headerlink" href="#cv.GetTextSize" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>text</strong> &#8211; Input text string.</li>
+<li><strong>text_string</strong> &#8211; Input text string in C format.</li>
+<li><strong>fontFace</strong> &#8211; Font to use. See the  <a class="reference internal" href="#void putText(Mat&amp; img, const string&amp; text, Point org, int fontFace, double fontScale, Scalar color, int thickness, int lineType, bool bottomLeftOrigin)" title="void putText(Mat&amp; img, const string&amp; text, Point org, int fontFace, double fontScale, Scalar color, int thickness, int lineType, bool bottomLeftOrigin)"><code class="xref ocv ocv-func docutils literal"><span class="pre">putText()</span></code></a> for details.</li>
+<li><strong>fontScale</strong> &#8211; Font scale. See the  <a class="reference internal" href="#void putText(Mat&amp; img, const string&amp; text, Point org, int fontFace, double fontScale, Scalar color, int thickness, int lineType, bool bottomLeftOrigin)" title="void putText(Mat&amp; img, const string&amp; text, Point org, int fontFace, double fontScale, Scalar color, int thickness, int lineType, bool bottomLeftOrigin)"><code class="xref ocv ocv-func docutils literal"><span class="pre">putText()</span></code></a>  for details.</li>
+<li><strong>thickness</strong> &#8211; Thickness of lines used to render the text. See  <a class="reference internal" href="#void putText(Mat&amp; img, const string&amp; text, Point org, int fontFace, double fontScale, Scalar color, int thickness, int lineType, bool bottomLeftOrigin)" title="void putText(Mat&amp; img, const string&amp; text, Point org, int fontFace, double fontScale, Scalar color, int thickness, int lineType, bool bottomLeftOrigin)"><code class="xref ocv ocv-func docutils literal"><span class="pre">putText()</span></code></a>  for details.</li>
+<li><strong>baseLine</strong> &#8211; Output parameter - y-coordinate of the baseline relative to the bottom-most text point.</li>
+<li><strong>baseline</strong> &#8211; Output parameter - y-coordinate of the baseline relative to the bottom-most text point.</li>
+<li><strong>font</strong> &#8211; Font description in terms of old C API.</li>
+<li><strong>text_size</strong> &#8211; Output parameter - The size of a box that contains the specified text.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">getTextSize</span></code> calculates and returns the size of a box that contains the specified text.
+That is, the following code renders some text, the tight box surrounding it, and the baseline:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">string</span> <span class="n">text</span> <span class="o">=</span> <span class="s">&quot;Funny text inside the box&quot;</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">fontFace</span> <span class="o">=</span> <span class="n">FONT_HERSHEY_SCRIPT_SIMPLEX</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">fontScale</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">thickness</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+<span class="n">Mat</span> <span class="nf">img</span><span class="p">(</span><span class="mi">600</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="n">CV_8UC3</span><span class="p">,</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+
+<span class="kt">int</span> <span class="n">baseline</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">Size</span> <span class="n">textSize</span> <span class="o">=</span> <span class="n">getTextSize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">fontFace</span><span class="p">,</span>
+                            <span class="n">fontScale</span><span class="p">,</span> <span class="n">thickness</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">baseline</span><span class="p">);</span>
+<span class="n">baseline</span> <span class="o">+=</span> <span class="n">thickness</span><span class="p">;</span>
+
+<span class="c1">// center the text</span>
+<span class="n">Point</span> <span class="nf">textOrg</span><span class="p">((</span><span class="n">img</span><span class="p">.</span><span class="n">cols</span> <span class="o">-</span> <span class="n">textSize</span><span class="p">.</span><span class="n">width</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+              <span class="p">(</span><span class="n">img</span><span class="p">.</span><span class="n">rows</span> <span class="o">+</span> <span class="n">textSize</span><span class="p">.</span><span class="n">height</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>
+
+<span class="c1">// draw the box</span>
+<span class="n">rectangle</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">textOrg</span> <span class="o">+</span> <span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">baseline</span><span class="p">),</span>
+          <span class="n">textOrg</span> <span class="o">+</span> <span class="n">Point</span><span class="p">(</span><span class="n">textSize</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="o">-</span><span class="n">textSize</span><span class="p">.</span><span class="n">height</span><span class="p">),</span>
+          <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">));</span>
+<span class="c1">// ... and the baseline first</span>
+<span class="n">line</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">textOrg</span> <span class="o">+</span> <span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">thickness</span><span class="p">),</span>
+     <span class="n">textOrg</span> <span class="o">+</span> <span class="n">Point</span><span class="p">(</span><span class="n">textSize</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">thickness</span><span class="p">),</span>
+     <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">));</span>
+
+<span class="c1">// then put the text itself</span>
+<span class="n">putText</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">textOrg</span><span class="p">,</span> <span class="n">fontFace</span><span class="p">,</span> <span class="n">fontScale</span><span class="p">,</span>
+        <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span> <span class="n">thickness</span><span class="p">,</span> <span class="mi">8</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="initfont">
+<h2>InitFont<a class="headerlink" href="#initfont" title="Permalink to this headline">¶</a></h2>
+<p>Initializes font structure (OpenCV 1.x API).</p>
+<dl class="cfunction">
+<dt id="void cvInitFont(CvFont* font, int font_face, double hscale, double vscale, double shear, int thickness, int line_type)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvInitFont</code><span class="sig-paren">(</span>CvFont* <strong>font</strong>, int <strong>font_face</strong>, double <strong>hscale</strong>, double <strong>vscale</strong>, double <strong>shear</strong>=0, int <strong>thickness</strong>=1, int <strong>line_type</strong>=8 <span class="sig-paren">)</span><a class="headerlink" href="#void cvInitFont(CvFont* font, int font_face, double hscale, double vscale, double shear, int thickness, int line_type)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>font</strong> &#8211; Pointer to the font structure initialized by the function</li>
+<li><strong>font_face</strong> &#8211; <p>Font name identifier. Only a subset of Hershey fonts  <a class="reference external" href="http://sources.isc.org/utils/misc/hershey-font.txt">http://sources.isc.org/utils/misc/hershey-font.txt</a>  are supported now:</p>
+<blockquote>
+<div><ul>
+<li><strong>CV_FONT_HERSHEY_SIMPLEX</strong> normal size sans-serif font</li>
+<li><strong>CV_FONT_HERSHEY_PLAIN</strong> small size sans-serif font</li>
+<li><strong>CV_FONT_HERSHEY_DUPLEX</strong> normal size sans-serif font (more complex than    <code class="docutils literal"><span class="pre">CV_FONT_HERSHEY_SIMPLEX</span></code> )</li>
+<li><strong>CV_FONT_HERSHEY_COMPLEX</strong> normal size serif font</li>
+<li><strong>CV_FONT_HERSHEY_TRIPLEX</strong> normal size serif font (more complex than  <code class="docutils literal"><span class="pre">CV_FONT_HERSHEY_COMPLEX</span></code> )</li>
+<li><strong>CV_FONT_HERSHEY_COMPLEX_SMALL</strong> smaller version of  <code class="docutils literal"><span class="pre">CV_FONT_HERSHEY_COMPLEX</span></code></li>
+<li><strong>CV_FONT_HERSHEY_SCRIPT_SIMPLEX</strong> hand-writing style font</li>
+<li><strong>CV_FONT_HERSHEY_SCRIPT_COMPLEX</strong> more complex variant of  <code class="docutils literal"><span class="pre">CV_FONT_HERSHEY_SCRIPT_SIMPLEX</span></code></li>
+</ul>
+</div></blockquote>
+<p>The parameter can be composited from one of the values above and an optional  <code class="docutils literal"><span class="pre">CV_FONT_ITALIC</span></code>  flag, which indicates italic or oblique font.</p>
+</li>
+<li><strong>hscale</strong> &#8211; Horizontal scale.  If equal to  <code class="docutils literal"><span class="pre">1.0f</span></code> , the characters have the original width depending on the font type. If equal to  <code class="docutils literal"><span class="pre">0.5f</span></code> , the characters are of half the original width.</li>
+<li><strong>vscale</strong> &#8211; Vertical scale. If equal to  <code class="docutils literal"><span class="pre">1.0f</span></code> , the characters have the original height depending on the font type. If equal to  <code class="docutils literal"><span class="pre">0.5f</span></code> , the characters are of half the original height.</li>
+<li><strong>shear</strong> &#8211; Approximate tangent of the character slope relative to the vertical line.  A zero value means a non-italic font,  <code class="docutils literal"><span class="pre">1.0f</span></code>  means about a 45 degree slope, etc.</li>
+<li><strong>thickness</strong> &#8211; Thickness of the text strokes</li>
+<li><strong>line_type</strong> &#8211; Type of the strokes, see  <a class="reference internal" href="#void line(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)" title="void line(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)"><code class="xref ocv ocv-func docutils literal"><span class="pre">line()</span></code></a>  description</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function initializes the font structure that can be passed to text rendering functions.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void cvPutText(CvArr* img, const char* text, CvPoint org, const CvFont* font, CvScalar color)" title="void cvPutText(CvArr* img, const char* text, CvPoint org, const CvFont* font, CvScalar color)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">PutText()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="line">
+<span id="id1"></span><h2>line<a class="headerlink" href="#line" title="Permalink to this headline">¶</a></h2>
+<p>Draws a line segment connecting two points.</p>
+<dl class="function">
+<dt id="void line(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">line</code><span class="sig-paren">(</span>Mat&amp; <strong>img</strong>, Point <strong>pt1</strong>, Point <strong>pt2</strong>, const Scalar&amp; <strong>color</strong>, int <strong>thickness</strong>=1, int <strong>lineType</strong>=8, int <strong>shift</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#void line(Mat& img, Point pt1, Point pt2, const Scalar& color, int thickness, int lineType, int shift)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.line">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">line</code><span class="sig-paren">(</span>img, pt1, pt2, color<span class="optional">[</span>, thickness<span class="optional">[</span>, lineType<span class="optional">[</span>, shift<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv2.line" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvLine(CvArr* img, CvPoint pt1, CvPoint pt2, CvScalar color, int thickness, int line_type, int shift)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvLine</code><span class="sig-paren">(</span>CvArr* <strong>img</strong>, CvPoint <strong>pt1</strong>, CvPoint <strong>pt2</strong>, CvScalar <strong>color</strong>, int <strong>thickness</strong>=1, int <strong>line_type</strong>=8, int <strong>shift</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void cvLine(CvArr* img, CvPoint pt1, CvPoint pt2, CvScalar color, int thickness, int line_type, int shift)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Line">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Line</code><span class="sig-paren">(</span>img, pt1, pt2, color, thickness=1, lineType=8, shift=0<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.Line" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img</strong> &#8211; Image.</li>
+<li><strong>pt1</strong> &#8211; First point of the line segment.</li>
+<li><strong>pt2</strong> &#8211; Second point of the line segment.</li>
+<li><strong>color</strong> &#8211; Line color.</li>
+<li><strong>thickness</strong> &#8211; Line thickness.</li>
+<li><strong>lineType</strong> &#8211; <p>Type of the line:</p>
+<ul>
+<li><strong>8</strong> (or omitted) - 8-connected line.</li>
+<li><strong>4</strong> - 4-connected line.</li>
+<li><strong>CV_AA</strong> - antialiased line.</li>
+</ul>
+</li>
+<li><strong>shift</strong> &#8211; Number of fractional bits in the point coordinates.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">line</span></code> draws the line segment between <code class="docutils literal"><span class="pre">pt1</span></code> and <code class="docutils literal"><span class="pre">pt2</span></code> points in the image. The line is clipped by the image boundaries. For non-antialiased lines with integer coordinates, the 8-connected or 4-connected Bresenham algorithm is used. Thick lines are drawn with rounding endings.
+Antialiased lines are drawn using Gaussian filtering. To specify the line color, you may use the macro <code class="docutils literal"><span class="pre">CV_RGB(r,</span> <span class="pre">g,</span> <span class="pre">b)</span></code> .</p>
+</div>
+<div class="section" id="arrowedline">
+<h2>arrowedLine<a class="headerlink" href="#arrowedline" title="Permalink to this headline">¶</a></h2>
+<p>Draws a arrow segment pointing from the first point to the second one.</p>
+<dl class="function">
+<dt id="void arrowedLine(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int line_type, int shift, double tipLength)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">arrowedLine</code><span class="sig-paren">(</span>Mat&amp; <strong>img</strong>, Point <strong>pt1</strong>, Point <strong>pt2</strong>, const Scalar&amp; <strong>color</strong>, int <strong>thickness</strong>=1, int <strong>line_type</strong>=8, int <strong>shift</strong>=0, double <strong>tipLength</strong>=0.1<span class="sig-paren">)</span><a class="headerlink" href="#void arrowedLine(Mat& img, Point pt1, Point pt2, const Scalar& color, int thickness, int line_type, int shift, double tipLength)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img</strong> &#8211; Image.</li>
+<li><strong>pt1</strong> &#8211; The point the arrow starts from.</li>
+<li><strong>pt2</strong> &#8211; The point the arrow points to.</li>
+<li><strong>color</strong> &#8211; Line color.</li>
+<li><strong>thickness</strong> &#8211; Line thickness.</li>
+<li><strong>line_type</strong> &#8211; <p>Type of the line:</p>
+<ul>
+<li><strong>8</strong> (or omitted) - 8-connected line.</li>
+<li><strong>4</strong> - 4-connected line.</li>
+<li><strong>CV_AA</strong> - antialiased line.</li>
+</ul>
+</li>
+<li><strong>shift</strong> &#8211; Number of fractional bits in the point coordinates.</li>
+<li><strong>tipLength</strong> &#8211; The length of the arrow tip in relation to the arrow length</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">arrowedLine</span></code> draws an arrow between <code class="docutils literal"><span class="pre">pt1</span></code> and <code class="docutils literal"><span class="pre">pt2</span></code> points in the image. See also <a class="reference internal" href="#void line(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)" title="void line(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)"><code class="xref ocv ocv-func docutils literal"><span class="pre">line()</span></code></a>.</p>
+</div>
+<div class="section" id="lineiterator">
+<h2>LineIterator<a class="headerlink" href="#lineiterator" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="LineIterator">
+<em class="property">class </em><code class="descname">LineIterator</code><a class="headerlink" href="#LineIterator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class for iterating pixels on a raster line.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">LineIterator</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">// creates iterators for the line connecting pt1 and pt2</span>
+    <span class="c1">// the line will be clipped on the image boundaries</span>
+    <span class="c1">// the line is 8-connected or 4-connected</span>
+    <span class="c1">// If leftToRight=true, then the iteration is always done</span>
+    <span class="c1">// from the left-most point to the right most,</span>
+    <span class="c1">// not to depend on the ordering of pt1 and pt2 parameters</span>
+    <span class="n">LineIterator</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">img</span><span class="p">,</span> <span class="n">Point</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">Point</span> <span class="n">pt2</span><span class="p">,</span>
+                 <span class="kt">int</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">leftToRight</span><span class="o">=</span><span class="nb">false</span><span class="p">);</span>
+    <span class="c1">// returns pointer to the current line pixel</span>
+    <span class="n">uchar</span><span class="o">*</span> <span class="k">operator</span> <span class="o">*</span><span class="p">();</span>
+    <span class="c1">// move the iterator to the next pixel</span>
+    <span class="n">LineIterator</span><span class="o">&amp;</span> <span class="k">operator</span> <span class="o">++</span><span class="p">();</span>
+    <span class="n">LineIterator</span> <span class="k">operator</span> <span class="o">++</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>
+    <span class="n">Point</span> <span class="nf">pos</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">// internal state of the iterator</span>
+    <span class="n">uchar</span><span class="o">*</span> <span class="n">ptr</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">err</span><span class="p">,</span> <span class="n">count</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">minusDelta</span><span class="p">,</span> <span class="n">plusDelta</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">minusStep</span><span class="p">,</span> <span class="n">plusStep</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class <code class="docutils literal"><span class="pre">LineIterator</span></code> is used to get each pixel of a raster line. It can be treated as versatile implementation of the Bresenham algorithm where you can stop at each pixel and do some extra processing, for example, grab pixel values along the line or draw a line with an effect (for example, with XOR operation).</p>
+<p>The number of pixels along the line is stored in <code class="docutils literal"><span class="pre">LineIterator::count</span></code> . The method <code class="docutils literal"><span class="pre">LineIterator::pos</span></code> returns the current position in the image</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// grabs pixels along the line (pt1, pt2)</span>
+<span class="c1">// from 8-bit 3-channel image to the buffer</span>
+<span class="n">LineIterator</span> <span class="nf">it</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="mi">8</span><span class="p">);</span>
+<span class="n">LineIterator</span> <span class="n">it2</span> <span class="o">=</span> <span class="n">it</span><span class="p">;</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">Vec3b</span><span class="o">&gt;</span> <span class="n">buf</span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="n">count</span><span class="p">);</span>
+
+<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">it</span><span class="p">.</span><span class="n">count</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">,</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span>
+    <span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="n">Vec3b</span><span class="p">)</span><span class="o">*</span><span class="n">it</span><span class="p">;</span>
+
+<span class="c1">// alternative way of iterating through the line</span>
+<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">it2</span><span class="p">.</span><span class="n">count</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">,</span> <span class="o">++</span><span class="n">it2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Vec3b</span> <span class="n">val</span> <span class="o">=</span> <span class="n">img</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">Vec3b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">it2</span><span class="p">.</span><span class="n">pos</span><span class="p">());</span>
+    <span class="n">CV_Assert</span><span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">val</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rectangle">
+<h2>rectangle<a class="headerlink" href="#rectangle" title="Permalink to this headline">¶</a></h2>
+<p>Draws a simple, thick, or filled up-right rectangle.</p>
+<dl class="function">
+<dt id="void rectangle(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">rectangle</code><span class="sig-paren">(</span>Mat&amp; <strong>img</strong>, Point <strong>pt1</strong>, Point <strong>pt2</strong>, const Scalar&amp; <strong>color</strong>, int <strong>thickness</strong>=1, int <strong>lineType</strong>=8, int <strong>shift</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#void rectangle(Mat& img, Point pt1, Point pt2, const Scalar& color, int thickness, int lineType, int shift)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void rectangle(Mat&amp; img, Rect rec, const Scalar&amp; color, int thickness, int lineType, int shift)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">rectangle</code><span class="sig-paren">(</span>Mat&amp; <strong>img</strong>, Rect <strong>rec</strong>, const Scalar&amp; <strong>color</strong>, int <strong>thickness</strong>=1, int <strong>lineType</strong>=8, int <strong>shift</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void rectangle(Mat& img, Rect rec, const Scalar& color, int thickness, int lineType, int shift)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.rectangle">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">rectangle</code><span class="sig-paren">(</span>img, pt1, pt2, color<span class="optional">[</span>, thickness<span class="optional">[</span>, lineType<span class="optional">[</span>, shift<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv2.rectangle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvRectangle(CvArr* img, CvPoint pt1, CvPoint pt2, CvScalar color, int thickness, int line_type, int shift)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvRectangle</code><span class="sig-paren">(</span>CvArr* <strong>img</strong>, CvPoint <strong>pt1</strong>, CvPoint <strong>pt2</strong>, CvScalar <strong>color</strong>, int <strong>thickness</strong>=1, int <strong>line_type</strong>=8, int <strong>shift</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void cvRectangle(CvArr* img, CvPoint pt1, CvPoint pt2, CvScalar color, int thickness, int line_type, int shift)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Rectangle">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Rectangle</code><span class="sig-paren">(</span>img, pt1, pt2, color, thickness=1, lineType=8, shift=0<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.Rectangle" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img</strong> &#8211; Image.</li>
+<li><strong>pt1</strong> &#8211; Vertex of the rectangle.</li>
+<li><strong>pt2</strong> &#8211; Vertex of the rectangle opposite to  <code class="docutils literal"><span class="pre">pt1</span></code> .</li>
+<li><strong>rec</strong> &#8211; Alternative specification of the drawn rectangle.</li>
+<li><strong>color</strong> &#8211; Rectangle color or brightness (grayscale image).</li>
+<li><strong>thickness</strong> &#8211; Thickness of lines that make up the rectangle. Negative values, like  <code class="docutils literal"><span class="pre">CV_FILLED</span></code> , mean that the function has to draw a filled rectangle.</li>
+<li><strong>lineType</strong> &#8211; Type of the line. See the  <a class="reference internal" href="#void line(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)" title="void line(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)"><code class="xref ocv ocv-func docutils literal"><span class="pre">line()</span></code></a>  description.</li>
+<li><strong>shift</strong> &#8211; Number of fractional bits in the point coordinates.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">rectangle</span></code> draws a rectangle outline or a filled rectangle whose two opposite corners are <code class="docutils literal"><span class="pre">pt1</span></code> and <code class="docutils literal"><span class="pre">pt2</span></code>, or <code class="docutils literal"><span class="pre">r.tl()</span></code> and <code class="docutils literal"><span class="pre">r.br()-Point(1,1)</span></code>.</p>
+</div>
+<div class="section" id="polylines">
+<h2>polylines<a class="headerlink" href="#polylines" title="Permalink to this headline">¶</a></h2>
+<p>Draws several polygonal curves.</p>
+<dl class="function">
+<dt id="void polylines(Mat&amp; img, const Point** pts, const int* npts, int ncontours, bool isClosed, const Scalar&amp; color, int thickness, int lineType, int shift)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">polylines</code><span class="sig-paren">(</span>Mat&amp; <strong>img</strong>, const Point** <strong>pts</strong>, const int* <strong>npts</strong>, int <strong>ncontours</strong>, bool <strong>isClosed</strong>, const Scalar&amp; <strong>color</strong>, int <strong>thickness</strong>=1, int <strong>lineType</strong>=8, int <strong>shift</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void polylines(Mat& img, const Point** pts, const int* npts, int ncontours, bool isClosed, const Scalar& color, int thickness, int lineType, int shift)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void polylines(InputOutputArray img, InputArrayOfArrays pts, bool isClosed, const Scalar&amp; color, int thickness, int lineType, int shift)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">polylines</code><span class="sig-paren">(</span>InputOutputArray <strong>img</strong>, InputArrayOfArrays <strong>pts</strong>, bool <strong>isClosed</strong>, const Scalar&amp; <strong>color</strong>, int <strong>thickness</strong>=1, int <strong>lineType</strong>=8, int <strong>shift</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void polylines(InputOutputArray img, InputArrayOfArrays pts, bool isClosed, const Scalar& color, int thickness, int lineType, int shift)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.polylines">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">polylines</code><span class="sig-paren">(</span>img, pts, isClosed, color<span class="optional">[</span>, thickness<span class="optional">[</span>, lineType<span class="optional">[</span>, shift<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv2.polylines" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvPolyLine(CvArr* img, CvPoint** pts, const int* npts, int contours, int is_closed, CvScalar color, int thickness, int line_type, int shift)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvPolyLine</code><span class="sig-paren">(</span>CvArr* <strong>img</strong>, CvPoint** <strong>pts</strong>, const int* <strong>npts</strong>, int <strong>contours</strong>, int <strong>is_closed</strong>, CvScalar <strong>color</strong>, int <strong>thickness</strong>=1, int <strong>line_type</strong>=8, int <strong>shift</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void cvPolyLine(CvArr* img, CvPoint** pts, const int* npts, int contours, int is_closed, CvScalar color, int thickness, int line_type, int shift)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.PolyLine">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">PolyLine</code><span class="sig-paren">(</span>img, polys, is_closed, color, thickness=1, lineType=8, shift=0<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.PolyLine" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img</strong> &#8211; Image.</li>
+<li><strong>pts</strong> &#8211; Array of polygonal curves.</li>
+<li><strong>npts</strong> &#8211; Array of polygon vertex counters.</li>
+<li><strong>ncontours</strong> &#8211; Number of curves.</li>
+<li><strong>isClosed</strong> &#8211; Flag indicating whether the drawn polylines are closed or not. If they are closed, the function draws a line from the last vertex of each curve to its first vertex.</li>
+<li><strong>color</strong> &#8211; Polyline color.</li>
+<li><strong>thickness</strong> &#8211; Thickness of the polyline edges.</li>
+<li><strong>lineType</strong> &#8211; Type of the line segments. See the  <a class="reference internal" href="#void line(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)" title="void line(Mat&amp; img, Point pt1, Point pt2, const Scalar&amp; color, int thickness, int lineType, int shift)"><code class="xref ocv ocv-func docutils literal"><span class="pre">line()</span></code></a>  description.</li>
+<li><strong>shift</strong> &#8211; Number of fractional bits in the vertex coordinates.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">polylines</span></code> draws one or more polygonal curves.</p>
+</div>
+<div class="section" id="puttext">
+<h2>putText<a class="headerlink" href="#puttext" title="Permalink to this headline">¶</a></h2>
+<p>Draws a text string.</p>
+<dl class="function">
+<dt id="void putText(Mat&amp; img, const string&amp; text, Point org, int fontFace, double fontScale, Scalar color, int thickness, int lineType, bool bottomLeftOrigin)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">putText</code><span class="sig-paren">(</span>Mat&amp; <strong>img</strong>, const string&amp; <strong>text</strong>, Point <strong>org</strong>, int <strong>fontFace</strong>, double <strong>fontScale</strong>, Scalar <strong>color</strong>, int <strong>thickness</strong>=1, int <strong>lineType</strong>=8, bool <strong>bottomLeftOrigin</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#void putText(Mat& img, const string& text, Point org, int fontFace, double fontScale, Scalar color, int thickness, int lineType, bool bottomLeftOrigin)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.putText">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">putText</code><span class="sig-paren">(</span>img, text, org, fontFace, fontScale, color<span class="optional">[</span>, thickness<span class="optional">[</span>, lineType<span class="optional">[</span>, bottomLeftOrigin<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv2.putText" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvPutText(CvArr* img, const char* text, CvPoint org, const CvFont* font, CvScalar color)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvPutText</code><span class="sig-paren">(</span>CvArr* <strong>img</strong>, const char* <strong>text</strong>, CvPoint <strong>org</strong>, const CvFont* <strong>font</strong>, CvScalar <strong>color</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvPutText(CvArr* img, const char* text, CvPoint org, const CvFont* font, CvScalar color)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.PutText">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">PutText</code><span class="sig-paren">(</span>img, text, org, font, color<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.PutText" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img</strong> &#8211; Image.</li>
+<li><strong>text</strong> &#8211; Text string to be drawn.</li>
+<li><strong>org</strong> &#8211; Bottom-left corner of the text string in the image.</li>
+<li><strong>font</strong> &#8211; <code class="docutils literal"><span class="pre">CvFont</span></code> structure initialized using <a class="reference internal" href="#void cvInitFont(CvFont* font, int font_face, double hscale, double vscale, double shear, int thickness, int line_type)" title="void cvInitFont(CvFont* font, int font_face, double hscale, double vscale, double shear, int thickness, int line_type)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">InitFont()</span></code></a>.</li>
+<li><strong>fontFace</strong> &#8211; Font type. One of  <code class="docutils literal"><span class="pre">FONT_HERSHEY_SIMPLEX</span></code>,  <code class="docutils literal"><span class="pre">FONT_HERSHEY_PLAIN</span></code>, <code class="docutils literal"><span class="pre">FONT_HERSHEY_DUPLEX</span></code>,  <code class="docutils literal"><span class="pre">FONT_HERSHEY_COMPLEX</span></code>,  <code class="docutils literal"><span class="pre">FONT_HERSHEY_TRIPLEX</span></code>, <code class="docutils literal"><span class="pre">FONT_HERSHEY_COMPLEX_SMALL</span></code>,  <code class="docutils literal"><span class="pre">FONT_HERSHEY_SCRIPT_SIMPLEX</span></code>, or  <code class="docutils literal"><span class="pre">FONT_HERSHEY_SCRIPT_COMPLEX</span></code>,
+where each of the font ID&#8217;s can be combined with  <code class="docutils literal"><span class="pre">FONT_ITALIC</span></code>  to get the slanted letters.</li>
+<li><strong>fontScale</strong> &#8211; Font scale factor that is multiplied by the font-specific base size.</li>
+<li><strong>color</strong> &#8211; Text color.</li>
+<li><strong>thickness</strong> &#8211; Thickness of the lines used to draw a text.</li>
+<li><strong>lineType</strong> &#8211; Line type. See the  <code class="docutils literal"><span class="pre">line</span></code>  for details.</li>
+<li><strong>bottomLeftOrigin</strong> &#8211; When true, the image data origin is at the bottom-left corner. Otherwise, it is at the top-left corner.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">putText</span></code> renders the specified text string in the image.
+Symbols that cannot be rendered using the specified font are
+replaced by question marks. See
+<a class="reference internal" href="#Size getTextSize(const string&amp; text, int fontFace, double fontScale, int thickness, int* baseLine)" title="Size getTextSize(const string&amp; text, int fontFace, double fontScale, int thickness, int* baseLine)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getTextSize()</span></code></a> for a text rendering code example.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Drawing Functions</a><ul>
+<li><a class="reference internal" href="#circle">circle</a></li>
+<li><a class="reference internal" href="#clipline">clipLine</a></li>
+<li><a class="reference internal" href="#ellipse">ellipse</a></li>
+<li><a class="reference internal" href="#ellipse2poly">ellipse2Poly</a></li>
+<li><a class="reference internal" href="#fillconvexpoly">fillConvexPoly</a></li>
+<li><a class="reference internal" href="#fillpoly">fillPoly</a></li>
+<li><a class="reference internal" href="#gettextsize">getTextSize</a></li>
+<li><a class="reference internal" href="#initfont">InitFont</a></li>
+<li><a class="reference internal" href="#line">line</a></li>
+<li><a class="reference internal" href="#arrowedline">arrowedLine</a></li>
+<li><a class="reference internal" href="#lineiterator">LineIterator</a></li>
+<li><a class="reference internal" href="#rectangle">rectangle</a></li>
+<li><a class="reference internal" href="#polylines">polylines</a></li>
+<li><a class="reference internal" href="#puttext">putText</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="operations_on_arrays.html"
+                        title="previous chapter">Operations on Arrays</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="xml_yaml_persistence.html"
+                        title="next chapter">XML/YAML Persistence</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/core/doc/drawing_functions.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="xml_yaml_persistence.html" title="XML/YAML Persistence"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="operations_on_arrays.html" title="Operations on Arrays"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="core.html" >core. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

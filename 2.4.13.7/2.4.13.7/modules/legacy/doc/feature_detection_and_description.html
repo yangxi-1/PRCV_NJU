@@ -1,0 +1,719 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Feature Detection and Description &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="legacy. Deprecated stuff" href="legacy.html" />
+    <link rel="next" title="Common Interfaces of Descriptor Extractors" href="common_interfaces_of_descriptor_extractors.html" />
+    <link rel="prev" title="Planar Subdivisions (C API)" href="planar_subdivisions.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="common_interfaces_of_descriptor_extractors.html" title="Common Interfaces of Descriptor Extractors"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="planar_subdivisions.html" title="Planar Subdivisions (C API)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="legacy.html" accesskey="U">legacy. Deprecated stuff</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="feature-detection-and-description">
+<h1>Feature Detection and Description<a class="headerlink" href="#feature-detection-and-description" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="randomizedtree">
+<h2>RandomizedTree<a class="headerlink" href="#randomizedtree" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="RandomizedTree">
+<em class="property">class </em><code class="descname">RandomizedTree</code><a class="headerlink" href="#RandomizedTree" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class containing a base structure for <code class="docutils literal"><span class="pre">RTreeClassifier</span></code>.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">RandomizedTree</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+        <span class="k">friend</span> <span class="k">class</span> <span class="nc">RTreeClassifier</span><span class="p">;</span>
+
+        <span class="n">RandomizedTree</span><span class="p">();</span>
+        <span class="o">~</span><span class="n">RandomizedTree</span><span class="p">();</span>
+
+        <span class="kt">void</span> <span class="nf">train</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">BaseKeypoint</span><span class="o">&gt;</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">base_set</span><span class="p">,</span>
+                 <span class="n">RNG</span> <span class="o">&amp;</span><span class="n">rng</span><span class="p">,</span> <span class="kt">int</span> <span class="n">depth</span><span class="p">,</span> <span class="kt">int</span> <span class="n">views</span><span class="p">,</span>
+                 <span class="kt">size_t</span> <span class="n">reduced_num_dim</span><span class="p">,</span> <span class="kt">int</span> <span class="n">num_quant_bits</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="nf">train</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">BaseKeypoint</span><span class="o">&gt;</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">base_set</span><span class="p">,</span>
+                 <span class="n">RNG</span> <span class="o">&amp;</span><span class="n">rng</span><span class="p">,</span> <span class="n">PatchGenerator</span> <span class="o">&amp;</span><span class="n">make_patch</span><span class="p">,</span> <span class="kt">int</span> <span class="n">depth</span><span class="p">,</span>
+                 <span class="kt">int</span> <span class="n">views</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">reduced_num_dim</span><span class="p">,</span> <span class="kt">int</span> <span class="n">num_quant_bits</span><span class="p">);</span>
+
+        <span class="c1">// next two functions are EXPERIMENTAL</span>
+        <span class="c1">//(do not use unless you know exactly what you do)</span>
+        <span class="k">static</span> <span class="kt">void</span> <span class="nf">quantizeVector</span><span class="p">(</span><span class="kt">float</span> <span class="o">*</span><span class="n">vec</span><span class="p">,</span> <span class="kt">int</span> <span class="n">dim</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="kt">float</span> <span class="n">bnds</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                 <span class="kt">int</span> <span class="n">clamp_mode</span><span class="o">=</span><span class="mi">0</span><span class="p">);</span>
+        <span class="k">static</span> <span class="kt">void</span> <span class="nf">quantizeVector</span><span class="p">(</span><span class="kt">float</span> <span class="o">*</span><span class="n">src</span><span class="p">,</span> <span class="kt">int</span> <span class="n">dim</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="kt">float</span> <span class="n">bnds</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                 <span class="n">uchar</span> <span class="o">*</span><span class="n">dst</span><span class="p">);</span>
+
+        <span class="c1">// patch_data must be a 32x32 array (no row padding)</span>
+        <span class="kt">float</span><span class="o">*</span> <span class="nf">getPosterior</span><span class="p">(</span><span class="n">uchar</span><span class="o">*</span> <span class="n">patch_data</span><span class="p">);</span>
+        <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="nf">getPosterior</span><span class="p">(</span><span class="n">uchar</span><span class="o">*</span> <span class="n">patch_data</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+        <span class="n">uchar</span><span class="o">*</span> <span class="nf">getPosterior2</span><span class="p">(</span><span class="n">uchar</span><span class="o">*</span> <span class="n">patch_data</span><span class="p">);</span>
+
+        <span class="kt">void</span> <span class="nf">read</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file_name</span><span class="p">,</span> <span class="kt">int</span> <span class="n">num_quant_bits</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="nf">read</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span> <span class="o">&amp;</span><span class="n">is</span><span class="p">,</span> <span class="kt">int</span> <span class="n">num_quant_bits</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="nf">write</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file_name</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+        <span class="kt">void</span> <span class="nf">write</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">os</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+        <span class="kt">int</span> <span class="nf">classes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">classes_</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">int</span> <span class="nf">depth</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">depth_</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="kt">void</span> <span class="nf">discardFloatPosteriors</span><span class="p">()</span> <span class="p">{</span> <span class="n">freePosteriors</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="p">}</span>
+
+        <span class="kr">inline</span> <span class="kt">void</span> <span class="nf">applyQuantization</span><span class="p">(</span><span class="kt">int</span> <span class="n">num_quant_bits</span><span class="p">)</span>
+                 <span class="p">{</span> <span class="n">makePosteriors2</span><span class="p">(</span><span class="n">num_quant_bits</span><span class="p">);</span> <span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+        <span class="kt">int</span> <span class="n">classes_</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">depth_</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">num_leaves_</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">RTreeNode</span><span class="o">&gt;</span> <span class="n">nodes_</span><span class="p">;</span>
+        <span class="kt">float</span> <span class="o">**</span><span class="n">posteriors_</span><span class="p">;</span>        <span class="c1">// 16-byte aligned posteriors</span>
+        <span class="n">uchar</span> <span class="o">**</span><span class="n">posteriors2_</span><span class="p">;</span>     <span class="c1">// 16-byte aligned posteriors</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">leaf_counts_</span><span class="p">;</span>
+
+        <span class="kt">void</span> <span class="nf">createNodes</span><span class="p">(</span><span class="kt">int</span> <span class="n">num_nodes</span><span class="p">,</span> <span class="n">RNG</span> <span class="o">&amp;</span><span class="n">rng</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="nf">allocPosteriorsAligned</span><span class="p">(</span><span class="kt">int</span> <span class="n">num_leaves</span><span class="p">,</span> <span class="kt">int</span> <span class="n">num_classes</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="nf">freePosteriors</span><span class="p">(</span><span class="kt">int</span> <span class="n">which</span><span class="p">);</span>
+                 <span class="c1">// which: 1=posteriors_, 2=posteriors2_, 3=both</span>
+        <span class="kt">void</span> <span class="nf">init</span><span class="p">(</span><span class="kt">int</span> <span class="n">classes</span><span class="p">,</span> <span class="kt">int</span> <span class="n">depth</span><span class="p">,</span> <span class="n">RNG</span> <span class="o">&amp;</span><span class="n">rng</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="nf">addExample</span><span class="p">(</span><span class="kt">int</span> <span class="n">class_id</span><span class="p">,</span> <span class="n">uchar</span><span class="o">*</span> <span class="n">patch_data</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="nf">finalize</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">reduced_num_dim</span><span class="p">,</span> <span class="kt">int</span> <span class="n">num_quant_bits</span><span class="p">);</span>
+        <span class="kt">int</span> <span class="nf">getIndex</span><span class="p">(</span><span class="n">uchar</span><span class="o">*</span> <span class="n">patch_data</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+        <span class="kr">inline</span> <span class="kt">float</span><span class="o">*</span> <span class="nf">getPosteriorByIndex</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">);</span>
+        <span class="kr">inline</span> <span class="n">uchar</span><span class="o">*</span> <span class="nf">getPosteriorByIndex2</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">);</span>
+        <span class="kr">inline</span> <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="nf">getPosteriorByIndex</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+        <span class="kt">void</span> <span class="nf">convertPosteriorsToChar</span><span class="p">();</span>
+        <span class="kt">void</span> <span class="nf">makePosteriors2</span><span class="p">(</span><span class="kt">int</span> <span class="n">num_quant_bits</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="nf">compressLeaves</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">reduced_num_dim</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="nf">estimateQuantPercForPosteriors</span><span class="p">(</span><span class="kt">float</span> <span class="n">perc</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>: PYTHON : An example using Randomized Tree training for letter recognition can be found at opencv_source_code/samples/python2/letter_recog.py</li>
+</ul>
+</div>
+</div>
+<div class="section" id="randomizedtree-train">
+<h2>RandomizedTree::train<a class="headerlink" href="#randomizedtree-train" title="Permalink to this headline">¶</a></h2>
+<p>Trains a randomized tree using an input set of keypoints.</p>
+<dl class="function">
+<dt id="void RandomizedTree::train(vector&lt;BaseKeypoint&gt; const&amp; base_set, RNG &amp; rng, int depth, int views, size_t reduced_num_dim, int num_quant_bits)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">RandomizedTree::</code><code class="descname">train</code><span class="sig-paren">(</span>vector&lt;BaseKeypoint&gt; const&amp; <strong>base_set</strong>, RNG&amp; <strong>rng</strong>, int <strong>depth</strong>, int <strong>views</strong>, size_t <strong>reduced_num_dim</strong>, int <strong>num_quant_bits</strong><span class="sig-paren">)</span><a class="headerlink" href="#void RandomizedTree::train(vector<BaseKeypoint> const& base_set, RNG & rng, int depth, int views, size_t reduced_num_dim, int num_quant_bits)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void RandomizedTree::train(vector&lt;BaseKeypoint&gt; const&amp; base_set, RNG &amp; rng, PatchGenerator &amp; make_patch, int depth, int views, size_t reduced_num_dim, int num_quant_bits)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">RandomizedTree::</code><code class="descname">train</code><span class="sig-paren">(</span>vector&lt;BaseKeypoint&gt; const&amp; <strong>base_set</strong>, RNG&amp; <strong>rng</strong>, PatchGenerator&amp; <strong>make_patch</strong>, int <strong>depth</strong>, int <strong>views</strong>, size_t <strong>reduced_num_dim</strong>, int <strong>num_quant_bits</strong><span class="sig-paren">)</span><a class="headerlink" href="#void RandomizedTree::train(vector<BaseKeypoint> const& base_set, RNG & rng, PatchGenerator & make_patch, int depth, int views, size_t reduced_num_dim, int num_quant_bits)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>base_set</strong> &#8211; Vector of the <code class="docutils literal"><span class="pre">BaseKeypoint</span></code> type. It contains image keypoints used for training.</li>
+<li><strong>rng</strong> &#8211; Random-number generator used for training.</li>
+<li><strong>make_patch</strong> &#8211; Patch generator used for training.</li>
+<li><strong>depth</strong> &#8211; Maximum tree depth.</li>
+<li><strong>views</strong> &#8211; Number of random views of each keypoint neighborhood to generate.</li>
+<li><strong>reduced_num_dim</strong> &#8211; Number of dimensions used in the compressed signature.</li>
+<li><strong>num_quant_bits</strong> &#8211; Number of bits used for quantization.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>: An example on training a Random Tree Classifier for letter recognition can be found at opencv_source_codesamplescppletter_recog.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="randomizedtree-read">
+<h2>RandomizedTree::read<a class="headerlink" href="#randomizedtree-read" title="Permalink to this headline">¶</a></h2>
+<p>Reads a pre-saved randomized tree from a file or stream.</p>
+<dl class="function">
+<dt id="RandomizedTree::read(const char* file_name, int num_quant_bits)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">RandomizedTree::</code><code class="descname">read</code><span class="sig-paren">(</span>const char* <strong>file_name</strong>, int <strong>num_quant_bits</strong><span class="sig-paren">)</span><a class="headerlink" href="#RandomizedTree::read(const char* file_name, int num_quant_bits)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="RandomizedTree::read(std::istream &amp;is, int num_quant_bits)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">RandomizedTree::</code><code class="descname">read</code><span class="sig-paren">(</span>std::istream&amp; <strong>is</strong>, int <strong>num_quant_bits</strong><span class="sig-paren">)</span><a class="headerlink" href="#RandomizedTree::read(std::istream &is, int num_quant_bits)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> &#8211; Name of the file that contains randomized tree data.</li>
+<li><strong>is</strong> &#8211; Input stream associated with the file that contains randomized tree data.</li>
+<li><strong>num_quant_bits</strong> &#8211; Number of bits used for quantization.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="randomizedtree-write">
+<h2>RandomizedTree::write<a class="headerlink" href="#randomizedtree-write" title="Permalink to this headline">¶</a></h2>
+<p>Writes the current randomized tree to a file or stream.</p>
+<dl class="function">
+<dt id="void RandomizedTree::write(const char* file_name) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">RandomizedTree::</code><code class="descname">write</code><span class="sig-paren">(</span>const char* <strong>file_name</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void RandomizedTree::write(const char* file_name) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void RandomizedTree::write(std::ostream &amp;os) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">RandomizedTree::</code><code class="descname">write</code><span class="sig-paren">(</span>std::ostream&amp; <strong>os</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void RandomizedTree::write(std::ostream &os) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> &#8211; Name of the file where randomized tree data is stored.</li>
+<li><strong>os</strong> &#8211; Output stream associated with the file where randomized tree data is stored.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="randomizedtree-applyquantization">
+<h2>RandomizedTree::applyQuantization<a class="headerlink" href="#randomizedtree-applyquantization" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="void RandomizedTree::applyQuantization(int num_quant_bits)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">RandomizedTree::</code><code class="descname">applyQuantization</code><span class="sig-paren">(</span>int <strong>num_quant_bits</strong><span class="sig-paren">)</span><a class="headerlink" href="#void RandomizedTree::applyQuantization(int num_quant_bits)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies quantization to the current randomized tree.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>num_quant_bits</strong> &#8211; Number of bits used for quantization.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="rtreenode">
+<h2>RTreeNode<a class="headerlink" href="#rtreenode" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="RTreeNode">
+<em class="property">struct </em><code class="descname">RTreeNode</code><a class="headerlink" href="#RTreeNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class containing a base structure for <code class="docutils literal"><span class="pre">RandomizedTree</span></code>.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">RTreeNode</span>
+<span class="p">{</span>
+        <span class="kt">short</span> <span class="n">offset1</span><span class="p">,</span> <span class="n">offset2</span><span class="p">;</span>
+
+        <span class="n">RTreeNode</span><span class="p">()</span> <span class="p">{}</span>
+
+        <span class="n">RTreeNode</span><span class="p">(</span><span class="n">uchar</span> <span class="n">x1</span><span class="p">,</span> <span class="n">uchar</span> <span class="n">y1</span><span class="p">,</span> <span class="n">uchar</span> <span class="n">x2</span><span class="p">,</span> <span class="n">uchar</span> <span class="n">y2</span><span class="p">)</span>
+                <span class="o">:</span> <span class="n">offset1</span><span class="p">(</span><span class="n">y1</span><span class="o">*</span><span class="n">PATCH_SIZE</span> <span class="o">+</span> <span class="n">x1</span><span class="p">),</span>
+                <span class="n">offset2</span><span class="p">(</span><span class="n">y2</span><span class="o">*</span><span class="n">PATCH_SIZE</span> <span class="o">+</span> <span class="n">x2</span><span class="p">)</span>
+        <span class="p">{}</span>
+
+        <span class="c1">//! Left child on 0, right child on 1</span>
+        <span class="kr">inline</span> <span class="kt">bool</span> <span class="k">operator</span><span class="p">()</span> <span class="p">(</span><span class="n">uchar</span><span class="o">*</span> <span class="n">patch_data</span><span class="p">)</span> <span class="k">const</span>
+        <span class="p">{</span>
+                <span class="k">return</span> <span class="n">patch_data</span><span class="p">[</span><span class="n">offset1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">patch_data</span><span class="p">[</span><span class="n">offset2</span><span class="p">];</span>
+        <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rtreeclassifier">
+<h2>RTreeClassifier<a class="headerlink" href="#rtreeclassifier" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="RTreeClassifier">
+<em class="property">class </em><code class="descname">RTreeClassifier</code><a class="headerlink" href="#RTreeClassifier" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class containing <code class="docutils literal"><span class="pre">RTreeClassifier</span></code>. It represents the Calonder descriptor originally introduced by Michael Calonder.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">RTreeClassifier</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+        <span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">DEFAULT_TREES</span> <span class="o">=</span> <span class="mi">48</span><span class="p">;</span>
+        <span class="k">static</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">DEFAULT_NUM_QUANT_BITS</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
+        <span class="n">RTreeClassifier</span><span class="p">();</span>
+
+        <span class="kt">void</span> <span class="nf">train</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">BaseKeypoint</span><span class="o">&gt;</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">base_set</span><span class="p">,</span>
+                <span class="n">RNG</span> <span class="o">&amp;</span><span class="n">rng</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">num_trees</span> <span class="o">=</span> <span class="n">RTreeClassifier</span><span class="o">::</span><span class="n">DEFAULT_TREES</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">depth</span> <span class="o">=</span> <span class="n">DEFAULT_DEPTH</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">views</span> <span class="o">=</span> <span class="n">DEFAULT_VIEWS</span><span class="p">,</span>
+                <span class="kt">size_t</span> <span class="n">reduced_num_dim</span> <span class="o">=</span> <span class="n">DEFAULT_REDUCED_NUM_DIM</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">num_quant_bits</span> <span class="o">=</span> <span class="n">DEFAULT_NUM_QUANT_BITS</span><span class="p">,</span>
+                         <span class="kt">bool</span> <span class="n">print_status</span> <span class="o">=</span> <span class="nb">true</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="nf">train</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">BaseKeypoint</span><span class="o">&gt;</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">base_set</span><span class="p">,</span>
+                <span class="n">RNG</span> <span class="o">&amp;</span><span class="n">rng</span><span class="p">,</span>
+                <span class="n">PatchGenerator</span> <span class="o">&amp;</span><span class="n">make_patch</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">num_trees</span> <span class="o">=</span> <span class="n">RTreeClassifier</span><span class="o">::</span><span class="n">DEFAULT_TREES</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">depth</span> <span class="o">=</span> <span class="n">DEFAULT_DEPTH</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">views</span> <span class="o">=</span> <span class="n">DEFAULT_VIEWS</span><span class="p">,</span>
+                <span class="kt">size_t</span> <span class="n">reduced_num_dim</span> <span class="o">=</span> <span class="n">DEFAULT_REDUCED_NUM_DIM</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">num_quant_bits</span> <span class="o">=</span> <span class="n">DEFAULT_NUM_QUANT_BITS</span><span class="p">,</span>
+                 <span class="kt">bool</span> <span class="n">print_status</span> <span class="o">=</span> <span class="nb">true</span><span class="p">);</span>
+
+        <span class="c1">// sig must point to a memory block of at least</span>
+        <span class="c1">//classes()*sizeof(float|uchar) bytes</span>
+        <span class="kt">void</span> <span class="nf">getSignature</span><span class="p">(</span><span class="n">IplImage</span> <span class="o">*</span><span class="n">patch</span><span class="p">,</span> <span class="n">uchar</span> <span class="o">*</span><span class="n">sig</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="nf">getSignature</span><span class="p">(</span><span class="n">IplImage</span> <span class="o">*</span><span class="n">patch</span><span class="p">,</span> <span class="kt">float</span> <span class="o">*</span><span class="n">sig</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="nf">getSparseSignature</span><span class="p">(</span><span class="n">IplImage</span> <span class="o">*</span><span class="n">patch</span><span class="p">,</span> <span class="kt">float</span> <span class="o">*</span><span class="n">sig</span><span class="p">,</span>
+                 <span class="kt">float</span> <span class="n">thresh</span><span class="p">);</span>
+
+        <span class="k">static</span> <span class="kt">int</span> <span class="nf">countNonZeroElements</span><span class="p">(</span><span class="kt">float</span> <span class="o">*</span><span class="n">vec</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">double</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">);</span>
+        <span class="k">static</span> <span class="kr">inline</span> <span class="kt">void</span> <span class="nf">safeSignatureAlloc</span><span class="p">(</span><span class="n">uchar</span> <span class="o">**</span><span class="n">sig</span><span class="p">,</span> <span class="kt">int</span> <span class="n">num_sig</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="kt">int</span> <span class="n">sig_len</span><span class="o">=</span><span class="mi">176</span><span class="p">);</span>
+        <span class="k">static</span> <span class="kr">inline</span> <span class="n">uchar</span><span class="o">*</span> <span class="nf">safeSignatureAlloc</span><span class="p">(</span><span class="kt">int</span> <span class="n">num_sig</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                         <span class="kt">int</span> <span class="n">sig_len</span><span class="o">=</span><span class="mi">176</span><span class="p">);</span>
+
+        <span class="kr">inline</span> <span class="kt">int</span> <span class="nf">classes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">classes_</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kr">inline</span> <span class="kt">int</span> <span class="nf">original_num_classes</span><span class="p">()</span>
+                 <span class="p">{</span> <span class="k">return</span> <span class="n">original_num_classes_</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="kt">void</span> <span class="nf">setQuantization</span><span class="p">(</span><span class="kt">int</span> <span class="n">num_quant_bits</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="nf">discardFloatPosteriors</span><span class="p">();</span>
+
+        <span class="kt">void</span> <span class="nf">read</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file_name</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="nf">read</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span> <span class="o">&amp;</span><span class="n">is</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="nf">write</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file_name</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+        <span class="kt">void</span> <span class="nf">write</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">os</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">RandomizedTree</span><span class="o">&gt;</span> <span class="n">trees_</span><span class="p">;</span>
+
+<span class="k">private</span><span class="o">:</span>
+        <span class="kt">int</span> <span class="n">classes_</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">num_quant_bits_</span><span class="p">;</span>
+        <span class="n">uchar</span> <span class="o">**</span><span class="n">posteriors_</span><span class="p">;</span>
+        <span class="n">ushort</span> <span class="o">*</span><span class="n">ptemp_</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">original_num_classes_</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">keep_floats_</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rtreeclassifier-train">
+<h2>RTreeClassifier::train<a class="headerlink" href="#rtreeclassifier-train" title="Permalink to this headline">¶</a></h2>
+<p>Trains a randomized tree classifier using an input set of keypoints.</p>
+<dl class="function">
+<dt id="void RTreeClassifier::train(vector&lt;BaseKeypoint&gt; const&amp; base_set, RNG &amp; rng, int num_trees, int depth, int views, size_t reduced_num_dim, int num_quant_bits)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">RTreeClassifier::</code><code class="descname">train</code><span class="sig-paren">(</span>vector&lt;BaseKeypoint&gt; const&amp; <strong>base_set</strong>, RNG&amp; <strong>rng</strong>, int <strong>num_trees</strong>=RTreeClassifier::DEFAULT_TREES, int <strong>depth</strong>=RandomizedTree::DEFAULT_DEPTH, int <strong>views</strong>=RandomizedTree::DEFAULT_VIEWS, size_t <strong>reduced_num_dim</strong>=RandomizedTree::DEFAULT_REDUCED_NUM_DIM, int <strong>num_quant_bits</strong>=DEFAULT_NUM_QUANT_BITS <span class="sig-paren">)</span><a class="headerlink" href="#void RTreeClassifier::train(vector<BaseKeypoint> const& base_set, RNG & rng, int num_trees, int depth, int views, size_t reduced_num_dim, int num_quant_bits)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void RTreeClassifier::train(vector&lt;BaseKeypoint&gt; const&amp; base_set, RNG &amp; rng, PatchGenerator &amp; make_patch, int num_trees, int depth, int views, size_t reduced_num_dim, int num_quant_bits)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">RTreeClassifier::</code><code class="descname">train</code><span class="sig-paren">(</span>vector&lt;BaseKeypoint&gt; const&amp; <strong>base_set</strong>, RNG&amp; <strong>rng</strong>, PatchGenerator&amp; <strong>make_patch</strong>, int <strong>num_trees</strong>=RTreeClassifier::DEFAULT_TREES, int <strong>depth</strong>=RandomizedTree::DEFAULT_DEPTH, int <strong>views</strong>=RandomizedTree::DEFAULT_VIEWS, size_t <strong>reduced_num_dim</strong>=RandomizedTree::DEFAULT_REDUCED_NUM_DIM, int <strong>num_quant_bits</strong>=DEFAULT_NUM_QUANT_BITS <span class="sig-paren">)</span><a class="headerlink" href="#void RTreeClassifier::train(vector<BaseKeypoint> const& base_set, RNG & rng, PatchGenerator & make_patch, int num_trees, int depth, int views, size_t reduced_num_dim, int num_quant_bits)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>base_set</strong> &#8211; Vector of the <code class="docutils literal"><span class="pre">BaseKeypoint</span></code>  type. It contains image keypoints used for training.</li>
+<li><strong>rng</strong> &#8211; Random-number generator used for training.</li>
+<li><strong>make_patch</strong> &#8211; Patch generator used for training.</li>
+<li><strong>num_trees</strong> &#8211; Number of randomized trees used in <code class="docutils literal"><span class="pre">RTreeClassificator</span></code> .</li>
+<li><strong>depth</strong> &#8211; Maximum tree depth.</li>
+<li><strong>views</strong> &#8211; Number of random views of each keypoint neighborhood to generate.</li>
+<li><strong>reduced_num_dim</strong> &#8211; Number of dimensions used in the compressed signature.</li>
+<li><strong>num_quant_bits</strong> &#8211; Number of bits used for quantization.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="rtreeclassifier-getsignature">
+<h2>RTreeClassifier::getSignature<a class="headerlink" href="#rtreeclassifier-getsignature" title="Permalink to this headline">¶</a></h2>
+<p>Returns a signature for an image patch.</p>
+<dl class="function">
+<dt id="void RTreeClassifier::getSignature(IplImage *patch, uchar *sig)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">RTreeClassifier::</code><code class="descname">getSignature</code><span class="sig-paren">(</span>IplImage* <strong>patch</strong>, uchar* <strong>sig</strong><span class="sig-paren">)</span><a class="headerlink" href="#void RTreeClassifier::getSignature(IplImage *patch, uchar *sig)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void RTreeClassifier::getSignature(IplImage *patch, float *sig)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">RTreeClassifier::</code><code class="descname">getSignature</code><span class="sig-paren">(</span>IplImage* <strong>patch</strong>, float* <strong>sig</strong><span class="sig-paren">)</span><a class="headerlink" href="#void RTreeClassifier::getSignature(IplImage *patch, float *sig)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>patch</strong> &#8211; Image patch to calculate the signature for.</li>
+<li><strong>sig</strong> &#8211; Output signature (array dimension is <code class="docutils literal"><span class="pre">reduced_num_dim)</span></code> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="rtreeclassifier-getsparsesignature">
+<h2>RTreeClassifier::getSparseSignature<a class="headerlink" href="#rtreeclassifier-getsparsesignature" title="Permalink to this headline">¶</a></h2>
+<p>Returns a sparse signature for an image patch</p>
+<dl class="function">
+<dt id="void RTreeClassifier::getSparseSignature(IplImage *patch, float *sig, float thresh)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">RTreeClassifier::</code><code class="descname">getSparseSignature</code><span class="sig-paren">(</span>IplImage* <strong>patch</strong>, float* <strong>sig</strong>, float <strong>thresh</strong><span class="sig-paren">)</span><a class="headerlink" href="#void RTreeClassifier::getSparseSignature(IplImage *patch, float *sig, float thresh)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>patch</strong> &#8211; Image patch to calculate the signature for.</li>
+<li><strong>sig</strong> &#8211; Output signature (array dimension is <code class="docutils literal"><span class="pre">reduced_num_dim)</span></code> .</li>
+<li><strong>thresh</strong> &#8211; Threshold used for compressing the signature.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Returns a signature for an image patch similarly to <code class="docutils literal"><span class="pre">getSignature</span></code>  but uses a threshold for removing all signature elements below the threshold so that the signature is compressed.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="rtreeclassifier-countnonzeroelements">
+<h2>RTreeClassifier::countNonZeroElements<a class="headerlink" href="#rtreeclassifier-countnonzeroelements" title="Permalink to this headline">¶</a></h2>
+<p>Returns the number of non-zero elements in an input array.</p>
+<dl class="function">
+<dt id="static int RTreeClassifier::countNonZeroElements(float *vec, int n, double tol)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> int <code class="descclassname">RTreeClassifier::</code><code class="descname">countNonZeroElements</code><span class="sig-paren">(</span>float* <strong>vec</strong>, int <strong>n</strong>, double <strong>tol</strong>=1e-10<span class="sig-paren">)</span><a class="headerlink" href="#static int RTreeClassifier::countNonZeroElements(float *vec, int n, double tol)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>vec</strong> &#8211; Input vector containing float elements.</li>
+<li><strong>n</strong> &#8211; Input vector size.</li>
+<li><strong>tol</strong> &#8211; Threshold used for counting elements. All elements less than <code class="docutils literal"><span class="pre">tol</span></code>  are considered as zero elements.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="rtreeclassifier-read">
+<h2>RTreeClassifier::read<a class="headerlink" href="#rtreeclassifier-read" title="Permalink to this headline">¶</a></h2>
+<p>Reads a pre-saved <code class="docutils literal"><span class="pre">RTreeClassifier</span></code> from a file or stream.</p>
+<dl class="function">
+<dt id="void RTreeClassifier::read(const char* file_name)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">RTreeClassifier::</code><code class="descname">read</code><span class="sig-paren">(</span>const char* <strong>file_name</strong><span class="sig-paren">)</span><a class="headerlink" href="#void RTreeClassifier::read(const char* file_name)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void RTreeClassifier::read(std::istream &amp; is)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">RTreeClassifier::</code><code class="descname">read</code><span class="sig-paren">(</span>std::istream&amp; <strong>is</strong><span class="sig-paren">)</span><a class="headerlink" href="#void RTreeClassifier::read(std::istream & is)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> &#8211; Name of the file that contains randomized tree data.</li>
+<li><strong>is</strong> &#8211; Input stream associated with the file that contains randomized tree data.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="rtreeclassifier-write">
+<h2>RTreeClassifier::write<a class="headerlink" href="#rtreeclassifier-write" title="Permalink to this headline">¶</a></h2>
+<p>Writes the current <code class="docutils literal"><span class="pre">RTreeClassifier</span></code> to a file or stream.</p>
+<dl class="function">
+<dt id="void RTreeClassifier::write(const char* file_name) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">RTreeClassifier::</code><code class="descname">write</code><span class="sig-paren">(</span>const char* <strong>file_name</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void RTreeClassifier::write(const char* file_name) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void RTreeClassifier::write(std::ostream &amp;os) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">RTreeClassifier::</code><code class="descname">write</code><span class="sig-paren">(</span>std::ostream&amp; <strong>os</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void RTreeClassifier::write(std::ostream &os) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> &#8211; Name of the file where randomized tree data is stored.</li>
+<li><strong>os</strong> &#8211; Output stream associated with the file where randomized tree data is stored.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="rtreeclassifier-setquantization">
+<h2>RTreeClassifier::setQuantization<a class="headerlink" href="#rtreeclassifier-setquantization" title="Permalink to this headline">¶</a></h2>
+<p>Applies quantization to the current randomized tree.</p>
+<dl class="function">
+<dt id="void RTreeClassifier::setQuantization(int num_quant_bits)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">RTreeClassifier::</code><code class="descname">setQuantization</code><span class="sig-paren">(</span>int <strong>num_quant_bits</strong><span class="sig-paren">)</span><a class="headerlink" href="#void RTreeClassifier::setQuantization(int num_quant_bits)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>num_quant_bits</strong> &#8211; Number of bits used for quantization.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The example below demonstrates the usage of <code class="docutils literal"><span class="pre">RTreeClassifier</span></code> for matching the features. The features are extracted from the test and train images with SURF. Output is
+<img class="math" src="../../../_images/math/a2d32786c2a82bf5cc6c74d328eef44294a5078f.png" alt="best\_corr"/> and
+<img class="math" src="../../../_images/math/b9e838f9737859e28656ca4fd3e2e1388032eb49.png" alt="best\_corr\_idx"/> arrays that keep the best probabilities and corresponding features indices for every train feature.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">CvMemStorage</span><span class="o">*</span> <span class="n">storage</span> <span class="o">=</span> <span class="n">cvCreateMemStorage</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">CvSeq</span> <span class="o">*</span><span class="n">objectKeypoints</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="n">objectDescriptors</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">CvSeq</span> <span class="o">*</span><span class="n">imageKeypoints</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="n">imageDescriptors</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">CvSURFParams</span> <span class="n">params</span> <span class="o">=</span> <span class="n">cvSURFParams</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="n">cvExtractSURF</span><span class="p">(</span> <span class="n">test_image</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">imageKeypoints</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">imageDescriptors</span><span class="p">,</span>
+                 <span class="n">storage</span><span class="p">,</span> <span class="n">params</span> <span class="p">);</span>
+<span class="n">cvExtractSURF</span><span class="p">(</span> <span class="n">train_image</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">objectKeypoints</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">objectDescriptors</span><span class="p">,</span>
+                 <span class="n">storage</span><span class="p">,</span> <span class="n">params</span> <span class="p">);</span>
+
+<span class="n">RTreeClassifier</span> <span class="n">detector</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">patch_width</span> <span class="o">=</span> <span class="n">PATCH_SIZE</span><span class="p">;</span>
+<span class="n">iint</span> <span class="n">patch_height</span> <span class="o">=</span> <span class="n">PATCH_SIZE</span><span class="p">;</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">BaseKeypoint</span><span class="o">&gt;</span> <span class="n">base_set</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">CvSURFPoint</span><span class="o">*</span> <span class="n">point</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="p">(</span><span class="n">n_points</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="nl">n_points</span> <span class="p">:</span> <span class="n">objectKeypoints</span><span class="o">-&gt;</span><span class="n">total</span><span class="p">);</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="n">point</span><span class="o">=</span><span class="p">(</span><span class="n">CvSURFPoint</span><span class="o">*</span><span class="p">)</span><span class="n">cvGetSeqElem</span><span class="p">(</span><span class="n">objectKeypoints</span><span class="p">,</span><span class="n">i</span><span class="p">);</span>
+        <span class="n">base_set</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span>
+                <span class="n">BaseKeypoint</span><span class="p">(</span><span class="n">point</span><span class="o">-&gt;</span><span class="n">pt</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="n">point</span><span class="o">-&gt;</span><span class="n">pt</span><span class="p">.</span><span class="n">y</span><span class="p">,</span><span class="n">train_image</span><span class="p">));</span>
+<span class="p">}</span>
+
+        <span class="c1">//Detector training</span>
+ <span class="n">RNG</span> <span class="n">rng</span><span class="p">(</span> <span class="n">cvGetTickCount</span><span class="p">()</span> <span class="p">);</span>
+<span class="n">PatchGenerator</span> <span class="nf">gen</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="mf">0.7</span><span class="p">,</span><span class="mf">1.3</span><span class="p">,</span><span class="o">-</span><span class="n">CV_PI</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span><span class="n">CV_PI</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span>
+                        <span class="o">-</span><span class="n">CV_PI</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span><span class="n">CV_PI</span><span class="o">/</span><span class="mi">3</span><span class="p">);</span>
+
+<span class="n">printf</span><span class="p">(</span><span class="s">&quot;RTree Classifier training...n&quot;</span><span class="p">);</span>
+<span class="n">detector</span><span class="p">.</span><span class="n">train</span><span class="p">(</span><span class="n">base_set</span><span class="p">,</span><span class="n">rng</span><span class="p">,</span><span class="n">gen</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="n">DEFAULT_DEPTH</span><span class="p">,</span><span class="mi">2000</span><span class="p">,</span>
+        <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">base_set</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">detector</span><span class="p">.</span><span class="n">DEFAULT_NUM_QUANT_BITS</span><span class="p">);</span>
+<span class="n">printf</span><span class="p">(</span><span class="s">&quot;Donen&quot;</span><span class="p">);</span>
+
+<span class="kt">float</span><span class="o">*</span> <span class="n">signature</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">float</span><span class="p">[</span><span class="n">detector</span><span class="p">.</span><span class="n">original_num_classes</span><span class="p">()];</span>
+<span class="kt">float</span><span class="o">*</span> <span class="n">best_corr</span><span class="p">;</span>
+<span class="kt">int</span><span class="o">*</span> <span class="n">best_corr_idx</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">imageKeypoints</span><span class="o">-&gt;</span><span class="n">total</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="n">best_corr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">float</span><span class="p">[</span><span class="n">imageKeypoints</span><span class="o">-&gt;</span><span class="n">total</span><span class="p">];</span>
+        <span class="n">best_corr_idx</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">imageKeypoints</span><span class="o">-&gt;</span><span class="n">total</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">imageKeypoints</span><span class="o">-&gt;</span><span class="n">total</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="n">point</span><span class="o">=</span><span class="p">(</span><span class="n">CvSURFPoint</span><span class="o">*</span><span class="p">)</span><span class="n">cvGetSeqElem</span><span class="p">(</span><span class="n">imageKeypoints</span><span class="p">,</span><span class="n">i</span><span class="p">);</span>
+        <span class="kt">int</span> <span class="n">part_idx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="kt">float</span> <span class="n">prob</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+
+        <span class="n">CvRect</span> <span class="n">roi</span> <span class="o">=</span> <span class="n">cvRect</span><span class="p">((</span><span class="kt">int</span><span class="p">)(</span><span class="n">point</span><span class="o">-&gt;</span><span class="n">pt</span><span class="p">.</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">patch_width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+                <span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">point</span><span class="o">-&gt;</span><span class="n">pt</span><span class="p">.</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="n">patch_height</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+                 <span class="n">patch_width</span><span class="p">,</span> <span class="n">patch_height</span><span class="p">);</span>
+        <span class="n">cvSetImageROI</span><span class="p">(</span><span class="n">test_image</span><span class="p">,</span> <span class="n">roi</span><span class="p">);</span>
+        <span class="n">roi</span> <span class="o">=</span> <span class="n">cvGetImageROI</span><span class="p">(</span><span class="n">test_image</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">roi</span><span class="p">.</span><span class="n">width</span> <span class="o">!=</span> <span class="n">patch_width</span> <span class="o">||</span> <span class="n">roi</span><span class="p">.</span><span class="n">height</span> <span class="o">!=</span> <span class="n">patch_height</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="n">best_corr_idx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">part_idx</span><span class="p">;</span>
+                <span class="n">best_corr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">prob</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+                <span class="n">cvSetImageROI</span><span class="p">(</span><span class="n">test_image</span><span class="p">,</span> <span class="n">roi</span><span class="p">);</span>
+                <span class="n">IplImage</span><span class="o">*</span> <span class="n">roi_image</span> <span class="o">=</span>
+                         <span class="n">cvCreateImage</span><span class="p">(</span><span class="n">cvSize</span><span class="p">(</span><span class="n">roi</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">roi</span><span class="p">.</span><span class="n">height</span><span class="p">),</span>
+                         <span class="n">test_image</span><span class="o">-&gt;</span><span class="n">depth</span><span class="p">,</span> <span class="n">test_image</span><span class="o">-&gt;</span><span class="n">nChannels</span><span class="p">);</span>
+                <span class="n">cvCopy</span><span class="p">(</span><span class="n">test_image</span><span class="p">,</span><span class="n">roi_image</span><span class="p">);</span>
+
+                <span class="n">detector</span><span class="p">.</span><span class="n">getSignature</span><span class="p">(</span><span class="n">roi_image</span><span class="p">,</span> <span class="n">signature</span><span class="p">);</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span> <span class="n">detector</span><span class="p">.</span><span class="n">original_num_classes</span><span class="p">();</span><span class="n">j</span><span class="o">++</span><span class="p">)</span>
+                <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">prob</span> <span class="o">&lt;</span> <span class="n">signature</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+                        <span class="p">{</span>
+                                <span class="n">part_idx</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
+                                <span class="n">prob</span> <span class="o">=</span> <span class="n">signature</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+                        <span class="p">}</span>
+                <span class="p">}</span>
+
+                <span class="n">best_corr_idx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">part_idx</span><span class="p">;</span>
+                <span class="n">best_corr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">prob</span><span class="p">;</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">roi_image</span><span class="p">)</span>
+                        <span class="n">cvReleaseImage</span><span class="p">(</span><span class="o">&amp;</span><span class="n">roi_image</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">cvResetImageROI</span><span class="p">(</span><span class="n">test_image</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Feature Detection and Description</a><ul>
+<li><a class="reference internal" href="#randomizedtree">RandomizedTree</a></li>
+<li><a class="reference internal" href="#randomizedtree-train">RandomizedTree::train</a></li>
+<li><a class="reference internal" href="#randomizedtree-read">RandomizedTree::read</a></li>
+<li><a class="reference internal" href="#randomizedtree-write">RandomizedTree::write</a></li>
+<li><a class="reference internal" href="#randomizedtree-applyquantization">RandomizedTree::applyQuantization</a></li>
+<li><a class="reference internal" href="#rtreenode">RTreeNode</a></li>
+<li><a class="reference internal" href="#rtreeclassifier">RTreeClassifier</a></li>
+<li><a class="reference internal" href="#rtreeclassifier-train">RTreeClassifier::train</a></li>
+<li><a class="reference internal" href="#rtreeclassifier-getsignature">RTreeClassifier::getSignature</a></li>
+<li><a class="reference internal" href="#rtreeclassifier-getsparsesignature">RTreeClassifier::getSparseSignature</a></li>
+<li><a class="reference internal" href="#rtreeclassifier-countnonzeroelements">RTreeClassifier::countNonZeroElements</a></li>
+<li><a class="reference internal" href="#rtreeclassifier-read">RTreeClassifier::read</a></li>
+<li><a class="reference internal" href="#rtreeclassifier-write">RTreeClassifier::write</a></li>
+<li><a class="reference internal" href="#rtreeclassifier-setquantization">RTreeClassifier::setQuantization</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="planar_subdivisions.html"
+                        title="previous chapter">Planar Subdivisions (C API)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="common_interfaces_of_descriptor_extractors.html"
+                        title="next chapter">Common Interfaces of Descriptor Extractors</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/legacy/doc/feature_detection_and_description.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="common_interfaces_of_descriptor_extractors.html" title="Common Interfaces of Descriptor Extractors"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="planar_subdivisions.html" title="Planar Subdivisions (C API)"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="legacy.html" >legacy. Deprecated stuff</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

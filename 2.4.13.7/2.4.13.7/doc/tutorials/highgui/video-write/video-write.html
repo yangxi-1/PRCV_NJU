@@ -1,0 +1,443 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Creating a video with OpenCV &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="highgui module. High Level GUI and Media" href="../table_of_content_highgui/table_of_content_highgui.html" />
+    <link rel="next" title="calib3d module. Camera calibration and 3D reconstruction" href="../../calib3d/table_of_content_calib3d/table_of_content_calib3d.html" />
+    <link rel="prev" title="Video Input with OpenCV and similarity measurement" href="../video-input-psnr-ssim/video-input-psnr-ssim.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../calib3d/table_of_content_calib3d/table_of_content_calib3d.html" title="calib3d module. Camera calibration and 3D reconstruction"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../video-input-psnr-ssim/video-input-psnr-ssim.html" title="Video Input with OpenCV and similarity measurement"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_highgui/table_of_content_highgui.html" accesskey="U"><em>highgui</em> module. High Level GUI and Media</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="creating-a-video-with-opencv">
+<span id="videowritehighgui"></span><h1>Creating a video with OpenCV<a class="headerlink" href="#creating-a-video-with-opencv" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>Whenever you work with video feeds you may eventually want to save your image processing result in a form of a new video file. For simple video outputs you can use the OpenCV built-in <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videowriter-videowriter">VideoWriter</a> class, designed for this.</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>How to create a video file with OpenCV</li>
+<li>What type of video files you can create with OpenCV</li>
+<li>How to extract a given color channel from a video</li>
+</ul>
+</div>
+<p>As a simple demonstration I&#8217;ll just extract one of the BGR color channels of an input video file into a new video. You can control the flow of the application from its console line arguments:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>The first argument points to the video file to work on</li>
+<li>The second argument may be one of the characters: R G B. This will specify which of the channels to extract.</li>
+<li>The last argument is the character Y (Yes) or N (No). If this is no, the codec used for the input video file will be the same as for the output. Otherwise, a window will pop up and allow you to select yourself the codec to use.</li>
+</ul>
+</div>
+<p>For example, a valid command line would look like:</p>
+<div class="highlight-bash"><div class="highlight"><pre>video-write.exe video/Megamind.avi R Y
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-source-code">
+<h2>The source code<a class="headerlink" href="#the-source-code" title="Permalink to this headline">¶</a></h2>
+<p>You may also find the source code and these video file in the <code class="file docutils literal"><span class="pre">samples/cpp/tutorial_code/highgui/video-write/</span></code> folder of the OpenCV source library or <a class="reference download internal" href="../../../../_downloads/video-write.cpp" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">it</span> <span class="pre">from</span> <span class="pre">here</span></code></a>.</p>
+<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt; // for standard I/O</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;   // for strings</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;opencv2/core/core.hpp&gt;        // Basic OpenCV structures (cv::Mat)</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;  // Video write</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">help</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">cout</span>
+        <span class="o">&lt;&lt;</span> <span class="s">&quot;------------------------------------------------------------------------------&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+        <span class="o">&lt;&lt;</span> <span class="s">&quot;This program shows how to write video files.&quot;</span>                                   <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+        <span class="o">&lt;&lt;</span> <span class="s">&quot;You can extract the R or G or B color channel of the input video.&quot;</span>              <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+        <span class="o">&lt;&lt;</span> <span class="s">&quot;Usage:&quot;</span>                                                                         <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+        <span class="o">&lt;&lt;</span> <span class="s">&quot;./video-write inputvideoName [ R | G | B] [Y | N]&quot;</span>                              <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+        <span class="o">&lt;&lt;</span> <span class="s">&quot;------------------------------------------------------------------------------&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+        <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+    <span class="n">help</span><span class="p">();</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Not enough parameters&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">const</span> <span class="n">string</span> <span class="n">source</span>      <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>           <span class="c1">// the source file name</span>
+    <span class="k">const</span> <span class="kt">bool</span> <span class="n">askOutputType</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span><span class="sc">&#39;Y&#39;</span><span class="p">;</span>  <span class="c1">// If false it will use the inputs codec type</span>
+
+    <span class="n">VideoCapture</span> <span class="n">inputVideo</span><span class="p">(</span><span class="n">source</span><span class="p">);</span>              <span class="c1">// Open input</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">inputVideo</span><span class="p">.</span><span class="n">isOpened</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="n">cout</span>  <span class="o">&lt;&lt;</span> <span class="s">&quot;Could not open the input video: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">source</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">string</span><span class="o">::</span><span class="n">size_type</span> <span class="n">pAt</span> <span class="o">=</span> <span class="n">source</span><span class="p">.</span><span class="n">find_last_of</span><span class="p">(</span><span class="sc">&#39;.&#39;</span><span class="p">);</span>                  <span class="c1">// Find extension point</span>
+    <span class="k">const</span> <span class="n">string</span> <span class="n">NAME</span> <span class="o">=</span> <span class="n">source</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">pAt</span><span class="p">)</span> <span class="o">+</span> <span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;.avi&quot;</span><span class="p">;</span>   <span class="c1">// Form the new name with container</span>
+    <span class="kt">int</span> <span class="n">ex</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">inputVideo</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">CV_CAP_PROP_FOURCC</span><span class="p">));</span>     <span class="c1">// Get Codec Type- Int form</span>
+
+    <span class="c1">// Transform from int to char via Bitwise operators</span>
+    <span class="kt">char</span> <span class="n">EXT</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{(</span><span class="kt">char</span><span class="p">)(</span><span class="n">ex</span> <span class="o">&amp;</span> <span class="mi">0</span><span class="n">XFF</span><span class="p">)</span> <span class="p">,</span> <span class="p">(</span><span class="kt">char</span><span class="p">)((</span><span class="n">ex</span> <span class="o">&amp;</span> <span class="mi">0</span><span class="n">XFF00</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">),(</span><span class="kt">char</span><span class="p">)((</span><span class="n">ex</span> <span class="o">&amp;</span> <span class="mi">0</span><span class="n">XFF0000</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">),(</span><span class="kt">char</span><span class="p">)((</span><span class="n">ex</span> <span class="o">&amp;</span> <span class="mi">0</span><span class="n">XFF000000</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">24</span><span class="p">),</span> <span class="mi">0</span><span class="p">};</span>
+
+    <span class="n">Size</span> <span class="n">S</span> <span class="o">=</span> <span class="n">Size</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">inputVideo</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">CV_CAP_PROP_FRAME_WIDTH</span><span class="p">),</span>    <span class="c1">// Acquire input size</span>
+                  <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">inputVideo</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">CV_CAP_PROP_FRAME_HEIGHT</span><span class="p">));</span>
+
+    <span class="n">VideoWriter</span> <span class="n">outputVideo</span><span class="p">;</span>                                        <span class="c1">// Open the output</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">askOutputType</span><span class="p">)</span>
+        <span class="n">outputVideo</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="n">ex</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">inputVideo</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">CV_CAP_PROP_FPS</span><span class="p">),</span> <span class="n">S</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+    <span class="k">else</span>
+        <span class="n">outputVideo</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="n">ex</span><span class="p">,</span> <span class="n">inputVideo</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">CV_CAP_PROP_FPS</span><span class="p">),</span> <span class="n">S</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">outputVideo</span><span class="p">.</span><span class="n">isOpened</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="n">cout</span>  <span class="o">&lt;&lt;</span> <span class="s">&quot;Could not open the output video for write: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">source</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Input frame resolution: Width=&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">S</span><span class="p">.</span><span class="n">width</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;  Height=&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">S</span><span class="p">.</span><span class="n">height</span>
+         <span class="o">&lt;&lt;</span> <span class="s">&quot; of nr#: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">inputVideo</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">CV_CAP_PROP_FRAME_COUNT</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Input codec type: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">EXT</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="n">channel</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">// Select the channel to save</span>
+    <span class="k">switch</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+    <span class="p">{</span>
+    <span class="k">case</span> <span class="sc">&#39;R&#39;</span> <span class="o">:</span> <span class="n">channel</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="sc">&#39;G&#39;</span> <span class="o">:</span> <span class="n">channel</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="sc">&#39;B&#39;</span> <span class="o">:</span> <span class="n">channel</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">res</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;</span> <span class="n">spl</span><span class="p">;</span>
+
+    <span class="k">for</span><span class="p">(;;)</span> <span class="c1">//Show the image captured in the window and repeat</span>
+    <span class="p">{</span>
+        <span class="n">inputVideo</span> <span class="o">&gt;&gt;</span> <span class="n">src</span><span class="p">;</span>              <span class="c1">// read</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">src</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="k">break</span><span class="p">;</span>         <span class="c1">// check if at end</span>
+
+        <span class="n">split</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">spl</span><span class="p">);</span>                <span class="c1">// process - extract only the correct channel</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">channel</span><span class="p">)</span>
+                <span class="n">spl</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">spl</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">type</span><span class="p">());</span>
+       <span class="n">merge</span><span class="p">(</span><span class="n">spl</span><span class="p">,</span> <span class="n">res</span><span class="p">);</span>
+
+       <span class="c1">//outputVideo.write(res); //save or</span>
+       <span class="n">outputVideo</span> <span class="o">&lt;&lt;</span> <span class="n">res</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Finished writing&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="the-structure-of-a-video">
+<h2>The structure of a video<a class="headerlink" href="#the-structure-of-a-video" title="Permalink to this headline">¶</a></h2>
+<p>For start, you should have an idea of just how a video file looks. Every video file in itself is a container. The type of the container is expressed in the files extension (for example <em>avi</em>, <em>mov</em> or <em>mkv</em>). This contains multiple elements like: video feeds, audio feeds or other tracks (like for example subtitles). How these feeds are stored is determined by the codec used for each one of them. In case of the audio tracks commonly used codecs are <em>mp3</em> or <em>aac</em>. For the video files the list is somehow longer and includes names such as <em>XVID</em>, <em>DIVX</em>, <em>H264</em> or <em>LAGS</em> (<em>Lagarith Lossless Codec</em>). The full list of codecs you may use on a system depends on just what one you have installed.</p>
+<img alt="The Structure of the video" class="align-center" src="../../../../_images/videoFileStructure.png" />
+<p>As you can see things can get really complicated with videos. However, OpenCV is mainly a computer vision library, not a video stream, codec and write one. Therefore, the developers tried to keep this part as simple as possible. Due to this OpenCV for video containers supports only the <em>avi</em> extension, its first version. A direct limitation of this is that you cannot save a video file larger than 2 GB. Furthermore you can only create and expand a single video track inside the container. No audio or other track editing support here. Nevertheless, any video codec present on your system might work. If you encounter some of these limitations you will need to look into more specialized video writing libraries such as <em>FFMpeg</em> or codecs as <em>HuffYUV</em>, <em>CorePNG</em> and <em>LCL</em>. As an alternative, create the video track with OpenCV and expand it with sound tracks or convert it to other formats by using video manipulation programs such as <em>VirtualDub</em> or <em>AviSynth</em>.
+The <em>VideoWriter</em> class
+=======================
+The content written here builds on the assumption you already read the <a class="reference internal" href="../video-input-psnr-ssim/video-input-psnr-ssim.html#videoinputpsnrmssim"><span>Video Input with OpenCV and similarity measurement</span></a> tutorial and you know how to read video files.
+To create a video file you just need to create an instance of the <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videowriter-videowriter">VideoWriter</a> class. You can specify its properties either via parameters in the constructor or later on via the <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videowriter-open">open</a> function. Either way, the parameters are the same:
+1. The name of the output that contains the container type in its extension. At the moment only <em>avi</em> is supported. We construct this from the input file, add to this the name of the channel to use, and finish it off with the container extension.</p>
+<blockquote>
+<div><div class="highlight-cpp"><div class="highlight"><pre><span class="k">const</span> <span class="n">string</span> <span class="n">source</span>      <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>            <span class="c1">// the source file name</span>
+<span class="n">string</span><span class="o">::</span><span class="n">size_type</span> <span class="n">pAt</span> <span class="o">=</span> <span class="n">source</span><span class="p">.</span><span class="n">find_last_of</span><span class="p">(</span><span class="sc">&#39;.&#39;</span><span class="p">);</span>   <span class="c1">// Find extension point</span>
+<span class="k">const</span> <span class="n">string</span> <span class="n">NAME</span> <span class="o">=</span> <span class="n">source</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">pAt</span><span class="p">)</span> <span class="o">+</span> <span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;.avi&quot;</span><span class="p">;</span>   <span class="c1">// Form the new name with container</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic">
+<li><p class="first">The codec to use for the video track. Now all the video codecs have a unique short name of maximum four characters. Hence, the <em>XVID</em>, <em>DIVX</em> or <em>H264</em> names. This is called a four character code. You may also ask this from an input video by using its <em>get</em> function. Because the <em>get</em> function is a general function it always returns double values. A double value is stored on 64 bits. Four characters are four bytes, meaning 32 bits. These four characters are coded in the lower 32 bits of the <em>double</em>. A simple way to throw away the upper 32 bits would be to just convert this value to <em>int</em>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">VideoCapture</span> <span class="nf">inputVideo</span><span class="p">(</span><span class="n">source</span><span class="p">);</span>                                   <span class="c1">// Open input</span>
+<span class="kt">int</span> <span class="n">ex</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">inputVideo</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">CV_CAP_PROP_FOURCC</span><span class="p">));</span>     <span class="c1">// Get Codec Type- Int form</span>
+</pre></div>
+</div>
+<p>OpenCV internally works with this integer type and expect this as its second parameter. Now to convert from the integer form to string we may use two methods: a bitwise operator and a union method. The first one extracting from an int the characters looks like (an &#8220;and&#8221; operation, some shifting and adding a 0 at the end to close the string):</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">char</span> <span class="n">EXT</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="n">ex</span> <span class="o">&amp;</span> <span class="mi">0</span><span class="n">XFF</span> <span class="p">,</span> <span class="p">(</span><span class="n">ex</span> <span class="o">&amp;</span> <span class="mi">0</span><span class="n">XFF00</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">,(</span><span class="n">ex</span> <span class="o">&amp;</span> <span class="mi">0</span><span class="n">XFF0000</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">,(</span><span class="n">ex</span> <span class="o">&amp;</span> <span class="mi">0</span><span class="n">XFF000000</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>You can do the same thing with the <em>union</em> as:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">union</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">v</span><span class="p">;</span> <span class="kt">char</span> <span class="n">c</span><span class="p">[</span><span class="mi">5</span><span class="p">];}</span> <span class="n">uEx</span> <span class="p">;</span>
+<span class="n">uEx</span><span class="p">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">ex</span><span class="p">;</span>                              <span class="c1">// From Int to char via union</span>
+<span class="n">uEx</span><span class="p">.</span><span class="n">c</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">=</span><span class="sc">&#39;\0&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The advantage of this is that the conversion is done automatically after assigning, while for the bitwise operator you need to do the operations whenever you change the codec type. In case you know the codecs four character code beforehand, you can use the <em>CV_FOURCC</em> macro to build the integer:</p>
+<p>If you pass for this argument minus one than a window will pop up at runtime that contains all the codec installed on your system and ask you to select the one to use:</p>
+<img alt="Select the codec type to use" class="align-center" src="../../../../_images/videoCompressSelect.png" />
+</li>
+<li><p class="first">The frame per second for the output video. Again, here I keep the input videos frame per second by using the <em>get</em> function.</p>
+</li>
+<li><p class="first">The size of the frames for the output video. Here too I keep the input videos frame size per second by using the <em>get</em> function.</p>
+</li>
+<li><p class="first">The final argument is an optional one. By default is true and says that the output will be a colorful one (so for write you will send three channel images). To create a gray scale video pass a false parameter here.</p>
+</li>
+</ol>
+<p>Here it is, how I use it in the sample:</p>
+<blockquote>
+<div><div class="highlight-cpp"><div class="highlight"><pre><span class="n">VideoWriter</span> <span class="n">outputVideo</span><span class="p">;</span>
+<span class="n">Size</span> <span class="n">S</span> <span class="o">=</span> <span class="n">Size</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">inputVideo</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">CV_CAP_PROP_FRAME_WIDTH</span><span class="p">),</span>    <span class="c1">//Acquire input size</span>
+              <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">inputVideo</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">CV_CAP_PROP_FRAME_HEIGHT</span><span class="p">));</span>
+<span class="n">outputVideo</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">NAME</span> <span class="p">,</span> <span class="n">ex</span><span class="p">,</span> <span class="n">inputVideo</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">CV_CAP_PROP_FPS</span><span class="p">),</span><span class="n">S</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Afterwards, you use the <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videowriter-isopened">isOpened()</a> function to find out if the open operation succeeded or not. The video file automatically closes when the <em>VideoWriter</em> object is destroyed. After you open the object with success you can send the frames of the video in a sequential order by using the <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videowriter-write">write</a> function of the class. Alternatively, you can use its overloaded operator &lt;&lt; :</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">outputVideo</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">res</span><span class="p">);</span>  <span class="c1">//or</span>
+<span class="n">outputVideo</span> <span class="o">&lt;&lt;</span> <span class="n">res</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Extracting a color channel from an BGR image means to set to zero the BGR values of the other channels. You can either do this with image scanning operations or by using the split and merge operations. You first split the channels up into different images, set the other channels to zero images of the same size and type and finally merge them back:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">split</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">spl</span><span class="p">);</span>                 <span class="c1">// process - extract only the correct channel</span>
+<span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+   <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">channel</span><span class="p">)</span>
+      <span class="n">spl</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">spl</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">type</span><span class="p">());</span>
+<span class="n">merge</span><span class="p">(</span><span class="n">spl</span><span class="p">,</span> <span class="n">res</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Put all this together and you&#8217;ll get the upper source code, whose runtime result will show something around the idea:</p>
+<img alt="A sample output" class="align-center" src="../../../../_images/resultOutputWideoWrite.png" />
+<p>You may observe a runtime instance of this on the <a class="reference external" href="https://www.youtube.com/watch?v=jpBwHxsl1_0">YouTube here</a>.</p>
+<div align="center">
+<iframe title="Creating a video with OpenCV" width="560" height="349" src="https://www.youtube.com/embed/jpBwHxsl1_0?rel=0&loop=1" frameborder="0" allowfullscreen align="middle"></iframe>
+</div></div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Creating a video with OpenCV</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#the-source-code">The source code</a></li>
+<li><a class="reference internal" href="#the-structure-of-a-video">The structure of a video</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../video-input-psnr-ssim/video-input-psnr-ssim.html"
+                        title="previous chapter">Video Input with OpenCV and similarity measurement</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../calib3d/table_of_content_calib3d/table_of_content_calib3d.html"
+                        title="next chapter"><em>calib3d</em> module. Camera calibration and 3D reconstruction</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/highgui/video-write/video-write.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../calib3d/table_of_content_calib3d/table_of_content_calib3d.html" title="calib3d module. Camera calibration and 3D reconstruction"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../video-input-psnr-ssim/video-input-psnr-ssim.html" title="Video Input with OpenCV and similarity measurement"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_highgui/table_of_content_highgui.html" ><em>highgui</em> module. High Level GUI and Media</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

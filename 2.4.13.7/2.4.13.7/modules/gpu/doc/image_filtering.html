@@ -1,0 +1,1123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Image Filtering &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="gpu. GPU-accelerated Computer Vision" href="gpu.html" />
+    <link rel="next" title="Camera Calibration and 3D Reconstruction" href="camera_calibration_and_3d_reconstruction.html" />
+    <link rel="prev" title="Feature Detection and Description" href="feature_detection_and_description.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="camera_calibration_and_3d_reconstruction.html" title="Camera Calibration and 3D Reconstruction"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="feature_detection_and_description.html" title="Feature Detection and Description"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="gpu.html" accesskey="U">gpu. GPU-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="image-filtering">
+<h1>Image Filtering<a class="headerlink" href="#image-filtering" title="Permalink to this headline">¶</a></h1>
+<p>Functions and classes described in this section are used to perform various linear or non-linear filtering operations on 2D images.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example containing all basic morphology operators like erode and dilate can be found at opencv_source_code/samples/gpu/morphology.cpp</li>
+</ul>
+</div>
+<div class="section" id="gpu-baserowfilter-gpu">
+<h2>gpu::BaseRowFilter_GPU<a class="headerlink" href="#gpu-baserowfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::BaseRowFilter_GPU">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">BaseRowFilter_GPU</code><a class="headerlink" href="#gpu::BaseRowFilter_GPU" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for linear or non-linear filters that processes rows of 2D arrays. Such filters are used for the &#8220;horizontal&#8221; filtering passes in separable filters.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">BaseRowFilter_GPU</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">BaseRowFilter_GPU</span><span class="p">(</span><span class="kt">int</span> <span class="n">ksize_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">anchor_</span><span class="p">);</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">BaseRowFilter_GPU</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">src</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">dst</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">())</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">ksize</span><span class="p">,</span> <span class="n">anchor</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This class does not allocate memory for a destination image. Usually this class is used inside <a class="reference internal" href="#gpu::FilterEngine_GPU" title="class gpu::FilterEngine_GPU"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::FilterEngine_GPU</span></code></a>.</p>
+</div>
+</div>
+<div class="section" id="gpu-basecolumnfilter-gpu">
+<h2>gpu::BaseColumnFilter_GPU<a class="headerlink" href="#gpu-basecolumnfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::BaseColumnFilter_GPU">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">BaseColumnFilter_GPU</code><a class="headerlink" href="#gpu::BaseColumnFilter_GPU" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for linear or non-linear filters that processes columns of 2D arrays. Such filters are used for the &#8220;vertical&#8221; filtering passes in separable filters.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">BaseColumnFilter_GPU</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">BaseColumnFilter_GPU</span><span class="p">(</span><span class="kt">int</span> <span class="n">ksize_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">anchor_</span><span class="p">);</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">BaseColumnFilter_GPU</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">src</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">dst</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">())</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">ksize</span><span class="p">,</span> <span class="n">anchor</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This class does not allocate memory for a destination image. Usually this class is used inside <a class="reference internal" href="#gpu::FilterEngine_GPU" title="class gpu::FilterEngine_GPU"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::FilterEngine_GPU</span></code></a>.</p>
+</div>
+</div>
+<div class="section" id="gpu-basefilter-gpu">
+<h2>gpu::BaseFilter_GPU<a class="headerlink" href="#gpu-basefilter-gpu" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::BaseFilter_GPU">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">BaseFilter_GPU</code><a class="headerlink" href="#gpu::BaseFilter_GPU" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for non-separable 2D filters.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">BaseFilter_GPU</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">BaseFilter_GPU</span><span class="p">(</span><span class="k">const</span> <span class="n">Size</span><span class="o">&amp;</span> <span class="n">ksize_</span><span class="p">,</span> <span class="k">const</span> <span class="n">Point</span><span class="o">&amp;</span> <span class="n">anchor_</span><span class="p">);</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">BaseFilter_GPU</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">src</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">dst</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">())</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">Size</span> <span class="n">ksize</span><span class="p">;</span>
+    <span class="n">Point</span> <span class="n">anchor</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This class does not allocate memory for a destination image. Usually this class is used inside <a class="reference internal" href="#gpu::FilterEngine_GPU" title="class gpu::FilterEngine_GPU"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::FilterEngine_GPU</span></code></a>.</p>
+</div>
+</div>
+<div class="section" id="gpu-filterengine-gpu">
+<h2>gpu::FilterEngine_GPU<a class="headerlink" href="#gpu-filterengine-gpu" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::FilterEngine_GPU">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">FilterEngine_GPU</code><a class="headerlink" href="#gpu::FilterEngine_GPU" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for the Filter Engine.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">FilterEngine_GPU</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">FilterEngine_GPU</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">apply</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">src</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">dst</span><span class="p">,</span>
+                       <span class="n">Rect</span> <span class="n">roi</span> <span class="o">=</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">())</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class can be used to apply an arbitrary filtering operation to an image. It contains all the necessary intermediate buffers. Pointers to the initialized <code class="docutils literal"><span class="pre">FilterEngine_GPU</span></code> instances are returned by various <code class="docutils literal"><span class="pre">create*Filter_GPU</span></code> functions (see below), and they are used inside high-level functions such as <a class="reference internal" href="#void gpu::filter2D(const GpuMat&amp; src, GpuMat&amp; dst, int ddepth, const Mat&amp; kernel, Point anchor, int borderType , Stream&amp; stream)" title="void gpu::filter2D(const GpuMat&amp; src, GpuMat&amp; dst, int ddepth, const Mat&amp; kernel, Point anchor, int borderType , Stream&amp; stream)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::filter2D()</span></code></a>, <a class="reference internal" href="#void gpu::erode(const GpuMat&amp; src, GpuMat&amp; dst, const Mat&amp; kernel, Point anchor, int iterations)" title="void gpu::erode(const GpuMat&amp; src, GpuMat&amp; dst, const Mat&amp; kernel, Point anchor, int iterations)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::erode()</span></code></a>, <a class="reference internal" href="#void gpu::Sobel(const GpuMat&amp; src, GpuMat&amp; dst, int ddepth, int dx, int dy, int ksize, double scale, int rowBorderType, int columnBorderType)" title="void gpu::Sobel(const GpuMat&amp; src, GpuMat&amp; dst, int ddepth, int dx, int dy, int ksize, double scale, int rowBorderType, int columnBorderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::Sobel()</span></code></a> , and others.</p>
+<p>By using <code class="docutils literal"><span class="pre">FilterEngine_GPU</span></code> instead of functions you can avoid unnecessary memory allocation for intermediate buffers and get better performance:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">while</span> <span class="p">(...)</span>
+<span class="p">{</span>
+    <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">src</span> <span class="o">=</span> <span class="n">getImg</span><span class="p">();</span>
+    <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">dst</span><span class="p">;</span>
+    <span class="c1">// Allocate and release buffers at each iterations</span>
+    <span class="n">gpu</span><span class="o">::</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">ksize</span><span class="p">,</span> <span class="n">sigma1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Allocate buffers only once</span>
+<span class="n">cv</span><span class="o">::</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">gpu</span><span class="o">::</span><span class="n">FilterEngine_GPU</span><span class="o">&gt;</span> <span class="n">filter</span> <span class="o">=</span>
+    <span class="n">gpu</span><span class="o">::</span><span class="n">createGaussianFilter_GPU</span><span class="p">(</span><span class="n">CV_8UC4</span><span class="p">,</span> <span class="n">ksize</span><span class="p">,</span> <span class="n">sigma1</span><span class="p">);</span>
+<span class="k">while</span> <span class="p">(...)</span>
+<span class="p">{</span>
+    <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">src</span> <span class="o">=</span> <span class="n">getImg</span><span class="p">();</span>
+    <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">dst</span><span class="p">;</span>
+    <span class="n">filter</span><span class="o">-&gt;</span><span class="n">apply</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">cv</span><span class="o">::</span><span class="n">Rect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="c1">// Release buffers only once</span>
+<span class="n">filter</span><span class="p">.</span><span class="n">release</span><span class="p">();</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">FilterEngine_GPU</span></code> can process a rectangular sub-region of an image. By default, if <code class="docutils literal"><span class="pre">roi</span> <span class="pre">==</span> <span class="pre">Rect(0,0,-1,-1)</span></code> , <code class="docutils literal"><span class="pre">FilterEngine_GPU</span></code> processes the inner region of an image ( <code class="docutils literal"><span class="pre">Rect(anchor.x,</span> <span class="pre">anchor.y,</span> <span class="pre">src_size.width</span> <span class="pre">-</span> <span class="pre">ksize.width,</span> <span class="pre">src_size.height</span> <span class="pre">-</span> <span class="pre">ksize.height)</span></code> ) because some filters do not check whether indices are outside the image for better performance. See below to understand which filters support processing the whole image and which do not and identify image type limitations.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The GPU filters do not support the in-place mode.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#gpu::BaseRowFilter_GPU" title="class gpu::BaseRowFilter_GPU"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::BaseRowFilter_GPU</span></code></a>, <a class="reference internal" href="#gpu::BaseColumnFilter_GPU" title="class gpu::BaseColumnFilter_GPU"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::BaseColumnFilter_GPU</span></code></a>, <a class="reference internal" href="#gpu::BaseFilter_GPU" title="class gpu::BaseFilter_GPU"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::BaseFilter_GPU</span></code></a>, <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; gpu::createFilter2D_GPU(const Ptr&lt;BaseFilter_GPU&gt;&amp; filter2D, int srcType, int dstType)" title="Ptr&lt;FilterEngine_GPU&gt; gpu::createFilter2D_GPU(const Ptr&lt;BaseFilter_GPU&gt;&amp; filter2D, int srcType, int dstType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::createFilter2D_GPU()</span></code></a>, <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; gpu::createSeparableFilter_GPU(const Ptr&lt;BaseRowFilter_GPU&gt;&amp; rowFilter, const Ptr&lt;BaseColumnFilter_GPU&gt;&amp; columnFilter, int srcType, int bufType, int dstType)" title="Ptr&lt;FilterEngine_GPU&gt; gpu::createSeparableFilter_GPU(const Ptr&lt;BaseRowFilter_GPU&gt;&amp; rowFilter, const Ptr&lt;BaseColumnFilter_GPU&gt;&amp; columnFilter, int srcType, int bufType, int dstType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::createSeparableFilter_GPU()</span></code></a>, <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; gpu::createBoxFilter_GPU(int srcType, int dstType, const Size&amp; ksize, const Point&amp; anchor)" title="Ptr&lt;FilterEngine_GPU&gt; gpu::createBoxFilter_GPU(int srcType, int dstType, const Size&amp; ksize, const Point&amp; anchor)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::createBoxFilter_GPU()</span></code></a>, <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; gpu::createMorphologyFilter_GPU(int op, int type, const Mat&amp; kernel, const Point&amp; anchor , int iterations)" title="Ptr&lt;FilterEngine_GPU&gt; gpu::createMorphologyFilter_GPU(int op, int type, const Mat&amp; kernel, const Point&amp; anchor , int iterations)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::createMorphologyFilter_GPU()</span></code></a>, <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; gpu::createLinearFilter_GPU(int srcType, int dstType, const Mat&amp; kernel, Point anchor , int borderType)" title="Ptr&lt;FilterEngine_GPU&gt; gpu::createLinearFilter_GPU(int srcType, int dstType, const Mat&amp; kernel, Point anchor , int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::createLinearFilter_GPU()</span></code></a>, <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; gpu::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat&amp; rowKernel, const Mat&amp; columnKernel, const Point&amp; anchor , int rowBorderType , int columnBorderType)" title="Ptr&lt;FilterEngine_GPU&gt; gpu::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat&amp; rowKernel, const Mat&amp; columnKernel, const Point&amp; anchor , int rowBorderType , int columnBorderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::createSeparableLinearFilter_GPU()</span></code></a>, <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; gpu::createDerivFilter_GPU(int srcType, int dstType, int dx, int dy, int ksize, int rowBorderType , int columnBorderType)" title="Ptr&lt;FilterEngine_GPU&gt; gpu::createDerivFilter_GPU(int srcType, int dstType, int dx, int dy, int ksize, int rowBorderType , int columnBorderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::createDerivFilter_GPU()</span></code></a>, <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; gpu::createGaussianFilter_GPU(int type, Size ksize, double sigma1, double sigma2, int rowBorderType, int columnBorderType)" title="Ptr&lt;FilterEngine_GPU&gt; gpu::createGaussianFilter_GPU(int type, Size ksize, double sigma1, double sigma2, int rowBorderType, int columnBorderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::createGaussianFilter_GPU()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-createfilter2d-gpu">
+<h2>gpu::createFilter2D_GPU<a class="headerlink" href="#gpu-createfilter2d-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a non-separable filter engine with the specified filter.</p>
+<dl class="function">
+<dt id="Ptr&lt;FilterEngine_GPU&gt; gpu::createFilter2D_GPU(const Ptr&lt;BaseFilter_GPU&gt;&amp; filter2D, int srcType, int dstType)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FilterEngine_GPU&gt; <code class="descclassname">gpu::</code><code class="descname">createFilter2D_GPU</code><span class="sig-paren">(</span>const Ptr&lt;BaseFilter_GPU&gt;&amp; <strong>filter2D</strong>, int <strong>srcType</strong>, int <strong>dstType</strong><span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FilterEngine_GPU> gpu::createFilter2D_GPU(const Ptr<BaseFilter_GPU>& filter2D, int srcType, int dstType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filter2D</strong> &#8211; Non-separable 2D filter.</li>
+<li><strong>srcType</strong> &#8211; Input image type. It must be supported by  <code class="docutils literal"><span class="pre">filter2D</span></code> .</li>
+<li><strong>dstType</strong> &#8211; Output image type. It must be supported by  <code class="docutils literal"><span class="pre">filter2D</span></code> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Usually this function is used inside such high-level functions as <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; gpu::createLinearFilter_GPU(int srcType, int dstType, const Mat&amp; kernel, Point anchor , int borderType)" title="Ptr&lt;FilterEngine_GPU&gt; gpu::createLinearFilter_GPU(int srcType, int dstType, const Mat&amp; kernel, Point anchor , int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::createLinearFilter_GPU()</span></code></a>, <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; gpu::createBoxFilter_GPU(int srcType, int dstType, const Size&amp; ksize, const Point&amp; anchor)" title="Ptr&lt;FilterEngine_GPU&gt; gpu::createBoxFilter_GPU(int srcType, int dstType, const Size&amp; ksize, const Point&amp; anchor)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::createBoxFilter_GPU()</span></code></a>.</p>
+</div>
+<div class="section" id="gpu-createseparablefilter-gpu">
+<h2>gpu::createSeparableFilter_GPU<a class="headerlink" href="#gpu-createseparablefilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a separable filter engine with the specified filters.</p>
+<dl class="function">
+<dt id="Ptr&lt;FilterEngine_GPU&gt; gpu::createSeparableFilter_GPU(const Ptr&lt;BaseRowFilter_GPU&gt;&amp; rowFilter, const Ptr&lt;BaseColumnFilter_GPU&gt;&amp; columnFilter, int srcType, int bufType, int dstType)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FilterEngine_GPU&gt; <code class="descclassname">gpu::</code><code class="descname">createSeparableFilter_GPU</code><span class="sig-paren">(</span>const Ptr&lt;BaseRowFilter_GPU&gt;&amp; <strong>rowFilter</strong>, const Ptr&lt;BaseColumnFilter_GPU&gt;&amp; <strong>columnFilter</strong>, int <strong>srcType</strong>, int <strong>bufType</strong>, int <strong>dstType</strong><span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FilterEngine_GPU> gpu::createSeparableFilter_GPU(const Ptr<BaseRowFilter_GPU>& rowFilter, const Ptr<BaseColumnFilter_GPU>& columnFilter, int srcType, int bufType, int dstType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>rowFilter</strong> &#8211; &#8220;Horizontal&#8221; 1D filter.</li>
+<li><strong>columnFilter</strong> &#8211; &#8220;Vertical&#8221; 1D filter.</li>
+<li><strong>srcType</strong> &#8211; Input image type. It must be supported by  <code class="docutils literal"><span class="pre">rowFilter</span></code> .</li>
+<li><strong>bufType</strong> &#8211; Buffer image type. It must be supported by  <code class="docutils literal"><span class="pre">rowFilter</span></code>  and  <code class="docutils literal"><span class="pre">columnFilter</span></code> .</li>
+<li><strong>dstType</strong> &#8211; Output image type. It must be supported by  <code class="docutils literal"><span class="pre">columnFilter</span></code> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Usually this function is used inside such high-level functions as <a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; gpu::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat&amp; rowKernel, const Mat&amp; columnKernel, const Point&amp; anchor , int rowBorderType , int columnBorderType)" title="Ptr&lt;FilterEngine_GPU&gt; gpu::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat&amp; rowKernel, const Mat&amp; columnKernel, const Point&amp; anchor , int rowBorderType , int columnBorderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::createSeparableLinearFilter_GPU()</span></code></a>.</p>
+</div>
+<div class="section" id="gpu-getrowsumfilter-gpu">
+<h2>gpu::getRowSumFilter_GPU<a class="headerlink" href="#gpu-getrowsumfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a horizontal 1D box filter.</p>
+<dl class="function">
+<dt id="Ptr&lt;BaseRowFilter_GPU&gt; gpu::getRowSumFilter_GPU(int srcType, int sumType, int ksize, int anchor)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;BaseRowFilter_GPU&gt; <code class="descclassname">gpu::</code><code class="descname">getRowSumFilter_GPU</code><span class="sig-paren">(</span>int <strong>srcType</strong>, int <strong>sumType</strong>, int <strong>ksize</strong>, int <strong>anchor</strong>=-1<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<BaseRowFilter_GPU> gpu::getRowSumFilter_GPU(int srcType, int sumType, int ksize, int anchor)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>srcType</strong> &#8211; Input image type. Only <code class="docutils literal"><span class="pre">CV_8UC1</span></code> type is supported for now.</li>
+<li><strong>sumType</strong> &#8211; Output image type. Only <code class="docutils literal"><span class="pre">CV_32FC1</span></code> type is supported for now.</li>
+<li><strong>ksize</strong> &#8211; Kernel size.</li>
+<li><strong>anchor</strong> &#8211; Anchor point. The default value (-1) means that the anchor is at the kernel center.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This filter does not check out-of-border accesses, so only a proper sub-matrix of a bigger matrix has to be passed to it.</p>
+</div>
+</div>
+<div class="section" id="gpu-getcolumnsumfilter-gpu">
+<h2>gpu::getColumnSumFilter_GPU<a class="headerlink" href="#gpu-getcolumnsumfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a vertical 1D box filter.</p>
+<dl class="function">
+<dt id="Ptr&lt;BaseColumnFilter_GPU&gt; gpu::getColumnSumFilter_GPU(int sumType, int dstType, int ksize, int anchor)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;BaseColumnFilter_GPU&gt; <code class="descclassname">gpu::</code><code class="descname">getColumnSumFilter_GPU</code><span class="sig-paren">(</span>int <strong>sumType</strong>, int <strong>dstType</strong>, int <strong>ksize</strong>, int <strong>anchor</strong>=-1<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<BaseColumnFilter_GPU> gpu::getColumnSumFilter_GPU(int sumType, int dstType, int ksize, int anchor)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sumType</strong> &#8211; Input image type. Only <code class="docutils literal"><span class="pre">CV_8UC1</span></code> type is supported for now.</li>
+<li><strong>dstType</strong> &#8211; Output image type. Only <code class="docutils literal"><span class="pre">CV_32FC1</span></code> type is supported for now.</li>
+<li><strong>ksize</strong> &#8211; Kernel size.</li>
+<li><strong>anchor</strong> &#8211; Anchor point. The default value (-1) means that the anchor is at the kernel center.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This filter does not check out-of-border accesses, so only a proper sub-matrix of a bigger matrix has to be passed to it.</p>
+</div>
+</div>
+<div class="section" id="gpu-createboxfilter-gpu">
+<h2>gpu::createBoxFilter_GPU<a class="headerlink" href="#gpu-createboxfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a normalized 2D box filter.</p>
+<dl class="function">
+<dt id="Ptr&lt;FilterEngine_GPU&gt; gpu::createBoxFilter_GPU(int srcType, int dstType, const Size&amp; ksize, const Point&amp; anchor)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FilterEngine_GPU&gt; <code class="descclassname">gpu::</code><code class="descname">createBoxFilter_GPU</code><span class="sig-paren">(</span>int <strong>srcType</strong>, int <strong>dstType</strong>, const Size&amp; <strong>ksize</strong>, const Point&amp; <strong>anchor</strong>=Point(-1,-1)<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FilterEngine_GPU> gpu::createBoxFilter_GPU(int srcType, int dstType, const Size& ksize, const Point& anchor)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Ptr&lt;BaseFilter_GPU&gt; gpu::getBoxFilter_GPU(int srcType, int dstType, const Size&amp; ksize, Point anchor)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;BaseFilter_GPU&gt; <code class="descclassname">gpu::</code><code class="descname">getBoxFilter_GPU</code><span class="sig-paren">(</span>int <strong>srcType</strong>, int <strong>dstType</strong>, const Size&amp; <strong>ksize</strong>, Point <strong>anchor</strong>=Point(-1, -1)<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<BaseFilter_GPU> gpu::getBoxFilter_GPU(int srcType, int dstType, const Size& ksize, Point anchor)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>srcType</strong> &#8211; Input image type supporting <code class="docutils literal"><span class="pre">CV_8UC1</span></code> and <code class="docutils literal"><span class="pre">CV_8UC4</span></code> .</li>
+<li><strong>dstType</strong> &#8211; Output image type.  It supports only the same values as the source type.</li>
+<li><strong>ksize</strong> &#8211; Kernel size.</li>
+<li><strong>anchor</strong> &#8211; Anchor point. The default value <code class="docutils literal"><span class="pre">Point(-1,</span> <span class="pre">-1)</span></code> means that the anchor is at the kernel center.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This filter does not check out-of-border accesses, so only a proper sub-matrix of a bigger matrix has to be passed to it.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#void boxFilter(InputArray src, OutputArray dst, int ddepth, Size ksize, Point anchor, bool normalize, int borderType)" title="void boxFilter(InputArray src, OutputArray dst, int ddepth, Size ksize, Point anchor, bool normalize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">boxFilter()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-boxfilter">
+<h2>gpu::boxFilter<a class="headerlink" href="#gpu-boxfilter" title="Permalink to this headline">¶</a></h2>
+<p>Smooths the image using the normalized box filter.</p>
+<dl class="function">
+<dt id="void gpu::boxFilter(const GpuMat&amp; src, GpuMat&amp; dst, int ddepth, Size ksize, Point anchor , Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">boxFilter</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>ddepth</strong>, Size <strong>ksize</strong>, Point <strong>anchor</strong>=Point(-1,-1), Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::boxFilter(const GpuMat& src, GpuMat& dst, int ddepth, Size ksize, Point anchor , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input image. <code class="docutils literal"><span class="pre">CV_8UC1</span></code> and <code class="docutils literal"><span class="pre">CV_8UC4</span></code> source types are supported.</li>
+<li><strong>dst</strong> &#8211; Output image type. The size and type is the same as <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>ddepth</strong> &#8211; Output image depth. If -1, the output image has the same depth as the input one. The only values allowed here are <code class="docutils literal"><span class="pre">CV_8U</span></code> and -1.</li>
+<li><strong>ksize</strong> &#8211; Kernel size.</li>
+<li><strong>anchor</strong> &#8211; Anchor point. The default value <code class="docutils literal"><span class="pre">Point(-1,</span> <span class="pre">-1)</span></code> means that the anchor is at the kernel center.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This filter does not check out-of-border accesses, so only a proper sub-matrix of a bigger matrix has to be passed to it.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#void boxFilter(InputArray src, OutputArray dst, int ddepth, Size ksize, Point anchor, bool normalize, int borderType)" title="void boxFilter(InputArray src, OutputArray dst, int ddepth, Size ksize, Point anchor, bool normalize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">boxFilter()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-blur">
+<h2>gpu::blur<a class="headerlink" href="#gpu-blur" title="Permalink to this headline">¶</a></h2>
+<p>Acts as a synonym for the normalized box filter.</p>
+<dl class="function">
+<dt id="void gpu::blur(const GpuMat&amp; src, GpuMat&amp; dst, Size ksize, Point anchor , Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">blur</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, Size <strong>ksize</strong>, Point <strong>anchor</strong>=Point(-1,-1), Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::blur(const GpuMat& src, GpuMat& dst, Size ksize, Point anchor , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input image.  <code class="docutils literal"><span class="pre">CV_8UC1</span></code>  and  <code class="docutils literal"><span class="pre">CV_8UC4</span></code>  source types are supported.</li>
+<li><strong>dst</strong> &#8211; Output image type with the same size and type as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>ksize</strong> &#8211; Kernel size.</li>
+<li><strong>anchor</strong> &#8211; Anchor point. The default value Point(-1, -1) means that the anchor is at the kernel center.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This filter does not check out-of-border accesses, so only a proper sub-matrix of a bigger matrix has to be passed to it.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#void blur(InputArray src, OutputArray dst, Size ksize, Point anchor, int borderType)" title="void blur(InputArray src, OutputArray dst, Size ksize, Point anchor, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">blur()</span></code></a>, <a class="reference internal" href="#void gpu::boxFilter(const GpuMat&amp; src, GpuMat&amp; dst, int ddepth, Size ksize, Point anchor , Stream&amp; stream)" title="void gpu::boxFilter(const GpuMat&amp; src, GpuMat&amp; dst, int ddepth, Size ksize, Point anchor , Stream&amp; stream)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::boxFilter()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-createmorphologyfilter-gpu">
+<h2>gpu::createMorphologyFilter_GPU<a class="headerlink" href="#gpu-createmorphologyfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a 2D morphological filter.</p>
+<dl class="function">
+<dt id="Ptr&lt;FilterEngine_GPU&gt; gpu::createMorphologyFilter_GPU(int op, int type, const Mat&amp; kernel, const Point&amp; anchor , int iterations)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FilterEngine_GPU&gt; <code class="descclassname">gpu::</code><code class="descname">createMorphologyFilter_GPU</code><span class="sig-paren">(</span>int <strong>op</strong>, int <strong>type</strong>, const Mat&amp; <strong>kernel</strong>, const Point&amp; <strong>anchor</strong>=Point(-1,-1), int <strong>iterations</strong>=1<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FilterEngine_GPU> gpu::createMorphologyFilter_GPU(int op, int type, const Mat& kernel, const Point& anchor , int iterations)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Ptr&lt;BaseFilter_GPU&gt; gpu::getMorphologyFilter_GPU(int op, int type, const Mat&amp; kernel, const Size&amp; ksize, Point anchor)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;BaseFilter_GPU&gt; <code class="descclassname">gpu::</code><code class="descname">getMorphologyFilter_GPU</code><span class="sig-paren">(</span>int <strong>op</strong>, int <strong>type</strong>, const Mat&amp; <strong>kernel</strong>, const Size&amp; <strong>ksize</strong>, Point <strong>anchor</strong>=Point(-1,-1)<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<BaseFilter_GPU> gpu::getMorphologyFilter_GPU(int op, int type, const Mat& kernel, const Size& ksize, Point anchor)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>op</strong> &#8211; Morphology operation id. Only <code class="docutils literal"><span class="pre">MORPH_ERODE</span></code> and <code class="docutils literal"><span class="pre">MORPH_DILATE</span></code> are supported.</li>
+<li><strong>type</strong> &#8211; Input/output image type. Only  <code class="docutils literal"><span class="pre">CV_8UC1</span></code>  and  <code class="docutils literal"><span class="pre">CV_8UC4</span></code>  are supported.</li>
+<li><strong>kernel</strong> &#8211; 2D 8-bit structuring element for the morphological operation.</li>
+<li><strong>ksize</strong> &#8211; Size of a horizontal or vertical structuring element used for separable morphological operations.</li>
+<li><strong>anchor</strong> &#8211; Anchor position within the structuring element. Negative values mean that the anchor is at the center.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This filter does not check out-of-border accesses, so only a proper sub-matrix of a bigger matrix has to be passed to it.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#Ptr&lt;FilterEngine&gt; createMorphologyFilter(int op, int type, InputArray kernel, Point anchor, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)" title="Ptr&lt;FilterEngine&gt; createMorphologyFilter(int op, int type, InputArray kernel, Point anchor, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createMorphologyFilter()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-erode">
+<h2>gpu::erode<a class="headerlink" href="#gpu-erode" title="Permalink to this headline">¶</a></h2>
+<p>Erodes an image by using a specific structuring element.</p>
+<dl class="function">
+<dt id="void gpu::erode(const GpuMat&amp; src, GpuMat&amp; dst, const Mat&amp; kernel, Point anchor, int iterations)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">erode</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, const Mat&amp; <strong>kernel</strong>, Point <strong>anchor</strong>=Point(-1, -1), int <strong>iterations</strong>=1 <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::erode(const GpuMat& src, GpuMat& dst, const Mat& kernel, Point anchor, int iterations)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::erode(const GpuMat&amp; src, GpuMat&amp; dst, const Mat&amp; kernel, GpuMat&amp; buf, Point anchor, int iterations, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">erode</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, const Mat&amp; <strong>kernel</strong>, GpuMat&amp; <strong>buf</strong>, Point <strong>anchor</strong>=Point(-1, -1), int <strong>iterations</strong>=1, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::erode(const GpuMat& src, GpuMat& dst, const Mat& kernel, GpuMat& buf, Point anchor, int iterations, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Only  <code class="docutils literal"><span class="pre">CV_8UC1</span></code>  and  <code class="docutils literal"><span class="pre">CV_8UC4</span></code>  types are supported.</li>
+<li><strong>dst</strong> &#8211; Destination image with the same size and type as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>kernel</strong> &#8211; Structuring element used for erosion. If  <code class="docutils literal"><span class="pre">kernel=Mat()</span></code>, a  3x3 rectangular structuring element is used.</li>
+<li><strong>anchor</strong> &#8211; Position of an anchor within the element. The default value  <code class="docutils literal"><span class="pre">(-1,</span> <span class="pre">-1)</span></code>  means that the anchor is at the element center.</li>
+<li><strong>iterations</strong> &#8211; Number of times erosion to be applied.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This filter does not check out-of-border accesses, so only a proper sub-matrix of a bigger matrix has to be passed to it.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#void erode(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)" title="void erode(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">erode()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-dilate">
+<h2>gpu::dilate<a class="headerlink" href="#gpu-dilate" title="Permalink to this headline">¶</a></h2>
+<p>Dilates an image by using a specific structuring element.</p>
+<dl class="function">
+<dt id="void gpu::dilate(const GpuMat&amp; src, GpuMat&amp; dst, const Mat&amp; kernel, Point anchor, int iterations)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">dilate</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, const Mat&amp; <strong>kernel</strong>, Point <strong>anchor</strong>=Point(-1, -1), int <strong>iterations</strong>=1 <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::dilate(const GpuMat& src, GpuMat& dst, const Mat& kernel, Point anchor, int iterations)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::dilate(const GpuMat&amp; src, GpuMat&amp; dst, const Mat&amp; kernel, GpuMat&amp; buf, Point anchor, int iterations, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">dilate</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, const Mat&amp; <strong>kernel</strong>, GpuMat&amp; <strong>buf</strong>, Point <strong>anchor</strong>=Point(-1, -1), int <strong>iterations</strong>=1, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::dilate(const GpuMat& src, GpuMat& dst, const Mat& kernel, GpuMat& buf, Point anchor, int iterations, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. <code class="docutils literal"><span class="pre">CV_8UC1</span></code> and <code class="docutils literal"><span class="pre">CV_8UC4</span></code> source types are supported.</li>
+<li><strong>dst</strong> &#8211; Destination image with the same size and type as <code class="docutils literal"><span class="pre">src</span></code>.</li>
+<li><strong>kernel</strong> &#8211; Structuring element used for dilation. If  <code class="docutils literal"><span class="pre">kernel=Mat()</span></code>, a  3x3 rectangular structuring element is used.</li>
+<li><strong>anchor</strong> &#8211; Position of an anchor within the element. The default value  <code class="docutils literal"><span class="pre">(-1,</span> <span class="pre">-1)</span></code>  means that the anchor is at the element center.</li>
+<li><strong>iterations</strong> &#8211; Number of times dilation to be applied.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This filter does not check out-of-border accesses, so only a proper sub-matrix of a bigger matrix has to be passed to it.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#void dilate(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)" title="void dilate(InputArray src, OutputArray dst, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">dilate()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-morphologyex">
+<h2>gpu::morphologyEx<a class="headerlink" href="#gpu-morphologyex" title="Permalink to this headline">¶</a></h2>
+<p>Applies an advanced morphological operation to an image.</p>
+<dl class="function">
+<dt id="void gpu::morphologyEx(const GpuMat&amp; src, GpuMat&amp; dst, int op, const Mat&amp; kernel, Point anchor, int iterations)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">morphologyEx</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>op</strong>, const Mat&amp; <strong>kernel</strong>, Point <strong>anchor</strong>=Point(-1, -1), int <strong>iterations</strong>=1 <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::morphologyEx(const GpuMat& src, GpuMat& dst, int op, const Mat& kernel, Point anchor, int iterations)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::morphologyEx(const GpuMat&amp; src, GpuMat&amp; dst, int op, const Mat&amp; kernel, GpuMat&amp; buf1, GpuMat&amp; buf2, Point anchor, int iterations, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">morphologyEx</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>op</strong>, const Mat&amp; <strong>kernel</strong>, GpuMat&amp; <strong>buf1</strong>, GpuMat&amp; <strong>buf2</strong>, Point <strong>anchor</strong>=Point(-1, -1), int <strong>iterations</strong>=1, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::morphologyEx(const GpuMat& src, GpuMat& dst, int op, const Mat& kernel, GpuMat& buf1, GpuMat& buf2, Point anchor, int iterations, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.  <code class="docutils literal"><span class="pre">CV_8UC1</span></code>  and  <code class="docutils literal"><span class="pre">CV_8UC4</span></code>  source types are supported.</li>
+<li><strong>dst</strong> &#8211; Destination image with the same size and type as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>op</strong> &#8211; <p>Type of morphological operation. The following types are possible:</p>
+<ul>
+<li><strong>MORPH_OPEN</strong> opening</li>
+<li><strong>MORPH_CLOSE</strong> closing</li>
+<li><strong>MORPH_GRADIENT</strong> morphological gradient</li>
+<li><strong>MORPH_TOPHAT</strong> &#8220;top hat&#8221;</li>
+<li><strong>MORPH_BLACKHAT</strong> &#8220;black hat&#8221;</li>
+</ul>
+</li>
+<li><strong>kernel</strong> &#8211; Structuring element.</li>
+<li><strong>anchor</strong> &#8211; Position of an anchor within the element. The default value <code class="docutils literal"><span class="pre">Point(-1,</span> <span class="pre">-1)</span></code> means that the anchor is at the element center.</li>
+<li><strong>iterations</strong> &#8211; Number of times erosion and dilation to be applied.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This filter does not check out-of-border accesses, so only a proper sub-matrix of a bigger matrix has to be passed to it.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#void morphologyEx(InputArray src, OutputArray dst, int op, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)" title="void morphologyEx(InputArray src, OutputArray dst, int op, InputArray kernel, Point anchor, int iterations, int borderType, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">morphologyEx()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-createlinearfilter-gpu">
+<h2>gpu::createLinearFilter_GPU<a class="headerlink" href="#gpu-createlinearfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a non-separable linear filter.</p>
+<dl class="function">
+<dt id="Ptr&lt;FilterEngine_GPU&gt; gpu::createLinearFilter_GPU(int srcType, int dstType, const Mat&amp; kernel, Point anchor , int borderType)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FilterEngine_GPU&gt; <code class="descclassname">gpu::</code><code class="descname">createLinearFilter_GPU</code><span class="sig-paren">(</span>int <strong>srcType</strong>, int <strong>dstType</strong>, const Mat&amp; <strong>kernel</strong>, Point <strong>anchor</strong>=Point(-1,-1), int <strong>borderType</strong>=BORDER_DEFAULT<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FilterEngine_GPU> gpu::createLinearFilter_GPU(int srcType, int dstType, const Mat& kernel, Point anchor , int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>srcType</strong> &#8211; Input image type. Supports  <code class="docutils literal"><span class="pre">CV_8U</span></code>  ,  <code class="docutils literal"><span class="pre">CV_16U</span></code>  and  <code class="docutils literal"><span class="pre">CV_32F</span></code>  one and four channel image.</li>
+<li><strong>dstType</strong> &#8211; Output image type. The same type as <code class="docutils literal"><span class="pre">src</span></code> is supported.</li>
+<li><strong>kernel</strong> &#8211; 2D array of filter coefficients. Floating-point coefficients will be converted to fixed-point representation before the actual processing. Supports size up to 16. For larger kernels use <a class="reference internal" href="image_processing.html#void gpu::convolve(const GpuMat&amp; image, const GpuMat&amp; templ, GpuMat&amp; result, bool ccorr)" title="void gpu::convolve(const GpuMat&amp; image, const GpuMat&amp; templ, GpuMat&amp; result, bool ccorr)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::convolve()</span></code></a>.</li>
+<li><strong>anchor</strong> &#8211; Anchor point. The default value Point(-1, -1) means that the anchor is at the kernel center.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. For details, see <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#Ptr&lt;FilterEngine&gt; createLinearFilter(int srcType, int dstType, InputArray kernel, Point _anchor, double delta, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)" title="Ptr&lt;FilterEngine&gt; createLinearFilter(int srcType, int dstType, InputArray kernel, Point _anchor, double delta, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createLinearFilter()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-filter2d">
+<h2>gpu::filter2D<a class="headerlink" href="#gpu-filter2d" title="Permalink to this headline">¶</a></h2>
+<p>Applies the non-separable 2D linear filter to an image.</p>
+<dl class="function">
+<dt id="void gpu::filter2D(const GpuMat&amp; src, GpuMat&amp; dst, int ddepth, const Mat&amp; kernel, Point anchor, int borderType , Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">filter2D</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>ddepth</strong>, const Mat&amp; <strong>kernel</strong>, Point <strong>anchor</strong>=Point(-1,-1), int <strong>borderType</strong>=BORDER_DEFAULT, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::filter2D(const GpuMat& src, GpuMat& dst, int ddepth, const Mat& kernel, Point anchor, int borderType , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Supports  <code class="docutils literal"><span class="pre">CV_8U</span></code>  ,  <code class="docutils literal"><span class="pre">CV_16U</span></code>  and  <code class="docutils literal"><span class="pre">CV_32F</span></code>  one and four channel image.</li>
+<li><strong>dst</strong> &#8211; Destination image. The size and the number of channels is the same as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>ddepth</strong> &#8211; Desired depth of the destination image. If it is negative, it is the same as  <code class="docutils literal"><span class="pre">src.depth()</span></code> . It supports only the same depth as the source image depth.</li>
+<li><strong>kernel</strong> &#8211; 2D array of filter coefficients.</li>
+<li><strong>anchor</strong> &#8211; Anchor of the kernel that indicates the relative position of a filtered point within the kernel. The anchor resides within the kernel. The special default value (-1,-1) means that the anchor is at the kernel center.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. For details, see <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#void filter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernel, Point anchor, double delta, int borderType)" title="void filter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernel, Point anchor, double delta, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">filter2D()</span></code></a>, <a class="reference internal" href="image_processing.html#void gpu::convolve(const GpuMat&amp; image, const GpuMat&amp; templ, GpuMat&amp; result, bool ccorr)" title="void gpu::convolve(const GpuMat&amp; image, const GpuMat&amp; templ, GpuMat&amp; result, bool ccorr)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::convolve()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-laplacian">
+<h2>gpu::Laplacian<a class="headerlink" href="#gpu-laplacian" title="Permalink to this headline">¶</a></h2>
+<p>Applies the Laplacian operator to an image.</p>
+<dl class="function">
+<dt id="void gpu::Laplacian(const GpuMat&amp; src, GpuMat&amp; dst, int ddepth, int ksize , double scale , int borderType , Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">Laplacian</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>ddepth</strong>, int <strong>ksize</strong>=1, double <strong>scale</strong>=1, int <strong>borderType</strong>=BORDER_DEFAULT, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::Laplacian(const GpuMat& src, GpuMat& dst, int ddepth, int ksize , double scale , int borderType , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. <code class="docutils literal"><span class="pre">CV_8UC1</span></code>  and  <code class="docutils literal"><span class="pre">CV_8UC4</span></code>  source types are supported.</li>
+<li><strong>dst</strong> &#8211; Destination image. The size and number of channels is the same as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>ddepth</strong> &#8211; Desired depth of the destination image. It supports only the same depth as the source image depth.</li>
+<li><strong>ksize</strong> &#8211; Aperture size used to compute the second-derivative filters (see <a class="reference internal" href="../../imgproc/doc/filtering.html#void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)" title="void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getDerivKernels()</span></code></a>). It must be positive and odd. Only  <code class="docutils literal"><span class="pre">ksize</span></code>  = 1 and  <code class="docutils literal"><span class="pre">ksize</span></code>  = 3 are supported.</li>
+<li><strong>scale</strong> &#8211; Optional scale factor for the computed Laplacian values. By default, no scaling is applied (see  <a class="reference internal" href="../../imgproc/doc/filtering.html#void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)" title="void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getDerivKernels()</span></code></a> ).</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. For details, see <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This filter does not check out-of-border accesses, so only a proper sub-matrix of a bigger matrix has to be passed to it.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#void Laplacian(InputArray src, OutputArray dst, int ddepth, int ksize, double scale, double delta, int borderType)" title="void Laplacian(InputArray src, OutputArray dst, int ddepth, int ksize, double scale, double delta, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Laplacian()</span></code></a>, <a class="reference internal" href="#void gpu::filter2D(const GpuMat&amp; src, GpuMat&amp; dst, int ddepth, const Mat&amp; kernel, Point anchor, int borderType , Stream&amp; stream)" title="void gpu::filter2D(const GpuMat&amp; src, GpuMat&amp; dst, int ddepth, const Mat&amp; kernel, Point anchor, int borderType , Stream&amp; stream)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::filter2D()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-getlinearrowfilter-gpu">
+<h2>gpu::getLinearRowFilter_GPU<a class="headerlink" href="#gpu-getlinearrowfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a primitive row filter with the specified kernel.</p>
+<dl class="function">
+<dt id="Ptr&lt;BaseRowFilter_GPU&gt; gpu::getLinearRowFilter_GPU(int srcType, int bufType, const Mat&amp; rowKernel, int anchor, int borderType)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;BaseRowFilter_GPU&gt; <code class="descclassname">gpu::</code><code class="descname">getLinearRowFilter_GPU</code><span class="sig-paren">(</span>int <strong>srcType</strong>, int <strong>bufType</strong>, const Mat&amp; <strong>rowKernel</strong>, int <strong>anchor</strong>=-1, int <strong>borderType</strong>=BORDER_DEFAULT <span class="sig-paren">)</span><a class="headerlink" href="#Ptr<BaseRowFilter_GPU> gpu::getLinearRowFilter_GPU(int srcType, int bufType, const Mat& rowKernel, int anchor, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>srcType</strong> &#8211; Source array type. Only  <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC4</span></code> , <code class="docutils literal"><span class="pre">CV_16SC1</span></code> , <code class="docutils literal"><span class="pre">CV_16SC2</span></code> , <code class="docutils literal"><span class="pre">CV_16SC3</span></code> , <code class="docutils literal"><span class="pre">CV_32SC1</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code>  source types are supported.</li>
+<li><strong>bufType</strong> &#8211; Intermediate buffer type with as many channels as  <code class="docutils literal"><span class="pre">srcType</span></code> .</li>
+<li><strong>rowKernel</strong> &#8211; Filter coefficients. Support kernels with <code class="docutils literal"><span class="pre">size</span> <span class="pre">&lt;=</span> <span class="pre">16</span></code> .</li>
+<li><strong>anchor</strong> &#8211; Anchor position within the kernel. Negative values mean that the anchor is positioned at the aperture center.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. For details, see <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a>. For details on limitations, see below.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>There are two versions of the algorithm: NPP and OpenCV.</p>
+<blockquote>
+<div><ul class="simple">
+<li>NPP version is called when <code class="docutils literal"><span class="pre">srcType</span> <span class="pre">==</span> <span class="pre">CV_8UC1</span></code> or <code class="docutils literal"><span class="pre">srcType</span> <span class="pre">==</span> <span class="pre">CV_8UC4</span></code> and <code class="docutils literal"><span class="pre">bufType</span> <span class="pre">==</span> <span class="pre">srcType</span></code> . Otherwise, the OpenCV version is called. NPP supports only <code class="docutils literal"><span class="pre">BORDER_CONSTANT</span></code> border type and does not check indices outside the image.</li>
+<li>OpenCV version supports only <code class="docutils literal"><span class="pre">CV_32F</span></code> buffer depth and <code class="docutils literal"><span class="pre">BORDER_REFLECT101</span></code> , <code class="docutils literal"><span class="pre">BORDER_REPLICATE</span></code> , and <code class="docutils literal"><span class="pre">BORDER_CONSTANT</span></code> border types. It checks indices outside the image.</li>
+</ul>
+</div></blockquote>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#Ptr&lt;FilterEngine&gt; createSeparableLinearFilter(int srcType, int dstType, InputArray rowKernel, InputArray columnKernel, Point anchor, double delta, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)" title="Ptr&lt;FilterEngine&gt; createSeparableLinearFilter(int srcType, int dstType, InputArray rowKernel, InputArray columnKernel, Point anchor, double delta, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createSeparableLinearFilter()</span></code></a> .</p>
+</div>
+</div>
+<div class="section" id="gpu-getlinearcolumnfilter-gpu">
+<h2>gpu::getLinearColumnFilter_GPU<a class="headerlink" href="#gpu-getlinearcolumnfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a primitive column filter with the specified kernel.</p>
+<dl class="function">
+<dt id="Ptr&lt;BaseColumnFilter_GPU&gt; gpu::getLinearColumnFilter_GPU(int bufType, int dstType, const Mat&amp; columnKernel, int anchor, int borderType)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;BaseColumnFilter_GPU&gt; <code class="descclassname">gpu::</code><code class="descname">getLinearColumnFilter_GPU</code><span class="sig-paren">(</span>int <strong>bufType</strong>, int <strong>dstType</strong>, const Mat&amp; <strong>columnKernel</strong>, int <strong>anchor</strong>=-1, int <strong>borderType</strong>=BORDER_DEFAULT <span class="sig-paren">)</span><a class="headerlink" href="#Ptr<BaseColumnFilter_GPU> gpu::getLinearColumnFilter_GPU(int bufType, int dstType, const Mat& columnKernel, int anchor, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>bufType</strong> &#8211; Intermediate buffer type with as many channels as  <code class="docutils literal"><span class="pre">dstType</span></code> .</li>
+<li><strong>dstType</strong> &#8211; Destination array type. <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC4</span></code> , <code class="docutils literal"><span class="pre">CV_16SC1</span></code> , <code class="docutils literal"><span class="pre">CV_16SC2</span></code> , <code class="docutils literal"><span class="pre">CV_16SC3</span></code> , <code class="docutils literal"><span class="pre">CV_32SC1</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code> destination types are supported.</li>
+<li><strong>columnKernel</strong> &#8211; Filter coefficients. Support kernels with <code class="docutils literal"><span class="pre">size</span> <span class="pre">&lt;=</span> <span class="pre">16</span></code> .</li>
+<li><strong>anchor</strong> &#8211; Anchor position within the kernel. Negative values mean that the anchor is positioned at the aperture center.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. For details, see  <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a> . For details on limitations, see below.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>There are two versions of the algorithm: NPP and OpenCV.</p>
+<blockquote>
+<div><ul class="simple">
+<li>NPP version is called when <code class="docutils literal"><span class="pre">dstType</span> <span class="pre">==</span> <span class="pre">CV_8UC1</span></code> or <code class="docutils literal"><span class="pre">dstType</span> <span class="pre">==</span> <span class="pre">CV_8UC4</span></code> and <code class="docutils literal"><span class="pre">bufType</span> <span class="pre">==</span> <span class="pre">dstType</span></code> . Otherwise, the OpenCV version is called. NPP supports only <code class="docutils literal"><span class="pre">BORDER_CONSTANT</span></code> border type and does not check indices outside the image.</li>
+<li>OpenCV version supports only <code class="docutils literal"><span class="pre">CV_32F</span></code> buffer depth and <code class="docutils literal"><span class="pre">BORDER_REFLECT101</span></code> , <code class="docutils literal"><span class="pre">BORDER_REPLICATE</span></code> , and <code class="docutils literal"><span class="pre">BORDER_CONSTANT</span></code> border types. It checks indices outside image.</li>
+</ul>
+</div></blockquote>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#Ptr&lt;BaseRowFilter_GPU&gt; gpu::getLinearRowFilter_GPU(int srcType, int bufType, const Mat&amp; rowKernel, int anchor, int borderType)" title="Ptr&lt;BaseRowFilter_GPU&gt; gpu::getLinearRowFilter_GPU(int srcType, int bufType, const Mat&amp; rowKernel, int anchor, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::getLinearRowFilter_GPU()</span></code></a>, <a class="reference internal" href="../../imgproc/doc/filtering.html#Ptr&lt;FilterEngine&gt; createSeparableLinearFilter(int srcType, int dstType, InputArray rowKernel, InputArray columnKernel, Point anchor, double delta, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)" title="Ptr&lt;FilterEngine&gt; createSeparableLinearFilter(int srcType, int dstType, InputArray rowKernel, InputArray columnKernel, Point anchor, double delta, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createSeparableLinearFilter()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-createseparablelinearfilter-gpu">
+<h2>gpu::createSeparableLinearFilter_GPU<a class="headerlink" href="#gpu-createseparablelinearfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a separable linear filter engine.</p>
+<dl class="function">
+<dt id="Ptr&lt;FilterEngine_GPU&gt; gpu::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat&amp; rowKernel, const Mat&amp; columnKernel, const Point&amp; anchor , int rowBorderType , int columnBorderType)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FilterEngine_GPU&gt; <code class="descclassname">gpu::</code><code class="descname">createSeparableLinearFilter_GPU</code><span class="sig-paren">(</span>int <strong>srcType</strong>, int <strong>dstType</strong>, const Mat&amp; <strong>rowKernel</strong>, const Mat&amp; <strong>columnKernel</strong>, const Point&amp; <strong>anchor</strong>=Point(-1,-1), int <strong>rowBorderType</strong>=BORDER_DEFAULT, int <strong>columnBorderType</strong>=-1<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FilterEngine_GPU> gpu::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat& rowKernel, const Mat& columnKernel, const Point& anchor , int rowBorderType , int columnBorderType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>srcType</strong> &#8211; Source array type.  <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC4</span></code> , <code class="docutils literal"><span class="pre">CV_16SC1</span></code> , <code class="docutils literal"><span class="pre">CV_16SC2</span></code> , <code class="docutils literal"><span class="pre">CV_16SC3</span></code> , <code class="docutils literal"><span class="pre">CV_32SC1</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code>  source types are supported.</li>
+<li><strong>dstType</strong> &#8211; Destination array type.  <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC4</span></code> , <code class="docutils literal"><span class="pre">CV_16SC1</span></code> , <code class="docutils literal"><span class="pre">CV_16SC2</span></code> , <code class="docutils literal"><span class="pre">CV_16SC3</span></code> , <code class="docutils literal"><span class="pre">CV_32SC1</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code>  destination types are supported.</li>
+<li><strong>rowKernel</strong> &#8211; Horizontal filter coefficients. Support kernels with <code class="docutils literal"><span class="pre">size</span> <span class="pre">&lt;=</span> <span class="pre">16</span></code> .</li>
+<li><strong>columnKernel</strong> &#8211; Vertical filter coefficients. Support kernels with <code class="docutils literal"><span class="pre">size</span> <span class="pre">&lt;=</span> <span class="pre">16</span></code> .</li>
+<li><strong>anchor</strong> &#8211; Anchor position within the kernel. Negative values mean that anchor is positioned at the aperture center.</li>
+<li><strong>rowBorderType</strong> &#8211; Pixel extrapolation method in the vertical direction For details, see  <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a>. For details on limitations, see <a class="reference internal" href="#Ptr&lt;BaseRowFilter_GPU&gt; gpu::getLinearRowFilter_GPU(int srcType, int bufType, const Mat&amp; rowKernel, int anchor, int borderType)" title="Ptr&lt;BaseRowFilter_GPU&gt; gpu::getLinearRowFilter_GPU(int srcType, int bufType, const Mat&amp; rowKernel, int anchor, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::getLinearRowFilter_GPU()</span></code></a>, cpp:ocv:func:<cite>gpu::getLinearColumnFilter_GPU</cite>.</li>
+<li><strong>columnBorderType</strong> &#8211; Pixel extrapolation method in the horizontal direction.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#Ptr&lt;BaseRowFilter_GPU&gt; gpu::getLinearRowFilter_GPU(int srcType, int bufType, const Mat&amp; rowKernel, int anchor, int borderType)" title="Ptr&lt;BaseRowFilter_GPU&gt; gpu::getLinearRowFilter_GPU(int srcType, int bufType, const Mat&amp; rowKernel, int anchor, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::getLinearRowFilter_GPU()</span></code></a>, <a class="reference internal" href="#Ptr&lt;BaseColumnFilter_GPU&gt; gpu::getLinearColumnFilter_GPU(int bufType, int dstType, const Mat&amp; columnKernel, int anchor, int borderType)" title="Ptr&lt;BaseColumnFilter_GPU&gt; gpu::getLinearColumnFilter_GPU(int bufType, int dstType, const Mat&amp; columnKernel, int anchor, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::getLinearColumnFilter_GPU()</span></code></a>, <a class="reference internal" href="../../imgproc/doc/filtering.html#Ptr&lt;FilterEngine&gt; createSeparableLinearFilter(int srcType, int dstType, InputArray rowKernel, InputArray columnKernel, Point anchor, double delta, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)" title="Ptr&lt;FilterEngine&gt; createSeparableLinearFilter(int srcType, int dstType, InputArray rowKernel, InputArray columnKernel, Point anchor, double delta, int rowBorderType, int columnBorderType, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createSeparableLinearFilter()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-sepfilter2d">
+<h2>gpu::sepFilter2D<a class="headerlink" href="#gpu-sepfilter2d" title="Permalink to this headline">¶</a></h2>
+<p>Applies a separable 2D linear filter to an image.</p>
+<dl class="function">
+<dt id="void gpu::sepFilter2D(const GpuMat&amp; src, GpuMat&amp; dst, int ddepth, const Mat&amp; kernelX, const Mat&amp; kernelY, Point anchor, int rowBorderType, int columnBorderType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">sepFilter2D</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>ddepth</strong>, const Mat&amp; <strong>kernelX</strong>, const Mat&amp; <strong>kernelY</strong>, Point <strong>anchor</strong>=Point(-1,-1), int <strong>rowBorderType</strong>=BORDER_DEFAULT, int <strong>columnBorderType</strong>=-1 <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::sepFilter2D(const GpuMat& src, GpuMat& dst, int ddepth, const Mat& kernelX, const Mat& kernelY, Point anchor, int rowBorderType, int columnBorderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::sepFilter2D(const GpuMat&amp; src, GpuMat&amp; dst, int ddepth, const Mat&amp; kernelX, const Mat&amp; kernelY, GpuMat&amp; buf, Point anchor, int rowBorderType, int columnBorderType, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">sepFilter2D</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>ddepth</strong>, const Mat&amp; <strong>kernelX</strong>, const Mat&amp; <strong>kernelY</strong>, GpuMat&amp; <strong>buf</strong>, Point <strong>anchor</strong>=Point(-1,-1), int <strong>rowBorderType</strong>=BORDER_DEFAULT, int <strong>columnBorderType</strong>=-1, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::sepFilter2D(const GpuMat& src, GpuMat& dst, int ddepth, const Mat& kernelX, const Mat& kernelY, GpuMat& buf, Point anchor, int rowBorderType, int columnBorderType, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.  <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC4</span></code> , <code class="docutils literal"><span class="pre">CV_16SC1</span></code> , <code class="docutils literal"><span class="pre">CV_16SC2</span></code> , <code class="docutils literal"><span class="pre">CV_32SC1</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code>  source types are supported.</li>
+<li><strong>dst</strong> &#8211; Destination image with the same size and number of channels as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>ddepth</strong> &#8211; Destination image depth.  <code class="docutils literal"><span class="pre">CV_8U</span></code> , <code class="docutils literal"><span class="pre">CV_16S</span></code> , <code class="docutils literal"><span class="pre">CV_32S</span></code> , and  <code class="docutils literal"><span class="pre">CV_32F</span></code> are supported.</li>
+<li><strong>kernelX</strong> &#8211; Horizontal filter coefficients.</li>
+<li><strong>kernelY</strong> &#8211; Vertical filter coefficients.</li>
+<li><strong>anchor</strong> &#8211; Anchor position within the kernel. The default value <code class="docutils literal"><span class="pre">(-1,</span> <span class="pre">1)</span></code> means that the anchor is at the kernel center.</li>
+<li><strong>rowBorderType</strong> &#8211; Pixel extrapolation method in the vertical direction. For details, see  <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a>.</li>
+<li><strong>columnBorderType</strong> &#8211; Pixel extrapolation method in the horizontal direction.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; gpu::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat&amp; rowKernel, const Mat&amp; columnKernel, const Point&amp; anchor , int rowBorderType , int columnBorderType)" title="Ptr&lt;FilterEngine_GPU&gt; gpu::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat&amp; rowKernel, const Mat&amp; columnKernel, const Point&amp; anchor , int rowBorderType , int columnBorderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::createSeparableLinearFilter_GPU()</span></code></a>, <a class="reference internal" href="../../imgproc/doc/filtering.html#void sepFilter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernelX, InputArray kernelY, Point anchor, double delta, int borderType)" title="void sepFilter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernelX, InputArray kernelY, Point anchor, double delta, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">sepFilter2D()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-createderivfilter-gpu">
+<h2>gpu::createDerivFilter_GPU<a class="headerlink" href="#gpu-createderivfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a filter engine for the generalized Sobel operator.</p>
+<dl class="function">
+<dt id="Ptr&lt;FilterEngine_GPU&gt; gpu::createDerivFilter_GPU(int srcType, int dstType, int dx, int dy, int ksize, int rowBorderType , int columnBorderType)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FilterEngine_GPU&gt; <code class="descclassname">gpu::</code><code class="descname">createDerivFilter_GPU</code><span class="sig-paren">(</span>int <strong>srcType</strong>, int <strong>dstType</strong>, int <strong>dx</strong>, int <strong>dy</strong>, int <strong>ksize</strong>, int <strong>rowBorderType</strong>=BORDER_DEFAULT, int <strong>columnBorderType</strong>=-1<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FilterEngine_GPU> gpu::createDerivFilter_GPU(int srcType, int dstType, int dx, int dy, int ksize, int rowBorderType , int columnBorderType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>srcType</strong> &#8211; Source image type.  <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC4</span></code> , <code class="docutils literal"><span class="pre">CV_16SC1</span></code> , <code class="docutils literal"><span class="pre">CV_16SC2</span></code> , <code class="docutils literal"><span class="pre">CV_16SC3</span></code> , <code class="docutils literal"><span class="pre">CV_32SC1</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code>  source types are supported.</li>
+<li><strong>dstType</strong> &#8211; Destination image type with as many channels as  <code class="docutils literal"><span class="pre">srcType</span></code> ,  <code class="docutils literal"><span class="pre">CV_8U</span></code> , <code class="docutils literal"><span class="pre">CV_16S</span></code> , <code class="docutils literal"><span class="pre">CV_32S</span></code> , and  <code class="docutils literal"><span class="pre">CV_32F</span></code>  depths are supported.</li>
+<li><strong>dx</strong> &#8211; Derivative order in respect of x.</li>
+<li><strong>dy</strong> &#8211; Derivative order in respect of y.</li>
+<li><strong>ksize</strong> &#8211; Aperture size. See  <a class="reference internal" href="../../imgproc/doc/filtering.html#void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)" title="void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getDerivKernels()</span></code></a> for details.</li>
+<li><strong>rowBorderType</strong> &#8211; Pixel extrapolation method in the vertical direction. For details, see  <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a>.</li>
+<li><strong>columnBorderType</strong> &#8211; Pixel extrapolation method in the horizontal direction.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; gpu::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat&amp; rowKernel, const Mat&amp; columnKernel, const Point&amp; anchor , int rowBorderType , int columnBorderType)" title="Ptr&lt;FilterEngine_GPU&gt; gpu::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat&amp; rowKernel, const Mat&amp; columnKernel, const Point&amp; anchor , int rowBorderType , int columnBorderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::createSeparableLinearFilter_GPU()</span></code></a>, <a class="reference internal" href="../../imgproc/doc/filtering.html#Ptr&lt;FilterEngine&gt; createDerivFilter(int srcType, int dstType, int dx, int dy, int ksize, int borderType)" title="Ptr&lt;FilterEngine&gt; createDerivFilter(int srcType, int dstType, int dx, int dy, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createDerivFilter()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-sobel">
+<h2>gpu::Sobel<a class="headerlink" href="#gpu-sobel" title="Permalink to this headline">¶</a></h2>
+<p>Applies the generalized Sobel operator to an image.</p>
+<dl class="function">
+<dt id="void gpu::Sobel(const GpuMat&amp; src, GpuMat&amp; dst, int ddepth, int dx, int dy, int ksize, double scale, int rowBorderType, int columnBorderType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">Sobel</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>ddepth</strong>, int <strong>dx</strong>, int <strong>dy</strong>, int <strong>ksize</strong>=3, double <strong>scale</strong>=1, int <strong>rowBorderType</strong>=BORDER_DEFAULT, int <strong>columnBorderType</strong>=-1 <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::Sobel(const GpuMat& src, GpuMat& dst, int ddepth, int dx, int dy, int ksize, double scale, int rowBorderType, int columnBorderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::Sobel(const GpuMat&amp; src, GpuMat&amp; dst, int ddepth, int dx, int dy, GpuMat&amp; buf, int ksize, double scale, int rowBorderType, int columnBorderType, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">Sobel</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>ddepth</strong>, int <strong>dx</strong>, int <strong>dy</strong>, GpuMat&amp; <strong>buf</strong>, int <strong>ksize</strong>=3, double <strong>scale</strong>=1, int <strong>rowBorderType</strong>=BORDER_DEFAULT, int <strong>columnBorderType</strong>=-1, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::Sobel(const GpuMat& src, GpuMat& dst, int ddepth, int dx, int dy, GpuMat& buf, int ksize, double scale, int rowBorderType, int columnBorderType, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.  <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC4</span></code> , <code class="docutils literal"><span class="pre">CV_16SC1</span></code> , <code class="docutils literal"><span class="pre">CV_16SC2</span></code> , <code class="docutils literal"><span class="pre">CV_16SC3</span></code> , <code class="docutils literal"><span class="pre">CV_32SC1</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code>  source types are supported.</li>
+<li><strong>dst</strong> &#8211; Destination image with the same size and number of channels as source image.</li>
+<li><strong>ddepth</strong> &#8211; Destination image depth.  <code class="docutils literal"><span class="pre">CV_8U</span></code> , <code class="docutils literal"><span class="pre">CV_16S</span></code> , <code class="docutils literal"><span class="pre">CV_32S</span></code> , and  <code class="docutils literal"><span class="pre">CV_32F</span></code> are supported.</li>
+<li><strong>dx</strong> &#8211; Derivative order in respect of x.</li>
+<li><strong>dy</strong> &#8211; Derivative order in respect of y.</li>
+<li><strong>ksize</strong> &#8211; Size of the extended Sobel kernel. Possible values are 1, 3, 5 or 7.</li>
+<li><strong>scale</strong> &#8211; Optional scale factor for the computed derivative values. By default, no scaling is applied. For details, see  <a class="reference internal" href="../../imgproc/doc/filtering.html#void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)" title="void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getDerivKernels()</span></code></a> .</li>
+<li><strong>rowBorderType</strong> &#8211; Pixel extrapolation method in the vertical direction. For details, see  <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a>.</li>
+<li><strong>columnBorderType</strong> &#8211; Pixel extrapolation method in the horizontal direction.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; gpu::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat&amp; rowKernel, const Mat&amp; columnKernel, const Point&amp; anchor , int rowBorderType , int columnBorderType)" title="Ptr&lt;FilterEngine_GPU&gt; gpu::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat&amp; rowKernel, const Mat&amp; columnKernel, const Point&amp; anchor , int rowBorderType , int columnBorderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::createSeparableLinearFilter_GPU()</span></code></a>, <a class="reference internal" href="../../imgproc/doc/filtering.html#void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)" title="void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Sobel()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-scharr">
+<h2>gpu::Scharr<a class="headerlink" href="#gpu-scharr" title="Permalink to this headline">¶</a></h2>
+<p>Calculates the first x- or y- image derivative using the Scharr operator.</p>
+<dl class="function">
+<dt id="void gpu::Scharr(const GpuMat&amp; src, GpuMat&amp; dst, int ddepth, int dx, int dy, double scale, int rowBorderType, int columnBorderType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">Scharr</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>ddepth</strong>, int <strong>dx</strong>, int <strong>dy</strong>, double <strong>scale</strong>=1, int <strong>rowBorderType</strong>=BORDER_DEFAULT, int <strong>columnBorderType</strong>=-1 <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::Scharr(const GpuMat& src, GpuMat& dst, int ddepth, int dx, int dy, double scale, int rowBorderType, int columnBorderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::Scharr(const GpuMat&amp; src, GpuMat&amp; dst, int ddepth, int dx, int dy, GpuMat&amp; buf, double scale, int rowBorderType, int columnBorderType, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">Scharr</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>ddepth</strong>, int <strong>dx</strong>, int <strong>dy</strong>, GpuMat&amp; <strong>buf</strong>, double <strong>scale</strong>=1, int <strong>rowBorderType</strong>=BORDER_DEFAULT, int <strong>columnBorderType</strong>=-1, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::Scharr(const GpuMat& src, GpuMat& dst, int ddepth, int dx, int dy, GpuMat& buf, double scale, int rowBorderType, int columnBorderType, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.  <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC4</span></code> , <code class="docutils literal"><span class="pre">CV_16SC1</span></code> , <code class="docutils literal"><span class="pre">CV_16SC2</span></code> , <code class="docutils literal"><span class="pre">CV_16SC3</span></code> , <code class="docutils literal"><span class="pre">CV_32SC1</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code>  source types are supported.</li>
+<li><strong>dst</strong> &#8211; Destination image with the same size and number of channels as  <code class="docutils literal"><span class="pre">src</span></code> has.</li>
+<li><strong>ddepth</strong> &#8211; Destination image depth.  <code class="docutils literal"><span class="pre">CV_8U</span></code> , <code class="docutils literal"><span class="pre">CV_16S</span></code> , <code class="docutils literal"><span class="pre">CV_32S</span></code> , and  <code class="docutils literal"><span class="pre">CV_32F</span></code> are supported.</li>
+<li><strong>dx</strong> &#8211; Order of the derivative x.</li>
+<li><strong>dy</strong> &#8211; Order of the derivative y.</li>
+<li><strong>scale</strong> &#8211; Optional scale factor for the computed derivative values. By default, no scaling is applied. See  <a class="reference internal" href="../../imgproc/doc/filtering.html#void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)" title="void getDerivKernels(OutputArray kx, OutputArray ky, int dx, int dy, int ksize, bool normalize, int ktype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getDerivKernels()</span></code></a>  for details.</li>
+<li><strong>rowBorderType</strong> &#8211; Pixel extrapolation method in the vertical direction. For details, see  <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a>.</li>
+<li><strong>columnBorderType</strong> &#8211; Pixel extrapolation method in the horizontal direction.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; gpu::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat&amp; rowKernel, const Mat&amp; columnKernel, const Point&amp; anchor , int rowBorderType , int columnBorderType)" title="Ptr&lt;FilterEngine_GPU&gt; gpu::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat&amp; rowKernel, const Mat&amp; columnKernel, const Point&amp; anchor , int rowBorderType , int columnBorderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::createSeparableLinearFilter_GPU()</span></code></a>, <a class="reference internal" href="../../imgproc/doc/filtering.html#void Scharr(InputArray src, OutputArray dst, int ddepth, int dx, int dy, double scale, double delta, int borderType)" title="void Scharr(InputArray src, OutputArray dst, int ddepth, int dx, int dy, double scale, double delta, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Scharr()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-creategaussianfilter-gpu">
+<h2>gpu::createGaussianFilter_GPU<a class="headerlink" href="#gpu-creategaussianfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates a Gaussian filter engine.</p>
+<dl class="function">
+<dt id="Ptr&lt;FilterEngine_GPU&gt; gpu::createGaussianFilter_GPU(int type, Size ksize, double sigma1, double sigma2, int rowBorderType, int columnBorderType)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FilterEngine_GPU&gt; <code class="descclassname">gpu::</code><code class="descname">createGaussianFilter_GPU</code><span class="sig-paren">(</span>int <strong>type</strong>, Size <strong>ksize</strong>, double <strong>sigma1</strong>, double <strong>sigma2</strong>=0, int <strong>rowBorderType</strong>=BORDER_DEFAULT, int <strong>columnBorderType</strong>=-1 <span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FilterEngine_GPU> gpu::createGaussianFilter_GPU(int type, Size ksize, double sigma1, double sigma2, int rowBorderType, int columnBorderType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>type</strong> &#8211; Source and destination image type.  <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC4</span></code> , <code class="docutils literal"><span class="pre">CV_16SC1</span></code> , <code class="docutils literal"><span class="pre">CV_16SC2</span></code> , <code class="docutils literal"><span class="pre">CV_16SC3</span></code> , <code class="docutils literal"><span class="pre">CV_32SC1</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code> are supported.</li>
+<li><strong>ksize</strong> &#8211; Aperture size. See  <a class="reference internal" href="../../imgproc/doc/filtering.html#Mat getGaussianKernel(int ksize, double sigma, int ktype)" title="Mat getGaussianKernel(int ksize, double sigma, int ktype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getGaussianKernel()</span></code></a> for details.</li>
+<li><strong>sigma1</strong> &#8211; Gaussian sigma in the horizontal direction. See  <a class="reference internal" href="../../imgproc/doc/filtering.html#Mat getGaussianKernel(int ksize, double sigma, int ktype)" title="Mat getGaussianKernel(int ksize, double sigma, int ktype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getGaussianKernel()</span></code></a> for details.</li>
+<li><strong>sigma2</strong> &#8211; Gaussian sigma in the vertical direction. If 0, then  <img class="math" src="../../../_images/math/746d45695d9afb38c7654245424b3152d29e956e.png" alt="\texttt{sigma2}\leftarrow\texttt{sigma1}"/> .</li>
+<li><strong>rowBorderType</strong> &#8211; Pixel extrapolation method in the vertical direction. For details, see  <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a>.</li>
+<li><strong>columnBorderType</strong> &#8211; Pixel extrapolation method in the horizontal direction.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; gpu::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat&amp; rowKernel, const Mat&amp; columnKernel, const Point&amp; anchor , int rowBorderType , int columnBorderType)" title="Ptr&lt;FilterEngine_GPU&gt; gpu::createSeparableLinearFilter_GPU(int srcType, int dstType, const Mat&amp; rowKernel, const Mat&amp; columnKernel, const Point&amp; anchor , int rowBorderType , int columnBorderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::createSeparableLinearFilter_GPU()</span></code></a>, <a class="reference internal" href="../../imgproc/doc/filtering.html#Ptr&lt;FilterEngine&gt; createGaussianFilter(int type, Size ksize, double sigma1, double sigma2, int borderType)" title="Ptr&lt;FilterEngine&gt; createGaussianFilter(int type, Size ksize, double sigma1, double sigma2, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createGaussianFilter()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-gaussianblur">
+<h2>gpu::GaussianBlur<a class="headerlink" href="#gpu-gaussianblur" title="Permalink to this headline">¶</a></h2>
+<p>Smooths an image using the Gaussian filter.</p>
+<dl class="function">
+<dt id="void gpu::GaussianBlur(const GpuMat&amp; src, GpuMat&amp; dst, Size ksize, double sigma1, double sigma2, int rowBorderType, int columnBorderType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">GaussianBlur</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, Size <strong>ksize</strong>, double <strong>sigma1</strong>, double <strong>sigma2</strong>=0, int <strong>rowBorderType</strong>=BORDER_DEFAULT, int <strong>columnBorderType</strong>=-1 <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::GaussianBlur(const GpuMat& src, GpuMat& dst, Size ksize, double sigma1, double sigma2, int rowBorderType, int columnBorderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::GaussianBlur(const GpuMat&amp; src, GpuMat&amp; dst, Size ksize, GpuMat&amp; buf, double sigma1, double sigma2, int rowBorderType, int columnBorderType, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">GaussianBlur</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, Size <strong>ksize</strong>, GpuMat&amp; <strong>buf</strong>, double <strong>sigma1</strong>, double <strong>sigma2</strong>=0, int <strong>rowBorderType</strong>=BORDER_DEFAULT, int <strong>columnBorderType</strong>=-1, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::GaussianBlur(const GpuMat& src, GpuMat& dst, Size ksize, GpuMat& buf, double sigma1, double sigma2, int rowBorderType, int columnBorderType, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.  <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC4</span></code> , <code class="docutils literal"><span class="pre">CV_16SC1</span></code> , <code class="docutils literal"><span class="pre">CV_16SC2</span></code> , <code class="docutils literal"><span class="pre">CV_16SC3</span></code> , <code class="docutils literal"><span class="pre">CV_32SC1</span></code> , <code class="docutils literal"><span class="pre">CV_32FC1</span></code>  source types are supported.</li>
+<li><strong>dst</strong> &#8211; Destination image with the same size and type as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>ksize</strong> &#8211; Gaussian kernel size.  <code class="docutils literal"><span class="pre">ksize.width</span></code>  and  <code class="docutils literal"><span class="pre">ksize.height</span></code>  can differ but they both must be positive and odd. If they are zeros, they are computed from  <code class="docutils literal"><span class="pre">sigma1</span></code>  and  <code class="docutils literal"><span class="pre">sigma2</span></code> .</li>
+<li><strong>sigma1</strong> &#8211; Gaussian kernel standard deviation in X direction.</li>
+<li><strong>sigma2</strong> &#8211; Gaussian kernel standard deviation in Y direction. If  <code class="docutils literal"><span class="pre">sigma2</span></code>  is zero, it is set to be equal to  <code class="docutils literal"><span class="pre">sigma1</span></code> . If they are both zeros, they are computed from  <code class="docutils literal"><span class="pre">ksize.width</span></code>  and  <code class="docutils literal"><span class="pre">ksize.height</span></code>, respectively. See  <a class="reference internal" href="../../imgproc/doc/filtering.html#Mat getGaussianKernel(int ksize, double sigma, int ktype)" title="Mat getGaussianKernel(int ksize, double sigma, int ktype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getGaussianKernel()</span></code></a> for details. To fully control the result regardless of possible future modification of all this semantics, you are recommended to specify all of  <code class="docutils literal"><span class="pre">ksize</span></code> , <code class="docutils literal"><span class="pre">sigma1</span></code> , and  <code class="docutils literal"><span class="pre">sigma2</span></code> .</li>
+<li><strong>rowBorderType</strong> &#8211; Pixel extrapolation method in the vertical direction. For details, see  <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a>.</li>
+<li><strong>columnBorderType</strong> &#8211; Pixel extrapolation method in the horizontal direction.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#Ptr&lt;FilterEngine_GPU&gt; gpu::createGaussianFilter_GPU(int type, Size ksize, double sigma1, double sigma2, int rowBorderType, int columnBorderType)" title="Ptr&lt;FilterEngine_GPU&gt; gpu::createGaussianFilter_GPU(int type, Size ksize, double sigma1, double sigma2, int rowBorderType, int columnBorderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::createGaussianFilter_GPU()</span></code></a>, <a class="reference internal" href="../../imgproc/doc/filtering.html#void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)" title="void GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">GaussianBlur()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-getmaxfilter-gpu">
+<h2>gpu::getMaxFilter_GPU<a class="headerlink" href="#gpu-getmaxfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates the maximum filter.</p>
+<dl class="function">
+<dt id="Ptr&lt;BaseFilter_GPU&gt; gpu::getMaxFilter_GPU(int srcType, int dstType, const Size&amp; ksize, Point anchor)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;BaseFilter_GPU&gt; <code class="descclassname">gpu::</code><code class="descname">getMaxFilter_GPU</code><span class="sig-paren">(</span>int <strong>srcType</strong>, int <strong>dstType</strong>, const Size&amp; <strong>ksize</strong>, Point <strong>anchor</strong>=Point(-1,-1)<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<BaseFilter_GPU> gpu::getMaxFilter_GPU(int srcType, int dstType, const Size& ksize, Point anchor)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>srcType</strong> &#8211; Input image type. Only  <code class="docutils literal"><span class="pre">CV_8UC1</span></code>  and  <code class="docutils literal"><span class="pre">CV_8UC4</span></code> are supported.</li>
+<li><strong>dstType</strong> &#8211; Output image type. It supports only the same type as the source type.</li>
+<li><strong>ksize</strong> &#8211; Kernel size.</li>
+<li><strong>anchor</strong> &#8211; Anchor point. The default value (-1) means that the anchor is at the kernel center.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This filter does not check out-of-border accesses, so only a proper sub-matrix of a bigger matrix has to be passed to it.</p>
+</div>
+</div>
+<div class="section" id="gpu-getminfilter-gpu">
+<h2>gpu::getMinFilter_GPU<a class="headerlink" href="#gpu-getminfilter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Creates the minimum filter.</p>
+<dl class="function">
+<dt id="Ptr&lt;BaseFilter_GPU&gt; gpu::getMinFilter_GPU(int srcType, int dstType, const Size&amp; ksize, Point anchor)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;BaseFilter_GPU&gt; <code class="descclassname">gpu::</code><code class="descname">getMinFilter_GPU</code><span class="sig-paren">(</span>int <strong>srcType</strong>, int <strong>dstType</strong>, const Size&amp; <strong>ksize</strong>, Point <strong>anchor</strong>=Point(-1,-1)<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<BaseFilter_GPU> gpu::getMinFilter_GPU(int srcType, int dstType, const Size& ksize, Point anchor)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>srcType</strong> &#8211; Input image type. Only  <code class="docutils literal"><span class="pre">CV_8UC1</span></code>  and  <code class="docutils literal"><span class="pre">CV_8UC4</span></code> are supported.</li>
+<li><strong>dstType</strong> &#8211; Output image type. It supports only the same type as the source type.</li>
+<li><strong>ksize</strong> &#8211; Kernel size.</li>
+<li><strong>anchor</strong> &#8211; Anchor point. The default value (-1) means that the anchor is at the kernel center.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This filter does not check out-of-border accesses, so only a proper sub-matrix of a bigger matrix has to be passed to it.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Image Filtering</a><ul>
+<li><a class="reference internal" href="#gpu-baserowfilter-gpu">gpu::BaseRowFilter_GPU</a></li>
+<li><a class="reference internal" href="#gpu-basecolumnfilter-gpu">gpu::BaseColumnFilter_GPU</a></li>
+<li><a class="reference internal" href="#gpu-basefilter-gpu">gpu::BaseFilter_GPU</a></li>
+<li><a class="reference internal" href="#gpu-filterengine-gpu">gpu::FilterEngine_GPU</a></li>
+<li><a class="reference internal" href="#gpu-createfilter2d-gpu">gpu::createFilter2D_GPU</a></li>
+<li><a class="reference internal" href="#gpu-createseparablefilter-gpu">gpu::createSeparableFilter_GPU</a></li>
+<li><a class="reference internal" href="#gpu-getrowsumfilter-gpu">gpu::getRowSumFilter_GPU</a></li>
+<li><a class="reference internal" href="#gpu-getcolumnsumfilter-gpu">gpu::getColumnSumFilter_GPU</a></li>
+<li><a class="reference internal" href="#gpu-createboxfilter-gpu">gpu::createBoxFilter_GPU</a></li>
+<li><a class="reference internal" href="#gpu-boxfilter">gpu::boxFilter</a></li>
+<li><a class="reference internal" href="#gpu-blur">gpu::blur</a></li>
+<li><a class="reference internal" href="#gpu-createmorphologyfilter-gpu">gpu::createMorphologyFilter_GPU</a></li>
+<li><a class="reference internal" href="#gpu-erode">gpu::erode</a></li>
+<li><a class="reference internal" href="#gpu-dilate">gpu::dilate</a></li>
+<li><a class="reference internal" href="#gpu-morphologyex">gpu::morphologyEx</a></li>
+<li><a class="reference internal" href="#gpu-createlinearfilter-gpu">gpu::createLinearFilter_GPU</a></li>
+<li><a class="reference internal" href="#gpu-filter2d">gpu::filter2D</a></li>
+<li><a class="reference internal" href="#gpu-laplacian">gpu::Laplacian</a></li>
+<li><a class="reference internal" href="#gpu-getlinearrowfilter-gpu">gpu::getLinearRowFilter_GPU</a></li>
+<li><a class="reference internal" href="#gpu-getlinearcolumnfilter-gpu">gpu::getLinearColumnFilter_GPU</a></li>
+<li><a class="reference internal" href="#gpu-createseparablelinearfilter-gpu">gpu::createSeparableLinearFilter_GPU</a></li>
+<li><a class="reference internal" href="#gpu-sepfilter2d">gpu::sepFilter2D</a></li>
+<li><a class="reference internal" href="#gpu-createderivfilter-gpu">gpu::createDerivFilter_GPU</a></li>
+<li><a class="reference internal" href="#gpu-sobel">gpu::Sobel</a></li>
+<li><a class="reference internal" href="#gpu-scharr">gpu::Scharr</a></li>
+<li><a class="reference internal" href="#gpu-creategaussianfilter-gpu">gpu::createGaussianFilter_GPU</a></li>
+<li><a class="reference internal" href="#gpu-gaussianblur">gpu::GaussianBlur</a></li>
+<li><a class="reference internal" href="#gpu-getmaxfilter-gpu">gpu::getMaxFilter_GPU</a></li>
+<li><a class="reference internal" href="#gpu-getminfilter-gpu">gpu::getMinFilter_GPU</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="feature_detection_and_description.html"
+                        title="previous chapter">Feature Detection and Description</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="camera_calibration_and_3d_reconstruction.html"
+                        title="next chapter">Camera Calibration and 3D Reconstruction</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/gpu/doc/image_filtering.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="camera_calibration_and_3d_reconstruction.html" title="Camera Calibration and 3D Reconstruction"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="feature_detection_and_description.html" title="Feature Detection and Description"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="gpu.html" >gpu. GPU-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

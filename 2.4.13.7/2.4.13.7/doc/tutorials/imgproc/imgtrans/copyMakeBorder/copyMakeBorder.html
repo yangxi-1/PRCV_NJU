@@ -1,0 +1,365 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Adding borders to your images &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../../index.html" />
+    <link rel="up" title="imgproc module. Image Processing" href="../../table_of_content_imgproc/table_of_content_imgproc.html" />
+    <link rel="next" title="Sobel Derivatives" href="../sobel_derivatives/sobel_derivatives.html" />
+    <link rel="prev" title="Making your own linear filters!" href="../filter_2d/filter_2d.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../sobel_derivatives/sobel_derivatives.html" title="Sobel Derivatives"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../filter_2d/filter_2d.html" title="Making your own linear filters!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" accesskey="U"><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="adding-borders-to-your-images">
+<span id="copymakebordertutorial"></span><h1>Adding borders to your images<a class="headerlink" href="#adding-borders-to-your-images" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Use the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=copymakeborder#copymakeborder">copyMakeBorder</a> to set the borders (extra padding to your image).</li>
+</ul>
+</div>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The explanation below belongs to the book <strong>Learning OpenCV</strong> by Bradski and Kaehler.</p>
+</div>
+<ol class="arabic">
+<li><p class="first">In our previous tutorial we learned to use convolution to operate on images. One problem that naturally arises is how to handle the boundaries. How can we convolve them if the evaluated points are at the edge of the image?</p>
+</li>
+<li><p class="first">What most of OpenCV functions do is to copy a given image onto another slightly larger image and then automatically pads the boundary (by any of the methods explained in the sample code just below). This way, the convolution  can be performed over the needed pixels without problems (the extra padding is cut after the operation is done).</p>
+</li>
+<li><p class="first">In this tutorial, we will briefly explore two ways of defining the extra padding (border) for an image:</p>
+<ol class="loweralpha simple">
+<li><strong>BORDER_CONSTANT</strong>: Pad the image with a constant value (i.e. black or <img class="math" src="../../../../../_images/math/f55b2cb61596a4cb87a860cfc3657cdb56b9edba.png" alt="0"/></li>
+<li><strong>BORDER_REPLICATE</strong>: The row or column at the very edge of the original is replicated to the extra border.</li>
+</ol>
+<p>This will be seen more clearly in the Code section.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first"><strong>What does this program do?</strong></p>
+<ul>
+<li><p class="first">Load an image</p>
+</li>
+<li><p class="first">Let the user choose what kind of padding use in the input image. There are two options:</p>
+<ol class="arabic simple">
+<li><em>Constant value border</em>: Applies a padding of a constant value for the whole border. This value will be updated randomly each 0.5 seconds.</li>
+<li><em>Replicated border</em>: The border will be replicated from the pixel values at the edges of the original image.</li>
+</ol>
+<p>The user chooses either option by pressing &#8216;c&#8217; (constant) or &#8216;r&#8217; (replicate)</p>
+</li>
+<li><p class="first">The program finishes when the user presses &#8216;ESC&#8217;</p>
+</li>
+</ul>
+</li>
+<li><p class="first">The tutorial code&#8217;s is shown lines below. You can also download it from <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/tutorial_code/ImgTrans/copyMakeBorder_demo.cpp">here</a></p>
+</li>
+</ol>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;opencv2/imgproc/imgproc.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/highgui/highgui.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="c1">/// Global Variables</span>
+<span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">top</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">borderType</span><span class="p">;</span>
+<span class="n">Scalar</span> <span class="n">value</span><span class="p">;</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">window_name</span> <span class="o">=</span> <span class="s">&quot;copyMakeBorder Demo&quot;</span><span class="p">;</span>
+<span class="n">RNG</span> <span class="nf">rng</span><span class="p">(</span><span class="mi">12345</span><span class="p">);</span>
+
+<span class="cm">/** @function main  */</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+
+  <span class="kt">int</span> <span class="n">c</span><span class="p">;</span>
+
+  <span class="c1">/// Load an image</span>
+  <span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">);</span>
+
+  <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">src</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span>
+  <span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot; No data entered, please enter the path to an image file </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">/// Brief how-to for this program</span>
+  <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s"> </span><span class="se">\t</span><span class="s"> copyMakeBorder Demo: </span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;</span><span class="se">\t</span><span class="s"> -------------------- </span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span> <span class="s">&quot; ** Press &#39;c&#39; to set the border to a random constant value </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span> <span class="s">&quot; ** Press &#39;r&#39; to set the border to be replicated </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span> <span class="s">&quot; ** Press &#39;ESC&#39; to exit the program </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+  <span class="c1">/// Create window</span>
+  <span class="n">namedWindow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+
+  <span class="c1">/// Initialize arguments for the filter</span>
+  <span class="n">top</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mf">0.05</span><span class="o">*</span><span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="p">);</span> <span class="n">bottom</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mf">0.05</span><span class="o">*</span><span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="p">);</span>
+  <span class="n">left</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mf">0.05</span><span class="o">*</span><span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="p">);</span> <span class="n">right</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mf">0.05</span><span class="o">*</span><span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="p">);</span>
+  <span class="n">dst</span> <span class="o">=</span> <span class="n">src</span><span class="p">;</span>
+
+  <span class="n">imshow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">dst</span> <span class="p">);</span>
+
+  <span class="k">while</span><span class="p">(</span> <span class="nb">true</span> <span class="p">)</span>
+    <span class="p">{</span>
+      <span class="n">c</span> <span class="o">=</span> <span class="n">waitKey</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+
+      <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">c</span> <span class="o">==</span> <span class="mi">27</span> <span class="p">)</span>
+        <span class="p">{</span> <span class="k">break</span><span class="p">;</span> <span class="p">}</span>
+      <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">c</span> <span class="o">==</span> <span class="sc">&#39;c&#39;</span> <span class="p">)</span>
+        <span class="p">{</span> <span class="n">borderType</span> <span class="o">=</span> <span class="n">BORDER_CONSTANT</span><span class="p">;</span> <span class="p">}</span>
+      <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">c</span> <span class="o">==</span> <span class="sc">&#39;r&#39;</span> <span class="p">)</span>
+        <span class="p">{</span> <span class="n">borderType</span> <span class="o">=</span> <span class="n">BORDER_REPLICATE</span><span class="p">;</span> <span class="p">}</span>
+
+      <span class="n">value</span> <span class="o">=</span> <span class="n">Scalar</span><span class="p">(</span> <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span> <span class="p">);</span>
+      <span class="n">copyMakeBorder</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">borderType</span><span class="p">,</span> <span class="n">value</span> <span class="p">);</span>
+
+      <span class="n">imshow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">dst</span> <span class="p">);</span>
+    <span class="p">}</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">First we declare the variables we are going to use:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">top</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">borderType</span><span class="p">;</span>
+<span class="n">Scalar</span> <span class="n">value</span><span class="p">;</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">window_name</span> <span class="o">=</span> <span class="s">&quot;copyMakeBorder Demo&quot;</span><span class="p">;</span>
+<span class="n">RNG</span> <span class="nf">rng</span><span class="p">(</span><span class="mi">12345</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Especial attention deserves the variable <em>rng</em> which is a random number generator. We use it to generate the random border color, as we will see soon.</p>
+</li>
+<li><p class="first">As usual we load our source image <em>src</em>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">);</span>
+
+<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">src</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span>
+<span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot; No data entered, please enter the path to an image file </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">After giving a short intro of how to use the program, we create a window:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">namedWindow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Now we initialize the argument that defines the size of the borders (<em>top</em>, <em>bottom</em>, <em>left</em> and <em>right</em>). We give them a value of 5% the size of <em>src</em>.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">top</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mf">0.05</span><span class="o">*</span><span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="p">);</span> <span class="n">bottom</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mf">0.05</span><span class="o">*</span><span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="p">);</span>
+<span class="n">left</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mf">0.05</span><span class="o">*</span><span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="p">);</span> <span class="n">right</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mf">0.05</span><span class="o">*</span><span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The program begins a <em>while</em> loop. If the user presses &#8216;c&#8217; or &#8216;r&#8217;, the <em>borderType</em> variable takes the value of <em>BORDER_CONSTANT</em> or <em>BORDER_REPLICATE</em> respectively:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">while</span><span class="p">(</span> <span class="nb">true</span> <span class="p">)</span>
+ <span class="p">{</span>
+   <span class="n">c</span> <span class="o">=</span> <span class="n">waitKey</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+
+   <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">c</span> <span class="o">==</span> <span class="mi">27</span> <span class="p">)</span>
+     <span class="p">{</span> <span class="k">break</span><span class="p">;</span> <span class="p">}</span>
+   <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">c</span> <span class="o">==</span> <span class="sc">&#39;c&#39;</span> <span class="p">)</span>
+     <span class="p">{</span> <span class="n">borderType</span> <span class="o">=</span> <span class="n">BORDER_CONSTANT</span><span class="p">;</span> <span class="p">}</span>
+   <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">c</span> <span class="o">==</span> <span class="sc">&#39;r&#39;</span> <span class="p">)</span>
+     <span class="p">{</span> <span class="n">borderType</span> <span class="o">=</span> <span class="n">BORDER_REPLICATE</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">In each iteration (after 0.5 seconds), the variable <em>value</em> is updated...</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">value</span> <span class="o">=</span> <span class="n">Scalar</span><span class="p">(</span> <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="n">rng</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>with a random value generated by the <strong>RNG</strong> variable <em>rng</em>. This value is a number picked randomly in the range <img class="math" src="../../../../../_images/math/7e5ded5375850a711f7d2965125b2e6cffb03867.png" alt="[0,255]"/></p>
+</li>
+<li><p class="first">Finally, we call the function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=copymakeborder#copymakeborder">copyMakeBorder</a> to apply the respective padding:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">copyMakeBorder</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">borderType</span><span class="p">,</span> <span class="n">value</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>The arguments are:</p>
+<ol class="loweralpha simple">
+<li><em>src</em>: Source image</li>
+<li><em>dst</em>: Destination image</li>
+<li><em>top</em>, <em>bottom</em>, <em>left</em>, <em>right</em>: Length in pixels of the borders at each side of the image. We define them as being 5% of the original size of the image.</li>
+<li><em>borderType</em>: Define what type of border is applied. It can be constant or replicate for this example.</li>
+<li><em>value</em>: If <em>borderType</em> is <em>BORDER_CONSTANT</em>, this is the value used to fill the border pixels.</li>
+</ol>
+</li>
+<li><p class="first">We display our output image in the image created previously</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">imshow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">dst</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">After compiling the code above, you  can execute it giving as argument the path of an image. The result should be:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>By default, it begins with the border set to BORDER_CONSTANT. Hence, a succession of random colored borders will be shown.</li>
+<li>If you press &#8216;r&#8217;, the border will become a replica of the edge pixels.</li>
+<li>If you press &#8216;c&#8217;, the random colored borders will appear again</li>
+<li>If you press &#8216;ESC&#8217; the program will exit.</li>
+</ul>
+</div>
+<p>Below some screenshot showing how the border changes color and how the <em>BORDER_REPLICATE</em> option looks:</p>
+<a class="reference internal image-reference" href="../../../../../_images/CopyMakeBorder_Tutorial_Results.jpg"><img alt="Final result after copyMakeBorder application" class="align-center" src="../../../../../_images/CopyMakeBorder_Tutorial_Results.jpg" style="width: 750pt;" /></a>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Adding borders to your images</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a></li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#results">Results</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../filter_2d/filter_2d.html"
+                        title="previous chapter">Making your own linear filters!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../sobel_derivatives/sobel_derivatives.html"
+                        title="next chapter">Sobel Derivatives</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../../_sources/doc/tutorials/imgproc/imgtrans/copyMakeBorder/copyMakeBorder.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../sobel_derivatives/sobel_derivatives.html" title="Sobel Derivatives"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../filter_2d/filter_2d.html" title="Making your own linear filters!"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" ><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

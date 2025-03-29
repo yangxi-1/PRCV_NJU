@@ -1,0 +1,804 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Per-element Operations &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="gpu. GPU-accelerated Computer Vision" href="gpu.html" />
+    <link rel="next" title="Image Processing" href="image_processing.html" />
+    <link rel="prev" title="Operations on Matrices" href="operations_on_matrices.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="image_processing.html" title="Image Processing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="operations_on_matrices.html" title="Operations on Matrices"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="gpu.html" accesskey="U">gpu. GPU-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="per-element-operations">
+<h1>Per-element Operations<a class="headerlink" href="#per-element-operations" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gpu-add">
+<h2>gpu::add<a class="headerlink" href="#gpu-add" title="Permalink to this headline">¶</a></h2>
+<p>Computes a matrix-matrix or matrix-scalar sum.</p>
+<dl class="function">
+<dt id="void gpu::add(const GpuMat&amp; a, const GpuMat&amp; b, GpuMat&amp; c, const GpuMat&amp; mask, int dtype, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">add</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>a</strong>, const GpuMat&amp; <strong>b</strong>, GpuMat&amp; <strong>c</strong>, const GpuMat&amp; <strong>mask</strong>=GpuMat(), int <strong>dtype</strong>=-1, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::add(const GpuMat& a, const GpuMat& b, GpuMat& c, const GpuMat& mask, int dtype, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::add(const GpuMat&amp; a, const Scalar&amp; sc, GpuMat&amp; c, const GpuMat&amp; mask, int dtype, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">add</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>a</strong>, const Scalar&amp; <strong>sc</strong>, GpuMat&amp; <strong>c</strong>, const GpuMat&amp; <strong>mask</strong>=GpuMat(), int <strong>dtype</strong>=-1, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::add(const GpuMat& a, const Scalar& sc, GpuMat& c, const GpuMat& mask, int dtype, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>a</strong> &#8211; First source matrix.</li>
+<li><strong>b</strong> &#8211; Second source matrix to be added to <code class="docutils literal"><span class="pre">a</span></code> . Matrix should have the same size and type as <code class="docutils literal"><span class="pre">a</span></code> .</li>
+<li><strong>sc</strong> &#8211; A scalar to be added to <code class="docutils literal"><span class="pre">a</span></code> .</li>
+<li><strong>c</strong> &#8211; Destination matrix that has the same size and number of channels as the input array(s). The depth is defined by <code class="docutils literal"><span class="pre">dtype</span></code> or <code class="docutils literal"><span class="pre">a</span></code> depth.</li>
+<li><strong>mask</strong> &#8211; Optional operation mask, 8-bit single channel array, that specifies elements of the destination array to be changed.</li>
+<li><strong>dtype</strong> &#8211; Optional depth of the output array.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../contrib/doc/openfabmap.html#virtual void add(const Mat&amp; queryImgDescriptor)" title="virtual void add(const Mat&amp; queryImgDescriptor)"><code class="xref ocv ocv-func docutils literal"><span class="pre">add()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-subtract">
+<h2>gpu::subtract<a class="headerlink" href="#gpu-subtract" title="Permalink to this headline">¶</a></h2>
+<p>Computes a matrix-matrix or matrix-scalar difference.</p>
+<dl class="function">
+<dt id="void gpu::subtract(const GpuMat&amp; a, const GpuMat&amp; b, GpuMat&amp; c, const GpuMat&amp; mask, int dtype, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">subtract</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>a</strong>, const GpuMat&amp; <strong>b</strong>, GpuMat&amp; <strong>c</strong>, const GpuMat&amp; <strong>mask</strong>=GpuMat(), int <strong>dtype</strong>=-1, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::subtract(const GpuMat& a, const GpuMat& b, GpuMat& c, const GpuMat& mask, int dtype, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::subtract(const GpuMat&amp; a, const Scalar&amp; sc, GpuMat&amp; c, const GpuMat&amp; mask, int dtype, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">subtract</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>a</strong>, const Scalar&amp; <strong>sc</strong>, GpuMat&amp; <strong>c</strong>, const GpuMat&amp; <strong>mask</strong>=GpuMat(), int <strong>dtype</strong>=-1, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::subtract(const GpuMat& a, const Scalar& sc, GpuMat& c, const GpuMat& mask, int dtype, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>a</strong> &#8211; First source matrix.</li>
+<li><strong>b</strong> &#8211; Second source matrix to be added to <code class="docutils literal"><span class="pre">a</span></code> . Matrix should have the same size and type as <code class="docutils literal"><span class="pre">a</span></code> .</li>
+<li><strong>sc</strong> &#8211; A scalar to be added to <code class="docutils literal"><span class="pre">a</span></code> .</li>
+<li><strong>c</strong> &#8211; Destination matrix that has the same size and number of channels as the input array(s). The depth is defined by <code class="docutils literal"><span class="pre">dtype</span></code> or <code class="docutils literal"><span class="pre">a</span></code> depth.</li>
+<li><strong>mask</strong> &#8211; Optional operation mask, 8-bit single channel array, that specifies elements of the destination array to be changed.</li>
+<li><strong>dtype</strong> &#8211; Optional depth of the output array.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void subtract(InputArray src1, InputArray src2, OutputArray dst, InputArray mask, int dtype)" title="void subtract(InputArray src1, InputArray src2, OutputArray dst, InputArray mask, int dtype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">subtract()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-multiply">
+<h2>gpu::multiply<a class="headerlink" href="#gpu-multiply" title="Permalink to this headline">¶</a></h2>
+<p>Computes a matrix-matrix or matrix-scalar per-element product.</p>
+<dl class="function">
+<dt id="void gpu::multiply(const GpuMat&amp; a, const GpuMat&amp; b, GpuMat&amp; c, double scale, int dtype, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">multiply</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>a</strong>, const GpuMat&amp; <strong>b</strong>, GpuMat&amp; <strong>c</strong>, double <strong>scale</strong>=1, int <strong>dtype</strong>=-1, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::multiply(const GpuMat& a, const GpuMat& b, GpuMat& c, double scale, int dtype, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::multiply(const GpuMat&amp; a, const Scalar&amp; sc, GpuMat&amp; c, double scale, int dtype, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">multiply</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>a</strong>, const Scalar&amp; <strong>sc</strong>, GpuMat&amp; <strong>c</strong>, double <strong>scale</strong>=1, int <strong>dtype</strong>=-1, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::multiply(const GpuMat& a, const Scalar& sc, GpuMat& c, double scale, int dtype, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>a</strong> &#8211; First source matrix.</li>
+<li><strong>b</strong> &#8211; Second source matrix to be multiplied by <code class="docutils literal"><span class="pre">a</span></code> elements.</li>
+<li><strong>sc</strong> &#8211; A scalar to be multiplied by <code class="docutils literal"><span class="pre">a</span></code> elements.</li>
+<li><strong>c</strong> &#8211; Destination matrix that has the same size and number of channels as the input array(s). The depth is defined by <code class="docutils literal"><span class="pre">dtype</span></code> or <code class="docutils literal"><span class="pre">a</span></code> depth.</li>
+<li><strong>scale</strong> &#8211; Optional scale factor.</li>
+<li><strong>dtype</strong> &#8211; Optional depth of the output array.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void multiply(InputArray src1, InputArray src2, OutputArray dst, double scale, int dtype)" title="void multiply(InputArray src1, InputArray src2, OutputArray dst, double scale, int dtype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">multiply()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-divide">
+<h2>gpu::divide<a class="headerlink" href="#gpu-divide" title="Permalink to this headline">¶</a></h2>
+<p>Computes a matrix-matrix or matrix-scalar division.</p>
+<dl class="function">
+<dt id="void gpu::divide(const GpuMat&amp; a, const GpuMat&amp; b, GpuMat&amp; c, double scale, int dtype, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">divide</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>a</strong>, const GpuMat&amp; <strong>b</strong>, GpuMat&amp; <strong>c</strong>, double <strong>scale</strong>=1, int <strong>dtype</strong>=-1, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::divide(const GpuMat& a, const GpuMat& b, GpuMat& c, double scale, int dtype, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::divide(const GpuMat&amp; a, const Scalar&amp; sc, GpuMat&amp; c, double scale , int dtype , Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">divide</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>a</strong>, const Scalar&amp; <strong>sc</strong>, GpuMat&amp; <strong>c</strong>, double <strong>scale</strong>=1, int <strong>dtype</strong>=-1, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::divide(const GpuMat& a, const Scalar& sc, GpuMat& c, double scale , int dtype , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::divide(double scale, const GpuMat&amp; b, GpuMat&amp; c, int dtype, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">divide</code><span class="sig-paren">(</span>double <strong>scale</strong>, const GpuMat&amp; <strong>b</strong>, GpuMat&amp; <strong>c</strong>, int <strong>dtype</strong>=-1, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::divide(double scale, const GpuMat& b, GpuMat& c, int dtype, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>a</strong> &#8211; First source matrix or a scalar.</li>
+<li><strong>b</strong> &#8211; Second source matrix. The <code class="docutils literal"><span class="pre">a</span></code> elements are divided by it.</li>
+<li><strong>sc</strong> &#8211; A scalar to be divided by the elements of <code class="docutils literal"><span class="pre">a</span></code> matrix.</li>
+<li><strong>c</strong> &#8211; Destination matrix that has the same size and number of channels as the input array(s). The depth is defined by <code class="docutils literal"><span class="pre">dtype</span></code> or <code class="docutils literal"><span class="pre">a</span></code> depth.</li>
+<li><strong>scale</strong> &#8211; Optional scale factor.</li>
+<li><strong>dtype</strong> &#8211; Optional depth of the output array.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function, in contrast to <a class="reference internal" href="../../core/doc/operations_on_arrays.html#void divide(InputArray src1, InputArray src2, OutputArray dst, double scale, int dtype)" title="void divide(InputArray src1, InputArray src2, OutputArray dst, double scale, int dtype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">divide()</span></code></a>, uses a round-down rounding mode.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void divide(InputArray src1, InputArray src2, OutputArray dst, double scale, int dtype)" title="void divide(InputArray src1, InputArray src2, OutputArray dst, double scale, int dtype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">divide()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-addweighted">
+<h2>gpu::addWeighted<a class="headerlink" href="#gpu-addweighted" title="Permalink to this headline">¶</a></h2>
+<p>Computes the weighted sum of two arrays.</p>
+<dl class="function">
+<dt id="void gpu::addWeighted(const GpuMat&amp; src1, double alpha, const GpuMat&amp; src2, double beta, double gamma, GpuMat&amp; dst, int dtype , Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">addWeighted</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src1</strong>, double <strong>alpha</strong>, const GpuMat&amp; <strong>src2</strong>, double <strong>beta</strong>, double <strong>gamma</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>dtype</strong>=-1, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::addWeighted(const GpuMat& src1, double alpha, const GpuMat& src2, double beta, double gamma, GpuMat& dst, int dtype , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; First source array.</li>
+<li><strong>alpha</strong> &#8211; Weight for the first array elements.</li>
+<li><strong>src2</strong> &#8211; Second source array of the same size and channel number as  <code class="docutils literal"><span class="pre">src1</span></code> .</li>
+<li><strong>beta</strong> &#8211; Weight for the second array elements.</li>
+<li><strong>dst</strong> &#8211; Destination array that has the same size and number of channels as the input arrays.</li>
+<li><strong>gamma</strong> &#8211; Scalar added to each sum.</li>
+<li><strong>dtype</strong> &#8211; Optional depth of the destination array. When both input arrays have the same depth, <code class="docutils literal"><span class="pre">dtype</span></code> can be set to <code class="docutils literal"><span class="pre">-1</span></code>, which will be equivalent to <code class="docutils literal"><span class="pre">src1.depth()</span></code>.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">addWeighted</span></code> calculates the weighted sum of two arrays as follows:</p>
+<div class="math">
+<p><img src="../../../_images/math/d9e87b75f6c0526dfca3f8c483fbda1ad7251046.png" alt="\texttt{dst} (I)= \texttt{saturate} ( \texttt{src1} (I)* \texttt{alpha} +  \texttt{src2} (I)* \texttt{beta} +  \texttt{gamma} )"/></p>
+</div><p>where <code class="docutils literal"><span class="pre">I</span></code> is a multi-dimensional index of array elements. In case of multi-channel arrays, each channel is processed independently.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void addWeighted(InputArray src1, double alpha, InputArray src2, double beta, double gamma, OutputArray dst, int dtype)" title="void addWeighted(InputArray src1, double alpha, InputArray src2, double beta, double gamma, OutputArray dst, int dtype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">addWeighted()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-abs">
+<h2>gpu::abs<a class="headerlink" href="#gpu-abs" title="Permalink to this headline">¶</a></h2>
+<p>Computes an absolute value of each matrix element.</p>
+<dl class="function">
+<dt id="void gpu::abs(const GpuMat&amp; src, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">abs</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::abs(const GpuMat& src, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source matrix. Supports <code class="docutils literal"><span class="pre">CV_16S</span></code> and <code class="docutils literal"><span class="pre">CV_32F</span></code> depth.</li>
+<li><strong>dst</strong> &#8211; Destination matrix with the same size and type as <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#MatExpr abs(const Mat&amp; m)" title="MatExpr abs(const Mat&amp; m)"><code class="xref ocv ocv-func docutils literal"><span class="pre">abs()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-sqr">
+<h2>gpu::sqr<a class="headerlink" href="#gpu-sqr" title="Permalink to this headline">¶</a></h2>
+<p>Computes a square value of each matrix element.</p>
+<dl class="function">
+<dt id="void gpu::sqr(const GpuMat&amp; src, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">sqr</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::sqr(const GpuMat& src, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source matrix. Supports <code class="docutils literal"><span class="pre">CV_8U</span></code> , <code class="docutils literal"><span class="pre">CV_16U</span></code> , <code class="docutils literal"><span class="pre">CV_16S</span></code> and <code class="docutils literal"><span class="pre">CV_32F</span></code> depth.</li>
+<li><strong>dst</strong> &#8211; Destination matrix with the same size and type as <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-sqrt">
+<h2>gpu::sqrt<a class="headerlink" href="#gpu-sqrt" title="Permalink to this headline">¶</a></h2>
+<p>Computes a square root of each matrix element.</p>
+<dl class="function">
+<dt id="void gpu::sqrt(const GpuMat&amp; src, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">sqrt</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::sqrt(const GpuMat& src, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source matrix. Supports <code class="docutils literal"><span class="pre">CV_8U</span></code> , <code class="docutils literal"><span class="pre">CV_16U</span></code> , <code class="docutils literal"><span class="pre">CV_16S</span></code> and <code class="docutils literal"><span class="pre">CV_32F</span></code> depth.</li>
+<li><strong>dst</strong> &#8211; Destination matrix with the same size and type as <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void sqrt(InputArray src, OutputArray dst)" title="void sqrt(InputArray src, OutputArray dst)"><code class="xref ocv ocv-func docutils literal"><span class="pre">sqrt()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-exp">
+<h2>gpu::exp<a class="headerlink" href="#gpu-exp" title="Permalink to this headline">¶</a></h2>
+<p>Computes an exponent of each matrix element.</p>
+<dl class="function">
+<dt id="void gpu::exp(const GpuMat&amp; a, GpuMat&amp; b, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">exp</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>a</strong>, GpuMat&amp; <strong>b</strong>, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::exp(const GpuMat& a, GpuMat& b, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>a</strong> &#8211; Source matrix. Supports <code class="docutils literal"><span class="pre">CV_8U</span></code> , <code class="docutils literal"><span class="pre">CV_16U</span></code> , <code class="docutils literal"><span class="pre">CV_16S</span></code> and <code class="docutils literal"><span class="pre">CV_32F</span></code> depth.</li>
+<li><strong>b</strong> &#8211; Destination matrix with the same size and type as <code class="docutils literal"><span class="pre">a</span></code> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void exp(InputArray src, OutputArray dst)" title="void exp(InputArray src, OutputArray dst)"><code class="xref ocv ocv-func docutils literal"><span class="pre">exp()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-log">
+<h2>gpu::log<a class="headerlink" href="#gpu-log" title="Permalink to this headline">¶</a></h2>
+<p>Computes a natural logarithm of absolute value of each matrix element.</p>
+<dl class="function">
+<dt id="void gpu::log(const GpuMat&amp; a, GpuMat&amp; b, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">log</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>a</strong>, GpuMat&amp; <strong>b</strong>, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::log(const GpuMat& a, GpuMat& b, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>a</strong> &#8211; Source matrix. Supports <code class="docutils literal"><span class="pre">CV_8U</span></code> , <code class="docutils literal"><span class="pre">CV_16U</span></code> , <code class="docutils literal"><span class="pre">CV_16S</span></code> and <code class="docutils literal"><span class="pre">CV_32F</span></code> depth.</li>
+<li><strong>b</strong> &#8211; Destination matrix with the same size and type as <code class="docutils literal"><span class="pre">a</span></code> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void log(InputArray src, OutputArray dst)" title="void log(InputArray src, OutputArray dst)"><code class="xref ocv ocv-func docutils literal"><span class="pre">log()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-pow">
+<h2>gpu::pow<a class="headerlink" href="#gpu-pow" title="Permalink to this headline">¶</a></h2>
+<p>Raises every matrix element to a power.</p>
+<dl class="function">
+<dt id="void gpu::pow(const GpuMat&amp; src, double power, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">pow</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, double <strong>power</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::pow(const GpuMat& src, double power, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source matrix. Supports all type, except <code class="docutils literal"><span class="pre">CV_64F</span></code> depth.</li>
+<li><strong>power</strong> &#8211; Exponent of power.</li>
+<li><strong>dst</strong> &#8211; Destination matrix with the same size and type as <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">pow</span></code> raises every element of the input matrix to <code class="docutils literal"><span class="pre">p</span></code> :</p>
+<div class="math">
+<p><img src="../../../_images/math/0f0d634672991b1e6227d6611357dc318f6f5292.png" alt="\texttt{dst} (I) =  \fork{\texttt{src}(I)^p}{if \texttt{p} is integer}{|\texttt{src}(I)|^p}{otherwise}"/></p>
+</div><div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void pow(InputArray src, double power, OutputArray dst)" title="void pow(InputArray src, double power, OutputArray dst)"><code class="xref ocv ocv-func docutils literal"><span class="pre">pow()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-absdiff">
+<h2>gpu::absdiff<a class="headerlink" href="#gpu-absdiff" title="Permalink to this headline">¶</a></h2>
+<p>Computes per-element absolute difference of two matrices (or of a matrix and scalar).</p>
+<dl class="function">
+<dt id="void gpu::absdiff(const GpuMat&amp; a, const GpuMat&amp; b, GpuMat&amp; c, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">absdiff</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>a</strong>, const GpuMat&amp; <strong>b</strong>, GpuMat&amp; <strong>c</strong>, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::absdiff(const GpuMat& a, const GpuMat& b, GpuMat& c, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::absdiff(const GpuMat&amp; a, const Scalar&amp; s, GpuMat&amp; c, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">absdiff</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>a</strong>, const Scalar&amp; <strong>s</strong>, GpuMat&amp; <strong>c</strong>, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::absdiff(const GpuMat& a, const Scalar& s, GpuMat& c, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>a</strong> &#8211; First source matrix.</li>
+<li><strong>b</strong> &#8211; Second source matrix to be added to <code class="docutils literal"><span class="pre">a</span></code> .</li>
+<li><strong>s</strong> &#8211; A scalar to be added to <code class="docutils literal"><span class="pre">a</span></code> .</li>
+<li><strong>c</strong> &#8211; Destination matrix with the same size and type as <code class="docutils literal"><span class="pre">a</span></code> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void absdiff(InputArray src1, InputArray src2, OutputArray dst)" title="void absdiff(InputArray src1, InputArray src2, OutputArray dst)"><code class="xref ocv ocv-func docutils literal"><span class="pre">absdiff()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-compare">
+<h2>gpu::compare<a class="headerlink" href="#gpu-compare" title="Permalink to this headline">¶</a></h2>
+<p>Compares elements of two matrices.</p>
+<dl class="function">
+<dt id="void gpu::compare(const GpuMat&amp; a, const GpuMat&amp; b, GpuMat&amp; c, int cmpop, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">compare</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>a</strong>, const GpuMat&amp; <strong>b</strong>, GpuMat&amp; <strong>c</strong>, int <strong>cmpop</strong>, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::compare(const GpuMat& a, const GpuMat& b, GpuMat& c, int cmpop, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::compare(const GpuMat&amp; a, Scalar sc, GpuMat&amp; c, int cmpop, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">compare</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>a</strong>, Scalar <strong>sc</strong>, GpuMat&amp; <strong>c</strong>, int <strong>cmpop</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::compare(const GpuMat& a, Scalar sc, GpuMat& c, int cmpop, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>a</strong> &#8211; First source matrix.</li>
+<li><strong>b</strong> &#8211; Second source matrix with the same size and type as <code class="docutils literal"><span class="pre">a</span></code> .</li>
+<li><strong>sc</strong> &#8211; A scalar to be compared with <code class="docutils literal"><span class="pre">a</span></code> .</li>
+<li><strong>c</strong> &#8211; Destination matrix with the same size as <code class="docutils literal"><span class="pre">a</span></code> and the <code class="docutils literal"><span class="pre">CV_8UC1</span></code> type.</li>
+<li><strong>cmpop</strong> &#8211; <p>Flag specifying the relation between the elements to be checked:</p>
+<ul>
+<li><strong>CMP_EQ:</strong> <code class="docutils literal"><span class="pre">a(.)</span> <span class="pre">==</span> <span class="pre">b(.)</span></code></li>
+<li><strong>CMP_GT:</strong> <code class="docutils literal"><span class="pre">a(.)</span> <span class="pre">&gt;</span> <span class="pre">b(.)</span></code></li>
+<li><strong>CMP_GE:</strong> <code class="docutils literal"><span class="pre">a(.)</span> <span class="pre">&gt;=</span> <span class="pre">b(.)</span></code></li>
+<li><strong>CMP_LT:</strong> <code class="docutils literal"><span class="pre">a(.)</span> <span class="pre">&lt;</span> <span class="pre">b(.)</span></code></li>
+<li><strong>CMP_LE:</strong> <code class="docutils literal"><span class="pre">a(.)</span> <span class="pre">&lt;=</span> <span class="pre">b(.)</span></code></li>
+<li><strong>CMP_NE:</strong> <code class="docutils literal"><span class="pre">a(.)</span> <span class="pre">!=</span> <span class="pre">b(.)</span></code></li>
+</ul>
+</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../contrib/doc/openfabmap.html#void compare(const Mat&amp; queryImgDescriptor, vector&lt;IMatch&gt;&amp; matches, bool addQuery , const Mat&amp; mask)" title="void compare(const Mat&amp; queryImgDescriptor, vector&lt;IMatch&gt;&amp; matches, bool addQuery , const Mat&amp; mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">compare()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-bitwise-not">
+<h2>gpu::bitwise_not<a class="headerlink" href="#gpu-bitwise-not" title="Permalink to this headline">¶</a></h2>
+<p>Performs a per-element bitwise inversion.</p>
+<dl class="function">
+<dt id="void gpu::bitwise_not(const GpuMat&amp; src, GpuMat&amp; dst, const GpuMat&amp; mask, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">bitwise_not</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, const GpuMat&amp; <strong>mask</strong>=GpuMat(), Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::bitwise_not(const GpuMat& src, GpuMat& dst, const GpuMat& mask, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source matrix.</li>
+<li><strong>dst</strong> &#8211; Destination matrix with the same size and type as <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>mask</strong> &#8211; Optional operation mask. 8-bit single channel image.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-bitwise-or">
+<h2>gpu::bitwise_or<a class="headerlink" href="#gpu-bitwise-or" title="Permalink to this headline">¶</a></h2>
+<p>Performs a per-element bitwise disjunction of two matrices or of matrix and scalar.</p>
+<dl class="function">
+<dt id="void gpu::bitwise_or(const GpuMat&amp; src1, const GpuMat&amp; src2, GpuMat&amp; dst, const GpuMat&amp; mask, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">bitwise_or</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src1</strong>, const GpuMat&amp; <strong>src2</strong>, GpuMat&amp; <strong>dst</strong>, const GpuMat&amp; <strong>mask</strong>=GpuMat(), Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::bitwise_or(const GpuMat& src1, const GpuMat& src2, GpuMat& dst, const GpuMat& mask, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::bitwise_or(const GpuMat&amp; src1, const Scalar&amp; sc, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">bitwise_or</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src1</strong>, const Scalar&amp; <strong>sc</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::bitwise_or(const GpuMat& src1, const Scalar& sc, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; First source matrix.</li>
+<li><strong>src2</strong> &#8211; Second source matrix with the same size and type as <code class="docutils literal"><span class="pre">src1</span></code> .</li>
+<li><strong>dst</strong> &#8211; Destination matrix with the same size and type as <code class="docutils literal"><span class="pre">src1</span></code> .</li>
+<li><strong>mask</strong> &#8211; Optional operation mask. 8-bit single channel image.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-bitwise-and">
+<h2>gpu::bitwise_and<a class="headerlink" href="#gpu-bitwise-and" title="Permalink to this headline">¶</a></h2>
+<p>Performs a per-element bitwise conjunction of two matrices or of matrix and scalar.</p>
+<dl class="function">
+<dt id="void gpu::bitwise_and(const GpuMat&amp; src1, const GpuMat&amp; src2, GpuMat&amp; dst, const GpuMat&amp; mask, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">bitwise_and</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src1</strong>, const GpuMat&amp; <strong>src2</strong>, GpuMat&amp; <strong>dst</strong>, const GpuMat&amp; <strong>mask</strong>=GpuMat(), Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::bitwise_and(const GpuMat& src1, const GpuMat& src2, GpuMat& dst, const GpuMat& mask, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::bitwise_and(const GpuMat&amp; src1, const Scalar&amp; sc, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">bitwise_and</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src1</strong>, const Scalar&amp; <strong>sc</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::bitwise_and(const GpuMat& src1, const Scalar& sc, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; First source matrix.</li>
+<li><strong>src2</strong> &#8211; Second source matrix with the same size and type as <code class="docutils literal"><span class="pre">src1</span></code> .</li>
+<li><strong>dst</strong> &#8211; Destination matrix with the same size and type as <code class="docutils literal"><span class="pre">src1</span></code> .</li>
+<li><strong>mask</strong> &#8211; Optional operation mask. 8-bit single channel image.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-bitwise-xor">
+<h2>gpu::bitwise_xor<a class="headerlink" href="#gpu-bitwise-xor" title="Permalink to this headline">¶</a></h2>
+<p>Performs a per-element bitwise <code class="docutils literal"><span class="pre">exclusive</span> <span class="pre">or</span></code> operation of two matrices of matrix and scalar.</p>
+<dl class="function">
+<dt id="void gpu::bitwise_xor(const GpuMat&amp; src1, const GpuMat&amp; src2, GpuMat&amp; dst, const GpuMat&amp; mask, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">bitwise_xor</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src1</strong>, const GpuMat&amp; <strong>src2</strong>, GpuMat&amp; <strong>dst</strong>, const GpuMat&amp; <strong>mask</strong>=GpuMat(), Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::bitwise_xor(const GpuMat& src1, const GpuMat& src2, GpuMat& dst, const GpuMat& mask, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::bitwise_xor(const GpuMat&amp; src1, const Scalar&amp; sc, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">bitwise_xor</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src1</strong>, const Scalar&amp; <strong>sc</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::bitwise_xor(const GpuMat& src1, const Scalar& sc, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; First source matrix.</li>
+<li><strong>src2</strong> &#8211; Second source matrix with the same size and type as <code class="docutils literal"><span class="pre">src1</span></code> .</li>
+<li><strong>dst</strong> &#8211; Destination matrix with the same size and type as <code class="docutils literal"><span class="pre">src1</span></code> .</li>
+<li><strong>mask</strong> &#8211; Optional operation mask. 8-bit single channel image.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-rshift">
+<h2>gpu::rshift<a class="headerlink" href="#gpu-rshift" title="Permalink to this headline">¶</a></h2>
+<p>Performs pixel by pixel right shift of an image by a constant value.</p>
+<dl class="function">
+<dt id="void gpu::rshift(const GpuMat&amp; src, Scalar_&lt;int&gt; sc, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">rshift</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, Scalar_&lt;int&gt; <strong>sc</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::rshift(const GpuMat& src, Scalar_<int> sc, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source matrix. Supports 1, 3 and 4 channels images with integers elements.</li>
+<li><strong>sc</strong> &#8211; Constant values, one per channel.</li>
+<li><strong>dst</strong> &#8211; Destination matrix with the same size and type as <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-lshift">
+<h2>gpu::lshift<a class="headerlink" href="#gpu-lshift" title="Permalink to this headline">¶</a></h2>
+<p>Performs pixel by pixel right left of an image by a constant value.</p>
+<dl class="function">
+<dt id="void gpu::lshift(const GpuMat&amp; src, Scalar_&lt;int&gt; sc, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">lshift</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, Scalar_&lt;int&gt; <strong>sc</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::lshift(const GpuMat& src, Scalar_<int> sc, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source matrix. Supports 1, 3 and 4 channels images with <code class="docutils literal"><span class="pre">CV_8U</span></code> , <code class="docutils literal"><span class="pre">CV_16U</span></code> or <code class="docutils literal"><span class="pre">CV_32S</span></code> depth.</li>
+<li><strong>sc</strong> &#8211; Constant values, one per channel.</li>
+<li><strong>dst</strong> &#8211; Destination matrix with the same size and type as <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-min">
+<h2>gpu::min<a class="headerlink" href="#gpu-min" title="Permalink to this headline">¶</a></h2>
+<p>Computes the per-element minimum of two matrices (or a matrix and a scalar).</p>
+<dl class="function">
+<dt id="void gpu::min(const GpuMat&amp; src1, const GpuMat&amp; src2, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">min</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src1</strong>, const GpuMat&amp; <strong>src2</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::min(const GpuMat& src1, const GpuMat& src2, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::min(const GpuMat&amp; src1, double src2, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">min</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src1</strong>, double <strong>src2</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::min(const GpuMat& src1, double src2, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; First source matrix.</li>
+<li><strong>src2</strong> &#8211; Second source matrix or a scalar to compare <code class="docutils literal"><span class="pre">src1</span></code> elements with.</li>
+<li><strong>dst</strong> &#8211; Destination matrix with the same size and type as <code class="docutils literal"><span class="pre">src1</span></code> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#MatExpr min(const Mat&amp; a, const Mat&amp; b)" title="MatExpr min(const Mat&amp; a, const Mat&amp; b)"><code class="xref ocv ocv-func docutils literal"><span class="pre">min()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-max">
+<h2>gpu::max<a class="headerlink" href="#gpu-max" title="Permalink to this headline">¶</a></h2>
+<p>Computes the per-element maximum of two matrices (or a matrix and a scalar).</p>
+<dl class="function">
+<dt id="void gpu::max(const GpuMat&amp; src1, const GpuMat&amp; src2, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">max</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src1</strong>, const GpuMat&amp; <strong>src2</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::max(const GpuMat& src1, const GpuMat& src2, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::max(const GpuMat&amp; src1, double src2, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">max</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src1</strong>, double <strong>src2</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::max(const GpuMat& src1, double src2, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; First source matrix.</li>
+<li><strong>src2</strong> &#8211; Second source matrix or a scalar to compare <code class="docutils literal"><span class="pre">src1</span></code> elements with.</li>
+<li><strong>dst</strong> &#8211; Destination matrix with the same size and type as <code class="docutils literal"><span class="pre">src1</span></code> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#MatExpr max(const Mat&amp; a, const Mat&amp; b)" title="MatExpr max(const Mat&amp; a, const Mat&amp; b)"><code class="xref ocv ocv-func docutils literal"><span class="pre">max()</span></code></a></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Per-element Operations</a><ul>
+<li><a class="reference internal" href="#gpu-add">gpu::add</a></li>
+<li><a class="reference internal" href="#gpu-subtract">gpu::subtract</a></li>
+<li><a class="reference internal" href="#gpu-multiply">gpu::multiply</a></li>
+<li><a class="reference internal" href="#gpu-divide">gpu::divide</a></li>
+<li><a class="reference internal" href="#gpu-addweighted">gpu::addWeighted</a></li>
+<li><a class="reference internal" href="#gpu-abs">gpu::abs</a></li>
+<li><a class="reference internal" href="#gpu-sqr">gpu::sqr</a></li>
+<li><a class="reference internal" href="#gpu-sqrt">gpu::sqrt</a></li>
+<li><a class="reference internal" href="#gpu-exp">gpu::exp</a></li>
+<li><a class="reference internal" href="#gpu-log">gpu::log</a></li>
+<li><a class="reference internal" href="#gpu-pow">gpu::pow</a></li>
+<li><a class="reference internal" href="#gpu-absdiff">gpu::absdiff</a></li>
+<li><a class="reference internal" href="#gpu-compare">gpu::compare</a></li>
+<li><a class="reference internal" href="#gpu-bitwise-not">gpu::bitwise_not</a></li>
+<li><a class="reference internal" href="#gpu-bitwise-or">gpu::bitwise_or</a></li>
+<li><a class="reference internal" href="#gpu-bitwise-and">gpu::bitwise_and</a></li>
+<li><a class="reference internal" href="#gpu-bitwise-xor">gpu::bitwise_xor</a></li>
+<li><a class="reference internal" href="#gpu-rshift">gpu::rshift</a></li>
+<li><a class="reference internal" href="#gpu-lshift">gpu::lshift</a></li>
+<li><a class="reference internal" href="#gpu-min">gpu::min</a></li>
+<li><a class="reference internal" href="#gpu-max">gpu::max</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="operations_on_matrices.html"
+                        title="previous chapter">Operations on Matrices</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="image_processing.html"
+                        title="next chapter">Image Processing</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/gpu/doc/per_element_operations.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="image_processing.html" title="Image Processing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="operations_on_matrices.html" title="Operations on Matrices"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="gpu.html" >gpu. GPU-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

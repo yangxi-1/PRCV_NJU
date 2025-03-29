@@ -1,0 +1,428 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Interoperability with OpenCV 1 &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="core module. The Core Functionality" href="../table_of_content_core/table_of_content_core.html" />
+    <link rel="next" title="imgproc module. Image Processing" href="../../imgproc/table_of_content_imgproc/table_of_content_imgproc.html" />
+    <link rel="prev" title="File Input and Output using XML and YAML files" href="../file_input_output_with_xml_yml/file_input_output_with_xml_yml.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../imgproc/table_of_content_imgproc/table_of_content_imgproc.html" title="imgproc module. Image Processing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../file_input_output_with_xml_yml/file_input_output_with_xml_yml.html" title="File Input and Output using XML and YAML files"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_core/table_of_content_core.html" accesskey="U"><em>core</em> module. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="interoperability-with-opencv-1">
+<span id="interoperabilitywithopencv1"></span><h1>Interoperability with OpenCV 1<a class="headerlink" href="#interoperability-with-opencv-1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>For the OpenCV developer team it&#8217;s important to constantly improve the library. We are constantly thinking about methods that will ease your work process, while still maintain the libraries flexibility. The new C++ interface is a development of us that serves this goal. Nevertheless, backward compatibility remains important. We do not want to break your code written for earlier version of the OpenCV library. Therefore, we made sure that we add some functions that deal with this. In the following you&#8217;ll learn:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>What changed with the version 2 of OpenCV in the way you use the library compared to its first version</li>
+<li>How to add some Gaussian noise to an image</li>
+<li>What are lookup tables and why use them?</li>
+</ul>
+</div>
+</div>
+<div class="section" id="general">
+<h2>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h2>
+<p>When making the switch you first need to learn some about the new data structure for images: <a class="reference internal" href="../mat_the_basic_image_container/mat_the_basic_image_container.html#matthebasicimagecontainer"><span>Mat - The Basic Image Container</span></a>, this replaces the old <em>CvMat</em> and <em>IplImage</em> ones. Switching to the new functions is easier. You just need to remember a couple of new things.</p>
+<p>OpenCV 2 received reorganization. No longer are all the functions crammed into a single library. We have many modules, each of them containing data structures and functions relevant to certain tasks. This way you do not need to ship a large library if you use just a subset of OpenCV. This means that you should also include only those headers you will use. For example:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&lt;opencv2/core/core.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;opencv2/imgproc/imgproc.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;</span><span class="cp"></span>
+</pre></div>
+</div>
+<p>All the OpenCV related stuff is put into the <em>cv</em> namespace to avoid name conflicts with other libraries data structures and functions. Therefore, either you need to prepend the <em>cv::</em> keyword before everything that comes from OpenCV or after the includes, you just add a directive to use this:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>  <span class="c1">// The new C++ interface API is inside this namespace. Import it.</span>
+</pre></div>
+</div>
+<p>Because the functions are already in a namespace there is no need for them to contain the <em>cv</em> prefix in their name. As such all the new C++ compatible functions don&#8217;t have this and they follow the camel case naming rule. This means the first letter is small (unless it&#8217;s a name, like Canny) and the subsequent words start with a capital letter (like <em>copyMakeBorder</em>).</p>
+<p>Now, remember that you need to link to your application all the modules you use, and in case you are on Windows using the <em>DLL</em> system you will need to add, again, to the path all the binaries. For more in-depth information if you&#8217;re on Windows read <a class="reference internal" href="../../introduction/windows_visual_studio_Opencv/windows_visual_studio_Opencv.html#windows-visual-studio-how-to"><span>How to build applications with OpenCV inside the Microsoft Visual Studio</span></a> and for Linux an example usage is explained in <a class="reference internal" href="../../introduction/linux_eclipse/linux_eclipse.html#linux-eclipse-usage"><span>Using OpenCV with Eclipse (plugin CDT)</span></a>.</p>
+<p>Now for converting the <em>Mat</em> object you can use either the <em>IplImage</em> or the <em>CvMat</em> operators. While in the C interface you used to work with pointers here it&#8217;s no longer the case. In the C++ interface we have mostly <em>Mat</em> objects. These objects may be freely converted to both <em>IplImage</em> and <em>CvMat</em> with simple assignment. For example:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">I</span><span class="p">;</span>
+<span class="n">IplImage</span> <span class="n">pI</span> <span class="o">=</span> <span class="n">I</span><span class="p">;</span>
+<span class="n">CvMat</span>    <span class="n">mI</span> <span class="o">=</span> <span class="n">I</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Now if you want pointers the conversion gets just a little more complicated. The compilers can no longer automatically determinate what you want and as you need to explicitly specify your goal. This is to call the <em>IplImage</em> and <em>CvMat</em> operators and then get their pointers. For getting the pointer we use the &amp; sign:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">I</span><span class="p">;</span>
+<span class="n">IplImage</span><span class="o">*</span> <span class="n">pI</span>     <span class="o">=</span> <span class="o">&amp;</span><span class="n">I</span><span class="p">.</span><span class="k">operator</span> <span class="n">IplImage</span><span class="p">();</span>
+<span class="n">CvMat</span><span class="o">*</span> <span class="n">mI</span>        <span class="o">=</span>  <span class="o">&amp;</span><span class="n">I</span><span class="p">.</span><span class="k">operator</span> <span class="n">CvMat</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>One of the biggest complaints of the C interface is that it leaves all the memory management to you. You need to figure out when it is safe to release your unused objects and make sure you do so before the program finishes or you could have troublesome memory leeks. To work around this issue in OpenCV there is introduced a sort of smart pointer. This will automatically release the object when it&#8217;s no longer in use. To use this declare the pointers as a specialization of the <em>Ptr</em> :</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">IplImage</span><span class="o">&gt;</span> <span class="n">piI</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">I</span><span class="p">.</span><span class="k">operator</span> <span class="n">IplImage</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Converting from the C data structures to the <em>Mat</em> is done by passing these inside its constructor. For example:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="nf">K</span><span class="p">(</span><span class="n">piL</span><span class="p">),</span> <span class="n">L</span><span class="p">;</span>
+<span class="n">L</span> <span class="o">=</span> <span class="n">Mat</span><span class="p">(</span><span class="n">pI</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="a-case-study">
+<h2>A case study<a class="headerlink" href="#a-case-study" title="Permalink to this headline">¶</a></h2>
+<p>Now that you have the basics done <a class="reference download internal" href="../../../../_downloads/interoperability_with_OpenCV_1.cpp" download=""><code class="xref download docutils literal"><span class="pre">here's</span></code></a> an example that mixes the usage of the C interface with the C++ one. You will also find it in the sample directory of the OpenCV source code library at the <code class="file docutils literal"><span class="pre">samples/cpp/tutorial_code/core/interoperability_with_OpenCV_1/interoperability_with_OpenCV_1.cpp</span></code> . To further help on seeing the difference the programs supports two modes: one mixed C and C++ and one pure C++. If you define the <em>DEMO_MIXED_API_USE</em> you&#8217;ll end up using the first. The program separates the color planes, does some modifications on them and in the end merge them back together.</p>
+<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;opencv2/core/core.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;opencv2/imgproc/imgproc.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>  <span class="c1">// The new C++ interface API is inside this namespace. Import it.</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="cp">#define DEMO_MIXED_API_USE</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">imagename</span> <span class="o">=</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">:</span> <span class="s">&quot;lena.jpg&quot;</span><span class="p">;</span>
+
+<span class="cp">#ifdef DEMO_MIXED_API_USE</span>
+    <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">IplImage</span><span class="o">&gt;</span> <span class="n">IplI</span> <span class="o">=</span> <span class="n">cvLoadImage</span><span class="p">(</span><span class="n">imagename</span><span class="p">);</span>      <span class="c1">// Ptr&lt;T&gt; is safe ref-counting pointer class</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">IplI</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Can not load image &quot;</span> <span class="o">&lt;&lt;</span>  <span class="n">imagename</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">Mat</span> <span class="n">I</span><span class="p">(</span><span class="n">IplI</span><span class="p">);</span> <span class="c1">// Convert to the new style container. Only header created. Image not copied.</span>
+<span class="cp">#else</span>
+    <span class="n">Mat</span> <span class="n">I</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">imagename</span><span class="p">);</span>        <span class="c1">// the newer cvLoadImage alternative, MATLAB-style function</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">I</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="p">)</span>                   <span class="c1">// same as if( !I.data )</span>
+    <span class="p">{</span>
+        <span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Can not load image &quot;</span> <span class="o">&lt;&lt;</span>  <span class="n">imagename</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="cp">#endif</span>
+</pre></div>
+</td></tr></table></div>
+<p>Here you can observe that with the new structure we have no pointer problems, although it is possible to use the old functions and in the end just transform the result to a <em>Mat</em> object.</p>
+<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre>    <span class="c1">// convert image to YUV color space. The output image will be created automatically.</span>
+    <span class="n">Mat</span> <span class="n">I_YUV</span><span class="p">;</span>
+    <span class="n">cvtColor</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">I_YUV</span><span class="p">,</span> <span class="n">COLOR_BGR2YCrCb</span><span class="p">);</span>
+
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;</span> <span class="n">planes</span><span class="p">;</span>    <span class="c1">// Use the STL&#39;s vector structure to store multiple Mat objects</span>
+    <span class="n">split</span><span class="p">(</span><span class="n">I_YUV</span><span class="p">,</span> <span class="n">planes</span><span class="p">);</span>  <span class="c1">// split the image into separate color planes (Y U V)</span>
+</pre></div>
+</td></tr></table></div>
+<p>Because, we want to mess around with the images luma component we first convert from the default BGR to the YUV color space and then split the result up into separate planes. Here the program splits: in the first example it processes each plane using one of the three major image scanning algorithms in OpenCV (C [] operator, iterator, individual element access). In a second variant we add to the image some Gaussian noise and then mix together the channels according to some formula.</p>
+<p>The scanning version looks like:</p>
+<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></div></td><td class="code"><div class="highlight"><pre>    <span class="c1">// Method 1. process Y plane using an iterator</span>
+    <span class="n">MatIterator_</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span> <span class="n">it</span> <span class="o">=</span> <span class="n">planes</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">begin</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">(),</span> <span class="n">it_end</span> <span class="o">=</span> <span class="n">planes</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">end</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="k">for</span><span class="p">(;</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">it_end</span><span class="p">;</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">double</span> <span class="n">v</span> <span class="o">=</span> <span class="o">*</span><span class="n">it</span> <span class="o">*</span> <span class="mf">1.7</span> <span class="o">+</span> <span class="n">rand</span><span class="p">()</span><span class="o">%</span><span class="mi">21</span> <span class="o">-</span> <span class="mi">10</span><span class="p">;</span>
+        <span class="o">*</span><span class="n">it</span> <span class="o">=</span> <span class="n">saturate_cast</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="o">*</span><span class="n">v</span><span class="o">/</span><span class="mi">255</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">I_YUV</span><span class="p">.</span><span class="n">rows</span><span class="p">;</span> <span class="n">y</span><span class="o">++</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// Method 2. process the first chroma plane using pre-stored row pointer.</span>
+        <span class="n">uchar</span><span class="o">*</span> <span class="n">Uptr</span> <span class="o">=</span> <span class="n">planes</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">ptr</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
+        <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">I_YUV</span><span class="p">.</span><span class="n">cols</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span> <span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Uptr</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">saturate_cast</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">((</span><span class="n">Uptr</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">-</span><span class="mi">128</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">128</span><span class="p">);</span>
+
+            <span class="c1">// Method 3. process the second chroma plane using individual element access</span>
+            <span class="n">uchar</span><span class="o">&amp;</span> <span class="n">Vxy</span> <span class="o">=</span> <span class="n">planes</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">at</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
+            <span class="n">Vxy</span> <span class="o">=</span>        <span class="n">saturate_cast</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">((</span><span class="n">Vxy</span><span class="o">-</span><span class="mi">128</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">128</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>Here you can observe that we may go through all the pixels of an image in three fashions: an iterator, a C pointer and an individual element access style. You can read a more in-depth description of these in the <a class="reference internal" href="../how_to_scan_images/how_to_scan_images.html#howtoscanimagesopencv"><span>How to scan images, lookup tables and time measurement with OpenCV</span></a> tutorial. Converting from the old function names is easy. Just remove the cv prefix and use the new <em>Mat</em> data structure. Here&#8217;s an example of this by using the weighted addition function:</p>
+<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34</pre></div></td><td class="code"><div class="highlight"><pre>    <span class="n">Mat</span> <span class="nf">noisyI</span><span class="p">(</span><span class="n">I</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">CV_8U</span><span class="p">);</span>           <span class="c1">// Create a matrix of the specified size and type</span>
+
+    <span class="c1">// Fills the matrix with normally distributed random values (around number with deviation off).</span>
+    <span class="c1">// There is also randu() for uniformly distributed random number generation</span>
+    <span class="n">randn</span><span class="p">(</span><span class="n">noisyI</span><span class="p">,</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">128</span><span class="p">),</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">20</span><span class="p">));</span>
+
+    <span class="c1">// blur the noisyI a bit, kernel size is 3x3 and both sigma&#39;s are set to 0.5</span>
+    <span class="n">GaussianBlur</span><span class="p">(</span><span class="n">noisyI</span><span class="p">,</span> <span class="n">noisyI</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">);</span>
+
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">brightness_gain</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">contrast_gain</span> <span class="o">=</span> <span class="mf">1.7</span><span class="p">;</span>
+
+<span class="cp">#ifdef DEMO_MIXED_API_USE</span>
+    <span class="c1">// To pass the new matrices to the functions that only work with IplImage or CvMat do:</span>
+    <span class="c1">// step 1) Convert the headers (tip: data will not be copied).</span>
+    <span class="c1">// step 2) call the function   (tip: to pass a pointer do not forget unary &quot;&amp;&quot; to form pointers)</span>
+
+    <span class="n">IplImage</span> <span class="n">cv_planes_0</span> <span class="o">=</span> <span class="n">planes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cv_noise</span> <span class="o">=</span> <span class="n">noisyI</span><span class="p">;</span>
+    <span class="n">cvAddWeighted</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cv_planes_0</span><span class="p">,</span> <span class="n">contrast_gain</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cv_noise</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">128</span> <span class="o">+</span> <span class="n">brightness_gain</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cv_planes_0</span><span class="p">);</span>
+<span class="cp">#else</span>
+    <span class="n">addWeighted</span><span class="p">(</span><span class="n">planes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">contrast_gain</span><span class="p">,</span> <span class="n">noisyI</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">128</span> <span class="o">+</span> <span class="n">brightness_gain</span><span class="p">,</span> <span class="n">planes</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="cp">#endif</span>
+
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">color_scale</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">;</span>
+    <span class="c1">// Mat::convertTo() replaces cvConvertScale.</span>
+    <span class="c1">// One must explicitly specify the output matrix type (we keep it intact - planes[1].type())</span>
+    <span class="n">planes</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">convertTo</span><span class="p">(</span><span class="n">planes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">planes</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">type</span><span class="p">(),</span> <span class="n">color_scale</span><span class="p">,</span> <span class="mi">128</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">color_scale</span><span class="p">));</span>
+
+    <span class="c1">// alternative form of cv::convertScale if we know the datatype at compile time (&quot;uchar&quot; here).</span>
+    <span class="c1">// This expression will not create any temporary arrays ( so should be almost as fast as above)</span>
+    <span class="n">planes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">Mat_</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">(</span><span class="n">planes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">color_scale</span> <span class="o">+</span> <span class="mi">128</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">color_scale</span><span class="p">));</span>
+
+    <span class="c1">// Mat::mul replaces cvMul(). Again, no temporary arrays are created in case of simple expressions.</span>
+    <span class="n">planes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">planes</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">mul</span><span class="p">(</span><span class="n">planes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">1.</span><span class="o">/</span><span class="mi">255</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<p>As you may observe the <em>planes</em> variable is of type <em>Mat</em>. However, converting from <em>Mat</em> to <em>IplImage</em> is easy and made automatically with a simple assignment operator.</p>
+<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre>    <span class="n">merge</span><span class="p">(</span><span class="n">planes</span><span class="p">,</span> <span class="n">I_YUV</span><span class="p">);</span>                <span class="c1">// now merge the results back</span>
+    <span class="n">cvtColor</span><span class="p">(</span><span class="n">I_YUV</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">CV_YCrCb2BGR</span><span class="p">);</span>  <span class="c1">// and produce the output RGB image</span>
+
+
+    <span class="n">namedWindow</span><span class="p">(</span><span class="s">&quot;image with grain&quot;</span><span class="p">,</span> <span class="n">WINDOW_AUTOSIZE</span><span class="p">);</span>   <span class="c1">// use this to create images</span>
+
+<span class="cp">#ifdef DEMO_MIXED_API_USE</span>
+    <span class="c1">// this is to demonstrate that I and IplI really share the data - the result of the above</span>
+    <span class="c1">// processing is stored in I and thus in IplI too.</span>
+    <span class="n">cvShowImage</span><span class="p">(</span><span class="s">&quot;image with grain&quot;</span><span class="p">,</span> <span class="n">IplI</span><span class="p">);</span>
+<span class="cp">#else</span>
+    <span class="n">imshow</span><span class="p">(</span><span class="s">&quot;image with grain&quot;</span><span class="p">,</span> <span class="n">I</span><span class="p">);</span> <span class="c1">// the new MATLAB style function show</span>
+</pre></div>
+</td></tr></table></div>
+<p>The new <em>imshow</em> highgui function accepts both the <em>Mat</em> and <em>IplImage</em> data structures. Compile and run the program and if the first image below is your input you may get either the first or second as output:</p>
+<img alt="The output of the sample" class="align-center" src="../../../../_images/outputInteropOpenCV1.jpg" />
+<p>You may observe a runtime instance of this on the <a class="reference external" href="https://www.youtube.com/watch?v=qckm-zvo31w">YouTube here</a> and you can <a class="reference download internal" href="../../../../_downloads/interoperability_with_OpenCV_1.cpp" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">the</span> <span class="pre">source</span> <span class="pre">code</span> <span class="pre">from</span> <span class="pre">here</span></code></a> or find it in the <code class="file docutils literal"><span class="pre">samples/cpp/tutorial_code/core/interoperability_with_OpenCV_1/interoperability_with_OpenCV_1.cpp</span></code> of the OpenCV source code library.</p>
+<div align="center">
+<iframe title="Interoperability with OpenCV 1" width="560" height="349" src="https://www.youtube.com/embed/qckm-zvo31w?rel=0&loop=1" frameborder="0" allowfullscreen align="middle"></iframe>
+</div></div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Interoperability with OpenCV 1</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#general">General</a></li>
+<li><a class="reference internal" href="#a-case-study">A case study</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../file_input_output_with_xml_yml/file_input_output_with_xml_yml.html"
+                        title="previous chapter">File Input and Output using XML and YAML files</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../imgproc/table_of_content_imgproc/table_of_content_imgproc.html"
+                        title="next chapter"><em>imgproc</em> module. Image Processing</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/core/interoperability_with_OpenCV_1/interoperability_with_OpenCV_1.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../imgproc/table_of_content_imgproc/table_of_content_imgproc.html" title="imgproc module. Image Processing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../file_input_output_with_xml_yml/file_input_output_with_xml_yml.html" title="File Input and Output using XML and YAML files"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_core/table_of_content_core.html" ><em>core</em> module. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Fast Approximate Nearest Neighbor Search &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="flann. Clustering and Search in Multi-Dimensional Spaces" href="flann.html" />
+    <link rel="next" title="Clustering" href="flann_clustering.html" />
+    <link rel="prev" title="flann. Clustering and Search in Multi-Dimensional Spaces" href="flann.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="flann_clustering.html" title="Clustering"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="flann.html" title="flann. Clustering and Search in Multi-Dimensional Spaces"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="flann.html" accesskey="U">flann. Clustering and Search in Multi-Dimensional Spaces</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="fast-approximate-nearest-neighbor-search">
+<h1>Fast Approximate Nearest Neighbor Search<a class="headerlink" href="#fast-approximate-nearest-neighbor-search" title="Permalink to this headline">¶</a></h1>
+<p>This section documents OpenCV&#8217;s interface to the FLANN library. FLANN (Fast Library for Approximate Nearest Neighbors) is a library that contains a collection of algorithms optimized for fast nearest neighbor search in large datasets and for high dimensional features. More information about FLANN can be found in <a class="reference internal" href="#muja2009" id="id1">[Muja2009]</a> .</p>
+<table class="docutils citation" frame="void" id="muja2009" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[Muja2009]</a></td><td>Marius Muja, David G. Lowe. Fast Approximate Nearest Neighbors with Automatic Algorithm Configuration, 2009</td></tr>
+</tbody>
+</table>
+<div class="section" id="flann-index">
+<h2>flann::Index_<a class="headerlink" href="#flann-index" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="flann::Index_">
+<em class="property">class </em><code class="descclassname">flann::</code><code class="descname">Index_</code><a class="headerlink" href="#flann::Index_" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The FLANN nearest neighbor index class. This class is templated with the type of elements for which the index is built.</p>
+</div>
+<div class="section" id="flann-index-t-index">
+<h2>flann::Index_&lt;T&gt;::Index_<a class="headerlink" href="#flann-index-t-index" title="Permalink to this headline">¶</a></h2>
+<p>Constructs a nearest neighbor search index for a given dataset.</p>
+<dl class="function">
+<dt id="flann::Index_&lt;T&gt;::Index_(const Mat&amp; features, const IndexParams&amp; params)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">flann::Index_&lt;T&gt;::</code><code class="descname">Index_</code><span class="sig-paren">(</span>const Mat&amp; <strong>features</strong>, const IndexParams&amp; <strong>params</strong><span class="sig-paren">)</span><a class="headerlink" href="#flann::Index_<T>::Index_(const Mat& features, const IndexParams& params)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>features</strong> &#8211; Matrix of containing the features(points) to index. The size of the matrix is <code class="docutils literal"><span class="pre">num_features</span> <span class="pre">x</span> <span class="pre">feature_dimensionality</span></code> and the data type of the elements in the matrix must coincide with the type of the index.</li>
+<li><strong>params</strong> &#8211; Structure containing the index parameters. The type of index that will be constructed depends on the type of this parameter. See the description.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method constructs a fast search structure from a set of features using the specified algorithm with specified parameters, as defined by <code class="docutils literal"><span class="pre">params</span></code>. <code class="docutils literal"><span class="pre">params</span></code> is a reference to one of the following class <code class="docutils literal"><span class="pre">IndexParams</span></code> descendants:</p>
+<blockquote>
+<div><ul>
+<li><p class="first"><strong>LinearIndexParams</strong> When passing an object of this type, the index will perform a linear, brute-force search.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="nl">LinearIndexParams</span> <span class="p">:</span> <span class="k">public</span> <span class="n">IndexParams</span>
+<span class="p">{</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>KDTreeIndexParams</strong> When passing an object of this type the index constructed will consist of a set of randomized kd-trees which will be searched in parallel.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="nl">KDTreeIndexParams</span> <span class="p">:</span> <span class="k">public</span> <span class="n">IndexParams</span>
+<span class="p">{</span>
+    <span class="n">KDTreeIndexParams</span><span class="p">(</span> <span class="kt">int</span> <span class="n">trees</span> <span class="o">=</span> <span class="mi">4</span> <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<blockquote>
+<div><ul class="simple">
+<li><strong>trees</strong> The number of parallel kd-trees to use. Good values are in the range [1..16]</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>KMeansIndexParams</strong> When passing an object of this type the index constructed will be a hierarchical k-means tree.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="nl">KMeansIndexParams</span> <span class="p">:</span> <span class="k">public</span> <span class="n">IndexParams</span>
+<span class="p">{</span>
+    <span class="n">KMeansIndexParams</span><span class="p">(</span>
+        <span class="kt">int</span> <span class="n">branching</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">iterations</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
+        <span class="n">flann_centers_init_t</span> <span class="n">centers_init</span> <span class="o">=</span> <span class="n">CENTERS_RANDOM</span><span class="p">,</span>
+        <span class="kt">float</span> <span class="n">cb_index</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<blockquote>
+<div><ul class="simple">
+<li><strong>branching</strong>  The branching factor to use for the hierarchical k-means tree</li>
+<li><strong>iterations</strong>  The maximum number of iterations to use in the k-means clustering stage when building the k-means tree. A value of -1 used here means that the k-means clustering should be iterated until convergence</li>
+<li><strong>centers_init</strong> The algorithm to use for selecting the initial centers when performing a k-means clustering step. The possible values are  <code class="docutils literal"><span class="pre">CENTERS_RANDOM</span></code>  (picks the initial cluster centers randomly),  <code class="docutils literal"><span class="pre">CENTERS_GONZALES</span></code>  (picks the initial centers using Gonzales&#8217; algorithm) and  <code class="docutils literal"><span class="pre">CENTERS_KMEANSPP</span></code>  (picks the initial centers using the algorithm suggested in  arthur_kmeanspp_2007 )</li>
+<li><strong>cb_index</strong> This parameter (cluster boundary index) influences the way exploration is performed in the hierarchical kmeans tree. When  <code class="docutils literal"><span class="pre">cb_index</span></code>  is zero the next kmeans domain to be explored is chosen to be the one with the closest center. A value greater then zero also takes into account the size of the domain.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>CompositeIndexParams</strong> When using a parameters object of this type the index created combines the randomized kd-trees  and the hierarchical k-means tree.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="nl">CompositeIndexParams</span> <span class="p">:</span> <span class="k">public</span> <span class="n">IndexParams</span>
+<span class="p">{</span>
+    <span class="n">CompositeIndexParams</span><span class="p">(</span>
+        <span class="kt">int</span> <span class="n">trees</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">branching</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">iterations</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
+        <span class="n">flann_centers_init_t</span> <span class="n">centers_init</span> <span class="o">=</span> <span class="n">CENTERS_RANDOM</span><span class="p">,</span>
+        <span class="kt">float</span> <span class="n">cb_index</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>LshIndexParams</strong> When using a parameters object of this type the index created uses multi-probe LSH (by <code class="docutils literal"><span class="pre">Multi-Probe</span> <span class="pre">LSH:</span> <span class="pre">Efficient</span> <span class="pre">Indexing</span> <span class="pre">for</span> <span class="pre">High-Dimensional</span> <span class="pre">Similarity</span> <span class="pre">Search</span></code> by Qin Lv, William Josephson, Zhe Wang, Moses Charikar, Kai Li., Proceedings of the 33rd International Conference on Very Large Data Bases (VLDB). Vienna, Austria. September 2007)</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="nl">LshIndexParams</span> <span class="p">:</span> <span class="k">public</span> <span class="n">IndexParams</span>
+<span class="p">{</span>
+    <span class="n">LshIndexParams</span><span class="p">(</span>
+        <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">table_number</span><span class="p">,</span>
+        <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">key_size</span><span class="p">,</span>
+        <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">multi_probe_level</span> <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<blockquote>
+<div><ul class="simple">
+<li><strong>table_number</strong>  the number of hash tables to use (between 10 and 30 usually).</li>
+<li><strong>key_size</strong>  the size of the hash key in bits (between 10 and 20 usually).</li>
+<li><strong>multi_probe_level</strong>  the number of bits to shift to check for neighboring buckets (0 is regular LSH, 2 is recommended).</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>AutotunedIndexParams</strong> When passing an object of this type the index created is automatically tuned to offer  the best performance, by choosing the optimal index type (randomized kd-trees, hierarchical kmeans, linear) and parameters for the dataset provided.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="nl">AutotunedIndexParams</span> <span class="p">:</span> <span class="k">public</span> <span class="n">IndexParams</span>
+<span class="p">{</span>
+    <span class="n">AutotunedIndexParams</span><span class="p">(</span>
+        <span class="kt">float</span> <span class="n">target_precision</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">,</span>
+        <span class="kt">float</span> <span class="n">build_weight</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
+        <span class="kt">float</span> <span class="n">memory_weight</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="kt">float</span> <span class="n">sample_fraction</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<blockquote>
+<div><ul class="simple">
+<li><strong>target_precision</strong>  Is a number between 0 and 1 specifying the percentage of the approximate nearest-neighbor searches that return the exact nearest-neighbor. Using a higher value for this parameter gives more accurate results, but the search takes longer. The optimum value usually depends on the application.</li>
+<li><strong>build_weight</strong>  Specifies the importance of the index build time raported to the nearest-neighbor search time. In some applications it&#8217;s acceptable for the index build step to take a long time if the subsequent searches in the index can be performed very fast. In other applications it&#8217;s required that the index be build as fast as possible even if that leads to slightly longer search times.</li>
+<li><strong>memory_weight</strong> Is used to specify the tradeoff between time (index build time and search time) and memory used by the index. A value less than 1 gives more importance to the time spent and a value greater than 1 gives more importance to the memory usage.</li>
+<li><strong>sample_fraction</strong> Is a number between 0 and 1 indicating what fraction of the dataset to use in the automatic parameter configuration algorithm. Running the algorithm on the full dataset gives the most accurate results, but for very large datasets can take longer than desired. In such case using just a fraction of the data helps speeding up this algorithm while still giving good approximations of the optimum parameters.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>SavedIndexParams</strong> This object type is used for loading a previously saved index from the disk.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="nl">SavedIndexParams</span> <span class="p">:</span> <span class="k">public</span> <span class="n">IndexParams</span>
+<span class="p">{</span>
+    <span class="n">SavedIndexParams</span><span class="p">(</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">filename</span> <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<blockquote>
+<div><ul class="simple">
+<li><strong>filename</strong>  The filename in which the index was saved.</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="flann-index-t-knnsearch">
+<h2>flann::Index_&lt;T&gt;::knnSearch<a class="headerlink" href="#flann-index-t-knnsearch" title="Permalink to this headline">¶</a></h2>
+<p>Performs a K-nearest neighbor search for a given query point using the index.</p>
+<dl class="function">
+<dt id="void flann::Index_&lt;T&gt;::knnSearch(const vector&lt;T&gt;&amp; query, vector&lt;int&gt;&amp; indices, vector&lt;float&gt;&amp; dists, int knn, const SearchParams&amp; params)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">flann::Index_&lt;T&gt;::</code><code class="descname">knnSearch</code><span class="sig-paren">(</span>const vector&lt;T&gt;&amp; <strong>query</strong>, vector&lt;int&gt;&amp; <strong>indices</strong>, vector&lt;float&gt;&amp; <strong>dists</strong>, int <strong>knn</strong>, const SearchParams&amp; <strong>params</strong><span class="sig-paren">)</span><a class="headerlink" href="#void flann::Index_<T>::knnSearch(const vector<T>& query, vector<int>& indices, vector<float>& dists, int knn, const SearchParams& params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void flann::Index_&lt;T&gt;::knnSearch(const Mat&amp; queries, Mat&amp; indices, Mat&amp; dists, int knn, const SearchParams&amp; params)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">flann::Index_&lt;T&gt;::</code><code class="descname">knnSearch</code><span class="sig-paren">(</span>const Mat&amp; <strong>queries</strong>, Mat&amp; <strong>indices</strong>, Mat&amp; <strong>dists</strong>, int <strong>knn</strong>, const SearchParams&amp; <strong>params</strong><span class="sig-paren">)</span><a class="headerlink" href="#void flann::Index_<T>::knnSearch(const Mat& queries, Mat& indices, Mat& dists, int knn, const SearchParams& params)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>query</strong> &#8211; The query point</li>
+<li><strong>indices</strong> &#8211; Vector that will contain the indices of the K-nearest neighbors found. It must have at least knn size.</li>
+<li><strong>dists</strong> &#8211; Vector that will contain the distances to the K-nearest neighbors found. It must have at least knn size.</li>
+<li><strong>knn</strong> &#8211; Number of nearest neighbors to search for.</li>
+<li><strong>params</strong> &#8211; <p>Search parameters</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">SearchParams</span> <span class="p">{</span>
+        <span class="n">SearchParams</span><span class="p">(</span><span class="kt">int</span> <span class="n">checks</span> <span class="o">=</span> <span class="mi">32</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<blockquote>
+<div><ul>
+<li><strong>checks</strong>  The number of times the tree(s) in the index should be recursively traversed. A higher value for this parameter would give better search precision, but also take more time. If automatic configuration was used when the index was created, the number of checks required to achieve the specified precision was also computed, in which case this parameter is ignored.</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="flann-index-t-radiussearch">
+<h2>flann::Index_&lt;T&gt;::radiusSearch<a class="headerlink" href="#flann-index-t-radiussearch" title="Permalink to this headline">¶</a></h2>
+<p>Performs a radius nearest neighbor search for a given query point.</p>
+<dl class="function">
+<dt id="int flann::Index_&lt;T&gt;::radiusSearch(const vector&lt;T&gt;&amp; query, vector&lt;int&gt;&amp; indices, vector&lt;float&gt;&amp; dists, float radius, const SearchParams&amp; params)">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">flann::Index_&lt;T&gt;::</code><code class="descname">radiusSearch</code><span class="sig-paren">(</span>const vector&lt;T&gt;&amp; <strong>query</strong>, vector&lt;int&gt;&amp; <strong>indices</strong>, vector&lt;float&gt;&amp; <strong>dists</strong>, float <strong>radius</strong>, const SearchParams&amp; <strong>params</strong><span class="sig-paren">)</span><a class="headerlink" href="#int flann::Index_<T>::radiusSearch(const vector<T>& query, vector<int>& indices, vector<float>& dists, float radius, const SearchParams& params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="int flann::Index_&lt;T&gt;::radiusSearch(const Mat&amp; query, Mat&amp; indices, Mat&amp; dists, float radius, const SearchParams&amp; params)">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">flann::Index_&lt;T&gt;::</code><code class="descname">radiusSearch</code><span class="sig-paren">(</span>const Mat&amp; <strong>query</strong>, Mat&amp; <strong>indices</strong>, Mat&amp; <strong>dists</strong>, float <strong>radius</strong>, const SearchParams&amp; <strong>params</strong><span class="sig-paren">)</span><a class="headerlink" href="#int flann::Index_<T>::radiusSearch(const Mat& query, Mat& indices, Mat& dists, float radius, const SearchParams& params)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>query</strong> &#8211; The query point</li>
+<li><strong>indices</strong> &#8211; Vector that will contain the indices of the points found within the search radius in decreasing order of the distance to the query point. If the number of neighbors in the search radius is bigger than the size of this vector, the ones that don&#8217;t fit in the vector are ignored.</li>
+<li><strong>dists</strong> &#8211; Vector that will contain the distances to the points found within the search radius</li>
+<li><strong>radius</strong> &#8211; The search radius</li>
+<li><strong>params</strong> &#8211; Search parameters</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="flann-index-t-save">
+<h2>flann::Index_&lt;T&gt;::save<a class="headerlink" href="#flann-index-t-save" title="Permalink to this headline">¶</a></h2>
+<p>Saves the index to a file.</p>
+<dl class="function">
+<dt id="void flann::Index_&lt;T&gt;::save(std::string filename)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">flann::Index_&lt;T&gt;::</code><code class="descname">save</code><span class="sig-paren">(</span>std::string <strong>filename</strong><span class="sig-paren">)</span><a class="headerlink" href="#void flann::Index_<T>::save(std::string filename)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; The file to save the index to</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="flann-index-t-getindexparameters">
+<h2>flann::Index_&lt;T&gt;::getIndexParameters<a class="headerlink" href="#flann-index-t-getindexparameters" title="Permalink to this headline">¶</a></h2>
+<p>Returns the index parameters.</p>
+<dl class="function">
+<dt id="const IndexParams* flann::Index_&lt;T&gt;::getIndexParameters()">
+<strong>C++:</strong><code class="descname"> </code>const IndexParams* <code class="descclassname">flann::Index_&lt;T&gt;::</code><code class="descname">getIndexParameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#const IndexParams* flann::Index_<T>::getIndexParameters()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The method is useful in the case of auto-tuned indices, when the parameters are chosen during the index construction. Then, the method can be used to retrieve the actual parameter values.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Fast Approximate Nearest Neighbor Search</a><ul>
+<li><a class="reference internal" href="#flann-index">flann::Index_</a></li>
+<li><a class="reference internal" href="#flann-index-t-index">flann::Index_&lt;T&gt;::Index_</a></li>
+<li><a class="reference internal" href="#flann-index-t-knnsearch">flann::Index_&lt;T&gt;::knnSearch</a></li>
+<li><a class="reference internal" href="#flann-index-t-radiussearch">flann::Index_&lt;T&gt;::radiusSearch</a></li>
+<li><a class="reference internal" href="#flann-index-t-save">flann::Index_&lt;T&gt;::save</a></li>
+<li><a class="reference internal" href="#flann-index-t-getindexparameters">flann::Index_&lt;T&gt;::getIndexParameters</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="flann.html"
+                        title="previous chapter">flann. Clustering and Search in Multi-Dimensional Spaces</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="flann_clustering.html"
+                        title="next chapter">Clustering</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/flann/doc/flann_fast_approximate_nearest_neighbor_search.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="flann_clustering.html" title="Clustering"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="flann.html" title="flann. Clustering and Search in Multi-Dimensional Spaces"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="flann.html" >flann. Clustering and Search in Multi-Dimensional Spaces</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

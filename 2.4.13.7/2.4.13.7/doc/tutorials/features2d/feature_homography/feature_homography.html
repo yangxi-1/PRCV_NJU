@@ -1,0 +1,294 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Features2D + Homography to find a known object &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="feature2d module. 2D Features framework" href="../table_of_content_features2d/table_of_content_features2d.html" />
+    <link rel="next" title="Shi-Tomasi corner detector" href="../trackingmotion/good_features_to_track/good_features_to_track.html" />
+    <link rel="prev" title="Feature Matching with FLANN" href="../feature_flann_matcher/feature_flann_matcher.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../trackingmotion/good_features_to_track/good_features_to_track.html" title="Shi-Tomasi corner detector"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../feature_flann_matcher/feature_flann_matcher.html" title="Feature Matching with FLANN"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_features2d/table_of_content_features2d.html" accesskey="U"><em>feature2d</em> module. 2D Features framework</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="features2d-homography-to-find-a-known-object">
+<span id="feature-homography"></span><h1>Features2D + Homography to find a known object<a class="headerlink" href="#features2d-homography-to-find-a-known-object" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Use the function <a class="reference external" href="http://docs.opencv.org/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html?highlight=findhomography#findhomography">findHomography</a> to find the transform between matched keypoints.</li>
+<li>Use the function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/operations_on_arrays.html?highlight=perspectivetransform#perspectivetransform">perspectiveTransform</a> to map the points.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial code&#8217;s is shown lines below. You can also download it from <a class="reference external" href="https://github.com/opencv/opencv/blob/2.4/samples/cpp/tutorial_code/features2D/SURF_Homography.cpp">here</a></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/core/core.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/features2d/features2d.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/highgui/highgui.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/calib3d/calib3d.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/nonfree/nonfree.hpp&quot;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">readme</span><span class="p">();</span>
+
+<span class="cm">/** @function main */</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">if</span><span class="p">(</span> <span class="n">argc</span> <span class="o">!=</span> <span class="mi">3</span> <span class="p">)</span>
+  <span class="p">{</span> <span class="n">readme</span><span class="p">();</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="n">Mat</span> <span class="n">img_object</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">CV_LOAD_IMAGE_GRAYSCALE</span> <span class="p">);</span>
+  <span class="n">Mat</span> <span class="n">img_scene</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">CV_LOAD_IMAGE_GRAYSCALE</span> <span class="p">);</span>
+
+  <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">img_object</span><span class="p">.</span><span class="n">data</span> <span class="o">||</span> <span class="o">!</span><span class="n">img_scene</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span>
+  <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span> <span class="s">&quot; --(!) Error reading images &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="c1">//-- Step 1: Detect the keypoints using SURF Detector</span>
+  <span class="kt">int</span> <span class="n">minHessian</span> <span class="o">=</span> <span class="mi">400</span><span class="p">;</span>
+
+  <span class="n">SurfFeatureDetector</span> <span class="n">detector</span><span class="p">(</span> <span class="n">minHessian</span> <span class="p">);</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;</span> <span class="n">keypoints_object</span><span class="p">,</span> <span class="n">keypoints_scene</span><span class="p">;</span>
+
+  <span class="n">detector</span><span class="p">.</span><span class="n">detect</span><span class="p">(</span> <span class="n">img_object</span><span class="p">,</span> <span class="n">keypoints_object</span> <span class="p">);</span>
+  <span class="n">detector</span><span class="p">.</span><span class="n">detect</span><span class="p">(</span> <span class="n">img_scene</span><span class="p">,</span> <span class="n">keypoints_scene</span> <span class="p">);</span>
+
+  <span class="c1">//-- Step 2: Calculate descriptors (feature vectors)</span>
+  <span class="n">SurfDescriptorExtractor</span> <span class="n">extractor</span><span class="p">;</span>
+
+  <span class="n">Mat</span> <span class="n">descriptors_object</span><span class="p">,</span> <span class="n">descriptors_scene</span><span class="p">;</span>
+
+  <span class="n">extractor</span><span class="p">.</span><span class="n">compute</span><span class="p">(</span> <span class="n">img_object</span><span class="p">,</span> <span class="n">keypoints_object</span><span class="p">,</span> <span class="n">descriptors_object</span> <span class="p">);</span>
+  <span class="n">extractor</span><span class="p">.</span><span class="n">compute</span><span class="p">(</span> <span class="n">img_scene</span><span class="p">,</span> <span class="n">keypoints_scene</span><span class="p">,</span> <span class="n">descriptors_scene</span> <span class="p">);</span>
+
+  <span class="c1">//-- Step 3: Matching descriptor vectors using FLANN matcher</span>
+  <span class="n">FlannBasedMatcher</span> <span class="n">matcher</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">DMatch</span> <span class="o">&gt;</span> <span class="n">matches</span><span class="p">;</span>
+  <span class="n">matcher</span><span class="p">.</span><span class="n">match</span><span class="p">(</span> <span class="n">descriptors_object</span><span class="p">,</span> <span class="n">descriptors_scene</span><span class="p">,</span> <span class="n">matches</span> <span class="p">);</span>
+
+  <span class="kt">double</span> <span class="n">max_dist</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="kt">double</span> <span class="n">min_dist</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+
+  <span class="c1">//-- Quick calculation of max and min distances between keypoints</span>
+  <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">descriptors_object</span><span class="p">.</span><span class="n">rows</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+  <span class="p">{</span> <span class="kt">double</span> <span class="n">dist</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">distance</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">dist</span> <span class="o">&lt;</span> <span class="n">min_dist</span> <span class="p">)</span> <span class="n">min_dist</span> <span class="o">=</span> <span class="n">dist</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">dist</span> <span class="o">&gt;</span> <span class="n">max_dist</span> <span class="p">)</span> <span class="n">max_dist</span> <span class="o">=</span> <span class="n">dist</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;-- Max dist : %f </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">max_dist</span> <span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;-- Min dist : %f </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">min_dist</span> <span class="p">);</span>
+
+  <span class="c1">//-- Draw only &quot;good&quot; matches (i.e. whose distance is less than 3*min_dist )</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">DMatch</span> <span class="o">&gt;</span> <span class="n">good_matches</span><span class="p">;</span>
+
+  <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">descriptors_object</span><span class="p">.</span><span class="n">rows</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+  <span class="p">{</span> <span class="k">if</span><span class="p">(</span> <span class="n">matches</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">distance</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="o">*</span><span class="n">min_dist</span> <span class="p">)</span>
+     <span class="p">{</span> <span class="n">good_matches</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span> <span class="n">matches</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span> <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="n">Mat</span> <span class="n">img_matches</span><span class="p">;</span>
+  <span class="n">drawMatches</span><span class="p">(</span> <span class="n">img_object</span><span class="p">,</span> <span class="n">keypoints_object</span><span class="p">,</span> <span class="n">img_scene</span><span class="p">,</span> <span class="n">keypoints_scene</span><span class="p">,</span>
+               <span class="n">good_matches</span><span class="p">,</span> <span class="n">img_matches</span><span class="p">,</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+               <span class="n">vector</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="p">(),</span> <span class="n">DrawMatchesFlags</span><span class="o">::</span><span class="n">NOT_DRAW_SINGLE_POINTS</span> <span class="p">);</span>
+
+  <span class="c1">//-- Localize the object</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point2f</span><span class="o">&gt;</span> <span class="n">obj</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point2f</span><span class="o">&gt;</span> <span class="n">scene</span><span class="p">;</span>
+
+  <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">good_matches</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+  <span class="p">{</span>
+    <span class="c1">//-- Get the keypoints from the good matches</span>
+    <span class="n">obj</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span> <span class="n">keypoints_object</span><span class="p">[</span> <span class="n">good_matches</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">queryIdx</span> <span class="p">].</span><span class="n">pt</span> <span class="p">);</span>
+    <span class="n">scene</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span> <span class="n">keypoints_scene</span><span class="p">[</span> <span class="n">good_matches</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">trainIdx</span> <span class="p">].</span><span class="n">pt</span> <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="n">Mat</span> <span class="n">H</span> <span class="o">=</span> <span class="n">findHomography</span><span class="p">(</span> <span class="n">obj</span><span class="p">,</span> <span class="n">scene</span><span class="p">,</span> <span class="n">CV_RANSAC</span> <span class="p">);</span>
+
+  <span class="c1">//-- Get the corners from the image_1 ( the object to be &quot;detected&quot; )</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point2f</span><span class="o">&gt;</span> <span class="n">obj_corners</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+  <span class="n">obj_corners</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cvPoint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span> <span class="n">obj_corners</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cvPoint</span><span class="p">(</span> <span class="n">img_object</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+  <span class="n">obj_corners</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">cvPoint</span><span class="p">(</span> <span class="n">img_object</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">img_object</span><span class="p">.</span><span class="n">rows</span> <span class="p">);</span> <span class="n">obj_corners</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">cvPoint</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">img_object</span><span class="p">.</span><span class="n">rows</span> <span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point2f</span><span class="o">&gt;</span> <span class="n">scene_corners</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+
+  <span class="n">perspectiveTransform</span><span class="p">(</span> <span class="n">obj_corners</span><span class="p">,</span> <span class="n">scene_corners</span><span class="p">,</span> <span class="n">H</span><span class="p">);</span>
+
+  <span class="c1">//-- Draw lines between the corners (the mapped object in the scene - image_2 )</span>
+  <span class="n">line</span><span class="p">(</span> <span class="n">img_matches</span><span class="p">,</span> <span class="n">scene_corners</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">Point2f</span><span class="p">(</span> <span class="n">img_object</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">scene_corners</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">Point2f</span><span class="p">(</span> <span class="n">img_object</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">4</span> <span class="p">);</span>
+  <span class="n">line</span><span class="p">(</span> <span class="n">img_matches</span><span class="p">,</span> <span class="n">scene_corners</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">Point2f</span><span class="p">(</span> <span class="n">img_object</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">scene_corners</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">Point2f</span><span class="p">(</span> <span class="n">img_object</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">4</span> <span class="p">);</span>
+  <span class="n">line</span><span class="p">(</span> <span class="n">img_matches</span><span class="p">,</span> <span class="n">scene_corners</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">Point2f</span><span class="p">(</span> <span class="n">img_object</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">scene_corners</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">Point2f</span><span class="p">(</span> <span class="n">img_object</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">4</span> <span class="p">);</span>
+  <span class="n">line</span><span class="p">(</span> <span class="n">img_matches</span><span class="p">,</span> <span class="n">scene_corners</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">Point2f</span><span class="p">(</span> <span class="n">img_object</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">scene_corners</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">Point2f</span><span class="p">(</span> <span class="n">img_object</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">4</span> <span class="p">);</span>
+
+  <span class="c1">//-- Show detected matches</span>
+  <span class="n">imshow</span><span class="p">(</span> <span class="s">&quot;Good Matches &amp; Object detection&quot;</span><span class="p">,</span> <span class="n">img_matches</span> <span class="p">);</span>
+
+  <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="cm">/** @function readme */</span>
+  <span class="kt">void</span> <span class="nf">readme</span><span class="p">()</span>
+  <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; Usage: ./SURF_descriptor &lt;img1&gt; &lt;img2&gt;&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="result">
+<h2>Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">And here is the result for the detected object (highlighted in green)</p>
+<a class="reference internal image-reference" href="../../../../_images/Feature_Homography_Result.jpg"><img alt="../../../../_images/Feature_Homography_Result.jpg" class="align-center" src="../../../../_images/Feature_Homography_Result.jpg" style="height: 200pt;" /></a>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Features2D + Homography to find a known object</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a></li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#result">Result</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../feature_flann_matcher/feature_flann_matcher.html"
+                        title="previous chapter">Feature Matching with FLANN</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../trackingmotion/good_features_to_track/good_features_to_track.html"
+                        title="next chapter">Shi-Tomasi corner detector</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/features2d/feature_homography/feature_homography.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../trackingmotion/good_features_to_track/good_features_to_track.html" title="Shi-Tomasi corner detector"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../feature_flann_matcher/feature_flann_matcher.html" title="Feature Matching with FLANN"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_features2d/table_of_content_features2d.html" ><em>feature2d</em> module. 2D Features framework</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,426 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Canny Edge Detector &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../../index.html" />
+    <link rel="up" title="imgproc module. Image Processing" href="../../table_of_content_imgproc/table_of_content_imgproc.html" />
+    <link rel="next" title="Hough Line Transform" href="../hough_lines/hough_lines.html" />
+    <link rel="prev" title="Laplace Operator" href="../laplace_operator/laplace_operator.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../hough_lines/hough_lines.html" title="Hough Line Transform"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../laplace_operator/laplace_operator.html" title="Laplace Operator"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" accesskey="U"><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="canny-edge-detector">
+<span id="canny-detector"></span><h1>Canny Edge Detector<a class="headerlink" href="#canny-edge-detector" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Use the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/feature_detection.html?highlight=canny#canny">Canny</a> to implement the Canny Edge Detector.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>The <em>Canny Edge detector</em> was developed by John F. Canny in 1986. Also known to many as the <em>optimal detector</em>, Canny algorithm aims to satisfy three main criteria:<ul>
+<li><strong>Low error rate:</strong> Meaning a good detection of only existent edges.</li>
+<li><strong>Good localization:</strong> The distance between edge pixels detected and real edge pixels have to be minimized.</li>
+<li><strong>Minimal response:</strong> Only one detector response per edge.</li>
+</ul>
+</li>
+</ol>
+<div class="section" id="steps">
+<h3>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">Filter out any noise. The Gaussian filter is used for this purpose. An example of a Gaussian kernel of <img class="math" src="../../../../../_images/math/8927106b6000efc5a562a85a04e0c8e7dae81f75.png" alt="size = 5"/> that might be used is shown below:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/8e268d7b17755d3bc1b321449d1d6de7f807d789.png" alt="K = \dfrac{1}{159}\begin{bmatrix}
+          2 &amp; 4 &amp; 5 &amp; 4 &amp; 2 \\
+          4 &amp; 9 &amp; 12 &amp; 9 &amp; 4 \\
+          5 &amp; 12 &amp; 15 &amp; 12 &amp; 5 \\
+          4 &amp; 9 &amp; 12 &amp; 9 &amp; 4 \\
+          2 &amp; 4 &amp; 5 &amp; 4 &amp; 2
+                  \end{bmatrix}"/></p>
+</div></li>
+<li><p class="first">Find the intensity gradient of the image. For this, we follow a procedure analogous to Sobel:</p>
+<ol class="loweralpha">
+<li><p class="first">Apply a pair of convolution masks (in <img class="math" src="../../../../../_images/math/275d1cfd2234a22c171bcf9ee37dd451fffd5e1b.png" alt="x"/> and <img class="math" src="../../../../../_images/math/8be61bd3f15e9c74771dd331d4fee2be8dbe30d5.png" alt="y"/> directions:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/daf149b9164966d5bdedb03720101683dd851e07.png" alt="G_{x} = \begin{bmatrix}
+-1 &amp; 0 &amp; +1  \\
+-2 &amp; 0 &amp; +2  \\
+-1 &amp; 0 &amp; +1
+\end{bmatrix}
+
+G_{y} = \begin{bmatrix}
+-1 &amp; -2 &amp; -1  \\
+0 &amp; 0 &amp; 0  \\
++1 &amp; +2 &amp; +1
+\end{bmatrix}"/></p>
+</div></li>
+<li><p class="first">Find the gradient strength and direction with:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/4c2af1833fd9f9af4ec5506ff8a83e217ebbe6db.png" alt="\begin{array}{l}
+G = \sqrt{ G_{x}^{2} + G_{y}^{2} } \\
+\theta = \arctan(\dfrac{ G_{y} }{ G_{x} })
+\end{array}"/></p>
+</div><p>The direction is rounded to one of four possible angles (namely 0, 45, 90 or 135)</p>
+</li>
+</ol>
+</li>
+<li><p class="first"><em>Non-maximum</em> suppression is applied. This removes pixels  that are not considered to be part of an edge. Hence, only thin lines (candidate edges) will remain.</p>
+</li>
+<li><p class="first"><em>Hysteresis</em>: The final step. Canny does use two thresholds (upper and lower):</p>
+<ol class="loweralpha simple">
+<li>If a pixel gradient is higher than the <em>upper</em> threshold, the pixel is accepted as an edge</li>
+<li>If a pixel gradient value is below the <em>lower</em> threshold, then it is rejected.</li>
+<li>If the pixel gradient is between the two thresholds, then it will be accepted only if it is connected to a pixel that is above the <em>upper</em> threshold.</li>
+</ol>
+<p>Canny recommended a <em>upper</em>:<em>lower</em> ratio between 2:1 and 3:1.</p>
+</li>
+<li><p class="first">For more details, you can always consult your favorite Computer Vision book.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><strong>What does this program do?</strong><ul>
+<li>Asks the user to enter a numerical value to set the lower threshold for our <em>Canny Edge Detector</em> (by means of a Trackbar)</li>
+<li>Applies the <em>Canny Detector</em> and generates a <strong>mask</strong> (bright lines representing the edges on a black background).</li>
+<li>Applies the mask obtained on the original image and display it in a window.</li>
+</ul>
+</li>
+<li>The tutorial code&#8217;s is shown lines below. You can also download it from <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/tutorial_code/ImgTrans/CannyDetector_Demo.cpp">here</a></li>
+</ol>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;opencv2/imgproc/imgproc.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/highgui/highgui.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="c1">/// Global variables</span>
+
+<span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">src_gray</span><span class="p">;</span>
+<span class="n">Mat</span> <span class="n">dst</span><span class="p">,</span> <span class="n">detected_edges</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="n">edgeThresh</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">lowThreshold</span><span class="p">;</span>
+<span class="kt">int</span> <span class="k">const</span> <span class="n">max_lowThreshold</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">ratio</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">kernel_size</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">window_name</span> <span class="o">=</span> <span class="s">&quot;Edge Map&quot;</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @function CannyThreshold</span>
+<span class="cm"> * @brief Trackbar callback - Canny thresholds input with a ratio 1:3</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="nf">CannyThreshold</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">/// Reduce noise with a kernel 3x3</span>
+  <span class="n">blur</span><span class="p">(</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">detected_edges</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="p">);</span>
+
+  <span class="c1">/// Canny detector</span>
+  <span class="n">Canny</span><span class="p">(</span> <span class="n">detected_edges</span><span class="p">,</span> <span class="n">detected_edges</span><span class="p">,</span> <span class="n">lowThreshold</span><span class="p">,</span> <span class="n">lowThreshold</span><span class="o">*</span><span class="n">ratio</span><span class="p">,</span> <span class="n">kernel_size</span> <span class="p">);</span>
+
+  <span class="c1">/// Using Canny&#39;s output as a mask, we display our result</span>
+  <span class="n">dst</span> <span class="o">=</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="n">src</span><span class="p">.</span><span class="n">copyTo</span><span class="p">(</span> <span class="n">dst</span><span class="p">,</span> <span class="n">detected_edges</span><span class="p">);</span>
+  <span class="n">imshow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">dst</span> <span class="p">);</span>
+ <span class="p">}</span>
+
+
+<span class="cm">/** @function main */</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">/// Load an image</span>
+  <span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">);</span>
+
+  <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">src</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span>
+  <span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="c1">/// Create a matrix of the same type and size as src (for dst)</span>
+  <span class="n">dst</span><span class="p">.</span><span class="n">create</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">src</span><span class="p">.</span><span class="n">type</span><span class="p">()</span> <span class="p">);</span>
+
+  <span class="c1">/// Convert the image to grayscale</span>
+  <span class="n">cvtColor</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">CV_BGR2GRAY</span> <span class="p">);</span>
+
+  <span class="c1">/// Create a window</span>
+  <span class="n">namedWindow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+
+  <span class="c1">/// Create a Trackbar for user to enter threshold</span>
+  <span class="n">createTrackbar</span><span class="p">(</span> <span class="s">&quot;Min Threshold:&quot;</span><span class="p">,</span> <span class="n">window_name</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">lowThreshold</span><span class="p">,</span> <span class="n">max_lowThreshold</span><span class="p">,</span> <span class="n">CannyThreshold</span> <span class="p">);</span>
+
+  <span class="c1">/// Show the image</span>
+  <span class="n">CannyThreshold</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+  <span class="c1">/// Wait until user exit program by pressing a key</span>
+  <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Create some needed variables:</p>
+<div class="highlight-cpp"><div class="highlight"><pre>  Mat src, src_gray;
+  Mat dst, detected_edges;
+
+  int edgeThresh = 1;
+  int lowThreshold;
+  int const max_lowThreshold = 100;
+  int ratio = 3;
+  int kernel_size = 3;
+  char* window_name = &quot;Edge Map&quot;;
+
+Note the following:
+
+a. We establish a ratio of lower:upper threshold of 3:1 (with the variable *ratio*)
+b. We set the kernel size of :math:`3` (for the Sobel operations to be performed internally by the Canny function)
+c. We set a maximum value for the lower Threshold of :math:`100`.
+</pre></div>
+</div>
+</li>
+<li><p class="first">Loads the source image:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">/// Load an image</span>
+<span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">);</span>
+
+<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">src</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span>
+  <span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create a matrix of the same type and size of <em>src</em> (to be <em>dst</em>)</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">dst</span><span class="p">.</span><span class="n">create</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">src</span><span class="p">.</span><span class="n">type</span><span class="p">()</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Convert the image to grayscale (using the function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/miscellaneous_transformations.html?highlight=cvtcolor#cvtcolor">cvtColor</a>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">cvtColor</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">CV_BGR2GRAY</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create a window to display the results</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">namedWindow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create a Trackbar for the user to enter the lower threshold for our Canny detector:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">createTrackbar</span><span class="p">(</span> <span class="s">&quot;Min Threshold:&quot;</span><span class="p">,</span> <span class="n">window_name</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">lowThreshold</span><span class="p">,</span> <span class="n">max_lowThreshold</span><span class="p">,</span> <span class="n">CannyThreshold</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>Observe the following:</p>
+<ol class="loweralpha simple">
+<li>The variable to be controlled by the Trackbar is <em>lowThreshold</em> with a limit of <em>max_lowThreshold</em> (which we set to 100 previously)</li>
+<li>Each time the Trackbar registers an action, the callback function <em>CannyThreshold</em> will be invoked.</li>
+</ol>
+</li>
+<li><p class="first">Let&#8217;s check the <em>CannyThreshold</em> function, step by step:</p>
+<ol class="loweralpha">
+<li><p class="first">First, we blur the image with a filter of kernel size 3:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">blur</span><span class="p">(</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">detected_edges</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Second, we apply the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/feature_detection.html?highlight=canny#canny">Canny</a>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Canny</span><span class="p">(</span> <span class="n">detected_edges</span><span class="p">,</span> <span class="n">detected_edges</span><span class="p">,</span> <span class="n">lowThreshold</span><span class="p">,</span> <span class="n">lowThreshold</span><span class="o">*</span><span class="n">ratio</span><span class="p">,</span> <span class="n">kernel_size</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>where the arguments are:</p>
+<ul class="simple">
+<li><em>detected_edges</em>: Source image, grayscale</li>
+<li><em>detected_edges</em>: Output of the detector (can be the same as the input)</li>
+<li><em>lowThreshold</em>: The value entered by the user moving the Trackbar</li>
+<li><em>highThreshold</em>: Set in the program as three times the lower threshold (following Canny&#8217;s recommendation)</li>
+<li><em>kernel_size</em>: We defined it to be 3 (the size of the Sobel kernel to be used internally)</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p class="first">We fill a <em>dst</em> image with zeros (meaning the image is completely black).</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">dst</span> <span class="o">=</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Finally, we will use the function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html?highlight=copyto#mat-copyto">copyTo</a> to map only the areas of the image that are identified as edges (on a black background).</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">src</span><span class="p">.</span><span class="n">copyTo</span><span class="p">(</span> <span class="n">dst</span><span class="p">,</span> <span class="n">detected_edges</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html?highlight=copyto#mat-copyto">copyTo</a> copy the <em>src</em> image onto <em>dst</em>. However, it will only copy the pixels in the locations where they have non-zero values. Since the output of the Canny detector is the edge contours on a black background, the resulting <em>dst</em> will be black in all the area but the detected edges.</p>
+</li>
+<li><p class="first">We display our result:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">imshow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">dst</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="result">
+<h2>Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">After compiling the code above, we can run it giving as argument the path to an image. For example, using as an input the following image:</p>
+<blockquote>
+<div><a class="reference internal image-reference" href="../../../../../_images/Canny_Detector_Tutorial_Original_Image.jpg"><img alt="Original test image" class="align-center" src="../../../../../_images/Canny_Detector_Tutorial_Original_Image.jpg" style="width: 200pt;" /></a>
+</div></blockquote>
+</li>
+<li><p class="first">Moving the slider, trying different threshold, we obtain the following result:</p>
+<blockquote>
+<div><a class="reference internal image-reference" href="../../../../../_images/Canny_Detector_Tutorial_Result.jpg"><img alt="Result after running Canny" class="align-center" src="../../../../../_images/Canny_Detector_Tutorial_Result.jpg" style="width: 200pt;" /></a>
+</div></blockquote>
+</li>
+<li><p class="first">Notice how the image is superposed to the black background on the edge regions.</p>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Canny Edge Detector</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a><ul>
+<li><a class="reference internal" href="#steps">Steps</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#result">Result</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../laplace_operator/laplace_operator.html"
+                        title="previous chapter">Laplace Operator</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../hough_lines/hough_lines.html"
+                        title="next chapter">Hough Line Transform</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../../_sources/doc/tutorials/imgproc/imgtrans/canny_detector/canny_detector.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../hough_lines/hough_lines.html" title="Hough Line Transform"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../laplace_operator/laplace_operator.html" title="Laplace Operator"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" ><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

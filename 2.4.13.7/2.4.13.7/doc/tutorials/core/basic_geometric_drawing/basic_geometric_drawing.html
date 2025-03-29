@@ -1,0 +1,425 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Basic Drawing &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="core module. The Core Functionality" href="../table_of_content_core/table_of_content_core.html" />
+    <link rel="next" title="Random generator and text with OpenCV" href="../random_generator_and_text/random_generator_and_text.html" />
+    <link rel="prev" title="Changing the contrast and brightness of an image!" href="../basic_linear_transform/basic_linear_transform.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../random_generator_and_text/random_generator_and_text.html" title="Random generator and text with OpenCV"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../basic_linear_transform/basic_linear_transform.html" title="Changing the contrast and brightness of an image!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_core/table_of_content_core.html" accesskey="U"><em>core</em> module. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="basic-drawing">
+<span id="drawing-1"></span><h1>Basic Drawing<a class="headerlink" href="#basic-drawing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goals">
+<h2>Goals<a class="headerlink" href="#goals" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Use  <a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html#point">Point</a>  to define 2D points in an image.</li>
+<li>Use  <a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html#scalar">Scalar</a>  and why it is useful</li>
+<li>Draw a <strong>line</strong> by using the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/drawing_functions.html#line">line</a></li>
+<li>Draw an <strong>ellipse</strong> by using the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/drawing_functions.html#ellipse">ellipse</a></li>
+<li>Draw a <strong>rectangle</strong> by using the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/drawing_functions.html#rectangle">rectangle</a></li>
+<li>Draw a <strong>circle</strong> by using the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/drawing_functions.html#circle">circle</a></li>
+<li>Draw a <strong>filled polygon</strong> by using the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/drawing_functions.html#fillpoly">fillPoly</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="opencv-theory">
+<h2>OpenCV Theory<a class="headerlink" href="#opencv-theory" title="Permalink to this headline">¶</a></h2>
+<p>For this tutorial, we will heavily use two structures: <a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html#point">Point</a> and <a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html#scalar">Scalar</a>:</p>
+<div class="section" id="point">
+<h3>Point<a class="headerlink" href="#point" title="Permalink to this headline">¶</a></h3>
+<div class="enumeratevisibleitemswithsquare container">
+It represents a 2D point, specified by its image coordinates <img class="math" src="../../../../_images/math/275d1cfd2234a22c171bcf9ee37dd451fffd5e1b.png" alt="x"/> and <img class="math" src="../../../../_images/math/8be61bd3f15e9c74771dd331d4fee2be8dbe30d5.png" alt="y"/>. We can define it as:</div>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Point</span> <span class="n">pt</span><span class="p">;</span>
+<span class="n">pt</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="n">pt</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Point</span> <span class="n">pt</span> <span class="o">=</span>  <span class="n">Point</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="scalar">
+<h3>Scalar<a class="headerlink" href="#scalar" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Represents a 4-element vector. The type Scalar is widely used in OpenCV for passing pixel values.</p>
+</li>
+<li><p class="first">In this tutorial, we will use it extensively to represent BGR color values (3 parameters). It is not necessary to define the last argument if it is not going to be used.</p>
+</li>
+<li><p class="first">Let&#8217;s see an example, if we are asked for a color argument and we give:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Scalar</span><span class="p">(</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>We would be defining a BGR color such as: <em>Blue = a</em>, <em>Green = b</em> and <em>Red = c</em></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>This code is in your OpenCV sample folder. Otherwise you can grab it from <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/tutorial_code/core/Matrix/Drawing_1.cpp">here</a></li>
+</ul>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Since we plan to draw two examples (an atom and a rook), we have to create 02 images and two windows to display them.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">/// Windows names</span>
+<span class="kt">char</span> <span class="n">atom_window</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&quot;Drawing 1: Atom&quot;</span><span class="p">;</span>
+<span class="kt">char</span> <span class="n">rook_window</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&quot;Drawing 2: Rook&quot;</span><span class="p">;</span>
+
+<span class="c1">/// Create black empty images</span>
+<span class="n">Mat</span> <span class="n">atom_image</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span> <span class="n">w</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">CV_8UC3</span> <span class="p">);</span>
+<span class="n">Mat</span> <span class="n">rook_image</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span> <span class="n">w</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">CV_8UC3</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">We created functions to draw different geometric shapes. For instance, to draw the atom we used <em>MyEllipse</em> and <em>MyFilledCircle</em>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">/// 1. Draw a simple atom:</span>
+
+<span class="c1">/// 1.a. Creating ellipses</span>
+<span class="n">MyEllipse</span><span class="p">(</span> <span class="n">atom_image</span><span class="p">,</span> <span class="mi">90</span> <span class="p">);</span>
+<span class="n">MyEllipse</span><span class="p">(</span> <span class="n">atom_image</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+<span class="n">MyEllipse</span><span class="p">(</span> <span class="n">atom_image</span><span class="p">,</span> <span class="mi">45</span> <span class="p">);</span>
+<span class="n">MyEllipse</span><span class="p">(</span> <span class="n">atom_image</span><span class="p">,</span> <span class="o">-</span><span class="mi">45</span> <span class="p">);</span>
+
+<span class="c1">/// 1.b. Creating circles</span>
+<span class="n">MyFilledCircle</span><span class="p">(</span> <span class="n">atom_image</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="n">w</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">w</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">And to draw the rook we employed <em>MyLine</em>, <em>rectangle</em> and a <em>MyPolygon</em>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">/// 2. Draw a rook</span>
+
+<span class="c1">/// 2.a. Create a convex polygon</span>
+<span class="n">MyPolygon</span><span class="p">(</span> <span class="n">rook_image</span> <span class="p">);</span>
+
+<span class="c1">/// 2.b. Creating rectangles</span>
+<span class="n">rectangle</span><span class="p">(</span> <span class="n">rook_image</span><span class="p">,</span>
+           <span class="n">Point</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">8.0</span> <span class="p">),</span>
+           <span class="n">Point</span><span class="p">(</span> <span class="n">w</span><span class="p">,</span> <span class="n">w</span><span class="p">),</span>
+           <span class="n">Scalar</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span> <span class="p">),</span>
+           <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+           <span class="mi">8</span> <span class="p">);</span>
+
+<span class="c1">/// 2.c. Create a few lines</span>
+<span class="n">MyLine</span><span class="p">(</span> <span class="n">rook_image</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mi">16</span> <span class="p">),</span> <span class="n">Point</span><span class="p">(</span> <span class="n">w</span><span class="p">,</span> <span class="mi">15</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mi">16</span> <span class="p">)</span> <span class="p">);</span>
+<span class="n">MyLine</span><span class="p">(</span> <span class="n">rook_image</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="n">w</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mi">8</span> <span class="p">),</span> <span class="n">Point</span><span class="p">(</span> <span class="n">w</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="n">w</span> <span class="p">)</span> <span class="p">);</span>
+<span class="n">MyLine</span><span class="p">(</span> <span class="n">rook_image</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="n">w</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mi">8</span> <span class="p">),</span> <span class="n">Point</span><span class="p">(</span> <span class="n">w</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">w</span> <span class="p">)</span> <span class="p">);</span>
+<span class="n">MyLine</span><span class="p">(</span> <span class="n">rook_image</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">3</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mi">8</span> <span class="p">),</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">3</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="n">w</span> <span class="p">)</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Let&#8217;s check what is inside each of these functions:</p>
+<ul>
+<li><p class="first"><em>MyLine</em></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">void</span> <span class="nf">MyLine</span><span class="p">(</span> <span class="n">Mat</span> <span class="n">img</span><span class="p">,</span> <span class="n">Point</span> <span class="n">start</span><span class="p">,</span> <span class="n">Point</span> <span class="n">end</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="kt">int</span> <span class="n">thickness</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">lineType</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+  <span class="n">line</span><span class="p">(</span> <span class="n">img</span><span class="p">,</span>
+        <span class="n">start</span><span class="p">,</span>
+        <span class="n">end</span><span class="p">,</span>
+        <span class="n">Scalar</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">),</span>
+        <span class="n">thickness</span><span class="p">,</span>
+        <span class="n">lineType</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>As we can see, <em>MyLine</em> just call the function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/drawing_functions.html#line">line</a>, which does the following:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Draw a line from Point <strong>start</strong> to Point <strong>end</strong></li>
+<li>The line is displayed in the image <strong>img</strong></li>
+<li>The line color is defined by <strong>Scalar( 0, 0, 0)</strong> which is the BGR value correspondent to <strong>Black</strong></li>
+<li>The line thickness is set to <strong>thickness</strong> (in this case 2)</li>
+<li>The line is a 8-connected one (<strong>lineType</strong> = 8)</li>
+</ul>
+</div>
+</li>
+<li><p class="first"><em>MyEllipse</em></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">void</span> <span class="nf">MyEllipse</span><span class="p">(</span> <span class="n">Mat</span> <span class="n">img</span><span class="p">,</span> <span class="kt">double</span> <span class="n">angle</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="kt">int</span> <span class="n">thickness</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">lineType</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+
+  <span class="n">ellipse</span><span class="p">(</span> <span class="n">img</span><span class="p">,</span>
+           <span class="n">Point</span><span class="p">(</span> <span class="n">w</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">w</span><span class="o">/</span><span class="mf">2.0</span> <span class="p">),</span>
+           <span class="n">Size</span><span class="p">(</span> <span class="n">w</span><span class="o">/</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">w</span><span class="o">/</span><span class="mf">16.0</span> <span class="p">),</span>
+           <span class="n">angle</span><span class="p">,</span>
+           <span class="mi">0</span><span class="p">,</span>
+           <span class="mi">360</span><span class="p">,</span>
+           <span class="n">Scalar</span><span class="p">(</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">),</span>
+           <span class="n">thickness</span><span class="p">,</span>
+           <span class="n">lineType</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>From the code above, we can observe that the function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/drawing_functions.html#ellipse">ellipse</a> draws an ellipse such that:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>The ellipse is displayed in the image <strong>img</strong></li>
+<li>The ellipse center is located in the point <strong>(w/2.0, w/2.0)</strong> and is enclosed in a box of size <strong>(w/4.0, w/16.0)</strong></li>
+<li>The ellipse is rotated <strong>angle</strong> degrees</li>
+<li>The ellipse extends an arc between <strong>0</strong> and <strong>360</strong> degrees</li>
+<li>The color of the figure will be <strong>Scalar( 255, 0, 0)</strong> which means blue in BGR value.</li>
+<li>The ellipse&#8217;s <strong>thickness</strong> is 2.</li>
+</ul>
+</div>
+</li>
+<li><p class="first"><em>MyFilledCircle</em></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">void</span> <span class="nf">MyFilledCircle</span><span class="p">(</span> <span class="n">Mat</span> <span class="n">img</span><span class="p">,</span> <span class="n">Point</span> <span class="n">center</span> <span class="p">)</span>
+<span class="p">{</span>
+ <span class="kt">int</span> <span class="n">thickness</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+ <span class="kt">int</span> <span class="n">lineType</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+
+ <span class="n">circle</span><span class="p">(</span> <span class="n">img</span><span class="p">,</span>
+         <span class="n">center</span><span class="p">,</span>
+         <span class="n">w</span><span class="o">/</span><span class="mf">32.0</span><span class="p">,</span>
+         <span class="n">Scalar</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span> <span class="p">),</span>
+         <span class="n">thickness</span><span class="p">,</span>
+         <span class="n">lineType</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Similar to the ellipse function, we can observe that <em>circle</em> receives as arguments:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>The image where the circle will be displayed (<strong>img</strong>)</li>
+<li>The center of the circle denoted as the Point <strong>center</strong></li>
+<li>The radius of the circle: <strong>w/32.0</strong></li>
+<li>The color of the circle: <strong>Scalar(0, 0, 255)</strong> which means <em>Red</em> in BGR</li>
+<li>Since <strong>thickness</strong> = -1, the circle will be drawn filled.</li>
+</ul>
+</div>
+</li>
+<li><p class="first"><em>MyPolygon</em></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">void</span> <span class="nf">MyPolygon</span><span class="p">(</span> <span class="n">Mat</span> <span class="n">img</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="kt">int</span> <span class="n">lineType</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+
+  <span class="cm">/** Create some points */</span>
+  <span class="n">Point</span> <span class="n">rook_points</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">20</span><span class="p">];</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="n">w</span><span class="o">/</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">7</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">8.0</span> <span class="p">);</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">3</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">7</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">8.0</span> <span class="p">);</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">3</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">13</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">16.0</span> <span class="p">);</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">11</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">16.0</span><span class="p">,</span> <span class="mi">13</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">16.0</span> <span class="p">);</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">19</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">32.0</span><span class="p">,</span> <span class="mi">3</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">8.0</span> <span class="p">);</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">3</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">3</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">8.0</span> <span class="p">);</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">3</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">w</span><span class="o">/</span><span class="mf">8.0</span> <span class="p">);</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">26</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">40.0</span><span class="p">,</span> <span class="n">w</span><span class="o">/</span><span class="mf">8.0</span> <span class="p">);</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">26</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">40.0</span><span class="p">,</span> <span class="n">w</span><span class="o">/</span><span class="mf">4.0</span> <span class="p">);</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">22</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">40.0</span><span class="p">,</span> <span class="n">w</span><span class="o">/</span><span class="mf">4.0</span> <span class="p">);</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">22</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">40.0</span><span class="p">,</span> <span class="n">w</span><span class="o">/</span><span class="mf">8.0</span> <span class="p">);</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">11</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">18</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">40.0</span><span class="p">,</span> <span class="n">w</span><span class="o">/</span><span class="mf">8.0</span> <span class="p">);</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">18</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">40.0</span><span class="p">,</span> <span class="n">w</span><span class="o">/</span><span class="mf">4.0</span> <span class="p">);</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">13</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">14</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">40.0</span><span class="p">,</span> <span class="n">w</span><span class="o">/</span><span class="mf">4.0</span> <span class="p">);</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">14</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">40.0</span><span class="p">,</span> <span class="n">w</span><span class="o">/</span><span class="mf">8.0</span> <span class="p">);</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="n">w</span><span class="o">/</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">w</span><span class="o">/</span><span class="mf">8.0</span> <span class="p">);</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="n">w</span><span class="o">/</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">3</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">8.0</span> <span class="p">);</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">17</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">13</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">32.0</span><span class="p">,</span> <span class="mi">3</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">8.0</span> <span class="p">);</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">18</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">5</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">16.0</span><span class="p">,</span> <span class="mi">13</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">16.0</span> <span class="p">);</span>
+  <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">19</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="n">w</span><span class="o">/</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">13</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">16.0</span><span class="p">)</span> <span class="p">;</span>
+
+  <span class="k">const</span> <span class="n">Point</span><span class="o">*</span> <span class="n">ppt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="n">rook_points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">};</span>
+  <span class="kt">int</span> <span class="n">npt</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">20</span> <span class="p">};</span>
+
+  <span class="n">fillPoly</span><span class="p">(</span> <span class="n">img</span><span class="p">,</span>
+            <span class="n">ppt</span><span class="p">,</span>
+            <span class="n">npt</span><span class="p">,</span>
+            <span class="mi">1</span><span class="p">,</span>
+            <span class="n">Scalar</span><span class="p">(</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span> <span class="p">),</span>
+            <span class="n">lineType</span> <span class="p">);</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+<p>To draw a filled polygon we use the function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/drawing_functions.html#fillpoly">fillPoly</a>. We note that:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>The polygon will be drawn on <strong>img</strong></li>
+<li>The vertices of the polygon are the set of points in <strong>ppt</strong></li>
+<li>The total number of vertices to be drawn are <strong>npt</strong></li>
+<li>The number of polygons to be drawn is only <strong>1</strong></li>
+<li>The color of the polygon is defined by <strong>Scalar( 255, 255, 255)</strong>, which is the BGR value for <em>white</em></li>
+</ul>
+</div>
+</li>
+<li><p class="first"><em>rectangle</em></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">rectangle</span><span class="p">(</span> <span class="n">rook_image</span><span class="p">,</span>
+           <span class="n">Point</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="o">*</span><span class="n">w</span><span class="o">/</span><span class="mf">8.0</span> <span class="p">),</span>
+           <span class="n">Point</span><span class="p">(</span> <span class="n">w</span><span class="p">,</span> <span class="n">w</span><span class="p">),</span>
+           <span class="n">Scalar</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span> <span class="p">),</span>
+           <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+           <span class="mi">8</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>Finally we have the <a class="reference external" href="http://docs.opencv.org/modules/core/doc/drawing_functions.html#rectangle">rectangle</a> function (we did not create a special function for this guy). We note that:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>The rectangle will be drawn on <strong>rook_image</strong></li>
+<li>Two opposite vertices of the rectangle are defined by ** Point( 0, 7*w/8.0 )** and <strong>Point( w, w)</strong></li>
+<li>The color of the rectangle is given by <strong>Scalar(0, 255, 255)</strong> which is the BGR value for <em>yellow</em></li>
+<li>Since the thickness value is given by <strong>-1</strong>, the rectangle will be filled.</li>
+</ul>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section" id="result">
+<h2>Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h2>
+<p>Compiling and running your program should give you a result like this:</p>
+<img alt="Drawing Tutorial 1 - Final Result" class="align-center" src="../../../../_images/Drawing_1_Tutorial_Result_0.png" />
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Basic Drawing</a><ul>
+<li><a class="reference internal" href="#goals">Goals</a></li>
+<li><a class="reference internal" href="#opencv-theory">OpenCV Theory</a><ul>
+<li><a class="reference internal" href="#point">Point</a></li>
+<li><a class="reference internal" href="#scalar">Scalar</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#result">Result</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../basic_linear_transform/basic_linear_transform.html"
+                        title="previous chapter">Changing the contrast and brightness of an image!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../random_generator_and_text/random_generator_and_text.html"
+                        title="next chapter">Random generator and text with OpenCV</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/core/basic_geometric_drawing/basic_geometric_drawing.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../random_generator_and_text/random_generator_and_text.html" title="Random generator and text with OpenCV"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../basic_linear_transform/basic_linear_transform.html" title="Changing the contrast and brightness of an image!"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_core/table_of_content_core.html" ><em>core</em> module. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

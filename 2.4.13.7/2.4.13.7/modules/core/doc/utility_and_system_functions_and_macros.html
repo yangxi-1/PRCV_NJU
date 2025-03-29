@@ -1,0 +1,927 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Utility and System Functions and Macros &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="core. The Core Functionality" href="core.html" />
+    <link rel="next" title="OpenGL interoperability" href="opengl_interop.html" />
+    <link rel="prev" title="Clustering" href="clustering.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="opengl_interop.html" title="OpenGL interoperability"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="clustering.html" title="Clustering"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="core.html" accesskey="U">core. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="utility-and-system-functions-and-macros">
+<h1>Utility and System Functions and Macros<a class="headerlink" href="#utility-and-system-functions-and-macros" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="alignptr">
+<h2>alignPtr<a class="headerlink" href="#alignptr" title="Permalink to this headline">¶</a></h2>
+<p>Aligns a pointer to the specified number of bytes.</p>
+<dl class="function">
+<dt id="template&lt;typename _Tp&gt; _Tp* alignPtr(_Tp* ptr, int n)">
+<strong>C++:</strong><code class="descname"> </code>template&lt;typename _Tp&gt; _Tp* <code class="descname">alignPtr</code><span class="sig-paren">(</span>_Tp* <strong>ptr</strong>, int <strong>n</strong>=sizeof(_Tp)<span class="sig-paren">)</span><a class="headerlink" href="#template<typename _Tp> _Tp* alignPtr(_Tp* ptr, int n)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ptr</strong> &#8211; Aligned pointer.</li>
+<li><strong>n</strong> &#8211; Alignment size that must be a power of two.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns the aligned pointer of the same type as the input pointer:</p>
+<div class="math">
+<p><img src="../../../_images/math/bb8d0622ed04b43b4246b40e5dc05055eec10718.png" alt="\texttt{(\_Tp*)(((size\_t)ptr + n-1) \&amp; -n)}"/></p>
+</div></div>
+<div class="section" id="alignsize">
+<h2>alignSize<a class="headerlink" href="#alignsize" title="Permalink to this headline">¶</a></h2>
+<p>Aligns a buffer size to the specified number of bytes.</p>
+<dl class="function">
+<dt id="size_t alignSize(size_t sz, int n)">
+<strong>C++:</strong><code class="descname"> </code>size_t <code class="descname">alignSize</code><span class="sig-paren">(</span>size_t <strong>sz</strong>, int <strong>n</strong><span class="sig-paren">)</span><a class="headerlink" href="#size_t alignSize(size_t sz, int n)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sz</strong> &#8211; Buffer size to align.</li>
+<li><strong>n</strong> &#8211; Alignment size that must be a power of two.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns the minimum number that is greater than or equal to <code class="docutils literal"><span class="pre">sz</span></code> and is divisible by <code class="docutils literal"><span class="pre">n</span></code> :</p>
+<div class="math">
+<p><img src="../../../_images/math/5ab8d65f12830e2c00287ec1b3ec91e22574a10e.png" alt="\texttt{(sz + n-1) \&amp; -n}"/></p>
+</div></div>
+<div class="section" id="allocate">
+<h2>allocate<a class="headerlink" href="#allocate" title="Permalink to this headline">¶</a></h2>
+<p>Allocates an array of elements.</p>
+<dl class="function">
+<dt id="template&lt;typename _Tp&gt; _Tp* allocate(size_t n)">
+<strong>C++:</strong><code class="descname"> </code>template&lt;typename _Tp&gt; _Tp* <code class="descname">allocate</code><span class="sig-paren">(</span>size_t <strong>n</strong><span class="sig-paren">)</span><a class="headerlink" href="#template<typename _Tp> _Tp* allocate(size_t n)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>n</strong> &#8211; Number of elements to allocate.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The generic function <code class="docutils literal"><span class="pre">allocate</span></code> allocates a buffer for the specified number of elements. For each element, the default constructor is called.</p>
+</div>
+<div class="section" id="deallocate">
+<h2>deallocate<a class="headerlink" href="#deallocate" title="Permalink to this headline">¶</a></h2>
+<p>Deallocates an array of elements.</p>
+<dl class="function">
+<dt id="template&lt;typename _Tp&gt; void deallocate(_Tp* ptr, size_t n)">
+<strong>C++:</strong><code class="descname"> </code>template&lt;typename _Tp&gt; void <code class="descname">deallocate</code><span class="sig-paren">(</span>_Tp* <strong>ptr</strong>, size_t <strong>n</strong><span class="sig-paren">)</span><a class="headerlink" href="#template<typename _Tp> void deallocate(_Tp* ptr, size_t n)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ptr</strong> &#8211; Pointer to the deallocated buffer.</li>
+<li><strong>n</strong> &#8211; Number of elements in the buffer.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The generic function <code class="docutils literal"><span class="pre">deallocate</span></code> deallocates the buffer allocated with
+<a class="reference internal" href="#template&lt;typename _Tp&gt; _Tp* allocate(size_t n)" title="template&lt;typename _Tp&gt; _Tp* allocate(size_t n)"><code class="xref ocv ocv-func docutils literal"><span class="pre">allocate()</span></code></a> . The number of elements must match the number passed to
+<a class="reference internal" href="#template&lt;typename _Tp&gt; _Tp* allocate(size_t n)" title="template&lt;typename _Tp&gt; _Tp* allocate(size_t n)"><code class="xref ocv ocv-func docutils literal"><span class="pre">allocate()</span></code></a> .</p>
+</div>
+<div class="section" id="fastatan2">
+<h2>fastAtan2<a class="headerlink" href="#fastatan2" title="Permalink to this headline">¶</a></h2>
+<p>Calculates the angle of a 2D vector in degrees.</p>
+<dl class="function">
+<dt id="float fastAtan2(float y, float x)">
+<strong>C++:</strong><code class="descname"> </code>float <code class="descname">fastAtan2</code><span class="sig-paren">(</span>float <strong>y</strong>, float <strong>x</strong><span class="sig-paren">)</span><a class="headerlink" href="#float fastAtan2(float y, float x)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.fastAtan2">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">fastAtan2</code><span class="sig-paren">(</span>y, x<span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.fastAtan2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="float cvFastArctan(float y, float x)">
+<strong>C:</strong><code class="descname"> </code>float <code class="descname">cvFastArctan</code><span class="sig-paren">(</span>float <strong>y</strong>, float <strong>x</strong><span class="sig-paren">)</span><a class="headerlink" href="#float cvFastArctan(float y, float x)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.FastArctan">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">FastArctan</code><span class="sig-paren">(</span>y, x<span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#cv.FastArctan" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; x-coordinate of the vector.</li>
+<li><strong>y</strong> &#8211; y-coordinate of the vector.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">fastAtan2</span></code> calculates the full-range angle of an input 2D vector. The angle is measured in degrees and varies from 0 to 360 degrees. The accuracy is about 0.3 degrees.</p>
+</div>
+<div class="section" id="cuberoot">
+<h2>cubeRoot<a class="headerlink" href="#cuberoot" title="Permalink to this headline">¶</a></h2>
+<p>Computes the cube root of an argument.</p>
+<dl class="function">
+<dt id="float cubeRoot(float val)">
+<strong>C++:</strong><code class="descname"> </code>float <code class="descname">cubeRoot</code><span class="sig-paren">(</span>float <strong>val</strong><span class="sig-paren">)</span><a class="headerlink" href="#float cubeRoot(float val)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.cubeRoot">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">cubeRoot</code><span class="sig-paren">(</span>val<span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.cubeRoot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="float cvCbrt(float value)">
+<strong>C:</strong><code class="descname"> </code>float <code class="descname">cvCbrt</code><span class="sig-paren">(</span>float <strong>value</strong><span class="sig-paren">)</span><a class="headerlink" href="#float cvCbrt(float value)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Cbrt">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Cbrt</code><span class="sig-paren">(</span>value<span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#cv.Cbrt" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>val</strong> &#8211; A function argument.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">cubeRoot</span></code> computes <img class="math" src="../../../_images/math/892cc1ce7a5029a746a9f078e3dd511a6e1a6195.png" alt="\sqrt[3]{\texttt{val}}"/>. Negative arguments are handled correctly. NaN and Inf are not handled. The accuracy approaches the maximum possible accuracy for single-precision data.</p>
+</div>
+<div class="section" id="ceil">
+<h2>Ceil<a class="headerlink" href="#ceil" title="Permalink to this headline">¶</a></h2>
+<p>Rounds floating-point number to the nearest integer not smaller than the original.</p>
+<dl class="cfunction">
+<dt id="int cvCeil(double value)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvCeil</code><span class="sig-paren">(</span>double <strong>value</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvCeil(double value)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Ceil">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Ceil</code><span class="sig-paren">(</span>value<span class="sig-paren">)</span> &rarr; int<a class="headerlink" href="#cv.Ceil" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> &#8211; floating-point number. If the value is outside of <code class="docutils literal"><span class="pre">INT_MIN</span></code> ... <code class="docutils literal"><span class="pre">INT_MAX</span></code> range, the result is not defined.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function computes an integer <code class="docutils literal"><span class="pre">i</span></code> such that:</p>
+<div class="math">
+<p><img src="../../../_images/math/34f4b6be68d8cbc01d0148941b2118a9d95aaa14.png" alt="i-1 &lt; \texttt{value} \le i"/></p>
+</div></div>
+<div class="section" id="floor">
+<h2>Floor<a class="headerlink" href="#floor" title="Permalink to this headline">¶</a></h2>
+<p>Rounds floating-point number to the nearest integer not larger than the original.</p>
+<dl class="cfunction">
+<dt id="int cvFloor(double value)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvFloor</code><span class="sig-paren">(</span>double <strong>value</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvFloor(double value)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Floor">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Floor</code><span class="sig-paren">(</span>value<span class="sig-paren">)</span> &rarr; int<a class="headerlink" href="#cv.Floor" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> &#8211; floating-point number. If the value is outside of <code class="docutils literal"><span class="pre">INT_MIN</span></code> ... <code class="docutils literal"><span class="pre">INT_MAX</span></code> range, the result is not defined.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function computes an integer <code class="docutils literal"><span class="pre">i</span></code> such that:</p>
+<div class="math">
+<p><img src="../../../_images/math/eaed9c8914c172582158228444caf7c7ba93c4ab.png" alt="i \le \texttt{value} &lt; i+1"/></p>
+</div></div>
+<div class="section" id="round">
+<h2>Round<a class="headerlink" href="#round" title="Permalink to this headline">¶</a></h2>
+<p>Rounds floating-point number to the nearest integer</p>
+<dl class="cfunction">
+<dt id="int cvRound(double value)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvRound</code><span class="sig-paren">(</span>double <strong>value</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvRound(double value)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Round">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Round</code><span class="sig-paren">(</span>value<span class="sig-paren">)</span> &rarr; int<a class="headerlink" href="#cv.Round" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> &#8211; floating-point number. If the value is outside of <code class="docutils literal"><span class="pre">INT_MIN</span></code> ... <code class="docutils literal"><span class="pre">INT_MAX</span></code> range, the result is not defined.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="isinf">
+<h2>IsInf<a class="headerlink" href="#isinf" title="Permalink to this headline">¶</a></h2>
+<p>Determines if the argument is Infinity.</p>
+<dl class="cfunction">
+<dt id="int cvIsInf(double value)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvIsInf</code><span class="sig-paren">(</span>double <strong>value</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvIsInf(double value)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.IsInf">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">IsInf</code><span class="sig-paren">(</span>value<span class="sig-paren">)</span> &rarr; int<a class="headerlink" href="#cv.IsInf" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> &#8211; The input floating-point value</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns 1 if the argument is a plus or minus infinity (as defined by IEEE754 standard) and 0 otherwise.</p>
+</div>
+<div class="section" id="isnan">
+<h2>IsNaN<a class="headerlink" href="#isnan" title="Permalink to this headline">¶</a></h2>
+<p>Determines if the argument is Not A Number.</p>
+<dl class="cfunction">
+<dt id="int cvIsNaN(double value)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvIsNaN</code><span class="sig-paren">(</span>double <strong>value</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvIsNaN(double value)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.IsNaN">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">IsNaN</code><span class="sig-paren">(</span>value<span class="sig-paren">)</span> &rarr; int<a class="headerlink" href="#cv.IsNaN" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> &#8211; The input floating-point value</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns 1 if the argument is Not A Number (as defined by IEEE754 standard), 0 otherwise.</p>
+</div>
+<div class="section" id="cv-assert">
+<h2>CV_Assert<a class="headerlink" href="#cv-assert" title="Permalink to this headline">¶</a></h2>
+<p>Checks a condition at runtime and throws exception if it fails</p>
+<dl class="function">
+<dt id="CV_Assert(expr)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descname">CV_Assert</code><span class="sig-paren">(</span>expr <strong>None</strong><span class="sig-paren">)</span><a class="headerlink" href="#CV_Assert(expr)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>expr</strong> &#8211; Expression for check.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The macros <code class="docutils literal"><span class="pre">CV_Assert</span></code> (and <code class="docutils literal"><span class="pre">CV_DbgAssert</span></code>) evaluate the specified expression. If it is 0, the macros raise an error (see <a class="reference internal" href="#void error(const Exception&amp; exc)" title="void error(const Exception&amp; exc)"><code class="xref ocv ocv-func docutils literal"><span class="pre">error()</span></code></a> ). The macro <code class="docutils literal"><span class="pre">CV_Assert</span></code> checks the condition in both Debug and Release configurations while <code class="docutils literal"><span class="pre">CV_DbgAssert</span></code> is only retained in the Debug configuration.</p>
+</div>
+<div class="section" id="error">
+<h2>error<a class="headerlink" href="#error" title="Permalink to this headline">¶</a></h2>
+<p>Signals an error and raises an exception.</p>
+<dl class="function">
+<dt id="void error(const Exception&amp; exc)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">error</code><span class="sig-paren">(</span>const Exception&amp; <strong>exc</strong><span class="sig-paren">)</span><a class="headerlink" href="#void error(const Exception& exc)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvError(int status, const char* func_name, const char* err_msg, const char* file_name, int line)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvError</code><span class="sig-paren">(</span>int <strong>status</strong>, const char* <strong>func_name</strong>, const char* <strong>err_msg</strong>, const char* <strong>file_name</strong>, int <strong>line</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvError(int status, const char* func_name, const char* err_msg, const char* file_name, int line)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>exc</strong> &#8211; Exception to throw.</li>
+<li><strong>status</strong> &#8211; Error code. Normally, it is a negative value. The list of pre-defined error codes can be found in  <code class="docutils literal"><span class="pre">cxerror.h</span></code> .</li>
+<li><strong>func_name</strong> &#8211; The function name where error occurs.</li>
+<li><strong>err_msg</strong> &#8211; Text of the error message.</li>
+<li><strong>file_name</strong> &#8211; The file name where error occurs.</li>
+<li><strong>line</strong> &#8211; The line number where error occurs.</li>
+<li><strong>args</strong> &#8211; <code class="docutils literal"><span class="pre">printf</span></code> -like formatted error message in parentheses.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function and the helper macros <code class="docutils literal"><span class="pre">CV_Error</span></code> and <code class="docutils literal"><span class="pre">CV_Error_</span></code>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#define CV_Error( code, msg ) error(...)</span>
+<span class="cp">#define CV_Error_( code, args ) error(...)</span>
+</pre></div>
+</div>
+<p>call the error handler. Currently, the error handler prints the error code ( <code class="docutils literal"><span class="pre">exc.code</span></code> ), the context ( <code class="docutils literal"><span class="pre">exc.file</span></code>,``exc.line`` ), and the error message <code class="docutils literal"><span class="pre">exc.err</span></code> to the standard error stream <code class="docutils literal"><span class="pre">stderr</span></code> . In the Debug configuration, it then provokes memory access violation, so that the execution stack and all the parameters can be analyzed by the debugger. In the Release configuration, the exception <code class="docutils literal"><span class="pre">exc</span></code> is thrown.</p>
+<p>The macro <code class="docutils literal"><span class="pre">CV_Error_</span></code> can be used to construct an error message on-fly to include some dynamic information, for example:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// note the extra parentheses around the formatted text message</span>
+<span class="n">CV_Error_</span><span class="p">(</span><span class="n">CV_StsOutOfRange</span><span class="p">,</span>
+    <span class="p">(</span><span class="s">&quot;the matrix element (</span>
+    <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">mtx</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="exception">
+<h2>Exception<a class="headerlink" href="#exception" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Exception : public std::exception">
+<em class="property">class </em><code class="descname">Exception</code> : <em class="property">public</em> <code class="descclassname">std::</code><code class="descname">exception</code><a class="headerlink" href="#Exception : public std::exception" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Exception class passed to an error.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span>  <span class="nc">Exception</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">// various constructors and the copy operation</span>
+    <span class="n">Exception</span><span class="p">()</span> <span class="p">{</span> <span class="n">code</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">line</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">Exception</span><span class="p">(</span><span class="kt">int</span> <span class="n">_code</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">_err</span><span class="p">,</span>
+              <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">_func</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">_file</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_line</span><span class="p">);</span>
+    <span class="n">Exception</span><span class="p">(</span><span class="k">const</span> <span class="n">Exception</span><span class="o">&amp;</span> <span class="n">exc</span><span class="p">);</span>
+    <span class="n">Exception</span><span class="o">&amp;</span> <span class="k">operator</span> <span class="o">=</span> <span class="p">(</span><span class="k">const</span> <span class="n">Exception</span><span class="o">&amp;</span> <span class="n">exc</span><span class="p">);</span>
+
+    <span class="c1">// the error code</span>
+    <span class="kt">int</span> <span class="n">code</span><span class="p">;</span>
+    <span class="c1">// the error text message</span>
+    <span class="n">string</span> <span class="n">err</span><span class="p">;</span>
+    <span class="c1">// function name where the error happened</span>
+    <span class="n">string</span> <span class="n">func</span><span class="p">;</span>
+    <span class="c1">// the source file name where the error happened</span>
+    <span class="n">string</span> <span class="n">file</span><span class="p">;</span>
+    <span class="c1">// the source file line where the error happened</span>
+    <span class="kt">int</span> <span class="n">line</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class <code class="docutils literal"><span class="pre">Exception</span></code> encapsulates all or almost all necessary information about the error happened in the program. The exception is usually constructed and thrown implicitly via <code class="docutils literal"><span class="pre">CV_Error</span></code> and <code class="docutils literal"><span class="pre">CV_Error_</span></code> macros. See
+<a class="reference internal" href="#void error(const Exception&amp; exc)" title="void error(const Exception&amp; exc)"><code class="xref ocv ocv-func docutils literal"><span class="pre">error()</span></code></a> .</p>
+</div>
+<div class="section" id="fastmalloc">
+<h2>fastMalloc<a class="headerlink" href="#fastmalloc" title="Permalink to this headline">¶</a></h2>
+<p>Allocates an aligned memory buffer.</p>
+<dl class="function">
+<dt id="void* fastMalloc(size_t bufSize)">
+<strong>C++:</strong><code class="descname"> </code>void* <code class="descname">fastMalloc</code><span class="sig-paren">(</span>size_t <strong>bufSize</strong><span class="sig-paren">)</span><a class="headerlink" href="#void* fastMalloc(size_t bufSize)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void* cvAlloc(size_t size)">
+<strong>C:</strong><code class="descname"> </code>void* <code class="descname">cvAlloc</code><span class="sig-paren">(</span>size_t <strong>size</strong><span class="sig-paren">)</span><a class="headerlink" href="#void* cvAlloc(size_t size)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>size</strong> &#8211; Allocated buffer size.</li>
+<li><strong>bufSize</strong> &#8211; Allocated buffer size.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function allocates the buffer of the specified size and returns it. When the buffer size is 16 bytes or more, the returned buffer is aligned to 16 bytes.</p>
+</div>
+<div class="section" id="fastfree">
+<h2>fastFree<a class="headerlink" href="#fastfree" title="Permalink to this headline">¶</a></h2>
+<p>Deallocates a memory buffer.</p>
+<dl class="function">
+<dt id="void fastFree(void* ptr)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">fastFree</code><span class="sig-paren">(</span>void* <strong>ptr</strong><span class="sig-paren">)</span><a class="headerlink" href="#void fastFree(void* ptr)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvFree(void** pptr)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvFree</code><span class="sig-paren">(</span>void** <strong>pptr</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvFree(void** pptr)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ptr</strong> &#8211; Pointer to the allocated buffer.</li>
+<li><strong>pptr</strong> &#8211; Double pointer to the allocated buffer</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function deallocates the buffer allocated with <a class="reference internal" href="#void* fastMalloc(size_t bufSize)" title="void* fastMalloc(size_t bufSize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">fastMalloc()</span></code></a> . If NULL pointer is passed, the function does nothing. C version of the function clears the pointer <code class="docutils literal"><span class="pre">*pptr</span></code> to avoid problems with double memory deallocation.</p>
+</div>
+<div class="section" id="format">
+<h2>format<a class="headerlink" href="#format" title="Permalink to this headline">¶</a></h2>
+<p>Returns a text string formatted using the <code class="docutils literal"><span class="pre">printf</span></code>-like expression.</p>
+<dl class="function">
+<dt id="string format(const char* fmt, ...)">
+<strong>C++:</strong><code class="descname"> </code>string <code class="descname">format</code><span class="sig-paren">(</span>const char* <strong>fmt</strong>, <strong>...</strong><span class="sig-paren">)</span><a class="headerlink" href="#string format(const char* fmt, ...)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fmt</strong> &#8211; <code class="docutils literal"><span class="pre">printf</span></code> -compatible formatting specifiers.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function acts like <code class="docutils literal"><span class="pre">sprintf</span></code>  but forms and returns an STL string. It can be used to form an error message in the
+<a class="reference internal" href="#Exception : public std::exception" title="class Exception : public std::exception"><code class="xref ocv ocv-class docutils literal"><span class="pre">Exception</span></code></a> constructor.</p>
+</div>
+<div class="section" id="getbuildinformation">
+<h2>getBuildInformation<a class="headerlink" href="#getbuildinformation" title="Permalink to this headline">¶</a></h2>
+<p>Returns full configuration time cmake output.</p>
+<dl class="function">
+<dt id="const std::string&amp; getBuildInformation()">
+<strong>C++:</strong><code class="descname"> </code>const std::string&amp; <code class="descname">getBuildInformation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#const std::string& getBuildInformation()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Returned value is raw cmake output including version control system revision, compiler version, compiler flags, enabled modules and third party libraries, etc. Output format depends on target architecture.</p>
+</div>
+<div class="section" id="checkhardwaresupport">
+<h2>checkHardwareSupport<a class="headerlink" href="#checkhardwaresupport" title="Permalink to this headline">¶</a></h2>
+<p>Returns true if the specified feature is supported by the host hardware.</p>
+<dl class="function">
+<dt id="bool checkHardwareSupport(int feature)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descname">checkHardwareSupport</code><span class="sig-paren">(</span>int <strong>feature</strong><span class="sig-paren">)</span><a class="headerlink" href="#bool checkHardwareSupport(int feature)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="int cvCheckHardwareSupport(int feature)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvCheckHardwareSupport</code><span class="sig-paren">(</span>int <strong>feature</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvCheckHardwareSupport(int feature)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.checkHardwareSupport">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">checkHardwareSupport</code><span class="sig-paren">(</span>feature<span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.checkHardwareSupport" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>feature</strong> &#8211; <p>The feature of interest, one of:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">CV_CPU_MMX</span></code> - MMX</li>
+<li><code class="docutils literal"><span class="pre">CV_CPU_SSE</span></code> - SSE</li>
+<li><code class="docutils literal"><span class="pre">CV_CPU_SSE2</span></code> - SSE 2</li>
+<li><code class="docutils literal"><span class="pre">CV_CPU_SSE3</span></code> - SSE 3</li>
+<li><code class="docutils literal"><span class="pre">CV_CPU_SSSE3</span></code> - SSSE 3</li>
+<li><code class="docutils literal"><span class="pre">CV_CPU_SSE4_1</span></code> - SSE 4.1</li>
+<li><code class="docutils literal"><span class="pre">CV_CPU_SSE4_2</span></code> - SSE 4.2</li>
+<li><code class="docutils literal"><span class="pre">CV_CPU_POPCNT</span></code> - POPCOUNT</li>
+<li><code class="docutils literal"><span class="pre">CV_CPU_AVX</span></code> - AVX</li>
+<li><code class="docutils literal"><span class="pre">CV_CPU_AVX2</span></code> - AVX2</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns true if the host hardware supports the specified feature. When user calls <code class="docutils literal"><span class="pre">setUseOptimized(false)</span></code>, the subsequent calls to <code class="docutils literal"><span class="pre">checkHardwareSupport()</span></code> will return false until <code class="docutils literal"><span class="pre">setUseOptimized(true)</span></code> is called. This way user can dynamically switch on and off the optimized code in OpenCV.</p>
+</div>
+<div class="section" id="getnumberofcpus">
+<h2>getNumberOfCPUs<a class="headerlink" href="#getnumberofcpus" title="Permalink to this headline">¶</a></h2>
+<p>Returns the number of logical CPUs available for the process.</p>
+<dl class="function">
+<dt id="int getNumberOfCPUs()">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descname">getNumberOfCPUs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#int getNumberOfCPUs()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="getnumthreads">
+<h2>getNumThreads<a class="headerlink" href="#getnumthreads" title="Permalink to this headline">¶</a></h2>
+<p>Returns the number of threads used by OpenCV for parallel regions.
+Always returns 1 if OpenCV is built without threading support.</p>
+<dl class="function">
+<dt id="int getNumThreads()">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descname">getNumThreads</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#int getNumThreads()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The exact meaning of return value depends on the threading framework used by OpenCV library:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>TBB</strong> – The number of threads, that OpenCV will try to use for parallel regions.
+If there is any <code class="docutils literal"><span class="pre">tbb::thread_scheduler_init</span></code> in user code conflicting with OpenCV, then
+function returns default number of threads used by TBB library.</li>
+<li><strong>OpenMP</strong> – An upper bound on the number of threads that could be used to form a new team.</li>
+<li><strong>Concurrency</strong> – The number of threads, that OpenCV will try to use for parallel regions.</li>
+<li><strong>GCD</strong> – Unsupported; returns the GCD thread pool limit (512) for compatibility.</li>
+<li><strong>C=</strong> – The number of threads, that OpenCV will try to use for parallel regions,
+if before called <code class="docutils literal"><span class="pre">setNumThreads</span></code> with <code class="docutils literal"><span class="pre">threads</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>,
+otherwise returns the number of logical CPUs, available for the process.</li>
+</ul>
+</div></blockquote>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void setNumThreads(int nthreads)" title="void setNumThreads(int nthreads)"><code class="xref ocv ocv-func docutils literal"><span class="pre">setNumThreads()</span></code></a>,
+<a class="reference internal" href="#int getThreadNum()" title="int getThreadNum()"><code class="xref ocv ocv-func docutils literal"><span class="pre">getThreadNum()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="getthreadnum">
+<h2>getThreadNum<a class="headerlink" href="#getthreadnum" title="Permalink to this headline">¶</a></h2>
+<p>Returns the index of the currently executed thread within the current parallel region.
+Always returns 0 if called outside of parallel region.</p>
+<dl class="function">
+<dt id="int getThreadNum()">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descname">getThreadNum</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#int getThreadNum()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The exact meaning of the return value depends on the threading framework used by OpenCV library:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>TBB</strong> – Unsupported with current 4.1 TBB release. May be will be supported in future.</li>
+<li><strong>OpenMP</strong> – The thread number, within the current team, of the calling thread.</li>
+<li><strong>Concurrency</strong> – An ID for the virtual processor that the current context is executing
+on (0 for master thread and unique number for others, but not necessary 1,2,3,...).</li>
+<li><strong>GCD</strong> – System calling thread&#8217;s ID. Never returns 0 inside parallel region.</li>
+<li><strong>C=</strong> – The index of the current parallel task.</li>
+</ul>
+</div></blockquote>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void setNumThreads(int nthreads)" title="void setNumThreads(int nthreads)"><code class="xref ocv ocv-func docutils literal"><span class="pre">setNumThreads()</span></code></a>,
+<a class="reference internal" href="#int getNumThreads()" title="int getNumThreads()"><code class="xref ocv ocv-func docutils literal"><span class="pre">getNumThreads()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gettickcount">
+<h2>getTickCount<a class="headerlink" href="#gettickcount" title="Permalink to this headline">¶</a></h2>
+<p>Returns the number of ticks.</p>
+<dl class="function">
+<dt id="int64 getTickCount()">
+<strong>C++:</strong><code class="descname"> </code>int64 <code class="descname">getTickCount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#int64 getTickCount()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.getTickCount">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">getTickCount</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.getTickCount" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The function returns the number of ticks after the certain event (for example, when the machine was turned on).
+It can be used to initialize
+<code class="xref ocv ocv-func docutils literal"><span class="pre">RNG()</span></code> or to measure a function execution time by reading the tick count before and after the function call. See also the tick frequency.</p>
+</div>
+<div class="section" id="gettickfrequency">
+<h2>getTickFrequency<a class="headerlink" href="#gettickfrequency" title="Permalink to this headline">¶</a></h2>
+<p>Returns the number of ticks per second.</p>
+<dl class="function">
+<dt id="double getTickFrequency()">
+<strong>C++:</strong><code class="descname"> </code>double <code class="descname">getTickFrequency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double getTickFrequency()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.getTickFrequency">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">getTickFrequency</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.getTickFrequency" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The function returns the number of ticks per second.
+That is, the following code computes the execution time in seconds:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">double</span> <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">getTickCount</span><span class="p">();</span>
+<span class="c1">// do something ...</span>
+<span class="n">t</span> <span class="o">=</span> <span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="n">getTickCount</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span><span class="o">/</span><span class="n">getTickFrequency</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="getcputickcount">
+<h2>getCPUTickCount<a class="headerlink" href="#getcputickcount" title="Permalink to this headline">¶</a></h2>
+<p>Returns the number of CPU ticks.</p>
+<dl class="function">
+<dt id="int64 getCPUTickCount()">
+<strong>C++:</strong><code class="descname"> </code>int64 <code class="descname">getCPUTickCount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#int64 getCPUTickCount()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.getCPUTickCount">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">getCPUTickCount</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.getCPUTickCount" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The function returns the current number of CPU ticks on some architectures (such as x86, x64, PowerPC). On other platforms the function is equivalent to <code class="docutils literal"><span class="pre">getTickCount</span></code>. It can also be used for very accurate time measurements, as well as for RNG initialization. Note that in case of multi-CPU systems a thread, from which <code class="docutils literal"><span class="pre">getCPUTickCount</span></code> is called, can be suspended and resumed at another CPU with its own counter. So, theoretically (and practically) the subsequent calls to the function do not necessary return the monotonously increasing values. Also, since a modern CPU varies the CPU frequency depending on the load, the number of CPU clocks spent in some code cannot be directly converted to time units. Therefore, <code class="docutils literal"><span class="pre">getTickCount</span></code> is generally a preferable solution for measuring execution time.</p>
+</div>
+<div class="section" id="saturate-cast">
+<h2>saturate_cast<a class="headerlink" href="#saturate-cast" title="Permalink to this headline">¶</a></h2>
+<p>Template function for accurate conversion from one primitive type to another.</p>
+<dl class="function">
+<dt id="template&lt;...&gt; _Tp saturate_cast(_Tp2 v)">
+<strong>C++:</strong><code class="descname"> </code>template&lt;...&gt; _Tp <code class="descname">saturate_cast</code><span class="sig-paren">(</span>_Tp2 <strong>v</strong><span class="sig-paren">)</span><a class="headerlink" href="#template<...> _Tp saturate_cast(_Tp2 v)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>v</strong> &#8211; Function parameter.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The functions <code class="docutils literal"><span class="pre">saturate_cast</span></code> resemble the standard C++ cast operations, such as <code class="docutils literal"><span class="pre">static_cast&lt;T&gt;()</span></code> and others. They perform an efficient and accurate conversion from one primitive type to another (see the introduction chapter). <code class="docutils literal"><span class="pre">saturate</span></code> in the name means that when the input value <code class="docutils literal"><span class="pre">v</span></code> is out of the range of the target type, the result is not formed just by taking low bits of the input, but instead the value is clipped. For example:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">uchar</span> <span class="n">a</span> <span class="o">=</span> <span class="n">saturate_cast</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">(</span><span class="o">-</span><span class="mi">100</span><span class="p">);</span> <span class="c1">// a = 0 (UCHAR_MIN)</span>
+<span class="kt">short</span> <span class="n">b</span> <span class="o">=</span> <span class="n">saturate_cast</span><span class="o">&lt;</span><span class="kt">short</span><span class="o">&gt;</span><span class="p">(</span><span class="mf">33333.33333</span><span class="p">);</span> <span class="c1">// b = 32767 (SHRT_MAX)</span>
+</pre></div>
+</div>
+<p>Such clipping is done when the target type is <code class="docutils literal"><span class="pre">unsigned</span> <span class="pre">char</span></code> , <code class="docutils literal"><span class="pre">signed</span> <span class="pre">char</span></code> , <code class="docutils literal"><span class="pre">unsigned</span> <span class="pre">short</span></code> or <code class="docutils literal"><span class="pre">signed</span> <span class="pre">short</span></code> . For 32-bit integers, no clipping is done.</p>
+<p>When the parameter is a floating-point value and the target type is an integer (8-, 16- or 32-bit), the floating-point value is first rounded to the nearest integer and then clipped if needed (when the target type is 8- or 16-bit).</p>
+<p>This operation is used in the simplest or most complex image processing functions in OpenCV.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../contrib/doc/openfabmap.html#virtual void add(const Mat&amp; queryImgDescriptor)" title="virtual void add(const Mat&amp; queryImgDescriptor)"><code class="xref ocv ocv-func docutils literal"><span class="pre">add()</span></code></a>,
+<a class="reference internal" href="operations_on_arrays.html#void subtract(InputArray src1, InputArray src2, OutputArray dst, InputArray mask, int dtype)" title="void subtract(InputArray src1, InputArray src2, OutputArray dst, InputArray mask, int dtype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">subtract()</span></code></a>,
+<a class="reference internal" href="operations_on_arrays.html#void multiply(InputArray src1, InputArray src2, OutputArray dst, double scale, int dtype)" title="void multiply(InputArray src1, InputArray src2, OutputArray dst, double scale, int dtype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">multiply()</span></code></a>,
+<a class="reference internal" href="operations_on_arrays.html#void divide(InputArray src1, InputArray src2, OutputArray dst, double scale, int dtype)" title="void divide(InputArray src1, InputArray src2, OutputArray dst, double scale, int dtype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">divide()</span></code></a>,
+<a class="reference internal" href="basic_structures.html#void Mat::convertTo(OutputArray m, int rtype, double alpha, double beta) const" title="void Mat::convertTo(OutputArray m, int rtype, double alpha, double beta) const"><code class="xref ocv ocv-func docutils literal"><span class="pre">Mat::convertTo()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="setnumthreads">
+<h2>setNumThreads<a class="headerlink" href="#setnumthreads" title="Permalink to this headline">¶</a></h2>
+<p>OpenCV will try to set the number of threads for the next parallel region.
+If <code class="docutils literal"><span class="pre">threads</span> <span class="pre">==</span> <span class="pre">0</span></code>, OpenCV will disable threading optimizations and run all its
+functions sequentially. Passing <code class="docutils literal"><span class="pre">threads</span> <span class="pre">&lt;</span> <span class="pre">0</span></code> will reset threads number to system default.
+This function must be called outside of parallel region.</p>
+<dl class="function">
+<dt id="void setNumThreads(int nthreads)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setNumThreads</code><span class="sig-paren">(</span>int <strong>nthreads</strong><span class="sig-paren">)</span><a class="headerlink" href="#void setNumThreads(int nthreads)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nthreads</strong> &#8211; Number of threads used by OpenCV.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>OpenCV will try to run its functions with specified threads number, but
+some behaviour differs from framework:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>TBB</strong> – User-defined parallel constructions will run with the same threads number,
+if another is not specified. If late on user creates his own scheduler, OpenCV will be use it.</li>
+<li><strong>OpenMP</strong> – No special defined behaviour.</li>
+<li><strong>Concurrency</strong> – If <code class="docutils literal"><span class="pre">threads</span> <span class="pre">==</span> <span class="pre">1</span></code>, OpenCV will disable threading optimizations
+and run its functions sequentially.</li>
+<li><strong>GCD</strong> – Supports only values &lt;= 0.</li>
+<li><strong>C=</strong> – No special defined behaviour.</li>
+</ul>
+</div></blockquote>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#int getNumThreads()" title="int getNumThreads()"><code class="xref ocv ocv-func docutils literal"><span class="pre">getNumThreads()</span></code></a>,
+<a class="reference internal" href="#int getThreadNum()" title="int getThreadNum()"><code class="xref ocv ocv-func docutils literal"><span class="pre">getThreadNum()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="setuseoptimized">
+<h2>setUseOptimized<a class="headerlink" href="#setuseoptimized" title="Permalink to this headline">¶</a></h2>
+<p>Enables or disables the optimized code.</p>
+<dl class="function">
+<dt id="int cvUseOptimized(int on_off)">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descname">cvUseOptimized</code><span class="sig-paren">(</span>int <strong>on_off</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvUseOptimized(int on_off)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.setUseOptimized">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">setUseOptimized</code><span class="sig-paren">(</span>onoff<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv2.setUseOptimized" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt>
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvUseOptimized</code><span class="sig-paren">(</span>int <strong>on_off</strong><span class="sig-paren">)</span></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>on_off</strong> &#8211; The boolean flag specifying whether the optimized code should be used (<code class="docutils literal"><span class="pre">on_off=true</span></code>) or not (<code class="docutils literal"><span class="pre">on_off=false</span></code>).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function can be used to dynamically turn on and off optimized code (code that uses SSE2, AVX, and other instructions on the platforms that support it). It sets a global flag that is further checked by OpenCV functions. Since the flag is not checked in the inner OpenCV loops, it is only safe to call the function on the very top level in your application where you can be sure that no other OpenCV function is currently executed.</p>
+<p>By default, the optimized code is enabled unless you disable it in CMake. The current status can be retrieved using <code class="docutils literal"><span class="pre">useOptimized</span></code>.</p>
+</div>
+<div class="section" id="useoptimized">
+<h2>useOptimized<a class="headerlink" href="#useoptimized" title="Permalink to this headline">¶</a></h2>
+<p>Returns the status of optimized code usage.</p>
+<dl class="function">
+<dt id="bool useOptimized()">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descname">useOptimized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bool useOptimized()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.useOptimized">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">useOptimized</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.useOptimized" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The function returns <code class="docutils literal"><span class="pre">true</span></code> if the optimized code is enabled. Otherwise, it returns <code class="docutils literal"><span class="pre">false</span></code>.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Utility and System Functions and Macros</a><ul>
+<li><a class="reference internal" href="#alignptr">alignPtr</a></li>
+<li><a class="reference internal" href="#alignsize">alignSize</a></li>
+<li><a class="reference internal" href="#allocate">allocate</a></li>
+<li><a class="reference internal" href="#deallocate">deallocate</a></li>
+<li><a class="reference internal" href="#fastatan2">fastAtan2</a></li>
+<li><a class="reference internal" href="#cuberoot">cubeRoot</a></li>
+<li><a class="reference internal" href="#ceil">Ceil</a></li>
+<li><a class="reference internal" href="#floor">Floor</a></li>
+<li><a class="reference internal" href="#round">Round</a></li>
+<li><a class="reference internal" href="#isinf">IsInf</a></li>
+<li><a class="reference internal" href="#isnan">IsNaN</a></li>
+<li><a class="reference internal" href="#cv-assert">CV_Assert</a></li>
+<li><a class="reference internal" href="#error">error</a></li>
+<li><a class="reference internal" href="#exception">Exception</a></li>
+<li><a class="reference internal" href="#fastmalloc">fastMalloc</a></li>
+<li><a class="reference internal" href="#fastfree">fastFree</a></li>
+<li><a class="reference internal" href="#format">format</a></li>
+<li><a class="reference internal" href="#getbuildinformation">getBuildInformation</a></li>
+<li><a class="reference internal" href="#checkhardwaresupport">checkHardwareSupport</a></li>
+<li><a class="reference internal" href="#getnumberofcpus">getNumberOfCPUs</a></li>
+<li><a class="reference internal" href="#getnumthreads">getNumThreads</a></li>
+<li><a class="reference internal" href="#getthreadnum">getThreadNum</a></li>
+<li><a class="reference internal" href="#gettickcount">getTickCount</a></li>
+<li><a class="reference internal" href="#gettickfrequency">getTickFrequency</a></li>
+<li><a class="reference internal" href="#getcputickcount">getCPUTickCount</a></li>
+<li><a class="reference internal" href="#saturate-cast">saturate_cast</a></li>
+<li><a class="reference internal" href="#setnumthreads">setNumThreads</a></li>
+<li><a class="reference internal" href="#setuseoptimized">setUseOptimized</a></li>
+<li><a class="reference internal" href="#useoptimized">useOptimized</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="clustering.html"
+                        title="previous chapter">Clustering</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="opengl_interop.html"
+                        title="next chapter">OpenGL interoperability</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/core/doc/utility_and_system_functions_and_macros.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="opengl_interop.html" title="OpenGL interoperability"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="clustering.html" title="Clustering"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="core.html" >core. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

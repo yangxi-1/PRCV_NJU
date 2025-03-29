@@ -1,0 +1,831 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Similarity check (PNSR and SSIM) on the GPU &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="gpu module. GPU-Accelerated Computer Vision" href="../table_of_content_gpu/table_of_content_gpu.html" />
+    <link rel="next" title="contrib module. The additional contributions made available !" href="../../contrib/table_of_content_contrib/table_of_content_contrib.html" />
+    <link rel="prev" title="gpu module. GPU-Accelerated Computer Vision" href="../table_of_content_gpu/table_of_content_gpu.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../contrib/table_of_content_contrib/table_of_content_contrib.html" title="contrib module. The additional contributions made available !"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../table_of_content_gpu/table_of_content_gpu.html" title="gpu module. GPU-Accelerated Computer Vision"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_gpu/table_of_content_gpu.html" accesskey="U"><em>gpu</em> module. GPU-Accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="similarity-check-pnsr-and-ssim-on-the-gpu">
+<span id="gpubasicssimilarity"></span><h1>Similarity check (PNSR and SSIM) on the GPU<a class="headerlink" href="#similarity-check-pnsr-and-ssim-on-the-gpu" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In the <a class="reference internal" href="../../highgui/video-input-psnr-ssim/video-input-psnr-ssim.html#videoinputpsnrmssim"><span>Video Input with OpenCV and similarity measurement</span></a> tutorial I already presented the PSNR and SSIM methods for checking the similarity between the two images. And as you could see there performing these takes quite some time, especially in the case of the SSIM. However, if the performance numbers of an OpenCV implementation for the CPU do not satisfy you and you happen to have an NVidia CUDA GPU device in your system all is not lost. You may try to port or write your algorithm for the video card.</p>
+<p>This tutorial will give a good grasp on how to approach coding by using the GPU module of OpenCV. As a prerequisite you should already know how to handle the core, highgui and imgproc modules. So, our goals are:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>What&#8217;s different compared to the CPU?</li>
+<li>Create the GPU code for the PSNR and SSIM</li>
+<li>Optimize the code for maximal performance</li>
+</ul>
+</div>
+</div>
+<div class="section" id="the-source-code">
+<h2>The source code<a class="headerlink" href="#the-source-code" title="Permalink to this headline">¶</a></h2>
+<p>You may also find the source code and these video file in the <code class="file docutils literal"><span class="pre">samples/cpp/tutorial_code/gpu/gpu-basics-similarity/gpu-basics-similarity</span></code> folder of the OpenCV source library or <a class="reference download internal" href="../../../../_downloads/gpu-basics-similarity.cpp" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">it</span> <span class="pre">from</span> <span class="pre">here</span></code></a>. The full source code is quite long (due to the controlling of the application via the command line arguments and performance measurement). Therefore, to avoid cluttering up these sections with those you&#8217;ll find here only the functions itself.</p>
+<p>The PSNR returns a float number, that if the two inputs are similar between 30 and 50 (higher is better).</p>
+<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78</pre></div></td><td class="code"><div class="highlight"><pre><span class="kt">double</span> <span class="nf">getPSNR</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">I1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">I2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Mat</span> <span class="n">s1</span><span class="p">;</span>
+    <span class="n">absdiff</span><span class="p">(</span><span class="n">I1</span><span class="p">,</span> <span class="n">I2</span><span class="p">,</span> <span class="n">s1</span><span class="p">);</span>       <span class="c1">// |I1 - I2|</span>
+    <span class="n">s1</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">);</span>  <span class="c1">// cannot make a square on 8 bits</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">s1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">s1</span><span class="p">);</span>           <span class="c1">// |I1 - I2|^2</span>
+
+    <span class="n">Scalar</span> <span class="n">s</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">s1</span><span class="p">);</span>         <span class="c1">// sum elements per channel</span>
+
+    <span class="kt">double</span> <span class="n">sse</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">s</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">s</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span> <span class="c1">// sum channels</span>
+
+    <span class="k">if</span><span class="p">(</span> <span class="n">sse</span> <span class="o">&lt;=</span> <span class="mf">1e-10</span><span class="p">)</span> <span class="c1">// for small values return zero</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="kt">double</span>  <span class="n">mse</span> <span class="o">=</span><span class="n">sse</span> <span class="o">/</span><span class="p">(</span><span class="kt">double</span><span class="p">)(</span><span class="n">I1</span><span class="p">.</span><span class="n">channels</span><span class="p">()</span> <span class="o">*</span> <span class="n">I1</span><span class="p">.</span><span class="n">total</span><span class="p">());</span>
+        <span class="kt">double</span> <span class="n">psnr</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">log10</span><span class="p">((</span><span class="mi">255</span><span class="o">*</span><span class="mi">255</span><span class="p">)</span><span class="o">/</span><span class="n">mse</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">psnr</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+
+<span class="kt">double</span> <span class="nf">getPSNR_GPU_optimized</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">I1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">I2</span><span class="p">,</span> <span class="n">BufferPSNR</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">b</span><span class="p">.</span><span class="n">gI1</span><span class="p">.</span><span class="n">upload</span><span class="p">(</span><span class="n">I1</span><span class="p">);</span>
+    <span class="n">b</span><span class="p">.</span><span class="n">gI2</span><span class="p">.</span><span class="n">upload</span><span class="p">(</span><span class="n">I2</span><span class="p">);</span>
+
+    <span class="n">b</span><span class="p">.</span><span class="n">gI1</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">t1</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">);</span>
+    <span class="n">b</span><span class="p">.</span><span class="n">gI2</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">t2</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">);</span>
+
+    <span class="n">gpu</span><span class="o">::</span><span class="n">absdiff</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">t1</span><span class="p">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">b</span><span class="p">.</span><span class="n">t2</span><span class="p">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">b</span><span class="p">.</span><span class="n">gs</span><span class="p">);</span>
+    <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">gs</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">gs</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">gs</span><span class="p">);</span>
+
+    <span class="kt">double</span> <span class="n">sse</span> <span class="o">=</span> <span class="n">gpu</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">gs</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">buf</span><span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
+
+    <span class="k">if</span><span class="p">(</span> <span class="n">sse</span> <span class="o">&lt;=</span> <span class="mf">1e-10</span><span class="p">)</span> <span class="c1">// for small values return zero</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="kt">double</span> <span class="n">mse</span> <span class="o">=</span> <span class="n">sse</span> <span class="o">/</span><span class="p">(</span><span class="kt">double</span><span class="p">)(</span><span class="n">I1</span><span class="p">.</span><span class="n">channels</span><span class="p">()</span> <span class="o">*</span> <span class="n">I1</span><span class="p">.</span><span class="n">total</span><span class="p">());</span>
+        <span class="kt">double</span> <span class="n">psnr</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">log10</span><span class="p">((</span><span class="mi">255</span><span class="o">*</span><span class="mi">255</span><span class="p">)</span><span class="o">/</span><span class="n">mse</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">psnr</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">struct</span> <span class="n">BufferPSNR</span>                                     <span class="c1">// Optimized GPU versions</span>
+<span class="p">{</span>   <span class="c1">// Data allocations are very expensive on GPU. Use a buffer to solve: allocate once reuse later.</span>
+    <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">gI1</span><span class="p">,</span> <span class="n">gI2</span><span class="p">,</span> <span class="n">gs</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span><span class="n">t2</span><span class="p">;</span>
+
+    <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">buf</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">double</span> <span class="nf">getPSNR_GPU</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">I1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">I2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">gI1</span><span class="p">,</span> <span class="n">gI2</span><span class="p">,</span> <span class="n">gs</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span><span class="n">t2</span><span class="p">;</span>
+
+    <span class="n">gI1</span><span class="p">.</span><span class="n">upload</span><span class="p">(</span><span class="n">I1</span><span class="p">);</span>
+    <span class="n">gI2</span><span class="p">.</span><span class="n">upload</span><span class="p">(</span><span class="n">I2</span><span class="p">);</span>
+
+    <span class="n">gI1</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">);</span>
+    <span class="n">gI2</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">t2</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">);</span>
+
+    <span class="n">gpu</span><span class="o">::</span><span class="n">absdiff</span><span class="p">(</span><span class="n">t1</span><span class="p">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">t2</span><span class="p">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">gs</span><span class="p">);</span>
+    <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">gs</span><span class="p">,</span> <span class="n">gs</span><span class="p">,</span> <span class="n">gs</span><span class="p">);</span>
+
+    <span class="n">Scalar</span> <span class="n">s</span> <span class="o">=</span> <span class="n">gpu</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">gs</span><span class="p">);</span>
+    <span class="kt">double</span> <span class="n">sse</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">s</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">s</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+
+    <span class="k">if</span><span class="p">(</span> <span class="n">sse</span> <span class="o">&lt;=</span> <span class="mf">1e-10</span><span class="p">)</span> <span class="c1">// for small values return zero</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="kt">double</span>  <span class="n">mse</span> <span class="o">=</span><span class="n">sse</span> <span class="o">/</span><span class="p">(</span><span class="kt">double</span><span class="p">)(</span><span class="n">gI1</span><span class="p">.</span><span class="n">channels</span><span class="p">()</span> <span class="o">*</span> <span class="n">I1</span><span class="p">.</span><span class="n">total</span><span class="p">());</span>
+        <span class="kt">double</span> <span class="n">psnr</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">log10</span><span class="p">((</span><span class="mi">255</span><span class="o">*</span><span class="mi">255</span><span class="p">)</span><span class="o">/</span><span class="n">mse</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">psnr</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>The SSIM returns the MSSIM of the images. This is too a float number between zero and one (higher is better), however we have one for each channel. Therefore, we return a <em>Scalar</em> OpenCV data structure:</p>
+<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208</pre></div></td><td class="code"><div class="highlight"><pre><span class="p">}</span>
+
+<span class="n">Scalar</span> <span class="n">getMSSIM</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">i1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">i2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">C1</span> <span class="o">=</span> <span class="mf">6.5025</span><span class="p">,</span> <span class="n">C2</span> <span class="o">=</span> <span class="mf">58.5225</span><span class="p">;</span>
+    <span class="cm">/***************************** INITS **********************************/</span>
+    <span class="kt">int</span> <span class="n">d</span>     <span class="o">=</span> <span class="n">CV_32F</span><span class="p">;</span>
+
+    <span class="n">Mat</span> <span class="n">I1</span><span class="p">,</span> <span class="n">I2</span><span class="p">;</span>
+    <span class="n">i1</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">I1</span><span class="p">,</span> <span class="n">d</span><span class="p">);</span>           <span class="c1">// cannot calculate on one byte large values</span>
+    <span class="n">i2</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">I2</span><span class="p">,</span> <span class="n">d</span><span class="p">);</span>
+
+    <span class="n">Mat</span> <span class="n">I2_2</span>   <span class="o">=</span> <span class="n">I2</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">I2</span><span class="p">);</span>        <span class="c1">// I2^2</span>
+    <span class="n">Mat</span> <span class="n">I1_2</span>   <span class="o">=</span> <span class="n">I1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">I1</span><span class="p">);</span>        <span class="c1">// I1^2</span>
+    <span class="n">Mat</span> <span class="n">I1_I2</span>  <span class="o">=</span> <span class="n">I1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">I2</span><span class="p">);</span>        <span class="c1">// I1 * I2</span>
+
+    <span class="cm">/*************************** END INITS **********************************/</span>
+
+    <span class="n">Mat</span> <span class="n">mu1</span><span class="p">,</span> <span class="n">mu2</span><span class="p">;</span>   <span class="c1">// PRELIMINARY COMPUTING</span>
+    <span class="n">GaussianBlur</span><span class="p">(</span><span class="n">I1</span><span class="p">,</span> <span class="n">mu1</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+    <span class="n">GaussianBlur</span><span class="p">(</span><span class="n">I2</span><span class="p">,</span> <span class="n">mu2</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+
+    <span class="n">Mat</span> <span class="n">mu1_2</span>   <span class="o">=</span>   <span class="n">mu1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">mu1</span><span class="p">);</span>
+    <span class="n">Mat</span> <span class="n">mu2_2</span>   <span class="o">=</span>   <span class="n">mu2</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">mu2</span><span class="p">);</span>
+    <span class="n">Mat</span> <span class="n">mu1_mu2</span> <span class="o">=</span>   <span class="n">mu1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">mu2</span><span class="p">);</span>
+
+    <span class="n">Mat</span> <span class="n">sigma1_2</span><span class="p">,</span> <span class="n">sigma2_2</span><span class="p">,</span> <span class="n">sigma12</span><span class="p">;</span>
+
+    <span class="n">GaussianBlur</span><span class="p">(</span><span class="n">I1_2</span><span class="p">,</span> <span class="n">sigma1_2</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+    <span class="n">sigma1_2</span> <span class="o">-=</span> <span class="n">mu1_2</span><span class="p">;</span>
+
+    <span class="n">GaussianBlur</span><span class="p">(</span><span class="n">I2_2</span><span class="p">,</span> <span class="n">sigma2_2</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+    <span class="n">sigma2_2</span> <span class="o">-=</span> <span class="n">mu2_2</span><span class="p">;</span>
+
+    <span class="n">GaussianBlur</span><span class="p">(</span><span class="n">I1_I2</span><span class="p">,</span> <span class="n">sigma12</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+    <span class="n">sigma12</span> <span class="o">-=</span> <span class="n">mu1_mu2</span><span class="p">;</span>
+
+    <span class="c1">///////////////////////////////// FORMULA ////////////////////////////////</span>
+    <span class="n">Mat</span> <span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">t3</span><span class="p">;</span>
+
+    <span class="n">t1</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">mu1_mu2</span> <span class="o">+</span> <span class="n">C1</span><span class="p">;</span>
+    <span class="n">t2</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">sigma12</span> <span class="o">+</span> <span class="n">C2</span><span class="p">;</span>
+    <span class="n">t3</span> <span class="o">=</span> <span class="n">t1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">t2</span><span class="p">);</span>              <span class="c1">// t3 = ((2*mu1_mu2 + C1).*(2*sigma12 + C2))</span>
+
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">mu1_2</span> <span class="o">+</span> <span class="n">mu2_2</span> <span class="o">+</span> <span class="n">C1</span><span class="p">;</span>
+    <span class="n">t2</span> <span class="o">=</span> <span class="n">sigma1_2</span> <span class="o">+</span> <span class="n">sigma2_2</span> <span class="o">+</span> <span class="n">C2</span><span class="p">;</span>
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">t1</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">t2</span><span class="p">);</span>               <span class="c1">// t1 =((mu1_2 + mu2_2 + C1).*(sigma1_2 + sigma2_2 + C2))</span>
+
+    <span class="n">Mat</span> <span class="n">ssim_map</span><span class="p">;</span>
+    <span class="n">divide</span><span class="p">(</span><span class="n">t3</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">ssim_map</span><span class="p">);</span>      <span class="c1">// ssim_map =  t3./t1;</span>
+
+    <span class="n">Scalar</span> <span class="n">mssim</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span> <span class="n">ssim_map</span> <span class="p">);</span> <span class="c1">// mssim = average of ssim map</span>
+    <span class="k">return</span> <span class="n">mssim</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">Scalar</span> <span class="n">getMSSIM_GPU</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">i1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">i2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">float</span> <span class="n">C1</span> <span class="o">=</span> <span class="mf">6.5025f</span><span class="p">,</span> <span class="n">C2</span> <span class="o">=</span> <span class="mf">58.5225f</span><span class="p">;</span>
+    <span class="cm">/***************************** INITS **********************************/</span>
+    <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">gI1</span><span class="p">,</span> <span class="n">gI2</span><span class="p">,</span> <span class="n">gs1</span><span class="p">,</span> <span class="n">tmp1</span><span class="p">,</span><span class="n">tmp2</span><span class="p">;</span>
+
+    <span class="n">gI1</span><span class="p">.</span><span class="n">upload</span><span class="p">(</span><span class="n">i1</span><span class="p">);</span>
+    <span class="n">gI2</span><span class="p">.</span><span class="n">upload</span><span class="p">(</span><span class="n">i2</span><span class="p">);</span>
+
+    <span class="n">gI1</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">tmp1</span><span class="p">,</span> <span class="n">CV_MAKE_TYPE</span><span class="p">(</span><span class="n">CV_32F</span><span class="p">,</span> <span class="n">gI1</span><span class="p">.</span><span class="n">channels</span><span class="p">()));</span>
+    <span class="n">gI2</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">tmp2</span><span class="p">,</span> <span class="n">CV_MAKE_TYPE</span><span class="p">(</span><span class="n">CV_32F</span><span class="p">,</span> <span class="n">gI2</span><span class="p">.</span><span class="n">channels</span><span class="p">()));</span>
+
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span><span class="o">&gt;</span> <span class="n">vI1</span><span class="p">,</span> <span class="n">vI2</span><span class="p">;</span>
+    <span class="n">gpu</span><span class="o">::</span><span class="n">split</span><span class="p">(</span><span class="n">tmp1</span><span class="p">,</span> <span class="n">vI1</span><span class="p">);</span>
+    <span class="n">gpu</span><span class="o">::</span><span class="n">split</span><span class="p">(</span><span class="n">tmp2</span><span class="p">,</span> <span class="n">vI2</span><span class="p">);</span>
+    <span class="n">Scalar</span> <span class="n">mssim</span><span class="p">;</span>
+
+    <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">gI1</span><span class="p">.</span><span class="n">channels</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">I2_2</span><span class="p">,</span> <span class="n">I1_2</span><span class="p">,</span> <span class="n">I1_I2</span><span class="p">;</span>
+
+        <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">vI2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vI2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">I2_2</span><span class="p">);</span>        <span class="c1">// I2^2</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">vI1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vI1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">I1_2</span><span class="p">);</span>        <span class="c1">// I1^2</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">vI1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vI2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">I1_I2</span><span class="p">);</span>       <span class="c1">// I1 * I2</span>
+
+        <span class="cm">/*************************** END INITS **********************************/</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">mu1</span><span class="p">,</span> <span class="n">mu2</span><span class="p">;</span>   <span class="c1">// PRELIMINARY COMPUTING</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">vI1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">mu1</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">vI2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">mu2</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+
+        <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">mu1_2</span><span class="p">,</span> <span class="n">mu2_2</span><span class="p">,</span> <span class="n">mu1_mu2</span><span class="p">;</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">mu1</span><span class="p">,</span> <span class="n">mu1</span><span class="p">,</span> <span class="n">mu1_2</span><span class="p">);</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">mu2</span><span class="p">,</span> <span class="n">mu2</span><span class="p">,</span> <span class="n">mu2_2</span><span class="p">);</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">mu1</span><span class="p">,</span> <span class="n">mu2</span><span class="p">,</span> <span class="n">mu1_mu2</span><span class="p">);</span>
+
+        <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">sigma1_2</span><span class="p">,</span> <span class="n">sigma2_2</span><span class="p">,</span> <span class="n">sigma12</span><span class="p">;</span>
+
+        <span class="n">gpu</span><span class="o">::</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">I1_2</span><span class="p">,</span> <span class="n">sigma1_2</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">subtract</span><span class="p">(</span><span class="n">sigma1_2</span><span class="p">,</span> <span class="n">mu1_2</span><span class="p">,</span> <span class="n">sigma1_2</span><span class="p">);</span> <span class="c1">// sigma1_2 -= mu1_2;</span>
+
+        <span class="n">gpu</span><span class="o">::</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">I2_2</span><span class="p">,</span> <span class="n">sigma2_2</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">subtract</span><span class="p">(</span><span class="n">sigma2_2</span><span class="p">,</span> <span class="n">mu2_2</span><span class="p">,</span> <span class="n">sigma2_2</span><span class="p">);</span> <span class="c1">// sigma2_2 -= mu2_2;</span>
+
+        <span class="n">gpu</span><span class="o">::</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">I1_I2</span><span class="p">,</span> <span class="n">sigma12</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">);</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">subtract</span><span class="p">(</span><span class="n">sigma12</span><span class="p">,</span> <span class="n">mu1_mu2</span><span class="p">,</span> <span class="n">sigma12</span><span class="p">);</span> <span class="c1">// sigma12 -= mu1_mu2;</span>
+
+        <span class="c1">///////////////////////////////// FORMULA ////////////////////////////////</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">t3</span><span class="p">;</span>
+
+        <span class="n">mu1_mu2</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">C1</span><span class="p">);</span> <span class="c1">// t1 = 2 * mu1_mu2 + C1;</span>
+        <span class="n">sigma12</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">t2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">C2</span><span class="p">);</span> <span class="c1">// t2 = 2 * sigma12 + C2;</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">t3</span><span class="p">);</span>        <span class="c1">// t3 = ((2*mu1_mu2 + C1).*(2*sigma12 + C2))</span>
+
+        <span class="n">gpu</span><span class="o">::</span><span class="n">addWeighted</span><span class="p">(</span><span class="n">mu1_2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">mu2_2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">C1</span><span class="p">,</span> <span class="n">t1</span><span class="p">);</span>       <span class="c1">// t1 = mu1_2 + mu2_2 + C1;</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">addWeighted</span><span class="p">(</span><span class="n">sigma1_2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">sigma2_2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">C2</span><span class="p">,</span> <span class="n">t2</span><span class="p">);</span> <span class="c1">// t2 = sigma1_2 + sigma2_2 + C2;</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">t1</span><span class="p">);</span>                              <span class="c1">// t1 =((mu1_2 + mu2_2 + C1).*(sigma1_2 + sigma2_2 + C2))</span>
+
+        <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">ssim_map</span><span class="p">;</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">divide</span><span class="p">(</span><span class="n">t3</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">ssim_map</span><span class="p">);</span>      <span class="c1">// ssim_map =  t3./t1;</span>
+
+        <span class="n">Scalar</span> <span class="n">s</span> <span class="o">=</span> <span class="n">gpu</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">ssim_map</span><span class="p">);</span>
+        <span class="n">mssim</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">ssim_map</span><span class="p">.</span><span class="n">rows</span> <span class="o">*</span> <span class="n">ssim_map</span><span class="p">.</span><span class="n">cols</span><span class="p">);</span>
+
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">mssim</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">struct</span> <span class="n">BufferMSSIM</span>                                     <span class="c1">// Optimized GPU versions</span>
+<span class="p">{</span>   <span class="c1">// Data allocations are very expensive on GPU. Use a buffer to solve: allocate once reuse later.</span>
+    <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">gI1</span><span class="p">,</span> <span class="n">gI2</span><span class="p">,</span> <span class="n">gs</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span><span class="n">t2</span><span class="p">;</span>
+
+    <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">I1_2</span><span class="p">,</span> <span class="n">I2_2</span><span class="p">,</span> <span class="n">I1_I2</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span><span class="o">&gt;</span> <span class="n">vI1</span><span class="p">,</span> <span class="n">vI2</span><span class="p">;</span>
+
+    <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">mu1</span><span class="p">,</span> <span class="n">mu2</span><span class="p">;</span>
+    <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">mu1_2</span><span class="p">,</span> <span class="n">mu2_2</span><span class="p">,</span> <span class="n">mu1_mu2</span><span class="p">;</span>
+
+    <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">sigma1_2</span><span class="p">,</span> <span class="n">sigma2_2</span><span class="p">,</span> <span class="n">sigma12</span><span class="p">;</span>
+    <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">t3</span><span class="p">;</span>
+
+    <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">ssim_map</span><span class="p">;</span>
+
+    <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">buf</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="n">Scalar</span> <span class="nf">getMSSIM_GPU_optimized</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">i1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">i2</span><span class="p">,</span> <span class="n">BufferMSSIM</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">float</span> <span class="n">C1</span> <span class="o">=</span> <span class="mf">6.5025f</span><span class="p">,</span> <span class="n">C2</span> <span class="o">=</span> <span class="mf">58.5225f</span><span class="p">;</span>
+    <span class="cm">/***************************** INITS **********************************/</span>
+
+    <span class="n">b</span><span class="p">.</span><span class="n">gI1</span><span class="p">.</span><span class="n">upload</span><span class="p">(</span><span class="n">i1</span><span class="p">);</span>
+    <span class="n">b</span><span class="p">.</span><span class="n">gI2</span><span class="p">.</span><span class="n">upload</span><span class="p">(</span><span class="n">i2</span><span class="p">);</span>
+
+    <span class="n">gpu</span><span class="o">::</span><span class="n">Stream</span> <span class="n">stream</span><span class="p">;</span>
+
+    <span class="n">stream</span><span class="p">.</span><span class="n">enqueueConvert</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">gI1</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">t1</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">);</span>
+    <span class="n">stream</span><span class="p">.</span><span class="n">enqueueConvert</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">gI2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">t2</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">);</span>
+
+    <span class="n">gpu</span><span class="o">::</span><span class="n">split</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">t1</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">vI1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>
+    <span class="n">gpu</span><span class="o">::</span><span class="n">split</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">t2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">vI2</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>
+    <span class="n">Scalar</span> <span class="n">mssim</span><span class="p">;</span>
+
+    <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">buf</span><span class="p">;</span>
+
+    <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">.</span><span class="n">gI1</span><span class="p">.</span><span class="n">channels</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">vI2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">b</span><span class="p">.</span><span class="n">vI2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">b</span><span class="p">.</span><span class="n">I2_2</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>        <span class="c1">// I2^2</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">vI1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">b</span><span class="p">.</span><span class="n">vI1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">b</span><span class="p">.</span><span class="n">I1_2</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>        <span class="c1">// I1^2</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">vI1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">b</span><span class="p">.</span><span class="n">vI2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">b</span><span class="p">.</span><span class="n">I1_I2</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>       <span class="c1">// I1 * I2</span>
+
+        <span class="n">gpu</span><span class="o">::</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">vI1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">b</span><span class="p">.</span><span class="n">mu1</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="n">buf</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">BORDER_DEFAULT</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">vI2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">b</span><span class="p">.</span><span class="n">mu2</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="n">buf</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">BORDER_DEFAULT</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>
+
+        <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">mu1</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">mu1</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">mu1_2</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">mu2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">mu2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">mu2_2</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">mu1</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">mu2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">mu1_mu2</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>
+
+        <span class="n">gpu</span><span class="o">::</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">I1_2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">sigma1_2</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="n">buf</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">BORDER_DEFAULT</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">subtract</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">sigma1_2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">mu1_2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">sigma1_2</span><span class="p">,</span> <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span><span class="p">(),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>
+        <span class="c1">//b.sigma1_2 -= b.mu1_2;  - This would result in an extra data transfer operation</span>
+
+        <span class="n">gpu</span><span class="o">::</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">I2_2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">sigma2_2</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="n">buf</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">BORDER_DEFAULT</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">subtract</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">sigma2_2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">mu2_2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">sigma2_2</span><span class="p">,</span> <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span><span class="p">(),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>
+        <span class="c1">//b.sigma2_2 -= b.mu2_2;</span>
+
+        <span class="n">gpu</span><span class="o">::</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">I1_I2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">sigma12</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="n">buf</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">BORDER_DEFAULT</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">subtract</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">sigma12</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">mu1_mu2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">sigma12</span><span class="p">,</span> <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span><span class="p">(),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>
+        <span class="c1">//b.sigma12 -= b.mu1_mu2;</span>
+
+        <span class="c1">//here too it would be an extra data transfer due to call of operator*(Scalar, Mat)</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">mu1_mu2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">t1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span> <span class="c1">//b.t1 = 2 * b.mu1_mu2 + C1;</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">add</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">t1</span><span class="p">,</span> <span class="n">C1</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">t1</span><span class="p">,</span> <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span><span class="p">(),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">sigma12</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">t2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span> <span class="c1">//b.t2 = 2 * b.sigma12 + C2;</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">add</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">t2</span><span class="p">,</span> <span class="n">C2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">t2</span><span class="p">,</span> <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span><span class="p">(),</span> <span class="o">-</span><span class="mi">12</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>
+
+        <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">t1</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">t2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">t3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>     <span class="c1">// t3 = ((2*mu1_mu2 + C1).*(2*sigma12 + C2))</span>
+
+        <span class="n">gpu</span><span class="o">::</span><span class="n">add</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">mu1_2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">mu2_2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">t1</span><span class="p">,</span> <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span><span class="p">(),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">add</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">t1</span><span class="p">,</span> <span class="n">C1</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">t1</span><span class="p">,</span> <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span><span class="p">(),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>
+
+        <span class="n">gpu</span><span class="o">::</span><span class="n">add</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">sigma1_2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">sigma2_2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">t2</span><span class="p">,</span> <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span><span class="p">(),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">add</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">t2</span><span class="p">,</span> <span class="n">C2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">t2</span><span class="p">,</span> <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span><span class="p">(),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>
+
+
+        <span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">t1</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">t2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">t1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>     <span class="c1">// t1 =((mu1_2 + mu2_2 + C1).*(sigma1_2 + sigma2_2 + C2))</span>
+        <span class="n">gpu</span><span class="o">::</span><span class="n">divide</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">t3</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">t1</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">ssim_map</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>      <span class="c1">// ssim_map =  t3./t1;</span>
+
+        <span class="n">stream</span><span class="p">.</span><span class="n">waitForCompletion</span><span class="p">();</span>
+
+        <span class="n">Scalar</span> <span class="n">s</span> <span class="o">=</span> <span class="n">gpu</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">ssim_map</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">buf</span><span class="p">);</span>
+        <span class="n">mssim</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">ssim_map</span><span class="p">.</span><span class="n">rows</span> <span class="o">*</span> <span class="n">b</span><span class="p">.</span><span class="n">ssim_map</span><span class="p">.</span><span class="n">cols</span><span class="p">);</span>
+
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">mssim</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="how-to-do-it-the-gpu">
+<h2>How to do it? - The GPU<a class="headerlink" href="#how-to-do-it-the-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Now as you can see we have three types of functions for each operation. One for the CPU and two for the GPU. The reason I made two for the GPU is too illustrate that often simple porting your CPU to GPU will actually make it slower. If you want some performance gain you will need to remember a few rules, whose I&#8217;m going to detail later on.</p>
+<p>The development of the GPU module was made so that it resembles as much as possible its CPU counterpart. This is to make porting easy. The first thing you need to do before writing any code is to link the GPU module to your project, and include the header file for the module. All the functions and data structures of the GPU are in a <em>gpu</em> sub namespace of the <em>cv</em> namespace. You may add this to the default one via the <em>use namespace</em> keyword, or mark it everywhere explicitly via the cv:: to avoid confusion. I&#8217;ll do the later.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&lt;opencv2/gpu/gpu.hpp&gt;        // GPU structures and methods</span><span class="cp"></span>
+</pre></div>
+</div>
+<p>GPU stands for <strong>g</strong>raphics <strong>p</strong>rocessing <strong>u</strong>nit. It was originally build to render graphical scenes. These scenes somehow build on a lot of data. Nevertheless, these aren&#8217;t all dependent one from another in a sequential way and as it is possible a parallel processing of them. Due to this a GPU will contain multiple smaller processing units. These aren&#8217;t the state of the art processors and on a one on one test with a CPU it will fall behind. However, its strength lies in its numbers. In the last years there has been an increasing trend to harvest these massive parallel powers of the GPU in non-graphical scene rendering too. This gave birth to the general-purpose computation on graphics processing units (GPGPU).</p>
+<p>The GPU has its own memory. When you read data from the hard drive with OpenCV into a <em>Mat</em> object that takes place in your systems memory. The CPU works somehow directly on this (via its cache), however the GPU cannot. He has too transferred the information he will use for calculations from the system memory to its own. This is done via an upload process and takes time. In the end the result will have to be downloaded back to your system memory for your CPU to see it and use it. Porting small functions to GPU is not recommended as the upload/download time will be larger than the amount you gain by a parallel execution.</p>
+<p><em>Mat</em> objects are stored <strong>only</strong> in the system memory (or the CPU cache). For getting an OpenCV matrix to the GPU you&#8217;ll need to use its GPU counterpart <a class="reference external" href="http://docs.opencv.org/modules/gpu/doc/data_structures.html#gpu-gpumat">GpuMat</a>. It works similar to the <em>Mat</em> with a 2D only limitation and no reference returning for its functions (cannot mix GPU references with CPU ones). To upload a <em>Mat</em> object to the <em>GPU</em> you need to call the <em>upload</em> function after creating an instance of the class. To download you may use simple assignment to a <em>Mat</em> object or use the <em>download</em> function.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">I1</span><span class="p">;</span>         <span class="c1">// Main memory item - read image into with imread for example</span>
+<span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">gI</span><span class="p">;</span> <span class="c1">// GPU matrix - for now empty</span>
+<span class="n">gI1</span><span class="p">.</span><span class="n">upload</span><span class="p">(</span><span class="n">I1</span><span class="p">);</span> <span class="c1">// Upload a data from the system memory to the GPU memory</span>
+
+<span class="n">I1</span> <span class="o">=</span> <span class="n">gI1</span><span class="p">;</span>       <span class="c1">// Download, gI1.download(I1) will work too</span>
+</pre></div>
+</div>
+<p>Once you have your data up in the GPU memory you may call GPU enabled functions of OpenCV. Most of the functions keep the same name just as on the CPU, with the difference that they only accept <em>GpuMat</em> inputs. A full list of these you will find in the documentation: <a class="reference external" href="http://docs.opencv.org/modules/gpu/doc/gpu.html">online here</a> or the OpenCV reference manual that comes with the source code.</p>
+<p>Another thing to keep in mind is that not for all channel numbers you can make efficient algorithms on the GPU. Generally, I found that the input images for the GPU images need to be either one or four channel ones and one of the char or float type for the item sizes. No double support on the GPU, sorry. Passing other types of objects for some functions will result in an exception thrown, and an error message on the error output. The documentation details in most of the places the types accepted for the inputs. If you have three channel images as an input you can do two things: either adds a new channel (and use char elements) or split up the image and call the function for each image. The first one isn&#8217;t really recommended as you waste memory.</p>
+<p>For some functions, where the position of the elements (neighbor items) doesn&#8217;t matter quick solution is to just reshape it into a single channel image. This is the case for the PSNR implementation where for the <em>absdiff</em> method the value of the neighbors is not important. However, for the <em>GaussianBlur</em> this isn&#8217;t an option and such need to use the split method for the SSIM. With this knowledge you can already make a GPU viable code (like mine GPU one) and run it. You&#8217;ll be surprised to see that it might turn out slower than your CPU implementation.</p>
+</div>
+<div class="section" id="optimization">
+<h2>Optimization<a class="headerlink" href="#optimization" title="Permalink to this headline">¶</a></h2>
+<p>The reason for this is that you&#8217;re throwing out on the window the price for memory allocation and data transfer. And on the GPU this is damn high. Another possibility for optimization is to introduce asynchronous OpenCV GPU calls too with the help of the <a class="reference external" href="http://docs.opencv.org/modules/gpu/doc/data_structures.html#gpu-stream">gpu::Stream</a>.</p>
+<ol class="arabic">
+<li><p class="first">Memory allocation on the GPU is considerable. Therefore, if it’s possible allocate new memory as few times as possible. If you create a function what you intend to call multiple times it is a good idea to allocate any local parameters for the function only once, during the first call. To do this you create a data structure containing all the local variables you will use. For instance in case of the PSNR these are:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">BufferPSNR</span>                                     <span class="c1">// Optimized GPU versions</span>
+  <span class="p">{</span>   <span class="c1">// Data allocations are very expensive on GPU. Use a buffer to solve: allocate once reuse later.</span>
+  <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">gI1</span><span class="p">,</span> <span class="n">gI2</span><span class="p">,</span> <span class="n">gs</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span><span class="n">t2</span><span class="p">;</span>
+
+  <span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">buf</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Then create an instance of this in the main program:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">BufferPSNR</span> <span class="n">bufferPSNR</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>And finally pass this to the function each time you call it:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">double</span> <span class="n">getPSNR_GPU_optimized</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">I1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">I2</span><span class="p">,</span> <span class="n">BufferPSNR</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now you access these local parameters as: <em>b.gI1</em>, <em>b.buf</em> and so on. The GpuMat will only reallocate itself on a new call if the new matrix size is different from the previous one.</p>
+</li>
+<li><p class="first">Avoid unnecessary function data transfers. Any small data transfer will be significant one once you go to the GPU. Therefore, if possible make all calculations in-place (in other words do not create new memory objects - for reasons explained at the previous point). For example, although expressing arithmetical operations may be easier to express in one line formulas, it will be slower. In case of the SSIM at one point I need to calculate:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">b</span><span class="p">.</span><span class="n">t1</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">b</span><span class="p">.</span><span class="n">mu1_mu2</span> <span class="o">+</span> <span class="n">C1</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Although the upper call will succeed observe that there is a hidden data transfer present. Before it makes the addition it needs to store somewhere the multiplication. Therefore, it will create a local matrix in the background, add to that the <em>C1</em> value and finally assign that to <em>t1</em>. To avoid this we use the gpu functions, instead of the arithmetic operators:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">mu1_mu2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">t1</span><span class="p">);</span> <span class="c1">//b.t1 = 2 * b.mu1_mu2 + C1;</span>
+<span class="n">gpu</span><span class="o">::</span><span class="n">add</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">t1</span><span class="p">,</span> <span class="n">C1</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">t1</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Use asynchronous calls (the <a class="reference external" href="http://docs.opencv.org/modules/gpu/doc/data_structures.html#gpu-stream">gpu::Stream</a>). By default whenever you call a gpu function it will wait for the call to finish and return with the result afterwards. However, it is possible to make asynchronous calls, meaning it will call for the operation execution, make the costly data allocations for the algorithm and return back right away. Now you can call another function if you wish to do so. For the MSSIM this is a small optimization point. In our default implementation we split up the image into channels and call then for each channel the gpu functions. A small degree of parallelization is possible with the stream. By using a stream we can make the data allocation, upload operations while the GPU is already executing a given method. For example we need to upload two images. We queue these one after another and call already the function that processes it. The functions will wait for the upload to finish, however while that happens makes the output buffer allocations for the function to be executed next.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">gpu</span><span class="o">::</span><span class="n">Stream</span> <span class="n">stream</span><span class="p">;</span>
+
+<span class="n">stream</span><span class="p">.</span><span class="n">enqueueConvert</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">gI1</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">t1</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">);</span>    <span class="c1">// Upload</span>
+
+<span class="n">gpu</span><span class="o">::</span><span class="n">split</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">t1</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">vI1</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>              <span class="c1">// Methods (pass the stream as final parameter).</span>
+<span class="n">gpu</span><span class="o">::</span><span class="n">multiply</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">vI1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">b</span><span class="p">.</span><span class="n">vI1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">b</span><span class="p">.</span><span class="n">I1_2</span><span class="p">,</span> <span class="n">stream</span><span class="p">);</span>        <span class="c1">// I1^2</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="result-and-conclusion">
+<h2>Result and conclusion<a class="headerlink" href="#result-and-conclusion" title="Permalink to this headline">¶</a></h2>
+<p>On an Intel P8700 laptop CPU paired with a low end NVidia GT220M here are the performance numbers:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Time</span> <span class="n">of</span> <span class="n">PSNR</span> <span class="n">CPU</span> <span class="p">(</span><span class="n">averaged</span> <span class="k">for</span> <span class="mi">10</span> <span class="n">runs</span><span class="p">)</span><span class="o">:</span> <span class="mf">41.4122</span> <span class="n">milliseconds</span><span class="p">.</span> <span class="n">With</span> <span class="n">result</span> <span class="nl">of</span><span class="p">:</span> <span class="mf">19.2506</span>
+<span class="n">Time</span> <span class="n">of</span> <span class="n">PSNR</span> <span class="n">GPU</span> <span class="p">(</span><span class="n">averaged</span> <span class="k">for</span> <span class="mi">10</span> <span class="n">runs</span><span class="p">)</span><span class="o">:</span> <span class="mf">158.977</span> <span class="n">milliseconds</span><span class="p">.</span> <span class="n">With</span> <span class="n">result</span> <span class="nl">of</span><span class="p">:</span> <span class="mf">19.2506</span>
+<span class="n">Initial</span> <span class="n">call</span> <span class="n">GPU</span> <span class="nl">optimized</span><span class="p">:</span>              <span class="mf">31.3418</span> <span class="n">milliseconds</span><span class="p">.</span> <span class="n">With</span> <span class="n">result</span> <span class="nl">of</span><span class="p">:</span> <span class="mf">19.2506</span>
+<span class="n">Time</span> <span class="n">of</span> <span class="n">PSNR</span> <span class="n">GPU</span> <span class="n">OPTIMIZED</span> <span class="p">(</span> <span class="o">/</span> <span class="mi">10</span> <span class="n">runs</span><span class="p">)</span><span class="o">:</span> <span class="mf">24.8171</span> <span class="n">milliseconds</span><span class="p">.</span> <span class="n">With</span> <span class="n">result</span> <span class="nl">of</span><span class="p">:</span> <span class="mf">19.2506</span>
+
+<span class="n">Time</span> <span class="n">of</span> <span class="n">MSSIM</span> <span class="n">CPU</span> <span class="p">(</span><span class="n">averaged</span> <span class="k">for</span> <span class="mi">10</span> <span class="n">runs</span><span class="p">)</span><span class="o">:</span> <span class="mf">484.343</span> <span class="n">milliseconds</span><span class="p">.</span> <span class="n">With</span> <span class="n">result</span> <span class="n">of</span> <span class="n">B0</span><span class="mf">.890964</span> <span class="n">G0</span><span class="mf">.903845</span> <span class="n">R0</span><span class="mf">.936934</span>
+<span class="n">Time</span> <span class="n">of</span> <span class="n">MSSIM</span> <span class="n">GPU</span> <span class="p">(</span><span class="n">averaged</span> <span class="k">for</span> <span class="mi">10</span> <span class="n">runs</span><span class="p">)</span><span class="o">:</span> <span class="mf">745.105</span> <span class="n">milliseconds</span><span class="p">.</span> <span class="n">With</span> <span class="n">result</span> <span class="n">of</span> <span class="n">B0</span><span class="mf">.89922</span> <span class="n">G0</span><span class="mf">.909051</span> <span class="n">R0</span><span class="mf">.968223</span>
+<span class="n">Time</span> <span class="n">of</span> <span class="n">MSSIM</span> <span class="n">GPU</span> <span class="n">Initial</span> <span class="n">Call</span>            <span class="mf">357.746</span> <span class="n">milliseconds</span><span class="p">.</span> <span class="n">With</span> <span class="n">result</span> <span class="n">of</span> <span class="n">B0</span><span class="mf">.890964</span> <span class="n">G0</span><span class="mf">.903845</span> <span class="n">R0</span><span class="mf">.936934</span>
+<span class="n">Time</span> <span class="n">of</span> <span class="n">MSSIM</span> <span class="n">GPU</span> <span class="n">OPTIMIZED</span> <span class="p">(</span> <span class="o">/</span> <span class="mi">10</span> <span class="n">runs</span><span class="p">)</span><span class="o">:</span> <span class="mf">203.091</span> <span class="n">milliseconds</span><span class="p">.</span> <span class="n">With</span> <span class="n">result</span> <span class="n">of</span> <span class="n">B0</span><span class="mf">.890964</span> <span class="n">G0</span><span class="mf">.903845</span> <span class="n">R0</span><span class="mf">.936934</span>
+</pre></div>
+</div>
+<p>In both cases we managed a performance increase of almost 100% compared to the CPU implementation. It may be just the improvement needed for your application to work. You may observe a runtime instance of this on the <a class="reference external" href="https://www.youtube.com/watch?v=3_ESXmFlnvY">YouTube here</a>.</p>
+<div align="center">
+<iframe title="Similarity check (PNSR and SSIM) on the GPU" width="560" height="349" src="https://www.youtube.com/embed/3_ESXmFlnvY?rel=0&loop=1" frameborder="0" allowfullscreen align="middle"></iframe>
+</div></div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Similarity check (PNSR and SSIM) on the GPU</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#the-source-code">The source code</a></li>
+<li><a class="reference internal" href="#how-to-do-it-the-gpu">How to do it? - The GPU</a></li>
+<li><a class="reference internal" href="#optimization">Optimization</a></li>
+<li><a class="reference internal" href="#result-and-conclusion">Result and conclusion</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../table_of_content_gpu/table_of_content_gpu.html"
+                        title="previous chapter"><em>gpu</em> module. GPU-Accelerated Computer Vision</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../contrib/table_of_content_contrib/table_of_content_contrib.html"
+                        title="next chapter"><em>contrib</em> module. The additional contributions made available !</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/gpu/gpu-basics-similarity/gpu-basics-similarity.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../contrib/table_of_content_contrib/table_of_content_contrib.html" title="contrib module. The additional contributions made available !"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../table_of_content_gpu/table_of_content_gpu.html" title="gpu module. GPU-Accelerated Computer Vision"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_gpu/table_of_content_gpu.html" ><em>gpu</em> module. GPU-Accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

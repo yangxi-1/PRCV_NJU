@@ -1,0 +1,556 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Object Detection &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="gpu. GPU-accelerated Computer Vision" href="gpu.html" />
+    <link rel="next" title="Feature Detection and Description" href="feature_detection_and_description.html" />
+    <link rel="prev" title="Matrix Reductions" href="matrix_reductions.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="feature_detection_and_description.html" title="Feature Detection and Description"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="matrix_reductions.html" title="Matrix Reductions"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="gpu.html" accesskey="U">gpu. GPU-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="object-detection">
+<h1>Object Detection<a class="headerlink" href="#object-detection" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gpu-hogdescriptor">
+<h2>gpu::HOGDescriptor<a class="headerlink" href="#gpu-hogdescriptor" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="gpu::HOGDescriptor">
+<em class="property">struct </em><code class="descclassname">gpu::</code><code class="descname">HOGDescriptor</code><a class="headerlink" href="#gpu::HOGDescriptor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The class implements Histogram of Oriented Gradients (<a class="reference internal" href="#dalal2005" id="id1">[Dalal2005]</a>) object detector.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">CV_EXPORTS</span> <span class="n">HOGDescriptor</span>
+<span class="p">{</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">DEFAULT_WIN_SIGMA</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="p">};</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">DEFAULT_NLEVELS</span> <span class="o">=</span> <span class="mi">64</span> <span class="p">};</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">DESCR_FORMAT_ROW_BY_ROW</span><span class="p">,</span> <span class="n">DESCR_FORMAT_COL_BY_COL</span> <span class="p">};</span>
+
+    <span class="n">HOGDescriptor</span><span class="p">(</span><span class="n">Size</span> <span class="n">win_size</span><span class="o">=</span><span class="n">Size</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span> <span class="n">Size</span> <span class="n">block_size</span><span class="o">=</span><span class="n">Size</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span>
+                  <span class="n">Size</span> <span class="n">block_stride</span><span class="o">=</span><span class="n">Size</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">Size</span> <span class="n">cell_size</span><span class="o">=</span><span class="n">Size</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+                  <span class="kt">int</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="kt">double</span> <span class="n">win_sigma</span><span class="o">=</span><span class="n">DEFAULT_WIN_SIGMA</span><span class="p">,</span>
+                  <span class="kt">double</span> <span class="n">threshold_L2hys</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">gamma_correction</span><span class="o">=</span><span class="nb">true</span><span class="p">,</span>
+                  <span class="kt">int</span> <span class="n">nlevels</span><span class="o">=</span><span class="n">DEFAULT_NLEVELS</span><span class="p">);</span>
+
+    <span class="kt">size_t</span> <span class="nf">getDescriptorSize</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">size_t</span> <span class="nf">getBlockHistogramSize</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">setSVMDetector</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">detector</span><span class="p">);</span>
+
+    <span class="k">static</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">getDefaultPeopleDetector</span><span class="p">();</span>
+    <span class="k">static</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">getPeopleDetector48x96</span><span class="p">();</span>
+    <span class="k">static</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">getPeopleDetector64x128</span><span class="p">();</span>
+
+    <span class="kt">void</span> <span class="nf">detect</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">img</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;&amp;</span> <span class="n">found_locations</span><span class="p">,</span>
+                <span class="kt">double</span> <span class="n">hit_threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">Size</span> <span class="n">win_stride</span><span class="o">=</span><span class="n">Size</span><span class="p">(),</span>
+                <span class="n">Size</span> <span class="n">padding</span><span class="o">=</span><span class="n">Size</span><span class="p">());</span>
+
+    <span class="kt">void</span> <span class="nf">detectMultiScale</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">img</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Rect</span><span class="o">&gt;&amp;</span> <span class="n">found_locations</span><span class="p">,</span>
+                          <span class="kt">double</span> <span class="n">hit_threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">Size</span> <span class="n">win_stride</span><span class="o">=</span><span class="n">Size</span><span class="p">(),</span>
+                          <span class="n">Size</span> <span class="n">padding</span><span class="o">=</span><span class="n">Size</span><span class="p">(),</span> <span class="kt">double</span> <span class="n">scale0</span><span class="o">=</span><span class="mf">1.05</span><span class="p">,</span>
+                          <span class="kt">int</span> <span class="n">group_threshold</span><span class="o">=</span><span class="mi">2</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">getDescriptors</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">img</span><span class="p">,</span> <span class="n">Size</span> <span class="n">win_stride</span><span class="p">,</span>
+                        <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">descriptors</span><span class="p">,</span>
+                        <span class="kt">int</span> <span class="n">descr_format</span><span class="o">=</span><span class="n">DESCR_FORMAT_COL_BY_COL</span><span class="p">);</span>
+
+    <span class="n">Size</span> <span class="n">win_size</span><span class="p">;</span>
+    <span class="n">Size</span> <span class="n">block_size</span><span class="p">;</span>
+    <span class="n">Size</span> <span class="n">block_stride</span><span class="p">;</span>
+    <span class="n">Size</span> <span class="n">cell_size</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">nbins</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">win_sigma</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">threshold_L2hys</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">gamma_correction</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">nlevels</span><span class="p">;</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="c1">// Hidden</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Interfaces of all methods are kept similar to the <code class="docutils literal"><span class="pre">CPU</span> <span class="pre">HOG</span></code> descriptor and detector analogues as much as possible.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example applying the HOG descriptor for people detection can be found at opencv_source_code/samples/cpp/peopledetect.cpp</li>
+<li>A GPU example applying the HOG descriptor for people detection can be found at opencv_source_code/samples/gpu/hog.cpp</li>
+<li>(Python) An example applying the HOG descriptor for people detection can be found at opencv_source_code/samples/python2/peopledetect.py</li>
+</ul>
+</div>
+</div>
+<div class="section" id="gpu-hogdescriptor-hogdescriptor">
+<h2>gpu::HOGDescriptor::HOGDescriptor<a class="headerlink" href="#gpu-hogdescriptor-hogdescriptor" title="Permalink to this headline">¶</a></h2>
+<p>Creates the <code class="docutils literal"><span class="pre">HOG</span></code> descriptor and detector.</p>
+<dl class="function">
+<dt id="gpu::HOGDescriptor::HOGDescriptor(Size win_size, Size block_size, Size block_stride, Size cell_size, int nbins, double win_sigma, double threshold_L2hys, bool gamma_correction, int nlevels)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::HOGDescriptor::</code><code class="descname">HOGDescriptor</code><span class="sig-paren">(</span>Size <strong>win_size</strong>=Size(64, 128), Size <strong>block_size</strong>=Size(16, 16), Size <strong>block_stride</strong>=Size(8, 8), Size <strong>cell_size</strong>=Size(8, 8), int <strong>nbins</strong>=9, double <strong>win_sigma</strong>=DEFAULT_WIN_SIGMA, double <strong>threshold_L2hys</strong>=0.2, bool <strong>gamma_correction</strong>=true, int <strong>nlevels</strong>=DEFAULT_NLEVELS<span class="sig-paren">)</span><a class="headerlink" href="#gpu::HOGDescriptor::HOGDescriptor(Size win_size, Size block_size, Size block_stride, Size cell_size, int nbins, double win_sigma, double threshold_L2hys, bool gamma_correction, int nlevels)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>win_size</strong> &#8211; Detection window size. Align to block size and block stride.</li>
+<li><strong>block_size</strong> &#8211; Block size in pixels. Align to cell size. Only (16,16) is supported for now.</li>
+<li><strong>block_stride</strong> &#8211; Block stride. It must be a multiple of cell size.</li>
+<li><strong>cell_size</strong> &#8211; Cell size. Only (8, 8) is supported for now.</li>
+<li><strong>nbins</strong> &#8211; Number of bins. Only 9 bins per cell are supported for now.</li>
+<li><strong>win_sigma</strong> &#8211; Gaussian smoothing window parameter.</li>
+<li><strong>threshold_L2hys</strong> &#8211; L2-Hys normalization method shrinkage.</li>
+<li><strong>gamma_correction</strong> &#8211; Flag to specify whether the gamma correction preprocessing is required or not.</li>
+<li><strong>nlevels</strong> &#8211; Maximum number of detection window increases.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-hogdescriptor-getdescriptorsize">
+<h2>gpu::HOGDescriptor::getDescriptorSize<a class="headerlink" href="#gpu-hogdescriptor-getdescriptorsize" title="Permalink to this headline">¶</a></h2>
+<p>Returns the number of coefficients required for the classification.</p>
+<dl class="function">
+<dt id="size_t gpu::HOGDescriptor::getDescriptorSize() const">
+<strong>C++:</strong><code class="descname"> </code>size_t <code class="descclassname">gpu::HOGDescriptor::</code><code class="descname">getDescriptorSize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#size_t gpu::HOGDescriptor::getDescriptorSize() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-hogdescriptor-getblockhistogramsize">
+<h2>gpu::HOGDescriptor::getBlockHistogramSize<a class="headerlink" href="#gpu-hogdescriptor-getblockhistogramsize" title="Permalink to this headline">¶</a></h2>
+<p>Returns the block histogram size.</p>
+<dl class="function">
+<dt id="size_t gpu::HOGDescriptor::getBlockHistogramSize() const">
+<strong>C++:</strong><code class="descname"> </code>size_t <code class="descclassname">gpu::HOGDescriptor::</code><code class="descname">getBlockHistogramSize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#size_t gpu::HOGDescriptor::getBlockHistogramSize() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-hogdescriptor-setsvmdetector">
+<h2>gpu::HOGDescriptor::setSVMDetector<a class="headerlink" href="#gpu-hogdescriptor-setsvmdetector" title="Permalink to this headline">¶</a></h2>
+<p>Sets coefficients for the linear SVM classifier.</p>
+<dl class="function">
+<dt id="void gpu::HOGDescriptor::setSVMDetector(const vector&lt;float&gt;&amp; detector)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::HOGDescriptor::</code><code class="descname">setSVMDetector</code><span class="sig-paren">(</span>const vector&lt;float&gt;&amp; <strong>detector</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::HOGDescriptor::setSVMDetector(const vector<float>& detector)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-hogdescriptor-getdefaultpeopledetector">
+<h2>gpu::HOGDescriptor::getDefaultPeopleDetector<a class="headerlink" href="#gpu-hogdescriptor-getdefaultpeopledetector" title="Permalink to this headline">¶</a></h2>
+<p>Returns coefficients of the classifier trained for people detection (for default window size).</p>
+<dl class="function">
+<dt id="static vector&lt;float&gt; gpu::HOGDescriptor::getDefaultPeopleDetector()">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> vector&lt;float&gt; <code class="descclassname">gpu::HOGDescriptor::</code><code class="descname">getDefaultPeopleDetector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#static vector<float> gpu::HOGDescriptor::getDefaultPeopleDetector()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-hogdescriptor-getpeopledetector48x96">
+<h2>gpu::HOGDescriptor::getPeopleDetector48x96<a class="headerlink" href="#gpu-hogdescriptor-getpeopledetector48x96" title="Permalink to this headline">¶</a></h2>
+<p>Returns coefficients of the classifier trained for people detection (for 48x96 windows).</p>
+<dl class="function">
+<dt id="static vector&lt;float&gt; gpu::HOGDescriptor::getPeopleDetector48x96()">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> vector&lt;float&gt; <code class="descclassname">gpu::HOGDescriptor::</code><code class="descname">getPeopleDetector48x96</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#static vector<float> gpu::HOGDescriptor::getPeopleDetector48x96()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-hogdescriptor-getpeopledetector64x128">
+<h2>gpu::HOGDescriptor::getPeopleDetector64x128<a class="headerlink" href="#gpu-hogdescriptor-getpeopledetector64x128" title="Permalink to this headline">¶</a></h2>
+<p>Returns coefficients of the classifier trained for people detection (for 64x128 windows).</p>
+<dl class="function">
+<dt id="static vector&lt;float&gt; gpu::HOGDescriptor::getPeopleDetector64x128()">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> vector&lt;float&gt; <code class="descclassname">gpu::HOGDescriptor::</code><code class="descname">getPeopleDetector64x128</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#static vector<float> gpu::HOGDescriptor::getPeopleDetector64x128()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-hogdescriptor-detect">
+<h2>gpu::HOGDescriptor::detect<a class="headerlink" href="#gpu-hogdescriptor-detect" title="Permalink to this headline">¶</a></h2>
+<p>Performs object detection without a multi-scale window.</p>
+<dl class="function">
+<dt id="void gpu::HOGDescriptor::detect(const GpuMat&amp; img, vector&lt;Point&gt;&amp; found_locations, double hit_threshold, Size win_stride, Size padding)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::HOGDescriptor::</code><code class="descname">detect</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>img</strong>, vector&lt;Point&gt;&amp; <strong>found_locations</strong>, double <strong>hit_threshold</strong>=0, Size <strong>win_stride</strong>=Size(), Size <strong>padding</strong>=Size()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::HOGDescriptor::detect(const GpuMat& img, vector<Point>& found_locations, double hit_threshold, Size win_stride, Size padding)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img</strong> &#8211; Source image.  <code class="docutils literal"><span class="pre">CV_8UC1</span></code>  and  <code class="docutils literal"><span class="pre">CV_8UC4</span></code> types are supported for now.</li>
+<li><strong>found_locations</strong> &#8211; Left-top corner points of detected objects boundaries.</li>
+<li><strong>hit_threshold</strong> &#8211; Threshold for the distance between features and SVM classifying plane. Usually it is 0 and should be specfied in the detector coefficients (as the last free coefficient). But if the free coefficient is omitted (which is allowed), you can specify it manually here.</li>
+<li><strong>win_stride</strong> &#8211; Window stride. It must be a multiple of block stride.</li>
+<li><strong>padding</strong> &#8211; Mock parameter to keep the CPU interface compatibility. It must be (0,0).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-hogdescriptor-detectmultiscale">
+<h2>gpu::HOGDescriptor::detectMultiScale<a class="headerlink" href="#gpu-hogdescriptor-detectmultiscale" title="Permalink to this headline">¶</a></h2>
+<p>Performs object detection with a multi-scale window.</p>
+<dl class="function">
+<dt id="void gpu::HOGDescriptor::detectMultiScale(const GpuMat&amp; img, vector&lt;Rect&gt;&amp; found_locations, double hit_threshold, Size win_stride, Size padding, double scale0, int group_threshold)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::HOGDescriptor::</code><code class="descname">detectMultiScale</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>img</strong>, vector&lt;Rect&gt;&amp; <strong>found_locations</strong>, double <strong>hit_threshold</strong>=0, Size <strong>win_stride</strong>=Size(), Size <strong>padding</strong>=Size(), double <strong>scale0</strong>=1.05, int <strong>group_threshold</strong>=2<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::HOGDescriptor::detectMultiScale(const GpuMat& img, vector<Rect>& found_locations, double hit_threshold, Size win_stride, Size padding, double scale0, int group_threshold)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img</strong> &#8211; Source image. See  <a class="reference internal" href="#void gpu::HOGDescriptor::detect(const GpuMat&amp; img, vector&lt;Point&gt;&amp; found_locations, double hit_threshold, Size win_stride, Size padding)" title="void gpu::HOGDescriptor::detect(const GpuMat&amp; img, vector&lt;Point&gt;&amp; found_locations, double hit_threshold, Size win_stride, Size padding)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::HOGDescriptor::detect()</span></code></a>  for type limitations.</li>
+<li><strong>found_locations</strong> &#8211; Detected objects boundaries.</li>
+<li><strong>hit_threshold</strong> &#8211; Threshold for the distance between features and SVM classifying plane. See  <a class="reference internal" href="#void gpu::HOGDescriptor::detect(const GpuMat&amp; img, vector&lt;Point&gt;&amp; found_locations, double hit_threshold, Size win_stride, Size padding)" title="void gpu::HOGDescriptor::detect(const GpuMat&amp; img, vector&lt;Point&gt;&amp; found_locations, double hit_threshold, Size win_stride, Size padding)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::HOGDescriptor::detect()</span></code></a>  for details.</li>
+<li><strong>win_stride</strong> &#8211; Window stride. It must be a multiple of block stride.</li>
+<li><strong>padding</strong> &#8211; Mock parameter to keep the CPU interface compatibility. It must be (0,0).</li>
+<li><strong>scale0</strong> &#8211; Coefficient of the detection window increase.</li>
+<li><strong>group_threshold</strong> &#8211; Coefficient to regulate the similarity threshold. When detected, some objects can be covered by many rectangles. 0 means not to perform grouping. See  <a class="reference internal" href="../../objdetect/doc/cascade_classification.html#void groupRectangles(vector&lt;Rect&gt;&amp; rectList, int groupThreshold, double eps)" title="void groupRectangles(vector&lt;Rect&gt;&amp; rectList, int groupThreshold, double eps)"><code class="xref ocv ocv-func docutils literal"><span class="pre">groupRectangles()</span></code></a> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-hogdescriptor-getdescriptors">
+<h2>gpu::HOGDescriptor::getDescriptors<a class="headerlink" href="#gpu-hogdescriptor-getdescriptors" title="Permalink to this headline">¶</a></h2>
+<p>Returns block descriptors computed for the whole image.</p>
+<dl class="function">
+<dt id="void gpu::HOGDescriptor::getDescriptors(const GpuMat&amp; img, Size win_stride, GpuMat&amp; descriptors, int descr_format)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::HOGDescriptor::</code><code class="descname">getDescriptors</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>img</strong>, Size <strong>win_stride</strong>, GpuMat&amp; <strong>descriptors</strong>, int <strong>descr_format</strong>=DESCR_FORMAT_COL_BY_COL<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::HOGDescriptor::getDescriptors(const GpuMat& img, Size win_stride, GpuMat& descriptors, int descr_format)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img</strong> &#8211; Source image. See  <a class="reference internal" href="#void gpu::HOGDescriptor::detect(const GpuMat&amp; img, vector&lt;Point&gt;&amp; found_locations, double hit_threshold, Size win_stride, Size padding)" title="void gpu::HOGDescriptor::detect(const GpuMat&amp; img, vector&lt;Point&gt;&amp; found_locations, double hit_threshold, Size win_stride, Size padding)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::HOGDescriptor::detect()</span></code></a>  for type limitations.</li>
+<li><strong>win_stride</strong> &#8211; Window stride. It must be a multiple of block stride.</li>
+<li><strong>descriptors</strong> &#8211; 2D array of descriptors.</li>
+<li><strong>descr_format</strong> &#8211; <p>Descriptor storage format:</p>
+<ul>
+<li><strong>DESCR_FORMAT_ROW_BY_ROW</strong> - Row-major order.</li>
+<li><strong>DESCR_FORMAT_COL_BY_COL</strong> - Column-major order.</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function is mainly used to learn the classifier.</p>
+</div>
+<div class="section" id="gpu-cascadeclassifier-gpu">
+<h2>gpu::CascadeClassifier_GPU<a class="headerlink" href="#gpu-cascadeclassifier-gpu" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::CascadeClassifier_GPU">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">CascadeClassifier_GPU</code><a class="headerlink" href="#gpu::CascadeClassifier_GPU" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Cascade classifier class used for object detection. Supports HAAR and LBP cascades.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">CascadeClassifier_GPU</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+        <span class="n">CascadeClassifier_GPU</span><span class="p">();</span>
+        <span class="n">CascadeClassifier_GPU</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">filename</span><span class="p">);</span>
+        <span class="o">~</span><span class="n">CascadeClassifier_GPU</span><span class="p">();</span>
+
+        <span class="kt">bool</span> <span class="nf">empty</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="nf">load</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">filename</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="nf">release</span><span class="p">();</span>
+
+        <span class="cm">/* Returns number of detected objects */</span>
+        <span class="kt">int</span> <span class="nf">detectMultiScale</span><span class="p">(</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">image</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">objectsBuf</span><span class="p">,</span> <span class="kt">double</span> <span class="n">scaleFactor</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">minNeighbors</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">Size</span> <span class="n">minSize</span><span class="o">=</span><span class="n">Size</span><span class="p">());</span>
+        <span class="kt">int</span> <span class="nf">detectMultiScale</span><span class="p">(</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">image</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">objectsBuf</span><span class="p">,</span> <span class="n">Size</span> <span class="n">maxObjectSize</span><span class="p">,</span> <span class="n">Size</span> <span class="n">minSize</span> <span class="o">=</span> <span class="n">Size</span><span class="p">(),</span> <span class="kt">double</span> <span class="n">scaleFactor</span> <span class="o">=</span> <span class="mf">1.1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">minNeighbors</span> <span class="o">=</span> <span class="mi">4</span><span class="p">);</span>
+
+        <span class="cm">/* Finds only the largest object. Special mode if training is required.*/</span>
+        <span class="kt">bool</span> <span class="n">findLargestObject</span><span class="p">;</span>
+
+        <span class="cm">/* Draws rectangles in input image */</span>
+        <span class="kt">bool</span> <span class="n">visualizeInPlace</span><span class="p">;</span>
+
+        <span class="n">Size</span> <span class="nf">getClassifierSize</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>A cascade classifier example can be found at opencv_source_code/samples/gpu/cascadeclassifier.cpp</li>
+<li>A Nvidea API specific cascade classifier example can be found at opencv_source_code/samples/gpu/cascadeclassifier_nvidia_api.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="gpu-cascadeclassifier-gpu-cascadeclassifier-gpu">
+<h2>gpu::CascadeClassifier_GPU::CascadeClassifier_GPU<a class="headerlink" href="#gpu-cascadeclassifier-gpu-cascadeclassifier-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Loads the classifier from a file. Cascade type is detected automatically by constructor parameter.</p>
+<dl class="function">
+<dt id="gpu::CascadeClassifier_GPU::CascadeClassifier_GPU(const string&amp; filename)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::CascadeClassifier_GPU::</code><code class="descname">CascadeClassifier_GPU</code><span class="sig-paren">(</span>const string&amp; <strong>filename</strong><span class="sig-paren">)</span><a class="headerlink" href="#gpu::CascadeClassifier_GPU::CascadeClassifier_GPU(const string& filename)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; Name of the file from which the classifier is loaded. Only the old <code class="docutils literal"><span class="pre">haar</span></code> classifier (trained by the <code class="docutils literal"><span class="pre">haar</span></code> training application) and NVIDIA&#8217;s <code class="docutils literal"><span class="pre">nvbin</span></code> are supported for HAAR and only new type of OpenCV XML cascade supported for LBP.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-cascadeclassifier-gpu-empty">
+<h2>gpu::CascadeClassifier_GPU::empty<a class="headerlink" href="#gpu-cascadeclassifier-gpu-empty" title="Permalink to this headline">¶</a></h2>
+<p>Checks whether the classifier is loaded or not.</p>
+<dl class="function">
+<dt id="bool gpu::CascadeClassifier_GPU::empty() const">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">gpu::CascadeClassifier_GPU::</code><code class="descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#bool gpu::CascadeClassifier_GPU::empty() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-cascadeclassifier-gpu-load">
+<h2>gpu::CascadeClassifier_GPU::load<a class="headerlink" href="#gpu-cascadeclassifier-gpu-load" title="Permalink to this headline">¶</a></h2>
+<p>Loads the classifier from a file. The previous content is destroyed.</p>
+<dl class="function">
+<dt id="bool gpu::CascadeClassifier_GPU::load(const string&amp; filename)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">gpu::CascadeClassifier_GPU::</code><code class="descname">load</code><span class="sig-paren">(</span>const string&amp; <strong>filename</strong><span class="sig-paren">)</span><a class="headerlink" href="#bool gpu::CascadeClassifier_GPU::load(const string& filename)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; Name of the file from which the classifier is loaded. Only the old <code class="docutils literal"><span class="pre">haar</span></code> classifiers (trained by the <code class="docutils literal"><span class="pre">haar</span></code> training application) and NVIDIA&#8217;s <code class="docutils literal"><span class="pre">nvbin</span></code> are supported for HAAR and only new type of OpenCV XML cascade supported for LBP. The working haar classifiers can be found under <code class="docutils literal"><span class="pre">data\haarcascades_GPU\</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-cascadeclassifier-gpu-release">
+<h2>gpu::CascadeClassifier_GPU::release<a class="headerlink" href="#gpu-cascadeclassifier-gpu-release" title="Permalink to this headline">¶</a></h2>
+<p>Destroys the loaded classifier.</p>
+<dl class="function">
+<dt id="void gpu::CascadeClassifier_GPU::release()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::CascadeClassifier_GPU::</code><code class="descname">release</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::CascadeClassifier_GPU::release()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-cascadeclassifier-gpu-detectmultiscale">
+<h2>gpu::CascadeClassifier_GPU::detectMultiScale<a class="headerlink" href="#gpu-cascadeclassifier-gpu-detectmultiscale" title="Permalink to this headline">¶</a></h2>
+<p>Detects objects of different sizes in the input image.</p>
+<dl class="function">
+<dt id="int gpu::CascadeClassifier_GPU::detectMultiScale(const GpuMat&amp; image, GpuMat&amp; objectsBuf, double scaleFactor, int minNeighbors, Size minSize)">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">gpu::CascadeClassifier_GPU::</code><code class="descname">detectMultiScale</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>image</strong>, GpuMat&amp; <strong>objectsBuf</strong>, double <strong>scaleFactor</strong>=1.2, int <strong>minNeighbors</strong>=4, Size <strong>minSize</strong>=Size()<span class="sig-paren">)</span><a class="headerlink" href="#int gpu::CascadeClassifier_GPU::detectMultiScale(const GpuMat& image, GpuMat& objectsBuf, double scaleFactor, int minNeighbors, Size minSize)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="int gpu::CascadeClassifier_GPU::detectMultiScale(const GpuMat&amp; image, GpuMat&amp; objectsBuf, Size maxObjectSize, Size minSize , double scaleFactor , int minNeighbors)">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">gpu::CascadeClassifier_GPU::</code><code class="descname">detectMultiScale</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>image</strong>, GpuMat&amp; <strong>objectsBuf</strong>, Size <strong>maxObjectSize</strong>, Size <strong>minSize</strong>=Size(), double <strong>scaleFactor</strong>=1.1, int <strong>minNeighbors</strong>=4<span class="sig-paren">)</span><a class="headerlink" href="#int gpu::CascadeClassifier_GPU::detectMultiScale(const GpuMat& image, GpuMat& objectsBuf, Size maxObjectSize, Size minSize , double scaleFactor , int minNeighbors)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Matrix of type  <code class="docutils literal"><span class="pre">CV_8U</span></code>  containing an image where objects should be detected.</li>
+<li><strong>objectsBuf</strong> &#8211; Buffer to store detected objects (rectangles). If it is empty, it is allocated with the default size. If not empty, the function searches not more than N objects, where <code class="docutils literal"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">sizeof(objectsBufer's</span> <span class="pre">data)/sizeof(cv::Rect)</span></code>.</li>
+<li><strong>maxObjectSize</strong> &#8211; Maximum possible object size. Objects larger than that are ignored. Used for second signature and supported only for LBP cascades.</li>
+<li><strong>scaleFactor</strong> &#8211; Parameter specifying how much the image size is reduced at each image scale.</li>
+<li><strong>minNeighbors</strong> &#8211; Parameter specifying how many neighbors each candidate rectangle should have to retain it.</li>
+<li><strong>minSize</strong> &#8211; Minimum possible object size. Objects smaller than that are ignored.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The detected objects are returned as a list of rectangles.</p>
+<p>The function returns the number of detected objects, so you can retrieve them as in the following example:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">gpu</span><span class="o">::</span><span class="n">CascadeClassifier_GPU</span> <span class="n">cascade_gpu</span><span class="p">(...);</span>
+
+<span class="n">Mat</span> <span class="n">image_cpu</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(...)</span>
+<span class="n">GpuMat</span> <span class="n">image_gpu</span><span class="p">(</span><span class="n">image_cpu</span><span class="p">);</span>
+
+<span class="n">GpuMat</span> <span class="n">objbuf</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">detections_number</span> <span class="o">=</span> <span class="n">cascade_gpu</span><span class="p">.</span><span class="n">detectMultiScale</span><span class="p">(</span> <span class="n">image_gpu</span><span class="p">,</span>
+          <span class="n">objbuf</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="n">minNeighbors</span><span class="p">);</span>
+
+<span class="n">Mat</span> <span class="n">obj_host</span><span class="p">;</span>
+<span class="c1">// download only detected number of rectangles</span>
+<span class="n">objbuf</span><span class="p">.</span><span class="n">colRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">detections_number</span><span class="p">).</span><span class="n">download</span><span class="p">(</span><span class="n">obj_host</span><span class="p">);</span>
+
+<span class="n">Rect</span><span class="o">*</span> <span class="n">faces</span> <span class="o">=</span> <span class="n">obj_host</span><span class="p">.</span><span class="n">ptr</span><span class="o">&lt;</span><span class="n">Rect</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">detections_num</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+   <span class="n">cv</span><span class="o">::</span><span class="n">rectangle</span><span class="p">(</span><span class="n">image_cpu</span><span class="p">,</span> <span class="n">faces</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">255</span><span class="p">));</span>
+
+<span class="n">imshow</span><span class="p">(</span><span class="s">&quot;Faces&quot;</span><span class="p">,</span> <span class="n">image_cpu</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../objdetect/doc/cascade_classification.html#void CascadeClassifier::detectMultiScale(const Mat&amp; image, vector&lt;Rect&gt;&amp; objects, double scaleFactor, int minNeighbors, int flags, Size minSize, Size maxSize)" title="void CascadeClassifier::detectMultiScale(const Mat&amp; image, vector&lt;Rect&gt;&amp; objects, double scaleFactor, int minNeighbors, int flags, Size minSize, Size maxSize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CascadeClassifier::detectMultiScale()</span></code></a></p>
+</div>
+<table class="docutils citation" frame="void" id="dalal2005" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[Dalal2005]</a></td><td>Navneet Dalal and Bill Triggs. <em>Histogram of oriented gradients for human detection</em>. 2005.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Object Detection</a><ul>
+<li><a class="reference internal" href="#gpu-hogdescriptor">gpu::HOGDescriptor</a></li>
+<li><a class="reference internal" href="#gpu-hogdescriptor-hogdescriptor">gpu::HOGDescriptor::HOGDescriptor</a></li>
+<li><a class="reference internal" href="#gpu-hogdescriptor-getdescriptorsize">gpu::HOGDescriptor::getDescriptorSize</a></li>
+<li><a class="reference internal" href="#gpu-hogdescriptor-getblockhistogramsize">gpu::HOGDescriptor::getBlockHistogramSize</a></li>
+<li><a class="reference internal" href="#gpu-hogdescriptor-setsvmdetector">gpu::HOGDescriptor::setSVMDetector</a></li>
+<li><a class="reference internal" href="#gpu-hogdescriptor-getdefaultpeopledetector">gpu::HOGDescriptor::getDefaultPeopleDetector</a></li>
+<li><a class="reference internal" href="#gpu-hogdescriptor-getpeopledetector48x96">gpu::HOGDescriptor::getPeopleDetector48x96</a></li>
+<li><a class="reference internal" href="#gpu-hogdescriptor-getpeopledetector64x128">gpu::HOGDescriptor::getPeopleDetector64x128</a></li>
+<li><a class="reference internal" href="#gpu-hogdescriptor-detect">gpu::HOGDescriptor::detect</a></li>
+<li><a class="reference internal" href="#gpu-hogdescriptor-detectmultiscale">gpu::HOGDescriptor::detectMultiScale</a></li>
+<li><a class="reference internal" href="#gpu-hogdescriptor-getdescriptors">gpu::HOGDescriptor::getDescriptors</a></li>
+<li><a class="reference internal" href="#gpu-cascadeclassifier-gpu">gpu::CascadeClassifier_GPU</a></li>
+<li><a class="reference internal" href="#gpu-cascadeclassifier-gpu-cascadeclassifier-gpu">gpu::CascadeClassifier_GPU::CascadeClassifier_GPU</a></li>
+<li><a class="reference internal" href="#gpu-cascadeclassifier-gpu-empty">gpu::CascadeClassifier_GPU::empty</a></li>
+<li><a class="reference internal" href="#gpu-cascadeclassifier-gpu-load">gpu::CascadeClassifier_GPU::load</a></li>
+<li><a class="reference internal" href="#gpu-cascadeclassifier-gpu-release">gpu::CascadeClassifier_GPU::release</a></li>
+<li><a class="reference internal" href="#gpu-cascadeclassifier-gpu-detectmultiscale">gpu::CascadeClassifier_GPU::detectMultiScale</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="matrix_reductions.html"
+                        title="previous chapter">Matrix Reductions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="feature_detection_and_description.html"
+                        title="next chapter">Feature Detection and Description</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/gpu/doc/object_detection.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="feature_detection_and_description.html" title="Feature Detection and Description"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="matrix_reductions.html" title="Matrix Reductions"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="gpu.html" >gpu. GPU-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

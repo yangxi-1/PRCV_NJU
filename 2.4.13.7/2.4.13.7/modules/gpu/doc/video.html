@@ -1,0 +1,1848 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Video Analysis &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="gpu. GPU-accelerated Computer Vision" href="gpu.html" />
+    <link rel="next" title="photo. Computational Photography" href="../../photo/doc/photo.html" />
+    <link rel="prev" title="Camera Calibration and 3D Reconstruction" href="camera_calibration_and_3d_reconstruction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../photo/doc/photo.html" title="photo. Computational Photography"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="camera_calibration_and_3d_reconstruction.html" title="Camera Calibration and 3D Reconstruction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="gpu.html" accesskey="U">gpu. GPU-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="video-analysis">
+<h1>Video Analysis<a class="headerlink" href="#video-analysis" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>A general optical flow example can be found at opencv_source_code/samples/gpu/optical_flow.cpp</li>
+<li>A general optical flow example using the Nvidia API can be found at opencv_source_code/samples/gpu/opticalflow_nvidia_api.cpp</li>
+</ul>
+</div>
+<div class="section" id="gpu-broxopticalflow">
+<h2>gpu::BroxOpticalFlow<a class="headerlink" href="#gpu-broxopticalflow" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::BroxOpticalFlow">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">BroxOpticalFlow</code><a class="headerlink" href="#gpu::BroxOpticalFlow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class computing the optical flow for two images using Brox et al Optical Flow algorithm (<a class="reference internal" href="#brox2004" id="id1">[Brox2004]</a>).</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">BroxOpticalFlow</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">BroxOpticalFlow</span><span class="p">(</span><span class="kt">float</span> <span class="n">alpha_</span><span class="p">,</span> <span class="kt">float</span> <span class="n">gamma_</span><span class="p">,</span> <span class="kt">float</span> <span class="n">scale_factor_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">inner_iterations_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">outer_iterations_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">solver_iterations_</span><span class="p">);</span>
+
+    <span class="c1">//! Compute optical flow</span>
+    <span class="c1">//! frame0 - source frame (supports only CV_32FC1 type)</span>
+    <span class="c1">//! frame1 - frame to track (with the same size and type as frame0)</span>
+    <span class="c1">//! u      - flow horizontal component (along x axis)</span>
+    <span class="c1">//! v      - flow vertical component (along y axis)</span>
+    <span class="kt">void</span> <span class="nf">operator</span> <span class="p">()(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">frame0</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">frame1</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">u</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">());</span>
+
+    <span class="c1">//! flow smoothness</span>
+    <span class="kt">float</span> <span class="n">alpha</span><span class="p">;</span>
+
+    <span class="c1">//! gradient constancy importance</span>
+    <span class="kt">float</span> <span class="n">gamma</span><span class="p">;</span>
+
+    <span class="c1">//! pyramid scale factor</span>
+    <span class="kt">float</span> <span class="n">scale_factor</span><span class="p">;</span>
+
+    <span class="c1">//! number of lagged non-linearity iterations (inner loop)</span>
+    <span class="kt">int</span> <span class="n">inner_iterations</span><span class="p">;</span>
+
+    <span class="c1">//! number of warping iterations (number of pyramid levels)</span>
+    <span class="kt">int</span> <span class="n">outer_iterations</span><span class="p">;</span>
+
+    <span class="c1">//! number of linear system solver iterations</span>
+    <span class="kt">int</span> <span class="n">solver_iterations</span><span class="p">;</span>
+
+    <span class="n">GpuMat</span> <span class="n">buf</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example illustrating the Brox et al optical flow algorithm can be found at opencv_source_code/samples/gpu/brox_optical_flow.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="gpu-goodfeaturestotrackdetector-gpu">
+<h2>gpu::GoodFeaturesToTrackDetector_GPU<a class="headerlink" href="#gpu-goodfeaturestotrackdetector-gpu" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::GoodFeaturesToTrackDetector_GPU">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">GoodFeaturesToTrackDetector_GPU</code><a class="headerlink" href="#gpu::GoodFeaturesToTrackDetector_GPU" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class used for strong corners detection on an image.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">GoodFeaturesToTrackDetector_GPU</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">explicit</span> <span class="n">GoodFeaturesToTrackDetector_GPU</span><span class="p">(</span><span class="kt">int</span> <span class="n">maxCorners_</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="kt">double</span> <span class="n">qualityLevel_</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span> <span class="kt">double</span> <span class="n">minDistance_</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">blockSize_</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">useHarrisDetector_</span> <span class="o">=</span> <span class="nb">false</span><span class="p">,</span> <span class="kt">double</span> <span class="n">harrisK_</span> <span class="o">=</span> <span class="mf">0.04</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">operator</span> <span class="p">()(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">image</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">corners</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">GpuMat</span><span class="p">());</span>
+
+    <span class="kt">int</span> <span class="n">maxCorners</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">qualityLevel</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">minDistance</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="n">blockSize</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">useHarrisDetector</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">harrisK</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">releaseMemory</span><span class="p">();</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class finds the most prominent corners in the image.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/feature_detection.html#void goodFeaturesToTrack(InputArray image, OutputArray corners, int maxCorners, double qualityLevel, double minDistance, InputArray mask, int blockSize, bool useHarrisDetector, double k)" title="void goodFeaturesToTrack(InputArray image, OutputArray corners, int maxCorners, double qualityLevel, double minDistance, InputArray mask, int blockSize, bool useHarrisDetector, double k)"><code class="xref ocv ocv-func docutils literal"><span class="pre">goodFeaturesToTrack()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-goodfeaturestotrackdetector-gpu-goodfeaturestotrackdetector-gpu">
+<h2>gpu::GoodFeaturesToTrackDetector_GPU::GoodFeaturesToTrackDetector_GPU<a class="headerlink" href="#gpu-goodfeaturestotrackdetector-gpu-goodfeaturestotrackdetector-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Constructor.</p>
+<dl class="function">
+<dt id="gpu::GoodFeaturesToTrackDetector_GPU::GoodFeaturesToTrackDetector_GPU(int maxCorners , double qualityLevel , double minDistance , int blockSize , bool useHarrisDetector , double harrisK)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::GoodFeaturesToTrackDetector_GPU::</code><code class="descname">GoodFeaturesToTrackDetector_GPU</code><span class="sig-paren">(</span>int <strong>maxCorners</strong>=1000, double <strong>qualityLevel</strong>=0.01, double <strong>minDistance</strong>=0.0, int <strong>blockSize</strong>=3, bool <strong>useHarrisDetector</strong>=false, double <strong>harrisK</strong>=0.04<span class="sig-paren">)</span><a class="headerlink" href="#gpu::GoodFeaturesToTrackDetector_GPU::GoodFeaturesToTrackDetector_GPU(int maxCorners , double qualityLevel , double minDistance , int blockSize , bool useHarrisDetector , double harrisK)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>maxCorners</strong> &#8211; Maximum number of corners to return. If there are more corners than are found, the strongest of them is returned.</li>
+<li><strong>qualityLevel</strong> &#8211; Parameter characterizing the minimal accepted quality of image corners. The parameter value is multiplied by the best corner quality measure, which is the minimal eigenvalue (see  <a class="reference internal" href="image_processing.html#void gpu::cornerMinEigenVal(const GpuMat&amp; src, GpuMat&amp; dst, int blockSize, int ksize, int borderType)" title="void gpu::cornerMinEigenVal(const GpuMat&amp; src, GpuMat&amp; dst, int blockSize, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::cornerMinEigenVal()</span></code></a> ) or the Harris function response (see  <a class="reference internal" href="image_processing.html#void gpu::cornerHarris(const GpuMat&amp; src, GpuMat&amp; dst, int blockSize, int ksize, double k, int borderType)" title="void gpu::cornerHarris(const GpuMat&amp; src, GpuMat&amp; dst, int blockSize, int ksize, double k, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::cornerHarris()</span></code></a> ). The corners with the quality measure less than the product are rejected. For example, if the best corner has the quality measure = 1500, and the  <code class="docutils literal"><span class="pre">qualityLevel=0.01</span></code> , then all the corners with the quality measure less than 15 are rejected.</li>
+<li><strong>minDistance</strong> &#8211; Minimum possible Euclidean distance between the returned corners.</li>
+<li><strong>blockSize</strong> &#8211; Size of an average block for computing a derivative covariation matrix over each pixel neighborhood. See  <a class="reference internal" href="../../imgproc/doc/feature_detection.html#void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerEigenValsAndVecs()</span></code></a> .</li>
+<li><strong>useHarrisDetector</strong> &#8211; Parameter indicating whether to use a Harris detector (see <a class="reference internal" href="image_processing.html#void gpu::cornerHarris(const GpuMat&amp; src, GpuMat&amp; dst, int blockSize, int ksize, double k, int borderType)" title="void gpu::cornerHarris(const GpuMat&amp; src, GpuMat&amp; dst, int blockSize, int ksize, double k, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::cornerHarris()</span></code></a>) or <a class="reference internal" href="image_processing.html#void gpu::cornerMinEigenVal(const GpuMat&amp; src, GpuMat&amp; dst, int blockSize, int ksize, int borderType)" title="void gpu::cornerMinEigenVal(const GpuMat&amp; src, GpuMat&amp; dst, int blockSize, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::cornerMinEigenVal()</span></code></a>.</li>
+<li><strong>harrisK</strong> &#8211; Free parameter of the Harris detector.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-goodfeaturestotrackdetector-gpu-operator">
+<h2>gpu::GoodFeaturesToTrackDetector_GPU::operator ()<a class="headerlink" href="#gpu-goodfeaturestotrackdetector-gpu-operator" title="Permalink to this headline">¶</a></h2>
+<p>Finds the most prominent corners in the image.</p>
+<dl class="function">
+<dt id="void gpu::GoodFeaturesToTrackDetector_GPU::operator ()(const GpuMat&amp; image, GpuMat&amp; corners, const GpuMat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::GoodFeaturesToTrackDetector_GPU::</code><code class="descname">operator()</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>image</strong>, GpuMat&amp; <strong>corners</strong>, const GpuMat&amp; <strong>mask</strong>=GpuMat()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::GoodFeaturesToTrackDetector_GPU::operator ()(const GpuMat& image, GpuMat& corners, const GpuMat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Input 8-bit, single-channel image.</li>
+<li><strong>corners</strong> &#8211; Output vector of detected corners (it will be one row matrix with CV_32FC2 type).</li>
+<li><strong>mask</strong> &#8211; Optional region of interest. If the image is not empty (it needs to have the type  <code class="docutils literal"><span class="pre">CV_8UC1</span></code>  and the same size as  <code class="docutils literal"><span class="pre">image</span></code> ), it  specifies the region in which the corners are detected.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/feature_detection.html#void goodFeaturesToTrack(InputArray image, OutputArray corners, int maxCorners, double qualityLevel, double minDistance, InputArray mask, int blockSize, bool useHarrisDetector, double k)" title="void goodFeaturesToTrack(InputArray image, OutputArray corners, int maxCorners, double qualityLevel, double minDistance, InputArray mask, int blockSize, bool useHarrisDetector, double k)"><code class="xref ocv ocv-func docutils literal"><span class="pre">goodFeaturesToTrack()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-goodfeaturestotrackdetector-gpu-releasememory">
+<h2>gpu::GoodFeaturesToTrackDetector_GPU::releaseMemory<a class="headerlink" href="#gpu-goodfeaturestotrackdetector-gpu-releasememory" title="Permalink to this headline">¶</a></h2>
+<p>Releases inner buffers memory.</p>
+<dl class="function">
+<dt id="void gpu::GoodFeaturesToTrackDetector_GPU::releaseMemory()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::GoodFeaturesToTrackDetector_GPU::</code><code class="descname">releaseMemory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::GoodFeaturesToTrackDetector_GPU::releaseMemory()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-farnebackopticalflow">
+<h2>gpu::FarnebackOpticalFlow<a class="headerlink" href="#gpu-farnebackopticalflow" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::FarnebackOpticalFlow">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">FarnebackOpticalFlow</code><a class="headerlink" href="#gpu::FarnebackOpticalFlow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class computing a dense optical flow using the Gunnar Farneback’s algorithm.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">FarnebackOpticalFlow</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">FarnebackOpticalFlow</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">numLevels</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+        <span class="n">pyrScale</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">;</span>
+        <span class="n">fastPyramids</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">winSize</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+        <span class="n">numIters</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+        <span class="n">polyN</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+        <span class="n">polySigma</span> <span class="o">=</span> <span class="mf">1.1</span><span class="p">;</span>
+        <span class="n">flags</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">int</span> <span class="n">numLevels</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">pyrScale</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">fastPyramids</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">winSize</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">numIters</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">polyN</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">polySigma</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">flags</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">operator</span> <span class="p">()(</span><span class="k">const</span> <span class="n">GpuMat</span> <span class="o">&amp;</span><span class="n">frame0</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span> <span class="o">&amp;</span><span class="n">frame1</span><span class="p">,</span> <span class="n">GpuMat</span> <span class="o">&amp;</span><span class="n">flowx</span><span class="p">,</span> <span class="n">GpuMat</span> <span class="o">&amp;</span><span class="n">flowy</span><span class="p">,</span> <span class="n">Stream</span> <span class="o">&amp;</span><span class="n">s</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">());</span>
+
+    <span class="kt">void</span> <span class="nf">releaseMemory</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/* hidden */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gpu-farnebackopticalflow-operator">
+<h2>gpu::FarnebackOpticalFlow::operator ()<a class="headerlink" href="#gpu-farnebackopticalflow-operator" title="Permalink to this headline">¶</a></h2>
+<p>Computes a dense optical flow using the Gunnar Farneback’s algorithm.</p>
+<dl class="function">
+<dt id="void gpu::FarnebackOpticalFlow::operator ()(const GpuMat &amp;frame0, const GpuMat &amp;frame1, GpuMat &amp;flowx, GpuMat &amp;flowy, Stream &amp;s)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::FarnebackOpticalFlow::</code><code class="descname">operator()</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>frame0</strong>, const GpuMat&amp; <strong>frame1</strong>, GpuMat&amp; <strong>flowx</strong>, GpuMat&amp; <strong>flowy</strong>, Stream&amp; <strong>s</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::FarnebackOpticalFlow::operator ()(const GpuMat &frame0, const GpuMat &frame1, GpuMat &flowx, GpuMat &flowy, Stream &s)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>frame0</strong> &#8211; First 8-bit gray-scale input image</li>
+<li><strong>frame1</strong> &#8211; Second 8-bit gray-scale input image</li>
+<li><strong>flowx</strong> &#8211; Flow horizontal component</li>
+<li><strong>flowy</strong> &#8211; Flow vertical component</li>
+<li><strong>s</strong> &#8211; Stream</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#void calcOpticalFlowFarneback(InputArray prev, InputArray next, InputOutputArray flow, double pyr_scale, int levels, int winsize, int iterations, int poly_n, double poly_sigma, int flags)" title="void calcOpticalFlowFarneback(InputArray prev, InputArray next, InputOutputArray flow, double pyr_scale, int levels, int winsize, int iterations, int poly_n, double poly_sigma, int flags)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcOpticalFlowFarneback()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-farnebackopticalflow-releasememory">
+<h2>gpu::FarnebackOpticalFlow::releaseMemory<a class="headerlink" href="#gpu-farnebackopticalflow-releasememory" title="Permalink to this headline">¶</a></h2>
+<p>Releases unused auxiliary memory buffers.</p>
+<dl class="function">
+<dt id="void gpu::FarnebackOpticalFlow::releaseMemory()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::FarnebackOpticalFlow::</code><code class="descname">releaseMemory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::FarnebackOpticalFlow::releaseMemory()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-pyrlkopticalflow">
+<h2>gpu::PyrLKOpticalFlow<a class="headerlink" href="#gpu-pyrlkopticalflow" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::PyrLKOpticalFlow">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">PyrLKOpticalFlow</code><a class="headerlink" href="#gpu::PyrLKOpticalFlow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class used for calculating an optical flow.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">PyrLKOpticalFlow</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">PyrLKOpticalFlow</span><span class="p">();</span>
+
+    <span class="kt">void</span> <span class="nf">sparse</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">prevImg</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">nextImg</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">prevPts</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">nextPts</span><span class="p">,</span>
+        <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">status</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">*</span> <span class="n">err</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">dense</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">prevImg</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">nextImg</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">u</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">*</span> <span class="n">err</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="n">Size</span> <span class="n">winSize</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">maxLevel</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">iters</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">useInitialFlow</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">releaseMemory</span><span class="p">();</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class can calculate an optical flow for a sparse feature set or dense optical flow using the iterative Lucas-Kanade method with pyramids.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)" title="void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcOpticalFlowPyrLK()</span></code></a></p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example of the Lucas Kanade optical flow algorithm can be found at opencv_source_code/samples/gpu/pyrlk_optical_flow.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="gpu-pyrlkopticalflow-sparse">
+<h2>gpu::PyrLKOpticalFlow::sparse<a class="headerlink" href="#gpu-pyrlkopticalflow-sparse" title="Permalink to this headline">¶</a></h2>
+<p>Calculate an optical flow for a sparse feature set.</p>
+<dl class="function">
+<dt id="void gpu::PyrLKOpticalFlow::sparse(const GpuMat&amp; prevImg, const GpuMat&amp; nextImg, const GpuMat&amp; prevPts, GpuMat&amp; nextPts, GpuMat&amp; status, GpuMat* err)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::PyrLKOpticalFlow::</code><code class="descname">sparse</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>prevImg</strong>, const GpuMat&amp; <strong>nextImg</strong>, const GpuMat&amp; <strong>prevPts</strong>, GpuMat&amp; <strong>nextPts</strong>, GpuMat&amp; <strong>status</strong>, GpuMat* <strong>err</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::PyrLKOpticalFlow::sparse(const GpuMat& prevImg, const GpuMat& nextImg, const GpuMat& prevPts, GpuMat& nextPts, GpuMat& status, GpuMat* err)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>prevImg</strong> &#8211; First 8-bit input image (supports both grayscale and color images).</li>
+<li><strong>nextImg</strong> &#8211; Second input image of the same size and the same type as  <code class="docutils literal"><span class="pre">prevImg</span></code> .</li>
+<li><strong>prevPts</strong> &#8211; Vector of 2D points for which the flow needs to be found. It must be one row matrix with CV_32FC2 type.</li>
+<li><strong>nextPts</strong> &#8211; Output vector of 2D points (with single-precision floating-point coordinates) containing the calculated new positions of input features in the second image. When <code class="docutils literal"><span class="pre">useInitialFlow</span></code> is true, the vector must have the same size as in the input.</li>
+<li><strong>status</strong> &#8211; Output status vector (CV_8UC1 type). Each element of the vector is set to 1 if the flow for the corresponding features has been found. Otherwise, it is set to 0.</li>
+<li><strong>err</strong> &#8211; Output vector (CV_32FC1 type) that contains the difference between patches around the original and moved points or min eigen value if <code class="docutils literal"><span class="pre">getMinEigenVals</span></code> is checked. It can be NULL, if not needed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)" title="void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcOpticalFlowPyrLK()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-pyrlkopticalflow-dense">
+<h2>gpu::PyrLKOpticalFlow::dense<a class="headerlink" href="#gpu-pyrlkopticalflow-dense" title="Permalink to this headline">¶</a></h2>
+<p>Calculate dense optical flow.</p>
+<dl class="function">
+<dt id="void gpu::PyrLKOpticalFlow::dense(const GpuMat&amp; prevImg, const GpuMat&amp; nextImg, GpuMat&amp; u, GpuMat&amp; v, GpuMat* err)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::PyrLKOpticalFlow::</code><code class="descname">dense</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>prevImg</strong>, const GpuMat&amp; <strong>nextImg</strong>, GpuMat&amp; <strong>u</strong>, GpuMat&amp; <strong>v</strong>, GpuMat* <strong>err</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::PyrLKOpticalFlow::dense(const GpuMat& prevImg, const GpuMat& nextImg, GpuMat& u, GpuMat& v, GpuMat* err)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>prevImg</strong> &#8211; First 8-bit grayscale input image.</li>
+<li><strong>nextImg</strong> &#8211; Second input image of the same size and the same type as  <code class="docutils literal"><span class="pre">prevImg</span></code> .</li>
+<li><strong>u</strong> &#8211; Horizontal component of the optical flow of the same size as input images, 32-bit floating-point, single-channel</li>
+<li><strong>v</strong> &#8211; Vertical component of the optical flow of the same size as input images, 32-bit floating-point, single-channel</li>
+<li><strong>err</strong> &#8211; Output vector (CV_32FC1 type) that contains the difference between patches around the original and moved points or min eigen value if <code class="docutils literal"><span class="pre">getMinEigenVals</span></code> is checked. It can be NULL, if not needed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-pyrlkopticalflow-releasememory">
+<h2>gpu::PyrLKOpticalFlow::releaseMemory<a class="headerlink" href="#gpu-pyrlkopticalflow-releasememory" title="Permalink to this headline">¶</a></h2>
+<p>Releases inner buffers memory.</p>
+<dl class="function">
+<dt id="void gpu::PyrLKOpticalFlow::releaseMemory()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::PyrLKOpticalFlow::</code><code class="descname">releaseMemory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::PyrLKOpticalFlow::releaseMemory()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-interpolateframes">
+<h2>gpu::interpolateFrames<a class="headerlink" href="#gpu-interpolateframes" title="Permalink to this headline">¶</a></h2>
+<p>Interpolates frames (images) using provided optical flow (displacement field).</p>
+<dl class="function">
+<dt id="void gpu::interpolateFrames(const GpuMat&amp; frame0, const GpuMat&amp; frame1, const GpuMat&amp; fu, const GpuMat&amp; fv, const GpuMat&amp; bu, const GpuMat&amp; bv, float pos, GpuMat&amp; newFrame, GpuMat&amp; buf, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">interpolateFrames</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>frame0</strong>, const GpuMat&amp; <strong>frame1</strong>, const GpuMat&amp; <strong>fu</strong>, const GpuMat&amp; <strong>fv</strong>, const GpuMat&amp; <strong>bu</strong>, const GpuMat&amp; <strong>bv</strong>, float <strong>pos</strong>, GpuMat&amp; <strong>newFrame</strong>, GpuMat&amp; <strong>buf</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::interpolateFrames(const GpuMat& frame0, const GpuMat& frame1, const GpuMat& fu, const GpuMat& fv, const GpuMat& bu, const GpuMat& bv, float pos, GpuMat& newFrame, GpuMat& buf, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>frame0</strong> &#8211; First frame (32-bit floating point images, single channel).</li>
+<li><strong>frame1</strong> &#8211; Second frame. Must have the same type and size as <code class="docutils literal"><span class="pre">frame0</span></code> .</li>
+<li><strong>fu</strong> &#8211; Forward horizontal displacement.</li>
+<li><strong>fv</strong> &#8211; Forward vertical displacement.</li>
+<li><strong>bu</strong> &#8211; Backward horizontal displacement.</li>
+<li><strong>bv</strong> &#8211; Backward vertical displacement.</li>
+<li><strong>pos</strong> &#8211; New frame position.</li>
+<li><strong>newFrame</strong> &#8211; Output image.</li>
+<li><strong>buf</strong> &#8211; Temporary buffer, will have width x 6*height size, CV_32FC1 type and contain 6 GpuMat: occlusion masks for first frame, occlusion masks for second, interpolated forward horizontal flow, interpolated forward vertical flow, interpolated backward horizontal flow, interpolated backward vertical flow.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-fgdstatmodel">
+<h2>gpu::FGDStatModel<a class="headerlink" href="#gpu-fgdstatmodel" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::FGDStatModel">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">FGDStatModel</code><a class="headerlink" href="#gpu::FGDStatModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class used for background/foreground segmentation.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">FGDStatModel</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">struct</span> <span class="n">Params</span>
+    <span class="p">{</span>
+        <span class="p">...</span>
+    <span class="p">};</span>
+
+    <span class="k">explicit</span> <span class="nf">FGDStatModel</span><span class="p">(</span><span class="kt">int</span> <span class="n">out_cn</span> <span class="o">=</span> <span class="mi">3</span><span class="p">);</span>
+    <span class="k">explicit</span> <span class="nf">FGDStatModel</span><span class="p">(</span><span class="k">const</span> <span class="n">cv</span><span class="o">::</span><span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">firstFrame</span><span class="p">,</span> <span class="k">const</span> <span class="n">Params</span><span class="o">&amp;</span> <span class="n">params</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(),</span> <span class="kt">int</span> <span class="n">out_cn</span> <span class="o">=</span> <span class="mi">3</span><span class="p">);</span>
+
+    <span class="o">~</span><span class="n">FGDStatModel</span><span class="p">();</span>
+
+    <span class="kt">void</span> <span class="nf">create</span><span class="p">(</span><span class="k">const</span> <span class="n">cv</span><span class="o">::</span><span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">firstFrame</span><span class="p">,</span> <span class="k">const</span> <span class="n">Params</span><span class="o">&amp;</span> <span class="n">params</span> <span class="o">=</span> <span class="n">Params</span><span class="p">());</span>
+    <span class="kt">void</span> <span class="nf">release</span><span class="p">();</span>
+
+    <span class="kt">int</span> <span class="nf">update</span><span class="p">(</span><span class="k">const</span> <span class="n">cv</span><span class="o">::</span><span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">curFrame</span><span class="p">);</span>
+
+    <span class="c1">//8UC3 or 8UC4 reference background image</span>
+    <span class="n">cv</span><span class="o">::</span><span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">background</span><span class="p">;</span>
+
+    <span class="c1">//8UC1 foreground image</span>
+    <span class="n">cv</span><span class="o">::</span><span class="n">gpu</span><span class="o">::</span><span class="n">GpuMat</span> <span class="n">foreground</span><span class="p">;</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">cv</span><span class="o">::</span><span class="n">Point</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">foreground_regions</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class discriminates between foreground and background pixels by building and maintaining a model of the background. Any pixel which does not fit this model is then deemed to be foreground. The class implements algorithm described in <a class="reference internal" href="#fgd2003" id="id2">[FGD2003]</a>.</p>
+<p>The results are available through the class fields:</p>
+<blockquote>
+<div><dl class="member">
+<dt id="cv::gpu::GpuMat background">
+cv::gpu::GpuMat <code class="descname">background</code><a class="headerlink" href="#cv::gpu::GpuMat background" title="Permalink to this definition">¶</a></dt>
+<dd><p>The output background image.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="cv::gpu::GpuMat foreground">
+cv::gpu::GpuMat <code class="descname">foreground</code><a class="headerlink" href="#cv::gpu::GpuMat foreground" title="Permalink to this definition">¶</a></dt>
+<dd><p>The output foreground mask as an 8-bit binary image.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="cv::gpu::GpuMat foreground_regions">
+cv::gpu::GpuMat <code class="descname">foreground_regions</code><a class="headerlink" href="#cv::gpu::GpuMat foreground_regions" title="Permalink to this definition">¶</a></dt>
+<dd><p>The output foreground regions calculated by <a class="reference internal" href="../../imgproc/doc/structural_analysis_and_shape_descriptors.html#void findContours(InputOutputArray image, OutputArrayOfArrays contours, OutputArray hierarchy, int mode, int method, Point offset)" title="void findContours(InputOutputArray image, OutputArrayOfArrays contours, OutputArray hierarchy, int mode, int method, Point offset)"><code class="xref ocv ocv-func docutils literal"><span class="pre">findContours()</span></code></a>.</p>
+</dd></dl>
+
+</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-fgdstatmodel-fgdstatmodel">
+<h2>gpu::FGDStatModel::FGDStatModel<a class="headerlink" href="#gpu-fgdstatmodel-fgdstatmodel" title="Permalink to this headline">¶</a></h2>
+<p>Constructors.</p>
+<dl class="function">
+<dt id="gpu::FGDStatModel::FGDStatModel(int out_cn)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::FGDStatModel::</code><code class="descname">FGDStatModel</code><span class="sig-paren">(</span>int <strong>out_cn</strong>=3<span class="sig-paren">)</span><a class="headerlink" href="#gpu::FGDStatModel::FGDStatModel(int out_cn)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="gpu::FGDStatModel::FGDStatModel(const cv::gpu::GpuMat&amp; firstFrame, const Params&amp; params , int out_cn)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::FGDStatModel::</code><code class="descname">FGDStatModel</code><span class="sig-paren">(</span>const cv::gpu::GpuMat&amp; <strong>firstFrame</strong>, const Params&amp; <strong>params</strong>=Params(), int <strong>out_cn</strong>=3<span class="sig-paren">)</span><a class="headerlink" href="#gpu::FGDStatModel::FGDStatModel(const cv::gpu::GpuMat& firstFrame, const Params& params , int out_cn)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>firstFrame</strong> &#8211; First frame from video stream. Supports 3- and 4-channels input ( <code class="docutils literal"><span class="pre">CV_8UC3</span></code> and <code class="docutils literal"><span class="pre">CV_8UC4</span></code> ).</li>
+<li><strong>params</strong> &#8211; Algorithm&#8217;s parameters. See <a class="reference internal" href="#fgd2003" id="id3">[FGD2003]</a> for explanation.</li>
+<li><strong>out_cn</strong> &#8211; Channels count in output result and inner buffers. Can be 3 or 4. 4-channels version requires more memory, but works a bit faster.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void gpu::FGDStatModel::create(const cv::gpu::GpuMat&amp; firstFrame, const Params&amp; params)" title="void gpu::FGDStatModel::create(const cv::gpu::GpuMat&amp; firstFrame, const Params&amp; params)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::FGDStatModel::create()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-fgdstatmodel-create">
+<h2>gpu::FGDStatModel::create<a class="headerlink" href="#gpu-fgdstatmodel-create" title="Permalink to this headline">¶</a></h2>
+<p>Initializes background model.</p>
+<dl class="function">
+<dt id="void gpu::FGDStatModel::create(const cv::gpu::GpuMat&amp; firstFrame, const Params&amp; params)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::FGDStatModel::</code><code class="descname">create</code><span class="sig-paren">(</span>const cv::gpu::GpuMat&amp; <strong>firstFrame</strong>, const Params&amp; <strong>params</strong>=Params()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::FGDStatModel::create(const cv::gpu::GpuMat& firstFrame, const Params& params)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>firstFrame</strong> &#8211; First frame from video stream. Supports 3- and 4-channels input ( <code class="docutils literal"><span class="pre">CV_8UC3</span></code> and <code class="docutils literal"><span class="pre">CV_8UC4</span></code> ).</li>
+<li><strong>params</strong> &#8211; Algorithm&#8217;s parameters. See <a class="reference internal" href="#fgd2003" id="id4">[FGD2003]</a> for explanation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-fgdstatmodel-release">
+<h2>gpu::FGDStatModel::release<a class="headerlink" href="#gpu-fgdstatmodel-release" title="Permalink to this headline">¶</a></h2>
+<p>Releases all inner buffer&#8217;s memory.</p>
+<dl class="function">
+<dt id="void gpu::FGDStatModel::release()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::FGDStatModel::</code><code class="descname">release</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::FGDStatModel::release()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-fgdstatmodel-update">
+<h2>gpu::FGDStatModel::update<a class="headerlink" href="#gpu-fgdstatmodel-update" title="Permalink to this headline">¶</a></h2>
+<p>Updates the background model and returns foreground regions count.</p>
+<dl class="function">
+<dt id="int gpu::FGDStatModel::update(const cv::gpu::GpuMat&amp; curFrame)">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">gpu::FGDStatModel::</code><code class="descname">update</code><span class="sig-paren">(</span>const cv::gpu::GpuMat&amp; <strong>curFrame</strong><span class="sig-paren">)</span><a class="headerlink" href="#int gpu::FGDStatModel::update(const cv::gpu::GpuMat& curFrame)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>curFrame</strong> &#8211; Next video frame.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-mog-gpu">
+<h2>gpu::MOG_GPU<a class="headerlink" href="#gpu-mog-gpu" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::MOG_GPU">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">MOG_GPU</code><a class="headerlink" href="#gpu::MOG_GPU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gaussian Mixture-based Backbround/Foreground Segmentation Algorithm.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MOG_GPU</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">MOG_GPU</span><span class="p">(</span><span class="kt">int</span> <span class="n">nmixtures</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">Size</span> <span class="n">frameSize</span><span class="p">,</span> <span class="kt">int</span> <span class="n">frameType</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">frame</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">fgmask</span><span class="p">,</span> <span class="kt">float</span> <span class="n">learningRate</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">());</span>
+
+    <span class="kt">void</span> <span class="nf">getBackgroundImage</span><span class="p">(</span><span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">backgroundImage</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">())</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">release</span><span class="p">();</span>
+
+    <span class="kt">int</span> <span class="n">history</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">varThreshold</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">backgroundRatio</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">noiseSigma</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>The class discriminates between foreground and background pixels by building and maintaining a model of the background. Any pixel which does not fit this model is then deemed to be foreground. The class implements algorithm described in <a class="reference internal" href="#mog2001" id="id5">[MOG2001]</a>.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#BackgroundSubtractorMOG : public BackgroundSubtractor" title="class BackgroundSubtractorMOG : public BackgroundSubtractor"><code class="xref ocv ocv-class docutils literal"><span class="pre">BackgroundSubtractorMOG</span></code></a></p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example on gaussian mixture based background/foreground segmantation can be found at opencv_source_code/samples/gpu/bgfg_segm.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="gpu-mog-gpu-mog-gpu">
+<h2>gpu::MOG_GPU::MOG_GPU<a class="headerlink" href="#gpu-mog-gpu-mog-gpu" title="Permalink to this headline">¶</a></h2>
+<p>The constructor.</p>
+<dl class="function">
+<dt id="gpu::MOG_GPU::MOG_GPU(int nmixtures)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::MOG_GPU::</code><code class="descname">MOG_GPU</code><span class="sig-paren">(</span>int <strong>nmixtures</strong>=-1<span class="sig-paren">)</span><a class="headerlink" href="#gpu::MOG_GPU::MOG_GPU(int nmixtures)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nmixtures</strong> &#8211; Number of Gaussian mixtures.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Default constructor sets all parameters to default values.</p>
+</div>
+<div class="section" id="gpu-mog-gpu-operator">
+<h2>gpu::MOG_GPU::operator()<a class="headerlink" href="#gpu-mog-gpu-operator" title="Permalink to this headline">¶</a></h2>
+<p>Updates the background model and returns the foreground mask.</p>
+<dl class="function">
+<dt id="void gpu::MOG_GPU::operator()(const GpuMat&amp; frame, GpuMat&amp; fgmask, float learningRate , Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::MOG_GPU::</code><code class="descname">operator()</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>frame</strong>, GpuMat&amp; <strong>fgmask</strong>, float <strong>learningRate</strong>=0.0f, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::MOG_GPU::operator()(const GpuMat& frame, GpuMat& fgmask, float learningRate , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>frame</strong> &#8211; Next video frame.</li>
+<li><strong>fgmask</strong> &#8211; The output foreground mask as an 8-bit binary image.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-mog-gpu-getbackgroundimage">
+<h2>gpu::MOG_GPU::getBackgroundImage<a class="headerlink" href="#gpu-mog-gpu-getbackgroundimage" title="Permalink to this headline">¶</a></h2>
+<p>Computes a background image.</p>
+<dl class="function">
+<dt id="void gpu::MOG_GPU::getBackgroundImage(GpuMat&amp; backgroundImage, Stream&amp; stream) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::MOG_GPU::</code><code class="descname">getBackgroundImage</code><span class="sig-paren">(</span>GpuMat&amp; <strong>backgroundImage</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void gpu::MOG_GPU::getBackgroundImage(GpuMat& backgroundImage, Stream& stream) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>backgroundImage</strong> &#8211; The output background image.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-mog-gpu-release">
+<h2>gpu::MOG_GPU::release<a class="headerlink" href="#gpu-mog-gpu-release" title="Permalink to this headline">¶</a></h2>
+<p>Releases all inner buffer&#8217;s memory.</p>
+<dl class="function">
+<dt id="void gpu::MOG_GPU::release()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::MOG_GPU::</code><code class="descname">release</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::MOG_GPU::release()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-mog2-gpu">
+<h2>gpu::MOG2_GPU<a class="headerlink" href="#gpu-mog2-gpu" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::MOG2_GPU">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">MOG2_GPU</code><a class="headerlink" href="#gpu::MOG2_GPU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gaussian Mixture-based Background/Foreground Segmentation Algorithm.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MOG2_GPU</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">MOG2_GPU</span><span class="p">(</span><span class="kt">int</span> <span class="n">nmixtures</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">Size</span> <span class="n">frameSize</span><span class="p">,</span> <span class="kt">int</span> <span class="n">frameType</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">frame</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">fgmask</span><span class="p">,</span> <span class="kt">float</span> <span class="n">learningRate</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">());</span>
+
+    <span class="kt">void</span> <span class="nf">getBackgroundImage</span><span class="p">(</span><span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">backgroundImage</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">())</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">release</span><span class="p">();</span>
+
+    <span class="c1">// parameters</span>
+    <span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class discriminates between foreground and background pixels by building and maintaining a model of the background. Any pixel which does not fit this model is then deemed to be foreground. The class implements algorithm described in <a class="reference internal" href="#mog2004" id="id6">[MOG2004]</a>.</p>
+<p>Here are important members of the class that control the algorithm, which you can set after constructing the class instance:</p>
+<blockquote>
+<div><dl class="member">
+<dt id="float backgroundRatio">
+float <code class="descname">backgroundRatio</code><a class="headerlink" href="#float backgroundRatio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Threshold defining whether the component is significant enough to be included into the background model ( corresponds to <code class="docutils literal"><span class="pre">TB=1-cf</span></code> from the paper??which paper??). <code class="docutils literal"><span class="pre">cf=0.1</span> <span class="pre">=&gt;</span> <span class="pre">TB=0.9</span></code> is default. For <code class="docutils literal"><span class="pre">alpha=0.001</span></code>, it means that the mode should exist for approximately 105 frames before it is considered foreground.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float varThreshold">
+float <code class="descname">varThreshold</code><a class="headerlink" href="#float varThreshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Threshold for the squared Mahalanobis distance that helps decide when a sample is close to the existing components (corresponds to <code class="docutils literal"><span class="pre">Tg</span></code>). If it is not close to any component, a new component is generated. <code class="docutils literal"><span class="pre">3</span> <span class="pre">sigma</span> <span class="pre">=&gt;</span> <span class="pre">Tg=3*3=9</span></code> is default. A smaller <code class="docutils literal"><span class="pre">Tg</span></code> value generates more components. A higher <code class="docutils literal"><span class="pre">Tg</span></code> value may result in a small number of components but they can grow too large.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float fVarInit">
+float <code class="descname">fVarInit</code><a class="headerlink" href="#float fVarInit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial variance for the newly generated components. It affects the speed of adaptation. The parameter value is based on your estimate of the typical standard deviation from the images. OpenCV uses 15 as a reasonable value.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float fVarMin">
+float <code class="descname">fVarMin</code><a class="headerlink" href="#float fVarMin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameter used to further control the variance.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float fVarMax">
+float <code class="descname">fVarMax</code><a class="headerlink" href="#float fVarMax" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameter used to further control the variance.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float fCT">
+float <code class="descname">fCT</code><a class="headerlink" href="#float fCT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Complexity reduction parameter. This parameter defines the number of samples needed to accept to prove the component exists. <code class="docutils literal"><span class="pre">CT=0.05</span></code> is a default value for all the samples. By setting <code class="docutils literal"><span class="pre">CT=0</span></code> you get an algorithm very similar to the standard Stauffer&amp;Grimson algorithm.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="uchar nShadowDetection">
+uchar <code class="descname">nShadowDetection</code><a class="headerlink" href="#uchar nShadowDetection" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value for marking shadow pixels in the output foreground mask. Default value is 127.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float fTau">
+float <code class="descname">fTau</code><a class="headerlink" href="#float fTau" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shadow threshold. The shadow is detected if the pixel is a darker version of the background. <code class="docutils literal"><span class="pre">Tau</span></code> is a threshold defining how much darker the shadow can be. <code class="docutils literal"><span class="pre">Tau=</span> <span class="pre">0.5</span></code> means that if a pixel is more than twice darker then it is not shadow. See <a class="reference internal" href="#shadowdetect2003" id="id7">[ShadowDetect2003]</a>.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="bool bShadowDetection">
+bool <code class="descname">bShadowDetection</code><a class="headerlink" href="#bool bShadowDetection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameter defining whether shadow detection should be enabled.</p>
+</dd></dl>
+
+</div></blockquote>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#BackgroundSubtractorMOG2 : public BackgroundSubtractor" title="class BackgroundSubtractorMOG2 : public BackgroundSubtractor"><code class="xref ocv ocv-class docutils literal"><span class="pre">BackgroundSubtractorMOG2</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-mog2-gpu-mog2-gpu">
+<h2>gpu::MOG2_GPU::MOG2_GPU<a class="headerlink" href="#gpu-mog2-gpu-mog2-gpu" title="Permalink to this headline">¶</a></h2>
+<p>The constructor.</p>
+<dl class="function">
+<dt id="gpu::MOG2_GPU::MOG2_GPU(int nmixtures)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::MOG2_GPU::</code><code class="descname">MOG2_GPU</code><span class="sig-paren">(</span>int <strong>nmixtures</strong>=-1<span class="sig-paren">)</span><a class="headerlink" href="#gpu::MOG2_GPU::MOG2_GPU(int nmixtures)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nmixtures</strong> &#8211; Number of Gaussian mixtures.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Default constructor sets all parameters to default values.</p>
+</div>
+<div class="section" id="gpu-mog2-gpu-operator">
+<h2>gpu::MOG2_GPU::operator()<a class="headerlink" href="#gpu-mog2-gpu-operator" title="Permalink to this headline">¶</a></h2>
+<p>Updates the background model and returns the foreground mask.</p>
+<dl class="function">
+<dt id="void gpu::MOG2_GPU::operator()(const GpuMat&amp; frame, GpuMat&amp; fgmask, float learningRate, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::MOG2_GPU::</code><code class="descname">operator()</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>frame</strong>, GpuMat&amp; <strong>fgmask</strong>, float <strong>learningRate</strong>=-1.0f, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::MOG2_GPU::operator()(const GpuMat& frame, GpuMat& fgmask, float learningRate, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>frame</strong> &#8211; Next video frame.</li>
+<li><strong>fgmask</strong> &#8211; The output foreground mask as an 8-bit binary image.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-mog2-gpu-getbackgroundimage">
+<h2>gpu::MOG2_GPU::getBackgroundImage<a class="headerlink" href="#gpu-mog2-gpu-getbackgroundimage" title="Permalink to this headline">¶</a></h2>
+<p>Computes a background image.</p>
+<dl class="function">
+<dt id="void gpu::MOG2_GPU::getBackgroundImage(GpuMat&amp; backgroundImage, Stream&amp; stream) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::MOG2_GPU::</code><code class="descname">getBackgroundImage</code><span class="sig-paren">(</span>GpuMat&amp; <strong>backgroundImage</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void gpu::MOG2_GPU::getBackgroundImage(GpuMat& backgroundImage, Stream& stream) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>backgroundImage</strong> &#8211; The output background image.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-mog2-gpu-release">
+<h2>gpu::MOG2_GPU::release<a class="headerlink" href="#gpu-mog2-gpu-release" title="Permalink to this headline">¶</a></h2>
+<p>Releases all inner buffer&#8217;s memory.</p>
+<dl class="function">
+<dt id="void gpu::MOG2_GPU::release()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::MOG2_GPU::</code><code class="descname">release</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::MOG2_GPU::release()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-gmg-gpu">
+<h2>gpu::GMG_GPU<a class="headerlink" href="#gpu-gmg-gpu" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::GMG_GPU">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">GMG_GPU</code><a class="headerlink" href="#gpu::GMG_GPU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class used for background/foreground segmentation.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">GMG_GPU</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">GMG_GPU</span><span class="p">();</span>
+
+    <span class="kt">void</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">Size</span> <span class="n">frameSize</span><span class="p">,</span> <span class="kt">float</span> <span class="n">min</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="kt">float</span> <span class="n">max</span> <span class="o">=</span> <span class="mf">255.0f</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">operator</span> <span class="p">()(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">frame</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">fgmask</span><span class="p">,</span> <span class="kt">float</span> <span class="n">learningRate</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0f</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">());</span>
+
+    <span class="kt">void</span> <span class="nf">release</span><span class="p">();</span>
+
+    <span class="kt">int</span>    <span class="n">maxFeatures</span><span class="p">;</span>
+    <span class="kt">float</span>  <span class="n">learningRate</span><span class="p">;</span>
+    <span class="kt">int</span>    <span class="n">numInitializationFrames</span><span class="p">;</span>
+    <span class="kt">int</span>    <span class="n">quantizationLevels</span><span class="p">;</span>
+    <span class="kt">float</span>  <span class="n">backgroundPrior</span><span class="p">;</span>
+    <span class="kt">float</span>  <span class="n">decisionThreshold</span><span class="p">;</span>
+    <span class="kt">int</span>    <span class="n">smoothingRadius</span><span class="p">;</span>
+
+    <span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class discriminates between foreground and background pixels by building and maintaining a model of the background. Any pixel which does not fit this model is then deemed to be foreground. The class implements algorithm described in <a class="reference internal" href="#gmg2012" id="id8">[GMG2012]</a>.</p>
+<p>Here are important members of the class that control the algorithm, which you can set after constructing the class instance:</p>
+<blockquote>
+<div><dl class="member">
+<dt id="int maxFeatures">
+int <code class="descname">maxFeatures</code><a class="headerlink" href="#int maxFeatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total number of distinct colors to maintain in histogram.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float learningRate">
+float <code class="descname">learningRate</code><a class="headerlink" href="#float learningRate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set between 0.0 and 1.0, determines how quickly features are &#8220;forgotten&#8221; from histograms.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int numInitializationFrames">
+int <code class="descname">numInitializationFrames</code><a class="headerlink" href="#int numInitializationFrames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of frames of video to use to initialize histograms.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int quantizationLevels">
+int <code class="descname">quantizationLevels</code><a class="headerlink" href="#int quantizationLevels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of discrete levels in each channel to be used in histograms.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float backgroundPrior">
+float <code class="descname">backgroundPrior</code><a class="headerlink" href="#float backgroundPrior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prior probability that any given pixel is a background pixel. A sensitivity parameter.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float decisionThreshold">
+float <code class="descname">decisionThreshold</code><a class="headerlink" href="#float decisionThreshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Value above which pixel is determined to be FG.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float smoothingRadius">
+float <code class="descname">smoothingRadius</code><a class="headerlink" href="#float smoothingRadius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Smoothing radius, in pixels, for cleaning up FG image.</p>
+</dd></dl>
+
+</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-gmg-gpu-gmg-gpu">
+<h2>gpu::GMG_GPU::GMG_GPU<a class="headerlink" href="#gpu-gmg-gpu-gmg-gpu" title="Permalink to this headline">¶</a></h2>
+<p>The default constructor.</p>
+<dl class="function">
+<dt id="gpu::GMG_GPU::GMG_GPU()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::GMG_GPU::</code><code class="descname">GMG_GPU</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gpu::GMG_GPU::GMG_GPU()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Default constructor sets all parameters to default values.</p>
+</div>
+<div class="section" id="gpu-gmg-gpu-initialize">
+<h2>gpu::GMG_GPU::initialize<a class="headerlink" href="#gpu-gmg-gpu-initialize" title="Permalink to this headline">¶</a></h2>
+<p>Initialize background model and allocates all inner buffers.</p>
+<dl class="function">
+<dt id="void gpu::GMG_GPU::initialize(Size frameSize, float min , float max)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::GMG_GPU::</code><code class="descname">initialize</code><span class="sig-paren">(</span>Size <strong>frameSize</strong>, float <strong>min</strong>=0.0f, float <strong>max</strong>=255.0f<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::GMG_GPU::initialize(Size frameSize, float min , float max)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>frameSize</strong> &#8211; Input frame size.</li>
+<li><strong>min</strong> &#8211; Minimum value taken on by pixels in image sequence. Usually 0.</li>
+<li><strong>max</strong> &#8211; Maximum value taken on by pixels in image sequence, e.g. 1.0 or 255.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-gmg-gpu-operator">
+<h2>gpu::GMG_GPU::operator()<a class="headerlink" href="#gpu-gmg-gpu-operator" title="Permalink to this headline">¶</a></h2>
+<p>Updates the background model and returns the foreground mask</p>
+<dl class="function">
+<dt id="void gpu::GMG_GPU::operator ()(const GpuMat&amp; frame, GpuMat&amp; fgmask, float learningRate, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::GMG_GPU::</code><code class="descname">operator()</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>frame</strong>, GpuMat&amp; <strong>fgmask</strong>, float <strong>learningRate</strong>=-1.0f, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::GMG_GPU::operator ()(const GpuMat& frame, GpuMat& fgmask, float learningRate, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>frame</strong> &#8211; Next video frame.</li>
+<li><strong>fgmask</strong> &#8211; The output foreground mask as an 8-bit binary image.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-gmg-gpu-release">
+<h2>gpu::GMG_GPU::release<a class="headerlink" href="#gpu-gmg-gpu-release" title="Permalink to this headline">¶</a></h2>
+<p>Releases all inner buffer&#8217;s memory.</p>
+<dl class="function">
+<dt id="void gpu::GMG_GPU::release()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::GMG_GPU::</code><code class="descname">release</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::GMG_GPU::release()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-videowriter-gpu">
+<h2>gpu::VideoWriter_GPU<a class="headerlink" href="#gpu-videowriter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Video writer class.</p>
+<dl class="class">
+<dt id="gpu::VideoWriter_GPU">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">VideoWriter_GPU</code><a class="headerlink" href="#gpu::VideoWriter_GPU" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The class uses H264 video codec.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Currently only Windows platform is supported.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example on how to use the videoWriter class can be found at opencv_source_code/samples/gpu/video_writer.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="gpu-videowriter-gpu-videowriter-gpu">
+<h2>gpu::VideoWriter_GPU::VideoWriter_GPU<a class="headerlink" href="#gpu-videowriter-gpu-videowriter-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Constructors.</p>
+<dl class="function">
+<dt id="gpu::VideoWriter_GPU::VideoWriter_GPU()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::VideoWriter_GPU::</code><code class="descname">VideoWriter_GPU</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gpu::VideoWriter_GPU::VideoWriter_GPU()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="gpu::VideoWriter_GPU::VideoWriter_GPU(const std::string&amp; fileName, cv::Size frameSize, double fps, SurfaceFormat format)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::VideoWriter_GPU::</code><code class="descname">VideoWriter_GPU</code><span class="sig-paren">(</span>const std::string&amp; <strong>fileName</strong>, cv::Size <strong>frameSize</strong>, double <strong>fps</strong>, SurfaceFormat <strong>format</strong>=SF_BGR<span class="sig-paren">)</span><a class="headerlink" href="#gpu::VideoWriter_GPU::VideoWriter_GPU(const std::string& fileName, cv::Size frameSize, double fps, SurfaceFormat format)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="gpu::VideoWriter_GPU::VideoWriter_GPU(const std::string&amp; fileName, cv::Size frameSize, double fps, const EncoderParams&amp; params, SurfaceFormat format)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::VideoWriter_GPU::</code><code class="descname">VideoWriter_GPU</code><span class="sig-paren">(</span>const std::string&amp; <strong>fileName</strong>, cv::Size <strong>frameSize</strong>, double <strong>fps</strong>, const EncoderParams&amp; <strong>params</strong>, SurfaceFormat <strong>format</strong>=SF_BGR<span class="sig-paren">)</span><a class="headerlink" href="#gpu::VideoWriter_GPU::VideoWriter_GPU(const std::string& fileName, cv::Size frameSize, double fps, const EncoderParams& params, SurfaceFormat format)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="gpu::VideoWriter_GPU::VideoWriter_GPU(const cv::Ptr&lt;EncoderCallBack&gt;&amp; encoderCallback, cv::Size frameSize, double fps, SurfaceFormat format)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::VideoWriter_GPU::</code><code class="descname">VideoWriter_GPU</code><span class="sig-paren">(</span>const cv::Ptr&lt;EncoderCallBack&gt;&amp; <strong>encoderCallback</strong>, cv::Size <strong>frameSize</strong>, double <strong>fps</strong>, SurfaceFormat <strong>format</strong>=SF_BGR<span class="sig-paren">)</span><a class="headerlink" href="#gpu::VideoWriter_GPU::VideoWriter_GPU(const cv::Ptr<EncoderCallBack>& encoderCallback, cv::Size frameSize, double fps, SurfaceFormat format)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="gpu::VideoWriter_GPU::VideoWriter_GPU(const cv::Ptr&lt;EncoderCallBack&gt;&amp; encoderCallback, cv::Size frameSize, double fps, const EncoderParams&amp; params, SurfaceFormat format)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::VideoWriter_GPU::</code><code class="descname">VideoWriter_GPU</code><span class="sig-paren">(</span>const cv::Ptr&lt;EncoderCallBack&gt;&amp; <strong>encoderCallback</strong>, cv::Size <strong>frameSize</strong>, double <strong>fps</strong>, const EncoderParams&amp; <strong>params</strong>, SurfaceFormat <strong>format</strong>=SF_BGR<span class="sig-paren">)</span><a class="headerlink" href="#gpu::VideoWriter_GPU::VideoWriter_GPU(const cv::Ptr<EncoderCallBack>& encoderCallback, cv::Size frameSize, double fps, const EncoderParams& params, SurfaceFormat format)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fileName</strong> &#8211; Name of the output video file. Only AVI file format is supported.</li>
+<li><strong>frameSize</strong> &#8211; Size of the input video frames.</li>
+<li><strong>fps</strong> &#8211; Framerate of the created video stream.</li>
+<li><strong>params</strong> &#8211; Encoder parameters. See <a class="reference internal" href="#gpu::VideoWriter_GPU::EncoderParams" title="struct gpu::VideoWriter_GPU::EncoderParams"><code class="xref ocv ocv-struct docutils literal"><span class="pre">gpu::VideoWriter_GPU::EncoderParams</span></code></a> .</li>
+<li><strong>format</strong> &#8211; Surface format of input frames ( <code class="docutils literal"><span class="pre">SF_UYVY</span></code> , <code class="docutils literal"><span class="pre">SF_YUY2</span></code> , <code class="docutils literal"><span class="pre">SF_YV12</span></code> , <code class="docutils literal"><span class="pre">SF_NV12</span></code> , <code class="docutils literal"><span class="pre">SF_IYUV</span></code> , <code class="docutils literal"><span class="pre">SF_BGR</span></code> or <code class="docutils literal"><span class="pre">SF_GRAY</span></code>). BGR or gray frames will be converted to YV12 format before encoding, frames with other formats will be used as is.</li>
+<li><strong>encoderCallback</strong> &#8211; Callbacks for video encoder. See <a class="reference internal" href="#gpu::VideoWriter_GPU::EncoderCallBack" title="class gpu::VideoWriter_GPU::EncoderCallBack"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::VideoWriter_GPU::EncoderCallBack</span></code></a> . Use it if you want to work with raw video stream.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The constructors initialize video writer. FFMPEG is used to write videos. User can implement own multiplexing with <a class="reference internal" href="#gpu::VideoWriter_GPU::EncoderCallBack" title="class gpu::VideoWriter_GPU::EncoderCallBack"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::VideoWriter_GPU::EncoderCallBack</span></code></a> .</p>
+</div>
+<div class="section" id="gpu-videowriter-gpu-open">
+<h2>gpu::VideoWriter_GPU::open<a class="headerlink" href="#gpu-videowriter-gpu-open" title="Permalink to this headline">¶</a></h2>
+<p>Initializes or reinitializes video writer.</p>
+<dl class="function">
+<dt id="void gpu::VideoWriter_GPU::open(const std::string&amp; fileName, cv::Size frameSize, double fps, SurfaceFormat format)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::VideoWriter_GPU::</code><code class="descname">open</code><span class="sig-paren">(</span>const std::string&amp; <strong>fileName</strong>, cv::Size <strong>frameSize</strong>, double <strong>fps</strong>, SurfaceFormat <strong>format</strong>=SF_BGR<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::VideoWriter_GPU::open(const std::string& fileName, cv::Size frameSize, double fps, SurfaceFormat format)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::VideoWriter_GPU::open(const std::string&amp; fileName, cv::Size frameSize, double fps, const EncoderParams&amp; params, SurfaceFormat format)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::VideoWriter_GPU::</code><code class="descname">open</code><span class="sig-paren">(</span>const std::string&amp; <strong>fileName</strong>, cv::Size <strong>frameSize</strong>, double <strong>fps</strong>, const EncoderParams&amp; <strong>params</strong>, SurfaceFormat <strong>format</strong>=SF_BGR<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::VideoWriter_GPU::open(const std::string& fileName, cv::Size frameSize, double fps, const EncoderParams& params, SurfaceFormat format)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::VideoWriter_GPU::open(const cv::Ptr&lt;EncoderCallBack&gt;&amp; encoderCallback, cv::Size frameSize, double fps, SurfaceFormat format)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::VideoWriter_GPU::</code><code class="descname">open</code><span class="sig-paren">(</span>const cv::Ptr&lt;EncoderCallBack&gt;&amp; <strong>encoderCallback</strong>, cv::Size <strong>frameSize</strong>, double <strong>fps</strong>, SurfaceFormat <strong>format</strong>=SF_BGR<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::VideoWriter_GPU::open(const cv::Ptr<EncoderCallBack>& encoderCallback, cv::Size frameSize, double fps, SurfaceFormat format)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::VideoWriter_GPU::open(const cv::Ptr&lt;EncoderCallBack&gt;&amp; encoderCallback, cv::Size frameSize, double fps, const EncoderParams&amp; params, SurfaceFormat format)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::VideoWriter_GPU::</code><code class="descname">open</code><span class="sig-paren">(</span>const cv::Ptr&lt;EncoderCallBack&gt;&amp; <strong>encoderCallback</strong>, cv::Size <strong>frameSize</strong>, double <strong>fps</strong>, const EncoderParams&amp; <strong>params</strong>, SurfaceFormat <strong>format</strong>=SF_BGR<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::VideoWriter_GPU::open(const cv::Ptr<EncoderCallBack>& encoderCallback, cv::Size frameSize, double fps, const EncoderParams& params, SurfaceFormat format)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The method opens video writer. Parameters are the same as in the constructor <a class="reference internal" href="#gpu::VideoWriter_GPU::VideoWriter_GPU()" title="gpu::VideoWriter_GPU::VideoWriter_GPU()"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::VideoWriter_GPU::VideoWriter_GPU()</span></code></a> . The method throws <a class="reference internal" href="../../core/doc/utility_and_system_functions_and_macros.html#Exception : public std::exception" title="class Exception : public std::exception"><code class="xref ocv ocv-class docutils literal"><span class="pre">Exception</span></code></a> if error occurs.</p>
+</div>
+<div class="section" id="gpu-videowriter-gpu-isopened">
+<h2>gpu::VideoWriter_GPU::isOpened<a class="headerlink" href="#gpu-videowriter-gpu-isopened" title="Permalink to this headline">¶</a></h2>
+<p>Returns true if video writer has been successfully initialized.</p>
+<dl class="function">
+<dt id="bool gpu::VideoWriter_GPU::isOpened() const">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">gpu::VideoWriter_GPU::</code><code class="descname">isOpened</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#bool gpu::VideoWriter_GPU::isOpened() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-videowriter-gpu-close">
+<h2>gpu::VideoWriter_GPU::close<a class="headerlink" href="#gpu-videowriter-gpu-close" title="Permalink to this headline">¶</a></h2>
+<p>Releases the video writer.</p>
+<dl class="function">
+<dt id="void gpu::VideoWriter_GPU::close()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::VideoWriter_GPU::</code><code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::VideoWriter_GPU::close()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-videowriter-gpu-write">
+<h2>gpu::VideoWriter_GPU::write<a class="headerlink" href="#gpu-videowriter-gpu-write" title="Permalink to this headline">¶</a></h2>
+<p>Writes the next video frame.</p>
+<dl class="function">
+<dt id="void gpu::VideoWriter_GPU::write(const cv::gpu::GpuMat&amp; image, bool lastFrame)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::VideoWriter_GPU::</code><code class="descname">write</code><span class="sig-paren">(</span>const cv::gpu::GpuMat&amp; <strong>image</strong>, bool <strong>lastFrame</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::VideoWriter_GPU::write(const cv::gpu::GpuMat& image, bool lastFrame)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; The written frame.</li>
+<li><strong>lastFrame</strong> &#8211; Indicates that it is end of stream. The parameter can be ignored.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method write the specified image to video file. The image must have the same size and the same surface format as has been specified when opening the video writer.</p>
+</div>
+<div class="section" id="gpu-videowriter-gpu-encoderparams">
+<h2>gpu::VideoWriter_GPU::EncoderParams<a class="headerlink" href="#gpu-videowriter-gpu-encoderparams" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="gpu::VideoWriter_GPU::EncoderParams">
+<em class="property">struct </em><code class="descclassname">gpu::VideoWriter_GPU::</code><code class="descname">EncoderParams</code><a class="headerlink" href="#gpu::VideoWriter_GPU::EncoderParams" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Different parameters for CUDA video encoder.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">EncoderParams</span>
+<span class="p">{</span>
+    <span class="kt">int</span>       <span class="n">P_Interval</span><span class="p">;</span>      <span class="c1">//    NVVE_P_INTERVAL,</span>
+    <span class="kt">int</span>       <span class="n">IDR_Period</span><span class="p">;</span>      <span class="c1">//    NVVE_IDR_PERIOD,</span>
+    <span class="kt">int</span>       <span class="n">DynamicGOP</span><span class="p">;</span>      <span class="c1">//    NVVE_DYNAMIC_GOP,</span>
+    <span class="kt">int</span>       <span class="n">RCType</span><span class="p">;</span>          <span class="c1">//    NVVE_RC_TYPE,</span>
+    <span class="kt">int</span>       <span class="n">AvgBitrate</span><span class="p">;</span>      <span class="c1">//    NVVE_AVG_BITRATE,</span>
+    <span class="kt">int</span>       <span class="n">PeakBitrate</span><span class="p">;</span>     <span class="c1">//    NVVE_PEAK_BITRATE,</span>
+    <span class="kt">int</span>       <span class="n">QP_Level_Intra</span><span class="p">;</span>  <span class="c1">//    NVVE_QP_LEVEL_INTRA,</span>
+    <span class="kt">int</span>       <span class="n">QP_Level_InterP</span><span class="p">;</span> <span class="c1">//    NVVE_QP_LEVEL_INTER_P,</span>
+    <span class="kt">int</span>       <span class="n">QP_Level_InterB</span><span class="p">;</span> <span class="c1">//    NVVE_QP_LEVEL_INTER_B,</span>
+    <span class="kt">int</span>       <span class="n">DeblockMode</span><span class="p">;</span>     <span class="c1">//    NVVE_DEBLOCK_MODE,</span>
+    <span class="kt">int</span>       <span class="n">ProfileLevel</span><span class="p">;</span>    <span class="c1">//    NVVE_PROFILE_LEVEL,</span>
+    <span class="kt">int</span>       <span class="n">ForceIntra</span><span class="p">;</span>      <span class="c1">//    NVVE_FORCE_INTRA,</span>
+    <span class="kt">int</span>       <span class="n">ForceIDR</span><span class="p">;</span>        <span class="c1">//    NVVE_FORCE_IDR,</span>
+    <span class="kt">int</span>       <span class="n">ClearStat</span><span class="p">;</span>       <span class="c1">//    NVVE_CLEAR_STAT,</span>
+    <span class="kt">int</span>       <span class="n">DIMode</span><span class="p">;</span>          <span class="c1">//    NVVE_SET_DEINTERLACE,</span>
+    <span class="kt">int</span>       <span class="n">Presets</span><span class="p">;</span>         <span class="c1">//    NVVE_PRESETS,</span>
+    <span class="kt">int</span>       <span class="n">DisableCabac</span><span class="p">;</span>    <span class="c1">//    NVVE_DISABLE_CABAC,</span>
+    <span class="kt">int</span>       <span class="n">NaluFramingType</span><span class="p">;</span> <span class="c1">//    NVVE_CONFIGURE_NALU_FRAMING_TYPE</span>
+    <span class="kt">int</span>       <span class="n">DisableSPSPPS</span><span class="p">;</span>   <span class="c1">//    NVVE_DISABLE_SPS_PPS</span>
+
+    <span class="n">EncoderParams</span><span class="p">();</span>
+    <span class="k">explicit</span> <span class="nf">EncoderParams</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">configFile</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">load</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">configFile</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">save</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">configFile</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gpu-videowriter-gpu-encoderparams-encoderparams">
+<h2>gpu::VideoWriter_GPU::EncoderParams::EncoderParams<a class="headerlink" href="#gpu-videowriter-gpu-encoderparams-encoderparams" title="Permalink to this headline">¶</a></h2>
+<p>Constructors.</p>
+<dl class="function">
+<dt id="gpu::VideoWriter_GPU::EncoderParams::EncoderParams()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::VideoWriter_GPU::EncoderParams::</code><code class="descname">EncoderParams</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gpu::VideoWriter_GPU::EncoderParams::EncoderParams()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="gpu::VideoWriter_GPU::EncoderParams::EncoderParams(const std::string&amp; configFile)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::VideoWriter_GPU::EncoderParams::</code><code class="descname">EncoderParams</code><span class="sig-paren">(</span>const std::string&amp; <strong>configFile</strong><span class="sig-paren">)</span><a class="headerlink" href="#gpu::VideoWriter_GPU::EncoderParams::EncoderParams(const std::string& configFile)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>configFile</strong> &#8211; Config file name.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Creates default parameters or reads parameters from config file.</p>
+</div>
+<div class="section" id="gpu-videowriter-gpu-encoderparams-load">
+<h2>gpu::VideoWriter_GPU::EncoderParams::load<a class="headerlink" href="#gpu-videowriter-gpu-encoderparams-load" title="Permalink to this headline">¶</a></h2>
+<p>Reads parameters from config file.</p>
+<dl class="function">
+<dt id="void gpu::VideoWriter_GPU::EncoderParams::load(const std::string&amp; configFile)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::VideoWriter_GPU::EncoderParams::</code><code class="descname">load</code><span class="sig-paren">(</span>const std::string&amp; <strong>configFile</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::VideoWriter_GPU::EncoderParams::load(const std::string& configFile)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>configFile</strong> &#8211; Config file name.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-videowriter-gpu-encoderparams-save">
+<h2>gpu::VideoWriter_GPU::EncoderParams::save<a class="headerlink" href="#gpu-videowriter-gpu-encoderparams-save" title="Permalink to this headline">¶</a></h2>
+<p>Saves parameters to config file.</p>
+<dl class="function">
+<dt id="void gpu::VideoWriter_GPU::EncoderParams::save(const std::string&amp; configFile) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::VideoWriter_GPU::EncoderParams::</code><code class="descname">save</code><span class="sig-paren">(</span>const std::string&amp; <strong>configFile</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void gpu::VideoWriter_GPU::EncoderParams::save(const std::string& configFile) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>configFile</strong> &#8211; Config file name.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-videowriter-gpu-encodercallback">
+<h2>gpu::VideoWriter_GPU::EncoderCallBack<a class="headerlink" href="#gpu-videowriter-gpu-encodercallback" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::VideoWriter_GPU::EncoderCallBack">
+<em class="property">class </em><code class="descclassname">gpu::VideoWriter_GPU::</code><code class="descname">EncoderCallBack</code><a class="headerlink" href="#gpu::VideoWriter_GPU::EncoderCallBack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Callbacks for CUDA video encoder.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">EncoderCallBack</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">enum</span> <span class="n">PicType</span>
+    <span class="p">{</span>
+        <span class="n">IFRAME</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">PFRAME</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">BFRAME</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="p">};</span>
+
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">EncoderCallBack</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="k">virtual</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">acquireBitStream</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">bufferSize</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">releaseBitStream</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">onBeginFrame</span><span class="p">(</span><span class="kt">int</span> <span class="n">frameNumber</span><span class="p">,</span> <span class="n">PicType</span> <span class="n">picType</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">onEndFrame</span><span class="p">(</span><span class="kt">int</span> <span class="n">frameNumber</span><span class="p">,</span> <span class="n">PicType</span> <span class="n">picType</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gpu-videowriter-gpu-encodercallback-acquirebitstream">
+<h2>gpu::VideoWriter_GPU::EncoderCallBack::acquireBitStream<a class="headerlink" href="#gpu-videowriter-gpu-encodercallback-acquirebitstream" title="Permalink to this headline">¶</a></h2>
+<p>Callback function to signal the start of bitstream that is to be encoded.</p>
+<dl class="function">
+<dt id="virtual uchar* gpu::VideoWriter_GPU::EncoderCallBack::acquireBitStream(int* bufferSize) = 0">
+<strong>C++:</strong><code class="descname"> </code><em class="property">virtual</em> uchar* <code class="descclassname">gpu::VideoWriter_GPU::EncoderCallBack::</code><code class="descname">acquireBitStream</code><span class="sig-paren">(</span>int* <strong>bufferSize</strong><span class="sig-paren">)</span><code class="descclassname"> = 0</code><a class="headerlink" href="#virtual uchar* gpu::VideoWriter_GPU::EncoderCallBack::acquireBitStream(int* bufferSize) = 0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Callback must allocate buffer for CUDA encoder and return pointer to it and it&#8217;s size.</p>
+</div>
+<div class="section" id="gpu-videowriter-gpu-encodercallback-releasebitstream">
+<h2>gpu::VideoWriter_GPU::EncoderCallBack::releaseBitStream<a class="headerlink" href="#gpu-videowriter-gpu-encodercallback-releasebitstream" title="Permalink to this headline">¶</a></h2>
+<p>Callback function to signal that the encoded bitstream is ready to be written to file.</p>
+<dl class="function">
+<dt id="virtual void gpu::VideoWriter_GPU::EncoderCallBack::releaseBitStream(unsigned char* data, int size) = 0">
+<strong>C++:</strong><code class="descname"> </code><em class="property">virtual</em> void <code class="descclassname">gpu::VideoWriter_GPU::EncoderCallBack::</code><code class="descname">releaseBitStream</code><span class="sig-paren">(</span>unsigned char* <strong>data</strong>, int <strong>size</strong><span class="sig-paren">)</span><code class="descclassname"> = 0</code><a class="headerlink" href="#virtual void gpu::VideoWriter_GPU::EncoderCallBack::releaseBitStream(unsigned char* data, int size) = 0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-videowriter-gpu-encodercallback-onbeginframe">
+<h2>gpu::VideoWriter_GPU::EncoderCallBack::onBeginFrame<a class="headerlink" href="#gpu-videowriter-gpu-encodercallback-onbeginframe" title="Permalink to this headline">¶</a></h2>
+<p>Callback function to signal that the encoding operation on the frame has started.</p>
+<dl class="function">
+<dt id="virtual void gpu::VideoWriter_GPU::EncoderCallBack::onBeginFrame(int frameNumber, PicType picType) = 0">
+<strong>C++:</strong><code class="descname"> </code><em class="property">virtual</em> void <code class="descclassname">gpu::VideoWriter_GPU::EncoderCallBack::</code><code class="descname">onBeginFrame</code><span class="sig-paren">(</span>int <strong>frameNumber</strong>, PicType <strong>picType</strong><span class="sig-paren">)</span><code class="descclassname"> = 0</code><a class="headerlink" href="#virtual void gpu::VideoWriter_GPU::EncoderCallBack::onBeginFrame(int frameNumber, PicType picType) = 0" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>picType</strong> &#8211; Specify frame type (I-Frame, P-Frame or B-Frame).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-videowriter-gpu-encodercallback-onendframe">
+<h2>gpu::VideoWriter_GPU::EncoderCallBack::onEndFrame<a class="headerlink" href="#gpu-videowriter-gpu-encodercallback-onendframe" title="Permalink to this headline">¶</a></h2>
+<p>Callback function signals that the encoding operation on the frame has finished.</p>
+<dl class="function">
+<dt id="virtual void gpu::VideoWriter_GPU::EncoderCallBack::onEndFrame(int frameNumber, PicType picType) = 0">
+<strong>C++:</strong><code class="descname"> </code><em class="property">virtual</em> void <code class="descclassname">gpu::VideoWriter_GPU::EncoderCallBack::</code><code class="descname">onEndFrame</code><span class="sig-paren">(</span>int <strong>frameNumber</strong>, PicType <strong>picType</strong><span class="sig-paren">)</span><code class="descclassname"> = 0</code><a class="headerlink" href="#virtual void gpu::VideoWriter_GPU::EncoderCallBack::onEndFrame(int frameNumber, PicType picType) = 0" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>picType</strong> &#8211; Specify frame type (I-Frame, P-Frame or B-Frame).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-videoreader-gpu">
+<h2>gpu::VideoReader_GPU<a class="headerlink" href="#gpu-videoreader-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Class for reading video from files.</p>
+<dl class="class">
+<dt id="gpu::VideoReader_GPU">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">VideoReader_GPU</code><a class="headerlink" href="#gpu::VideoReader_GPU" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Currently only Windows and Linux platforms are supported.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example on how to use the videoReader class can be found at opencv_source_code/samples/gpu/video_reader.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="gpu-videoreader-gpu-codec">
+<h2>gpu::VideoReader_GPU::Codec<a class="headerlink" href="#gpu-videoreader-gpu-codec" title="Permalink to this headline">¶</a></h2>
+<p>Video codecs supported by <a class="reference internal" href="#gpu::VideoReader_GPU" title="class gpu::VideoReader_GPU"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::VideoReader_GPU</span></code></a> .</p>
+<dl class="enum">
+<dt id="gpu::VideoReader_GPU::Codec">
+<strong>C++:</strong><code class="descname"> </code><em class="property">enum </em><code class="descclassname">gpu::VideoReader_GPU::</code><code class="descname">Codec</code><a class="headerlink" href="#gpu::VideoReader_GPU::Codec" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="emember">
+<dt id="MPEG1">
+<code class="descname">MPEG1</code> = 0<a class="headerlink" href="#MPEG1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="MPEG2">
+<code class="descname">MPEG2</code><a class="headerlink" href="#MPEG2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="MPEG4">
+<code class="descname">MPEG4</code><a class="headerlink" href="#MPEG4" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="VC1">
+<code class="descname">VC1</code><a class="headerlink" href="#VC1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="H264">
+<code class="descname">H264</code><a class="headerlink" href="#H264" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="JPEG">
+<code class="descname">JPEG</code><a class="headerlink" href="#JPEG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="H264_SVC">
+<code class="descname">H264_SVC</code><a class="headerlink" href="#H264_SVC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="H264_MVC">
+<code class="descname">H264_MVC</code><a class="headerlink" href="#H264_MVC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="Uncompressed_YUV420">
+<code class="descname">Uncompressed_YUV420</code> = (('I'&lt;&lt;24)|('Y'&lt;&lt;16)|('U'&lt;&lt;8)|('V'))<a class="headerlink" href="#Uncompressed_YUV420" title="Permalink to this definition">¶</a></dt>
+<dd><p>Y,U,V (4:2:0)</p>
+</dd></dl>
+
+<dl class="emember">
+<dt id="Uncompressed_YV12">
+<code class="descname">Uncompressed_YV12</code> = (('Y'&lt;&lt;24)|('V'&lt;&lt;16)|('1'&lt;&lt;8)|('2'))<a class="headerlink" href="#Uncompressed_YV12" title="Permalink to this definition">¶</a></dt>
+<dd><p>Y,V,U (4:2:0)</p>
+</dd></dl>
+
+<dl class="emember">
+<dt id="Uncompressed_NV12">
+<code class="descname">Uncompressed_NV12</code> = (('N'&lt;&lt;24)|('V'&lt;&lt;16)|('1'&lt;&lt;8)|('2'))<a class="headerlink" href="#Uncompressed_NV12" title="Permalink to this definition">¶</a></dt>
+<dd><p>Y,UV  (4:2:0)</p>
+</dd></dl>
+
+<dl class="emember">
+<dt id="Uncompressed_YUYV">
+<code class="descname">Uncompressed_YUYV</code> = (('Y'&lt;&lt;24)|('U'&lt;&lt;16)|('Y'&lt;&lt;8)|('V'))<a class="headerlink" href="#Uncompressed_YUYV" title="Permalink to this definition">¶</a></dt>
+<dd><p>YUYV/YUY2 (4:2:2)</p>
+</dd></dl>
+
+<dl class="emember">
+<dt id="Uncompressed_UYVY">
+<code class="descname">Uncompressed_UYVY</code> = (('U'&lt;&lt;24)|('Y'&lt;&lt;16)|('V'&lt;&lt;8)|('Y'))<a class="headerlink" href="#Uncompressed_UYVY" title="Permalink to this definition">¶</a></dt>
+<dd><p>UYVY (4:2:2)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-videoreader-gpu-chromaformat">
+<h2>gpu::VideoReader_GPU::ChromaFormat<a class="headerlink" href="#gpu-videoreader-gpu-chromaformat" title="Permalink to this headline">¶</a></h2>
+<p>Chroma formats supported by <a class="reference internal" href="#gpu::VideoReader_GPU" title="class gpu::VideoReader_GPU"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::VideoReader_GPU</span></code></a> .</p>
+<dl class="enum">
+<dt id="gpu::VideoReader_GPU::ChromaFormat">
+<strong>C++:</strong><code class="descname"> </code><em class="property">enum </em><code class="descclassname">gpu::VideoReader_GPU::</code><code class="descname">ChromaFormat</code><a class="headerlink" href="#gpu::VideoReader_GPU::ChromaFormat" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="emember">
+<dt id="Monochrome">
+<code class="descname">Monochrome</code> = 0<a class="headerlink" href="#Monochrome" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="YUV420">
+<code class="descname">YUV420</code><a class="headerlink" href="#YUV420" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="YUV422">
+<code class="descname">YUV422</code><a class="headerlink" href="#YUV422" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="emember">
+<dt id="YUV444">
+<code class="descname">YUV444</code><a class="headerlink" href="#YUV444" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-videoreader-gpu-formatinfo">
+<h2>gpu::VideoReader_GPU::FormatInfo<a class="headerlink" href="#gpu-videoreader-gpu-formatinfo" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="gpu::VideoReader_GPU::FormatInfo">
+<em class="property">struct </em><code class="descclassname">gpu::VideoReader_GPU::</code><code class="descname">FormatInfo</code><a class="headerlink" href="#gpu::VideoReader_GPU::FormatInfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Struct providing information about video file format.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">FormatInfo</span>
+<span class="p">{</span>
+    <span class="n">Codec</span> <span class="n">codec</span><span class="p">;</span>
+    <span class="n">ChromaFormat</span> <span class="n">chromaFormat</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">width</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">height</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gpu-videoreader-gpu-videoreader-gpu">
+<h2>gpu::VideoReader_GPU::VideoReader_GPU<a class="headerlink" href="#gpu-videoreader-gpu-videoreader-gpu" title="Permalink to this headline">¶</a></h2>
+<p>Constructors.</p>
+<dl class="function">
+<dt id="gpu::VideoReader_GPU::VideoReader_GPU()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::VideoReader_GPU::</code><code class="descname">VideoReader_GPU</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gpu::VideoReader_GPU::VideoReader_GPU()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="gpu::VideoReader_GPU::VideoReader_GPU(const std::string&amp; filename)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::VideoReader_GPU::</code><code class="descname">VideoReader_GPU</code><span class="sig-paren">(</span>const std::string&amp; <strong>filename</strong><span class="sig-paren">)</span><a class="headerlink" href="#gpu::VideoReader_GPU::VideoReader_GPU(const std::string& filename)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="gpu::VideoReader_GPU::VideoReader_GPU(const cv::Ptr&lt;VideoSource&gt;&amp; source)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::VideoReader_GPU::</code><code class="descname">VideoReader_GPU</code><span class="sig-paren">(</span>const cv::Ptr&lt;VideoSource&gt;&amp; <strong>source</strong><span class="sig-paren">)</span><a class="headerlink" href="#gpu::VideoReader_GPU::VideoReader_GPU(const cv::Ptr<VideoSource>& source)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; Name of the input video file.</li>
+<li><strong>source</strong> &#8211; Video file parser implemented by user.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The constructors initialize video reader. FFMPEG is used to read videos. User can implement own demultiplexing with <a class="reference internal" href="#gpu::VideoReader_GPU::VideoSource" title="class gpu::VideoReader_GPU::VideoSource"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::VideoReader_GPU::VideoSource</span></code></a> .</p>
+</div>
+<div class="section" id="gpu-videoreader-gpu-open">
+<h2>gpu::VideoReader_GPU::open<a class="headerlink" href="#gpu-videoreader-gpu-open" title="Permalink to this headline">¶</a></h2>
+<p>Initializes or reinitializes video reader.</p>
+<dl class="function">
+<dt id="void gpu::VideoReader_GPU::open(const std::string&amp; filename)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::VideoReader_GPU::</code><code class="descname">open</code><span class="sig-paren">(</span>const std::string&amp; <strong>filename</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::VideoReader_GPU::open(const std::string& filename)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::VideoReader_GPU::open(const cv::Ptr&lt;VideoSource&gt;&amp; source)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::VideoReader_GPU::</code><code class="descname">open</code><span class="sig-paren">(</span>const cv::Ptr&lt;VideoSource&gt;&amp; <strong>source</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::VideoReader_GPU::open(const cv::Ptr<VideoSource>& source)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The method opens video reader. Parameters are the same as in the constructor <a class="reference internal" href="#gpu::VideoReader_GPU::VideoReader_GPU()" title="gpu::VideoReader_GPU::VideoReader_GPU()"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::VideoReader_GPU::VideoReader_GPU()</span></code></a> . The method throws <a class="reference internal" href="../../core/doc/utility_and_system_functions_and_macros.html#Exception : public std::exception" title="class Exception : public std::exception"><code class="xref ocv ocv-class docutils literal"><span class="pre">Exception</span></code></a> if error occurs.</p>
+</div>
+<div class="section" id="gpu-videoreader-gpu-isopened">
+<h2>gpu::VideoReader_GPU::isOpened<a class="headerlink" href="#gpu-videoreader-gpu-isopened" title="Permalink to this headline">¶</a></h2>
+<p>Returns true if video reader has been successfully initialized.</p>
+<dl class="function">
+<dt id="bool gpu::VideoReader_GPU::isOpened() const">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">gpu::VideoReader_GPU::</code><code class="descname">isOpened</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#bool gpu::VideoReader_GPU::isOpened() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-videoreader-gpu-close">
+<h2>gpu::VideoReader_GPU::close<a class="headerlink" href="#gpu-videoreader-gpu-close" title="Permalink to this headline">¶</a></h2>
+<p>Releases the video reader.</p>
+<dl class="function">
+<dt id="void gpu::VideoReader_GPU::close()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::VideoReader_GPU::</code><code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::VideoReader_GPU::close()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-videoreader-gpu-read">
+<h2>gpu::VideoReader_GPU::read<a class="headerlink" href="#gpu-videoreader-gpu-read" title="Permalink to this headline">¶</a></h2>
+<p>Grabs, decodes and returns the next video frame.</p>
+<dl class="function">
+<dt id="bool gpu::VideoReader_GPU::read(GpuMat&amp; image)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">gpu::VideoReader_GPU::</code><code class="descname">read</code><span class="sig-paren">(</span>GpuMat&amp; <strong>image</strong><span class="sig-paren">)</span><a class="headerlink" href="#bool gpu::VideoReader_GPU::read(GpuMat& image)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>If no frames has been grabbed (there are no more frames in video file), the methods return <code class="docutils literal"><span class="pre">false</span></code> . The method throws <a class="reference internal" href="../../core/doc/utility_and_system_functions_and_macros.html#Exception : public std::exception" title="class Exception : public std::exception"><code class="xref ocv ocv-class docutils literal"><span class="pre">Exception</span></code></a> if error occurs.</p>
+</div>
+<div class="section" id="gpu-videoreader-gpu-format">
+<h2>gpu::VideoReader_GPU::format<a class="headerlink" href="#gpu-videoreader-gpu-format" title="Permalink to this headline">¶</a></h2>
+<p>Returns information about video file format.</p>
+<dl class="function">
+<dt id="FormatInfo gpu::VideoReader_GPU::format() const">
+<strong>C++:</strong><code class="descname"> </code>FormatInfo <code class="descclassname">gpu::VideoReader_GPU::</code><code class="descname">format</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#FormatInfo gpu::VideoReader_GPU::format() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The method throws <a class="reference internal" href="../../core/doc/utility_and_system_functions_and_macros.html#Exception : public std::exception" title="class Exception : public std::exception"><code class="xref ocv ocv-class docutils literal"><span class="pre">Exception</span></code></a> if video reader wasn&#8217;t initialized.</p>
+</div>
+<div class="section" id="gpu-videoreader-gpu-dumpformat">
+<h2>gpu::VideoReader_GPU::dumpFormat<a class="headerlink" href="#gpu-videoreader-gpu-dumpformat" title="Permalink to this headline">¶</a></h2>
+<p>Dump information about video file format to specified stream.</p>
+<dl class="function">
+<dt id="void gpu::VideoReader_GPU::dumpFormat(std::ostream&amp; st)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::VideoReader_GPU::</code><code class="descname">dumpFormat</code><span class="sig-paren">(</span>std::ostream&amp; <strong>st</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::VideoReader_GPU::dumpFormat(std::ostream& st)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>st</strong> &#8211; Output stream.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method throws <a class="reference internal" href="../../core/doc/utility_and_system_functions_and_macros.html#Exception : public std::exception" title="class Exception : public std::exception"><code class="xref ocv ocv-class docutils literal"><span class="pre">Exception</span></code></a> if video reader wasn&#8217;t initialized.</p>
+</div>
+<div class="section" id="gpu-videoreader-gpu-videosource">
+<h2>gpu::VideoReader_GPU::VideoSource<a class="headerlink" href="#gpu-videoreader-gpu-videosource" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::VideoReader_GPU::VideoSource">
+<em class="property">class </em><code class="descclassname">gpu::VideoReader_GPU::</code><code class="descname">VideoSource</code><a class="headerlink" href="#gpu::VideoReader_GPU::VideoSource" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Interface for video demultiplexing.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">VideoSource</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">VideoSource</span><span class="p">();</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">VideoSource</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="k">virtual</span> <span class="n">FormatInfo</span> <span class="n">format</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">start</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">stop</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">isStarted</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">hasError</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="k">protected</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">parseVideoData</span><span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">size</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">endOfStream</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>User can implement own demultiplexing by implementing this interface.</p>
+</div>
+<div class="section" id="gpu-videoreader-gpu-videosource-format">
+<h2>gpu::VideoReader_GPU::VideoSource::format<a class="headerlink" href="#gpu-videoreader-gpu-videosource-format" title="Permalink to this headline">¶</a></h2>
+<p>Returns information about video file format.</p>
+<dl class="function">
+<dt id="virtual FormatInfo gpu::VideoReader_GPU::VideoSource::format() const = 0">
+<strong>C++:</strong><code class="descname"> </code><em class="property">virtual</em> FormatInfo <code class="descclassname">gpu::VideoReader_GPU::VideoSource::</code><code class="descname">format</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><code class="descclassname"> = 0</code><a class="headerlink" href="#virtual FormatInfo gpu::VideoReader_GPU::VideoSource::format() const = 0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-videoreader-gpu-videosource-start">
+<h2>gpu::VideoReader_GPU::VideoSource::start<a class="headerlink" href="#gpu-videoreader-gpu-videosource-start" title="Permalink to this headline">¶</a></h2>
+<p>Starts processing.</p>
+<dl class="function">
+<dt id="virtual void gpu::VideoReader_GPU::VideoSource::start() = 0">
+<strong>C++:</strong><code class="descname"> </code><em class="property">virtual</em> void <code class="descclassname">gpu::VideoReader_GPU::VideoSource::</code><code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> = 0</code><a class="headerlink" href="#virtual void gpu::VideoReader_GPU::VideoSource::start() = 0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Implementation must create own thread with video processing and call periodic <a class="reference internal" href="#bool gpu::VideoReader_GPU::VideoSource::parseVideoData(const uchar* data, size_t size, bool endOfStream)" title="bool gpu::VideoReader_GPU::VideoSource::parseVideoData(const uchar* data, size_t size, bool endOfStream)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::VideoReader_GPU::VideoSource::parseVideoData()</span></code></a> .</p>
+</div>
+<div class="section" id="gpu-videoreader-gpu-videosource-stop">
+<h2>gpu::VideoReader_GPU::VideoSource::stop<a class="headerlink" href="#gpu-videoreader-gpu-videosource-stop" title="Permalink to this headline">¶</a></h2>
+<p>Stops processing.</p>
+<dl class="function">
+<dt id="virtual void gpu::VideoReader_GPU::VideoSource::stop() = 0">
+<strong>C++:</strong><code class="descname"> </code><em class="property">virtual</em> void <code class="descclassname">gpu::VideoReader_GPU::VideoSource::</code><code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> = 0</code><a class="headerlink" href="#virtual void gpu::VideoReader_GPU::VideoSource::stop() = 0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-videoreader-gpu-videosource-isstarted">
+<h2>gpu::VideoReader_GPU::VideoSource::isStarted<a class="headerlink" href="#gpu-videoreader-gpu-videosource-isstarted" title="Permalink to this headline">¶</a></h2>
+<p>Returns <code class="docutils literal"><span class="pre">true</span></code> if processing was successfully started.</p>
+<dl class="function">
+<dt id="virtual bool gpu::VideoReader_GPU::VideoSource::isStarted() const = 0">
+<strong>C++:</strong><code class="descname"> </code><em class="property">virtual</em> bool <code class="descclassname">gpu::VideoReader_GPU::VideoSource::</code><code class="descname">isStarted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><code class="descclassname"> = 0</code><a class="headerlink" href="#virtual bool gpu::VideoReader_GPU::VideoSource::isStarted() const = 0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-videoreader-gpu-videosource-haserror">
+<h2>gpu::VideoReader_GPU::VideoSource::hasError<a class="headerlink" href="#gpu-videoreader-gpu-videosource-haserror" title="Permalink to this headline">¶</a></h2>
+<p>Returns <code class="docutils literal"><span class="pre">true</span></code> if error occured during processing.</p>
+<dl class="function">
+<dt id="virtual bool gpu::VideoReader_GPU::VideoSource::hasError() const = 0">
+<strong>C++:</strong><code class="descname"> </code><em class="property">virtual</em> bool <code class="descclassname">gpu::VideoReader_GPU::VideoSource::</code><code class="descname">hasError</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><code class="descclassname"> = 0</code><a class="headerlink" href="#virtual bool gpu::VideoReader_GPU::VideoSource::hasError() const = 0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-videoreader-gpu-videosource-parsevideodata">
+<h2>gpu::VideoReader_GPU::VideoSource::parseVideoData<a class="headerlink" href="#gpu-videoreader-gpu-videosource-parsevideodata" title="Permalink to this headline">¶</a></h2>
+<p>Parse next video frame. Implementation must call this method after new frame was grabbed.</p>
+<dl class="function">
+<dt id="bool gpu::VideoReader_GPU::VideoSource::parseVideoData(const uchar* data, size_t size, bool endOfStream)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">gpu::VideoReader_GPU::VideoSource::</code><code class="descname">parseVideoData</code><span class="sig-paren">(</span>const uchar* <strong>data</strong>, size_t <strong>size</strong>, bool <strong>endOfStream</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#bool gpu::VideoReader_GPU::VideoSource::parseVideoData(const uchar* data, size_t size, bool endOfStream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> &#8211; Pointer to frame data. Can be <code class="docutils literal"><span class="pre">NULL</span></code> if <code class="docutils literal"><span class="pre">endOfStream</span></code> if <code class="docutils literal"><span class="pre">true</span></code> .</li>
+<li><strong>size</strong> &#8211; Size in bytes of current frame.</li>
+<li><strong>endOfStream</strong> &#8211; Indicates that it is end of stream.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<table class="docutils citation" frame="void" id="brox2004" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[Brox2004]</a></td><td><ol class="first last upperalpha simple" start="20">
+<li>Brox, A. Bruhn, N. Papenberg, J. Weickert. <em>High accuracy optical flow estimation based on a theory for warping</em>. ECCV 2004.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="fgd2003" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[FGD2003]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id3">2</a>, <a class="fn-backref" href="#id4">3</a>)</em> Liyuan Li, Weimin Huang, Irene Y.H. Gu, and Qi Tian. <em>Foreground Object Detection from Videos Containing Complex Background</em>. ACM MM2003 9p, 2003.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="mog2001" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[MOG2001]</a></td><td><ol class="first last upperalpha simple" start="16">
+<li>KadewTraKuPong and R. Bowden. <em>An improved adaptive background mixture model for real-time tracking with shadow detection</em>. Proc. 2nd European Workshop on Advanced Video-Based Surveillance Systems, 2001</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="mog2004" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[MOG2004]</a></td><td><ol class="first last upperalpha simple" start="26">
+<li>Zivkovic. <em>Improved adaptive Gausian mixture model for background subtraction</em>. International Conference Pattern Recognition, UK, August, 2004</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="shadowdetect2003" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[ShadowDetect2003]</a></td><td>Prati, Mikic, Trivedi and Cucchiarra. <em>Detecting Moving Shadows...</em>. IEEE PAMI, 2003</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="gmg2012" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[GMG2012]</a></td><td><ol class="first last upperalpha simple">
+<li>Godbehere, A. Matsukawa and K. Goldberg. <em>Visual Tracking of Human Visitors under Variable-Lighting Conditions for a Responsive Audio Art Installation</em>. American Control Conference, Montreal, June 2012</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Video Analysis</a><ul>
+<li><a class="reference internal" href="#gpu-broxopticalflow">gpu::BroxOpticalFlow</a></li>
+<li><a class="reference internal" href="#gpu-goodfeaturestotrackdetector-gpu">gpu::GoodFeaturesToTrackDetector_GPU</a></li>
+<li><a class="reference internal" href="#gpu-goodfeaturestotrackdetector-gpu-goodfeaturestotrackdetector-gpu">gpu::GoodFeaturesToTrackDetector_GPU::GoodFeaturesToTrackDetector_GPU</a></li>
+<li><a class="reference internal" href="#gpu-goodfeaturestotrackdetector-gpu-operator">gpu::GoodFeaturesToTrackDetector_GPU::operator ()</a></li>
+<li><a class="reference internal" href="#gpu-goodfeaturestotrackdetector-gpu-releasememory">gpu::GoodFeaturesToTrackDetector_GPU::releaseMemory</a></li>
+<li><a class="reference internal" href="#gpu-farnebackopticalflow">gpu::FarnebackOpticalFlow</a></li>
+<li><a class="reference internal" href="#gpu-farnebackopticalflow-operator">gpu::FarnebackOpticalFlow::operator ()</a></li>
+<li><a class="reference internal" href="#gpu-farnebackopticalflow-releasememory">gpu::FarnebackOpticalFlow::releaseMemory</a></li>
+<li><a class="reference internal" href="#gpu-pyrlkopticalflow">gpu::PyrLKOpticalFlow</a></li>
+<li><a class="reference internal" href="#gpu-pyrlkopticalflow-sparse">gpu::PyrLKOpticalFlow::sparse</a></li>
+<li><a class="reference internal" href="#gpu-pyrlkopticalflow-dense">gpu::PyrLKOpticalFlow::dense</a></li>
+<li><a class="reference internal" href="#gpu-pyrlkopticalflow-releasememory">gpu::PyrLKOpticalFlow::releaseMemory</a></li>
+<li><a class="reference internal" href="#gpu-interpolateframes">gpu::interpolateFrames</a></li>
+<li><a class="reference internal" href="#gpu-fgdstatmodel">gpu::FGDStatModel</a></li>
+<li><a class="reference internal" href="#gpu-fgdstatmodel-fgdstatmodel">gpu::FGDStatModel::FGDStatModel</a></li>
+<li><a class="reference internal" href="#gpu-fgdstatmodel-create">gpu::FGDStatModel::create</a></li>
+<li><a class="reference internal" href="#gpu-fgdstatmodel-release">gpu::FGDStatModel::release</a></li>
+<li><a class="reference internal" href="#gpu-fgdstatmodel-update">gpu::FGDStatModel::update</a></li>
+<li><a class="reference internal" href="#gpu-mog-gpu">gpu::MOG_GPU</a></li>
+<li><a class="reference internal" href="#gpu-mog-gpu-mog-gpu">gpu::MOG_GPU::MOG_GPU</a></li>
+<li><a class="reference internal" href="#gpu-mog-gpu-operator">gpu::MOG_GPU::operator()</a></li>
+<li><a class="reference internal" href="#gpu-mog-gpu-getbackgroundimage">gpu::MOG_GPU::getBackgroundImage</a></li>
+<li><a class="reference internal" href="#gpu-mog-gpu-release">gpu::MOG_GPU::release</a></li>
+<li><a class="reference internal" href="#gpu-mog2-gpu">gpu::MOG2_GPU</a></li>
+<li><a class="reference internal" href="#gpu-mog2-gpu-mog2-gpu">gpu::MOG2_GPU::MOG2_GPU</a></li>
+<li><a class="reference internal" href="#gpu-mog2-gpu-operator">gpu::MOG2_GPU::operator()</a></li>
+<li><a class="reference internal" href="#gpu-mog2-gpu-getbackgroundimage">gpu::MOG2_GPU::getBackgroundImage</a></li>
+<li><a class="reference internal" href="#gpu-mog2-gpu-release">gpu::MOG2_GPU::release</a></li>
+<li><a class="reference internal" href="#gpu-gmg-gpu">gpu::GMG_GPU</a></li>
+<li><a class="reference internal" href="#gpu-gmg-gpu-gmg-gpu">gpu::GMG_GPU::GMG_GPU</a></li>
+<li><a class="reference internal" href="#gpu-gmg-gpu-initialize">gpu::GMG_GPU::initialize</a></li>
+<li><a class="reference internal" href="#gpu-gmg-gpu-operator">gpu::GMG_GPU::operator()</a></li>
+<li><a class="reference internal" href="#gpu-gmg-gpu-release">gpu::GMG_GPU::release</a></li>
+<li><a class="reference internal" href="#gpu-videowriter-gpu">gpu::VideoWriter_GPU</a></li>
+<li><a class="reference internal" href="#gpu-videowriter-gpu-videowriter-gpu">gpu::VideoWriter_GPU::VideoWriter_GPU</a></li>
+<li><a class="reference internal" href="#gpu-videowriter-gpu-open">gpu::VideoWriter_GPU::open</a></li>
+<li><a class="reference internal" href="#gpu-videowriter-gpu-isopened">gpu::VideoWriter_GPU::isOpened</a></li>
+<li><a class="reference internal" href="#gpu-videowriter-gpu-close">gpu::VideoWriter_GPU::close</a></li>
+<li><a class="reference internal" href="#gpu-videowriter-gpu-write">gpu::VideoWriter_GPU::write</a></li>
+<li><a class="reference internal" href="#gpu-videowriter-gpu-encoderparams">gpu::VideoWriter_GPU::EncoderParams</a></li>
+<li><a class="reference internal" href="#gpu-videowriter-gpu-encoderparams-encoderparams">gpu::VideoWriter_GPU::EncoderParams::EncoderParams</a></li>
+<li><a class="reference internal" href="#gpu-videowriter-gpu-encoderparams-load">gpu::VideoWriter_GPU::EncoderParams::load</a></li>
+<li><a class="reference internal" href="#gpu-videowriter-gpu-encoderparams-save">gpu::VideoWriter_GPU::EncoderParams::save</a></li>
+<li><a class="reference internal" href="#gpu-videowriter-gpu-encodercallback">gpu::VideoWriter_GPU::EncoderCallBack</a></li>
+<li><a class="reference internal" href="#gpu-videowriter-gpu-encodercallback-acquirebitstream">gpu::VideoWriter_GPU::EncoderCallBack::acquireBitStream</a></li>
+<li><a class="reference internal" href="#gpu-videowriter-gpu-encodercallback-releasebitstream">gpu::VideoWriter_GPU::EncoderCallBack::releaseBitStream</a></li>
+<li><a class="reference internal" href="#gpu-videowriter-gpu-encodercallback-onbeginframe">gpu::VideoWriter_GPU::EncoderCallBack::onBeginFrame</a></li>
+<li><a class="reference internal" href="#gpu-videowriter-gpu-encodercallback-onendframe">gpu::VideoWriter_GPU::EncoderCallBack::onEndFrame</a></li>
+<li><a class="reference internal" href="#gpu-videoreader-gpu">gpu::VideoReader_GPU</a></li>
+<li><a class="reference internal" href="#gpu-videoreader-gpu-codec">gpu::VideoReader_GPU::Codec</a></li>
+<li><a class="reference internal" href="#gpu-videoreader-gpu-chromaformat">gpu::VideoReader_GPU::ChromaFormat</a></li>
+<li><a class="reference internal" href="#gpu-videoreader-gpu-formatinfo">gpu::VideoReader_GPU::FormatInfo</a></li>
+<li><a class="reference internal" href="#gpu-videoreader-gpu-videoreader-gpu">gpu::VideoReader_GPU::VideoReader_GPU</a></li>
+<li><a class="reference internal" href="#gpu-videoreader-gpu-open">gpu::VideoReader_GPU::open</a></li>
+<li><a class="reference internal" href="#gpu-videoreader-gpu-isopened">gpu::VideoReader_GPU::isOpened</a></li>
+<li><a class="reference internal" href="#gpu-videoreader-gpu-close">gpu::VideoReader_GPU::close</a></li>
+<li><a class="reference internal" href="#gpu-videoreader-gpu-read">gpu::VideoReader_GPU::read</a></li>
+<li><a class="reference internal" href="#gpu-videoreader-gpu-format">gpu::VideoReader_GPU::format</a></li>
+<li><a class="reference internal" href="#gpu-videoreader-gpu-dumpformat">gpu::VideoReader_GPU::dumpFormat</a></li>
+<li><a class="reference internal" href="#gpu-videoreader-gpu-videosource">gpu::VideoReader_GPU::VideoSource</a></li>
+<li><a class="reference internal" href="#gpu-videoreader-gpu-videosource-format">gpu::VideoReader_GPU::VideoSource::format</a></li>
+<li><a class="reference internal" href="#gpu-videoreader-gpu-videosource-start">gpu::VideoReader_GPU::VideoSource::start</a></li>
+<li><a class="reference internal" href="#gpu-videoreader-gpu-videosource-stop">gpu::VideoReader_GPU::VideoSource::stop</a></li>
+<li><a class="reference internal" href="#gpu-videoreader-gpu-videosource-isstarted">gpu::VideoReader_GPU::VideoSource::isStarted</a></li>
+<li><a class="reference internal" href="#gpu-videoreader-gpu-videosource-haserror">gpu::VideoReader_GPU::VideoSource::hasError</a></li>
+<li><a class="reference internal" href="#gpu-videoreader-gpu-videosource-parsevideodata">gpu::VideoReader_GPU::VideoSource::parseVideoData</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="camera_calibration_and_3d_reconstruction.html"
+                        title="previous chapter">Camera Calibration and 3D Reconstruction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../photo/doc/photo.html"
+                        title="next chapter">photo. Computational Photography</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/gpu/doc/video.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../photo/doc/photo.html" title="photo. Computational Photography"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="camera_calibration_and_3d_reconstruction.html" title="Camera Calibration and 3D Reconstruction"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="gpu.html" >gpu. GPU-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,520 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Camera Calibration and 3D Reconstruction &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="ocl. OpenCL-accelerated Computer Vision" href="ocl.html" />
+    <link rel="next" title="superres. Super Resolution" href="../../superres/doc/superres.html" />
+    <link rel="prev" title="Video Analysis" href="video_analysis.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../superres/doc/superres.html" title="superres. Super Resolution"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="video_analysis.html" title="Video Analysis"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" accesskey="U">ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="camera-calibration-and-3d-reconstruction">
+<h1>Camera Calibration and 3D Reconstruction<a class="headerlink" href="#camera-calibration-and-3d-reconstruction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ocl-stereobm-ocl">
+<h2>ocl::StereoBM_OCL<a class="headerlink" href="#ocl-stereobm-ocl" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ocl::StereoBM_OCL">
+<em class="property">class </em><code class="descclassname">ocl::</code><code class="descname">StereoBM_OCL</code><a class="headerlink" href="#ocl::StereoBM_OCL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class computing stereo correspondence (disparity map) using the block matching algorithm.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">StereoBM_OCL</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">BASIC_PRESET</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">PREFILTER_XSOBEL</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">};</span>
+
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">DEFAULT_NDISP</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span> <span class="n">DEFAULT_WINSZ</span> <span class="o">=</span> <span class="mi">19</span> <span class="p">};</span>
+
+    <span class="c1">//! the default constructor</span>
+    <span class="n">StereoBM_OCL</span><span class="p">();</span>
+    <span class="c1">//! the full constructor taking the camera-specific preset, number of disparities and the SAD window size. ndisparities must be multiple of 8.</span>
+    <span class="n">StereoBM_OCL</span><span class="p">(</span><span class="kt">int</span> <span class="n">preset</span><span class="p">,</span> <span class="kt">int</span> <span class="n">ndisparities</span> <span class="o">=</span> <span class="n">DEFAULT_NDISP</span><span class="p">,</span> <span class="kt">int</span> <span class="n">winSize</span> <span class="o">=</span> <span class="n">DEFAULT_WINSZ</span><span class="p">);</span>
+
+    <span class="c1">//! the stereo correspondence operator. Finds the disparity for the specified rectified stereo pair</span>
+    <span class="c1">//! Output disparity has CV_8U type.</span>
+    <span class="kt">void</span> <span class="nf">operator</span><span class="p">()</span> <span class="p">(</span> <span class="k">const</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">left</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">right</span><span class="p">,</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">disparity</span><span class="p">);</span>
+
+    <span class="c1">//! Some heuristics that tries to estmate</span>
+    <span class="c1">// if current GPU will be faster then CPU in this algorithm.</span>
+    <span class="c1">// It queries current active device.</span>
+    <span class="k">static</span> <span class="kt">bool</span> <span class="nf">checkIfGpuCallReasonable</span><span class="p">();</span>
+
+    <span class="kt">int</span> <span class="n">preset</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">ndisp</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">winSize</span><span class="p">;</span>
+
+    <span class="c1">// If avergeTexThreshold  == 0 =&gt; post procesing is disabled</span>
+    <span class="c1">// If avergeTexThreshold != 0 then disparity is set 0 in each point (x,y) where for left image</span>
+    <span class="c1">// SumOfHorizontalGradiensInWindow(x, y, winSize) &lt; (winSize * winSize) * avergeTexThreshold</span>
+    <span class="c1">// i.e. input left image is low textured.</span>
+    <span class="kt">float</span> <span class="n">avergeTexThreshold</span><span class="p">;</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/* hidden */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class also performs pre- and post-filtering steps: Sobel pre-filtering (if <code class="docutils literal"><span class="pre">PREFILTER_XSOBEL</span></code> flag is set) and low textureness filtering (if <code class="docutils literal"><span class="pre">averageTexThreshols</span> <span class="pre">&gt;</span> <span class="pre">0</span></code> ). If <code class="docutils literal"><span class="pre">avergeTexThreshold</span> <span class="pre">=</span> <span class="pre">0</span></code> , low textureness filtering is disabled. Otherwise, the disparity is set to 0 in each point <code class="docutils literal"><span class="pre">(x,</span> <span class="pre">y)</span></code> , where for the left image</p>
+<div class="math">
+<p><img src="../../../_images/math/bf67124653ef8d65a8846382d71a18a48b722141.png" alt="\sum HorizontalGradiensInWindow(x, y, winSize) &lt; (winSize \cdot winSize) \cdot avergeTexThreshold"/></p>
+</div><p>This means that the input left image is low textured.</p>
+</div>
+<div class="section" id="ocl-stereobm-ocl-stereobm-ocl">
+<h2>ocl::StereoBM_OCL::StereoBM_OCL<a class="headerlink" href="#ocl-stereobm-ocl-stereobm-ocl" title="Permalink to this headline">¶</a></h2>
+<p>Enables <a class="reference internal" href="#ocl::StereoBM_OCL" title="class ocl::StereoBM_OCL"><code class="xref ocv ocv-class docutils literal"><span class="pre">ocl::StereoBM_OCL</span></code></a> constructors.</p>
+<dl class="function">
+<dt id="ocl::StereoBM_OCL::StereoBM_OCL()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ocl::StereoBM_OCL::</code><code class="descname">StereoBM_OCL</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ocl::StereoBM_OCL::StereoBM_OCL()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ocl::StereoBM_OCL::StereoBM_OCL(int preset, int ndisparities , int winSize)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ocl::StereoBM_OCL::</code><code class="descname">StereoBM_OCL</code><span class="sig-paren">(</span>int <strong>preset</strong>, int <strong>ndisparities</strong>=DEFAULT_NDISP, int <strong>winSize</strong>=DEFAULT_WINSZ<span class="sig-paren">)</span><a class="headerlink" href="#ocl::StereoBM_OCL::StereoBM_OCL(int preset, int ndisparities , int winSize)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>preset</strong> &#8211; <p>Parameter presetting:</p>
+<ul>
+<li><strong>BASIC_PRESET</strong> Basic mode without pre-processing.</li>
+<li><strong>PREFILTER_XSOBEL</strong> Sobel pre-filtering mode.</li>
+</ul>
+</li>
+<li><strong>ndisparities</strong> &#8211; Number of disparities. It must be a multiple of 8 and less or equal to 256.</li>
+<li><strong>winSize</strong> &#8211; Block size.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-stereobm-ocl-operator">
+<h2>ocl::StereoBM_OCL::operator ()<a class="headerlink" href="#ocl-stereobm-ocl-operator" title="Permalink to this headline">¶</a></h2>
+<p>Enables the stereo correspondence operator that finds the disparity for the specified rectified stereo pair.</p>
+<dl class="function">
+<dt id="void ocl::StereoBM_OCL::operator ()(const oclMat&amp; left, const oclMat&amp; right, oclMat&amp; disparity)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::StereoBM_OCL::</code><code class="descname">operator()</code><span class="sig-paren">(</span>const oclMat&amp; <strong>left</strong>, const oclMat&amp; <strong>right</strong>, oclMat&amp; <strong>disparity</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::StereoBM_OCL::operator ()(const oclMat& left, const oclMat& right, oclMat& disparity)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>left</strong> &#8211; Left image. Only  <code class="docutils literal"><span class="pre">CV_8UC1</span></code>  type is supported.</li>
+<li><strong>right</strong> &#8211; Right image with the same size and the same type as the left one.</li>
+<li><strong>disparity</strong> &#8211; Output disparity map. It is a  <code class="docutils literal"><span class="pre">CV_8UC1</span></code>  image with the same size as the input images.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-stereobm-ocl-checkifgpucallreasonable">
+<h2>ocl::StereoBM_OCL::checkIfGpuCallReasonable<a class="headerlink" href="#ocl-stereobm-ocl-checkifgpucallreasonable" title="Permalink to this headline">¶</a></h2>
+<p>Uses a heuristic method to estimate whether the current GPU is faster than the CPU in this algorithm. It queries the currently active device.</p>
+<dl class="function">
+<dt id="bool ocl::StereoBM_OCL::checkIfGpuCallReasonable()">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">ocl::StereoBM_OCL::</code><code class="descname">checkIfGpuCallReasonable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bool ocl::StereoBM_OCL::checkIfGpuCallReasonable()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ocl-stereobeliefpropagation">
+<h2>ocl::StereoBeliefPropagation<a class="headerlink" href="#ocl-stereobeliefpropagation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ocl::StereoBeliefPropagation">
+<em class="property">class </em><code class="descclassname">ocl::</code><code class="descname">StereoBeliefPropagation</code><a class="headerlink" href="#ocl::StereoBeliefPropagation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class computing stereo correspondence using the belief propagation algorithm.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">StereoBeliefPropagation</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">DEFAULT_NDISP</span>  <span class="o">=</span> <span class="mi">64</span> <span class="p">};</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">DEFAULT_ITERS</span>  <span class="o">=</span> <span class="mi">5</span>  <span class="p">};</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">DEFAULT_LEVELS</span> <span class="o">=</span> <span class="mi">5</span>  <span class="p">};</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">estimateRecommendedParams</span><span class="p">(</span><span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">ndisp</span><span class="p">,</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">iters</span><span class="p">,</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">levels</span><span class="p">);</span>
+    <span class="k">explicit</span> <span class="nf">StereoBeliefPropagation</span><span class="p">(</span><span class="kt">int</span> <span class="n">ndisp</span>  <span class="o">=</span> <span class="n">DEFAULT_NDISP</span><span class="p">,</span>
+                                     <span class="kt">int</span> <span class="n">iters</span>  <span class="o">=</span> <span class="n">DEFAULT_ITERS</span><span class="p">,</span>
+                                     <span class="kt">int</span> <span class="n">levels</span> <span class="o">=</span> <span class="n">DEFAULT_LEVELS</span><span class="p">,</span>
+                                     <span class="kt">int</span> <span class="n">msg_type</span> <span class="o">=</span> <span class="n">CV_16S</span><span class="p">);</span>
+    <span class="n">StereoBeliefPropagation</span><span class="p">(</span><span class="kt">int</span> <span class="n">ndisp</span><span class="p">,</span> <span class="kt">int</span> <span class="n">iters</span><span class="p">,</span> <span class="kt">int</span> <span class="n">levels</span><span class="p">,</span>
+                            <span class="kt">float</span> <span class="n">max_data_term</span><span class="p">,</span> <span class="kt">float</span> <span class="n">data_weight</span><span class="p">,</span>
+                            <span class="kt">float</span> <span class="n">max_disc_term</span><span class="p">,</span> <span class="kt">float</span> <span class="n">disc_single_jump</span><span class="p">,</span>
+                            <span class="kt">int</span> <span class="n">msg_type</span> <span class="o">=</span> <span class="n">CV_32F</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">left</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">right</span><span class="p">,</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">disparity</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">data</span><span class="p">,</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">disparity</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">ndisp</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">iters</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">levels</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">max_data_term</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">data_weight</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">max_disc_term</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">disc_single_jump</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">msg_type</span><span class="p">;</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/* hidden */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class implements algorithm described in <a class="reference internal" href="../../gpu/doc/camera_calibration_and_3d_reconstruction.html#felzenszwalb2006" id="id1">[Felzenszwalb2006]</a> . It can compute own data cost (using a truncated linear model) or use a user-provided data cost.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><code class="docutils literal"><span class="pre">StereoBeliefPropagation</span></code> requires a lot of memory for message storage:</p>
+<div class="math">
+<p><img src="../../../_images/math/294aabb6292cd884f70694f751c425344d76b5b7.png" alt="width \_ step  \cdot height  \cdot ndisp  \cdot 4  \cdot (1 + 0.25)"/></p>
+</div><p>and for data cost storage:</p>
+<div class="math">
+<p><img src="../../../_images/math/10cf1cff96af2cffdf579a06fa2fa64b24216ca1.png" alt="width\_step \cdot height \cdot ndisp \cdot (1 + 0.25 + 0.0625 +  \dotsm + \frac{1}{4^{levels}})"/></p>
+</div><p class="last"><code class="docutils literal"><span class="pre">width_step</span></code> is the number of bytes in a line including padding.</p>
+</div>
+</div>
+<div class="section" id="ocl-stereobeliefpropagation-stereobeliefpropagation">
+<h2>ocl::StereoBeliefPropagation::StereoBeliefPropagation<a class="headerlink" href="#ocl-stereobeliefpropagation-stereobeliefpropagation" title="Permalink to this headline">¶</a></h2>
+<p>Enables the <a class="reference internal" href="#ocl::StereoBeliefPropagation" title="class ocl::StereoBeliefPropagation"><code class="xref ocv ocv-class docutils literal"><span class="pre">ocl::StereoBeliefPropagation</span></code></a> constructors.</p>
+<dl class="function">
+<dt id="ocl::StereoBeliefPropagation::StereoBeliefPropagation(int ndisp , int iters , int levels , int msg_type)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ocl::StereoBeliefPropagation::</code><code class="descname">StereoBeliefPropagation</code><span class="sig-paren">(</span>int <strong>ndisp</strong>=DEFAULT_NDISP, int <strong>iters</strong>=DEFAULT_ITERS, int <strong>levels</strong>=DEFAULT_LEVELS, int <strong>msg_type</strong>=CV_16S<span class="sig-paren">)</span><a class="headerlink" href="#ocl::StereoBeliefPropagation::StereoBeliefPropagation(int ndisp , int iters , int levels , int msg_type)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ocl::StereoBeliefPropagation::StereoBeliefPropagation(int ndisp, int iters, int levels, float max_data_term, float data_weight, float max_disc_term, float disc_single_jump, int msg_type)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ocl::StereoBeliefPropagation::</code><code class="descname">StereoBeliefPropagation</code><span class="sig-paren">(</span>int <strong>ndisp</strong>, int <strong>iters</strong>, int <strong>levels</strong>, float <strong>max_data_term</strong>, float <strong>data_weight</strong>, float <strong>max_disc_term</strong>, float <strong>disc_single_jump</strong>, int <strong>msg_type</strong>=CV_32F<span class="sig-paren">)</span><a class="headerlink" href="#ocl::StereoBeliefPropagation::StereoBeliefPropagation(int ndisp, int iters, int levels, float max_data_term, float data_weight, float max_disc_term, float disc_single_jump, int msg_type)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ndisp</strong> &#8211; Number of disparities.</li>
+<li><strong>iters</strong> &#8211; Number of BP iterations on each level.</li>
+<li><strong>levels</strong> &#8211; Number of levels.</li>
+<li><strong>max_data_term</strong> &#8211; Threshold for data cost truncation.</li>
+<li><strong>data_weight</strong> &#8211; Data weight.</li>
+<li><strong>max_disc_term</strong> &#8211; Threshold for discontinuity truncation.</li>
+<li><strong>disc_single_jump</strong> &#8211; Discontinuity single jump.</li>
+<li><strong>msg_type</strong> &#8211; Type for messages.  <code class="docutils literal"><span class="pre">CV_16SC1</span></code>  and  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> types are supported.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p><code class="docutils literal"><span class="pre">StereoBeliefPropagation</span></code> uses a truncated linear model for the data cost and discontinuity terms:</p>
+<div class="math">
+<p><img src="../../../_images/math/2f175a6b441383423cc8d58a07eb1e33e37b47d9.png" alt="DataCost = data \_ weight  \cdot \min ( \lvert Img_Left(x,y)-Img_Right(x-d,y)  \rvert , max \_ data \_ term)"/></p>
+</div><div class="math">
+<p><img src="../../../_images/math/fdcdeea0879f1695066c0b5b73c7a904bf7a623b.png" alt="DiscTerm =  \min (disc \_ single \_ jump  \cdot \lvert f_1-f_2  \rvert , max \_ disc \_ term)"/></p>
+</div><p>For more details, see <a class="reference internal" href="../../gpu/doc/camera_calibration_and_3d_reconstruction.html#felzenszwalb2006" id="id2">[Felzenszwalb2006]</a>.</p>
+<p>By default, <a class="reference internal" href="#ocl::StereoBeliefPropagation" title="class ocl::StereoBeliefPropagation"><code class="xref ocv ocv-class docutils literal"><span class="pre">ocl::StereoBeliefPropagation</span></code></a> uses floating-point arithmetics and the <code class="docutils literal"><span class="pre">CV_32FC1</span></code> type for messages. But it can also use fixed-point arithmetics and the <code class="docutils literal"><span class="pre">CV_16SC1</span></code> message type for better performance. To avoid an overflow in this case, the parameters must satisfy the following requirement:</p>
+<div class="math">
+<p><img src="../../../_images/math/ca35fe43476448e06dbfdc993587b2f9643a87c3.png" alt="10  \cdot 2^{levels-1}  \cdot max \_ data \_ term &lt; SHRT \_ MAX"/></p>
+</div></div>
+<div class="section" id="ocl-stereobeliefpropagation-estimaterecommendedparams">
+<h2>ocl::StereoBeliefPropagation::estimateRecommendedParams<a class="headerlink" href="#ocl-stereobeliefpropagation-estimaterecommendedparams" title="Permalink to this headline">¶</a></h2>
+<p>Uses a heuristic method to compute the recommended parameters ( <code class="docutils literal"><span class="pre">ndisp</span></code>, <code class="docutils literal"><span class="pre">iters</span></code> and <code class="docutils literal"><span class="pre">levels</span></code> ) for the specified image size ( <code class="docutils literal"><span class="pre">width</span></code> and <code class="docutils literal"><span class="pre">height</span></code> ).</p>
+<dl class="function">
+<dt id="void ocl::StereoBeliefPropagation::estimateRecommendedParams(int width, int height, int&amp; ndisp, int&amp; iters, int&amp; levels)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::StereoBeliefPropagation::</code><code class="descname">estimateRecommendedParams</code><span class="sig-paren">(</span>int <strong>width</strong>, int <strong>height</strong>, int&amp; <strong>ndisp</strong>, int&amp; <strong>iters</strong>, int&amp; <strong>levels</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::StereoBeliefPropagation::estimateRecommendedParams(int width, int height, int& ndisp, int& iters, int& levels)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ocl-stereobeliefpropagation-operator">
+<h2>ocl::StereoBeliefPropagation::operator ()<a class="headerlink" href="#ocl-stereobeliefpropagation-operator" title="Permalink to this headline">¶</a></h2>
+<p>Enables the stereo correspondence operator that finds the disparity for the specified rectified stereo pair or data cost.</p>
+<dl class="function">
+<dt id="void ocl::StereoBeliefPropagation::operator ()(const oclMat&amp; left, const oclMat&amp; right, oclMat&amp; disparity)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::StereoBeliefPropagation::</code><code class="descname">operator()</code><span class="sig-paren">(</span>const oclMat&amp; <strong>left</strong>, const oclMat&amp; <strong>right</strong>, oclMat&amp; <strong>disparity</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::StereoBeliefPropagation::operator ()(const oclMat& left, const oclMat& right, oclMat& disparity)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::StereoBeliefPropagation::operator ()(const oclMat&amp; data, oclMat&amp; disparity)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::StereoBeliefPropagation::</code><code class="descname">operator()</code><span class="sig-paren">(</span>const oclMat&amp; <strong>data</strong>, oclMat&amp; <strong>disparity</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::StereoBeliefPropagation::operator ()(const oclMat& data, oclMat& disparity)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>left</strong> &#8211; Left image. <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC3</span></code>  and  <code class="docutils literal"><span class="pre">CV_8UC4</span></code>  types are supported.</li>
+<li><strong>right</strong> &#8211; Right image with the same size and the same type as the left one.</li>
+<li><strong>data</strong> &#8211; User-specified data cost, a matrix of <code class="docutils literal"><span class="pre">msg_type</span></code> type and <code class="docutils literal"><span class="pre">Size(&lt;image</span> <span class="pre">columns&gt;*ndisp,</span> <span class="pre">&lt;image</span> <span class="pre">rows&gt;)</span></code> size.</li>
+<li><strong>disparity</strong> &#8211; Output disparity map. If  <code class="docutils literal"><span class="pre">disparity</span></code>  is empty, the output type is  <code class="docutils literal"><span class="pre">CV_16SC1</span></code> . Otherwise, the type is retained.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-stereoconstantspacebp">
+<h2>ocl::StereoConstantSpaceBP<a class="headerlink" href="#ocl-stereoconstantspacebp" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ocl::StereoConstantSpaceBP">
+<em class="property">class </em><code class="descclassname">ocl::</code><code class="descname">StereoConstantSpaceBP</code><a class="headerlink" href="#ocl::StereoConstantSpaceBP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class computing stereo correspondence using the constant space belief propagation algorithm.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">StereoConstantSpaceBP</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">DEFAULT_NDISP</span>    <span class="o">=</span> <span class="mi">128</span> <span class="p">};</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">DEFAULT_ITERS</span>    <span class="o">=</span> <span class="mi">8</span>   <span class="p">};</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">DEFAULT_LEVELS</span>   <span class="o">=</span> <span class="mi">4</span>   <span class="p">};</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">DEFAULT_NR_PLANE</span> <span class="o">=</span> <span class="mi">4</span>   <span class="p">};</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">estimateRecommendedParams</span><span class="p">(</span><span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">ndisp</span><span class="p">,</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">iters</span><span class="p">,</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">levels</span><span class="p">,</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">nr_plane</span><span class="p">);</span>
+    <span class="k">explicit</span> <span class="nf">StereoConstantSpaceBP</span><span class="p">(</span>
+        <span class="kt">int</span> <span class="n">ndisp</span>    <span class="o">=</span> <span class="n">DEFAULT_NDISP</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">iters</span>    <span class="o">=</span> <span class="n">DEFAULT_ITERS</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">levels</span>   <span class="o">=</span> <span class="n">DEFAULT_LEVELS</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">nr_plane</span> <span class="o">=</span> <span class="n">DEFAULT_NR_PLANE</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">msg_type</span> <span class="o">=</span> <span class="n">CV_32F</span><span class="p">);</span>
+    <span class="n">StereoConstantSpaceBP</span><span class="p">(</span><span class="kt">int</span> <span class="n">ndisp</span><span class="p">,</span> <span class="kt">int</span> <span class="n">iters</span><span class="p">,</span> <span class="kt">int</span> <span class="n">levels</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nr_plane</span><span class="p">,</span>
+        <span class="kt">float</span> <span class="n">max_data_term</span><span class="p">,</span> <span class="kt">float</span> <span class="n">data_weight</span><span class="p">,</span> <span class="kt">float</span> <span class="n">max_disc_term</span><span class="p">,</span> <span class="kt">float</span> <span class="n">disc_single_jump</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">min_disp_th</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">msg_type</span> <span class="o">=</span> <span class="n">CV_32F</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">left</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">right</span><span class="p">,</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">disparity</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">ndisp</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">iters</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">levels</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">nr_plane</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">max_data_term</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">data_weight</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">max_disc_term</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">disc_single_jump</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">min_disp_th</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">msg_type</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">use_local_init_data_cost</span><span class="p">;</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/* hidden */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class implements algorithm described in <a class="reference internal" href="../../gpu/doc/camera_calibration_and_3d_reconstruction.html#yang2010" id="id3">[Yang2010]</a>. <code class="docutils literal"><span class="pre">StereoConstantSpaceBP</span></code> supports both local minimum and global minimum data cost initialization algorithms. For more details, see the paper mentioned above. By default, a local algorithm is used. To enable a global algorithm, set <code class="docutils literal"><span class="pre">use_local_init_data_cost</span></code> to <code class="docutils literal"><span class="pre">false</span></code> .</p>
+</div>
+<div class="section" id="ocl-stereoconstantspacebp-stereoconstantspacebp">
+<h2>ocl::StereoConstantSpaceBP::StereoConstantSpaceBP<a class="headerlink" href="#ocl-stereoconstantspacebp-stereoconstantspacebp" title="Permalink to this headline">¶</a></h2>
+<p>Enables the <a class="reference internal" href="#ocl::StereoConstantSpaceBP" title="class ocl::StereoConstantSpaceBP"><code class="xref ocv ocv-class docutils literal"><span class="pre">ocl::StereoConstantSpaceBP</span></code></a> constructors.</p>
+<dl class="function">
+<dt id="ocl::StereoConstantSpaceBP::StereoConstantSpaceBP(int ndisp , int iters , int levels , int nr_plane , int msg_type)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ocl::StereoConstantSpaceBP::</code><code class="descname">StereoConstantSpaceBP</code><span class="sig-paren">(</span>int <strong>ndisp</strong>=DEFAULT_NDISP, int <strong>iters</strong>=DEFAULT_ITERS, int <strong>levels</strong>=DEFAULT_LEVELS, int <strong>nr_plane</strong>=DEFAULT_NR_PLANE, int <strong>msg_type</strong>=CV_32F<span class="sig-paren">)</span><a class="headerlink" href="#ocl::StereoConstantSpaceBP::StereoConstantSpaceBP(int ndisp , int iters , int levels , int nr_plane , int msg_type)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ocl::StereoConstantSpaceBP::StereoConstantSpaceBP(int ndisp, int iters, int levels, int nr_plane, float max_data_term, float data_weight, float max_disc_term, float disc_single_jump, int min_disp_th , int msg_type)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ocl::StereoConstantSpaceBP::</code><code class="descname">StereoConstantSpaceBP</code><span class="sig-paren">(</span>int <strong>ndisp</strong>, int <strong>iters</strong>, int <strong>levels</strong>, int <strong>nr_plane</strong>, float <strong>max_data_term</strong>, float <strong>data_weight</strong>, float <strong>max_disc_term</strong>, float <strong>disc_single_jump</strong>, int <strong>min_disp_th</strong>=0, int <strong>msg_type</strong>=CV_32F<span class="sig-paren">)</span><a class="headerlink" href="#ocl::StereoConstantSpaceBP::StereoConstantSpaceBP(int ndisp, int iters, int levels, int nr_plane, float max_data_term, float data_weight, float max_disc_term, float disc_single_jump, int min_disp_th , int msg_type)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ndisp</strong> &#8211; Number of disparities.</li>
+<li><strong>iters</strong> &#8211; Number of BP iterations on each level.</li>
+<li><strong>levels</strong> &#8211; Number of levels.</li>
+<li><strong>nr_plane</strong> &#8211; Number of disparity levels on the first level.</li>
+<li><strong>max_data_term</strong> &#8211; Truncation of data cost.</li>
+<li><strong>data_weight</strong> &#8211; Data weight.</li>
+<li><strong>max_disc_term</strong> &#8211; Truncation of discontinuity.</li>
+<li><strong>disc_single_jump</strong> &#8211; Discontinuity single jump.</li>
+<li><strong>min_disp_th</strong> &#8211; Minimal disparity threshold.</li>
+<li><strong>msg_type</strong> &#8211; Type for messages.  <code class="docutils literal"><span class="pre">CV_16SC1</span></code>  and  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> types are supported.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p><code class="docutils literal"><span class="pre">StereoConstantSpaceBP</span></code> uses a truncated linear model for the data cost and discontinuity terms:</p>
+<div class="math">
+<p><img src="../../../_images/math/2ef8bf5d08e35f01b4b696d64452b10ba8477aa9.png" alt="DataCost = data \_ weight  \cdot \min ( \lvert I_2-I_1  \rvert , max \_ data \_ term)"/></p>
+</div><div class="math">
+<p><img src="../../../_images/math/fdcdeea0879f1695066c0b5b73c7a904bf7a623b.png" alt="DiscTerm =  \min (disc \_ single \_ jump  \cdot \lvert f_1-f_2  \rvert , max \_ disc \_ term)"/></p>
+</div><p>For more details, see <a class="reference internal" href="../../gpu/doc/camera_calibration_and_3d_reconstruction.html#yang2010" id="id4">[Yang2010]</a>.</p>
+<p>By default, <code class="docutils literal"><span class="pre">StereoConstantSpaceBP</span></code> uses floating-point arithmetics and the <code class="docutils literal"><span class="pre">CV_32FC1</span></code> type for messages. But it can also use fixed-point arithmetics and the <code class="docutils literal"><span class="pre">CV_16SC1</span></code> message type for better performance. To avoid an overflow in this case, the parameters must satisfy the following requirement:</p>
+<div class="math">
+<p><img src="../../../_images/math/ca35fe43476448e06dbfdc993587b2f9643a87c3.png" alt="10  \cdot 2^{levels-1}  \cdot max \_ data \_ term &lt; SHRT \_ MAX"/></p>
+</div></div>
+<div class="section" id="ocl-stereoconstantspacebp-estimaterecommendedparams">
+<h2>ocl::StereoConstantSpaceBP::estimateRecommendedParams<a class="headerlink" href="#ocl-stereoconstantspacebp-estimaterecommendedparams" title="Permalink to this headline">¶</a></h2>
+<p>Uses a heuristic method to compute parameters (ndisp, iters, levelsand nrplane) for the specified image size (widthand height).</p>
+<dl class="function">
+<dt id="void ocl::StereoConstantSpaceBP::estimateRecommendedParams(int width, int height, int&amp; ndisp, int&amp; iters, int&amp; levels, int&amp; nr_plane)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::StereoConstantSpaceBP::</code><code class="descname">estimateRecommendedParams</code><span class="sig-paren">(</span>int <strong>width</strong>, int <strong>height</strong>, int&amp; <strong>ndisp</strong>, int&amp; <strong>iters</strong>, int&amp; <strong>levels</strong>, int&amp; <strong>nr_plane</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::StereoConstantSpaceBP::estimateRecommendedParams(int width, int height, int& ndisp, int& iters, int& levels, int& nr_plane)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ocl-stereoconstantspacebp-operator">
+<h2>ocl::StereoConstantSpaceBP::operator ()<a class="headerlink" href="#ocl-stereoconstantspacebp-operator" title="Permalink to this headline">¶</a></h2>
+<p>Enables the stereo correspondence operator that finds the disparity for the specified rectified stereo pair.</p>
+<dl class="function">
+<dt id="void ocl::StereoConstantSpaceBP::operator ()(const oclMat&amp; left, const oclMat&amp; right, oclMat&amp; disparity)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::StereoConstantSpaceBP::</code><code class="descname">operator()</code><span class="sig-paren">(</span>const oclMat&amp; <strong>left</strong>, const oclMat&amp; <strong>right</strong>, oclMat&amp; <strong>disparity</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::StereoConstantSpaceBP::operator ()(const oclMat& left, const oclMat& right, oclMat& disparity)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>left</strong> &#8211; Left image. <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC3</span></code>  and  <code class="docutils literal"><span class="pre">CV_8UC4</span></code>  types are supported.</li>
+<li><strong>right</strong> &#8211; Right image with the same size and the same type as the left one.</li>
+<li><strong>disparity</strong> &#8211; Output disparity map. If  <code class="docutils literal"><span class="pre">disparity</span></code>  is empty, the output type is  <code class="docutils literal"><span class="pre">CV_16SC1</span></code> . Otherwise, the output type is  <code class="docutils literal"><span class="pre">disparity.type()</span></code> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Camera Calibration and 3D Reconstruction</a><ul>
+<li><a class="reference internal" href="#ocl-stereobm-ocl">ocl::StereoBM_OCL</a></li>
+<li><a class="reference internal" href="#ocl-stereobm-ocl-stereobm-ocl">ocl::StereoBM_OCL::StereoBM_OCL</a></li>
+<li><a class="reference internal" href="#ocl-stereobm-ocl-operator">ocl::StereoBM_OCL::operator ()</a></li>
+<li><a class="reference internal" href="#ocl-stereobm-ocl-checkifgpucallreasonable">ocl::StereoBM_OCL::checkIfGpuCallReasonable</a></li>
+<li><a class="reference internal" href="#ocl-stereobeliefpropagation">ocl::StereoBeliefPropagation</a></li>
+<li><a class="reference internal" href="#ocl-stereobeliefpropagation-stereobeliefpropagation">ocl::StereoBeliefPropagation::StereoBeliefPropagation</a></li>
+<li><a class="reference internal" href="#ocl-stereobeliefpropagation-estimaterecommendedparams">ocl::StereoBeliefPropagation::estimateRecommendedParams</a></li>
+<li><a class="reference internal" href="#ocl-stereobeliefpropagation-operator">ocl::StereoBeliefPropagation::operator ()</a></li>
+<li><a class="reference internal" href="#ocl-stereoconstantspacebp">ocl::StereoConstantSpaceBP</a></li>
+<li><a class="reference internal" href="#ocl-stereoconstantspacebp-stereoconstantspacebp">ocl::StereoConstantSpaceBP::StereoConstantSpaceBP</a></li>
+<li><a class="reference internal" href="#ocl-stereoconstantspacebp-estimaterecommendedparams">ocl::StereoConstantSpaceBP::estimateRecommendedParams</a></li>
+<li><a class="reference internal" href="#ocl-stereoconstantspacebp-operator">ocl::StereoConstantSpaceBP::operator ()</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="video_analysis.html"
+                        title="previous chapter">Video Analysis</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../superres/doc/superres.html"
+                        title="next chapter">superres. Super Resolution</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/ocl/doc/camera_calibration_and_3D_reconstruction.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../superres/doc/superres.html" title="superres. Super Resolution"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="video_analysis.html" title="Video Analysis"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" >ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

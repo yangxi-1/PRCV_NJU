@@ -1,0 +1,276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>viz. 3D Visualizer &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="OpenCV API Reference" href="../../refman.html" />
+    <link rel="next" title="Viz" href="viz3d.html" />
+    <link rel="prev" title="Super Resolution" href="../../superres/doc/super_resolution.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="viz3d.html" title="Viz"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../../superres/doc/super_resolution.html" title="Super Resolution"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" accesskey="U">OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="viz-3d-visualizer">
+<h1>viz. 3D Visualizer<a class="headerlink" href="#viz-3d-visualizer" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="viz3d.html">Viz</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-maketransformtoglobal">viz::makeTransformToGlobal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-makecamerapose">viz::makeCameraPose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-getwindowbyname">viz::getWindowByName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-isnan">viz::isNan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d">viz::Viz3d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-viz3d">viz::Viz3d::Viz3d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-showwidget">viz::Viz3d::showWidget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-removewidget">viz::Viz3d::removeWidget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-getwidget">viz::Viz3d::getWidget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-removeallwidgets">viz::Viz3d::removeAllWidgets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-showimage">viz::Viz3d::showImage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-setwidgetpose">viz::Viz3d::setWidgetPose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-updatewidgetpose">viz::Viz3d::updateWidgetPose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-getwidgetpose">viz::Viz3d::getWidgetPose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-setcamera">viz::Viz3d::setCamera</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-getcamera">viz::Viz3d::getCamera</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-getviewerpose">viz::Viz3d::getViewerPose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-setviewerpose">viz::Viz3d::setViewerPose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-resetcameraviewpoint">viz::Viz3d::resetCameraViewpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-resetcamera">viz::Viz3d::resetCamera</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-converttowindowcoordinates">viz::Viz3d::convertToWindowCoordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-converto3dray">viz::Viz3d::converTo3DRay</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-getwindowsize">viz::Viz3d::getWindowSize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-setwindowsize">viz::Viz3d::setWindowSize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-getwindowname">viz::Viz3d::getWindowName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-savescreenshot">viz::Viz3d::saveScreenshot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-setwindowposition">viz::Viz3d::setWindowPosition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-setfullscreen">viz::Viz3d::setFullScreen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-setbackgroundcolor">viz::Viz3d::setBackgroundColor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-spin">viz::Viz3d::spin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-spinonce">viz::Viz3d::spinOnce</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-wasstopped">viz::Viz3d::wasStopped</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-registerkeyboardcallback">viz::Viz3d::registerKeyboardCallback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-registermousecallback">viz::Viz3d::registerMouseCallback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-setrenderingproperty">viz::Viz3d::setRenderingProperty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-getrenderingproperty">viz::Viz3d::getRenderingProperty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-viz3d-setrepresentation">viz::Viz3d::setRepresentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-color">viz::Color</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-mesh">viz::Mesh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-mesh-load">viz::Mesh::load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-keyboardevent">viz::KeyboardEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-keyboardevent-keyboardevent">viz::KeyboardEvent::KeyboardEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-mouseevent">viz::MouseEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-mouseevent-mouseevent">viz::MouseEvent::MouseEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-camera">viz::Camera</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-camera-camera">viz::Camera::Camera</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-camera-computeprojectionmatrix">viz::Camera::computeProjectionMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz3d.html#viz-camera-kinectcamera">viz::Camera::KinectCamera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="widget.html">Widget</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-widget">viz::Widget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-widget-fromplyfile">viz::Widget::fromPlyFile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-widget-setrenderingproperty">viz::Widget::setRenderingProperty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-widget-getrenderingproperty">viz::Widget::getRenderingProperty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-widget-cast">viz::Widget::cast</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-widgetaccessor">viz::WidgetAccessor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-widgetaccessor-getprop">viz::WidgetAccessor::getProp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-widgetaccessor-setprop">viz::WidgetAccessor::setProp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-widget3d">viz::Widget3D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-widget3d-setpose">viz::Widget3D::setPose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-widget3d-updatewidgetpose">viz::Widget3D::updateWidgetPose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-widget3d-getpose">viz::Widget3D::getPose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-widget3d-applytransform">viz::Widget3D::applyTransform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-widget3d-setcolor">viz::Widget3D::setColor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-widget2d">viz::Widget2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-widget2d-setcolor">viz::Widget2D::setColor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wline">viz::WLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wline-wline">viz::WLine::WLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wplane">viz::WPlane</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wplane-wplane">viz::WPlane::WPlane</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#id1">viz::WPlane::WPlane</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wsphere">viz::WSphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wsphere-wsphere">viz::WSphere::WSphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-warrow">viz::WArrow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-warrow-warrow">viz::WArrow::WArrow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcircle">viz::WCircle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcircle-wcircle">viz::WCircle::WCircle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#id2">viz::WCircle::WCircle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcone">viz::WCone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcone-wcone">viz::WCone::WCone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#id3">viz::WCone::WCone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcylinder">viz::WCylinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcylinder-wcylinder">viz::WCylinder::WCylinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcube">viz::WCube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcube-wcube">viz::WCube::WCube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcoordinatesystem">viz::WCoordinateSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcoordinatesystem-wcoordinatesystem">viz::WCoordinateSystem::WCoordinateSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wpolyline">viz::WPolyLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wpolyline-wpolyline">viz::WPolyLine::WPolyLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wgrid">viz::WGrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wgrid-wgrid">viz::WGrid::WGrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wtext3d">viz::WText3D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wtext3d-wtext3d">viz::WText3D::WText3D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wtext3d-settext">viz::WText3D::setText</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wtext3d-gettext">viz::WText3D::getText</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wtext">viz::WText</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wtext-wtext">viz::WText::WText</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wtext-settext">viz::WText::setText</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wtext-gettext">viz::WText::getText</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wimageoverlay">viz::WImageOverlay</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wimageoverlay-wimageoverlay">viz::WImageOverlay::WImageOverlay</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wimageoverlay-setimage">viz::WImageOverlay::setImage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wimage3d">viz::WImage3D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wimage3d-wimage3d">viz::WImage3D::WImage3D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wimage3d-setimage">viz::WImage3D::setImage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcameraposition">viz::WCameraPosition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcameraposition-wcameraposition">viz::WCameraPosition::WCameraPosition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wtrajectory">viz::WTrajectory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wtrajectory-wtrajectory">viz::WTrajectory::WTrajectory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wtrajectoryfrustums">viz::WTrajectoryFrustums</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wtrajectoryfrustums-wtrajectoryfrustums">viz::WTrajectoryFrustums::WTrajectoryFrustums</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wtrajectoryspheres">viz::WTrajectorySpheres</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wtrajectoryspheres-wtrajectoryspheres">viz::WTrajectorySpheres::WTrajectorySpheres</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcloud">viz::WCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcloud-wcloud">viz::WCloud::WCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcloudcollection">viz::WCloudCollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcloudcollection-wcloudcollection">viz::WCloudCollection::WCloudCollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcloudcollection-addcloud">viz::WCloudCollection::addCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcloudcollection-finalize">viz::WCloudCollection::finalize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcloudnormals">viz::WCloudNormals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wcloudnormals-wcloudnormals">viz::WCloudNormals::WCloudNormals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wmesh">viz::WMesh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wmesh-wmesh">viz::WMesh::WMesh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wwidgetmerger">viz::WWidgetMerger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wwidgetmerger-wwidgetmerger">viz::WWidgetMerger::WWidgetMerger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wwidgetmerger-addcloud">viz::WWidgetMerger::addCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="widget.html#viz-wwidgetmerger-finalize">viz::WWidgetMerger::finalize</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../../superres/doc/super_resolution.html"
+                        title="previous chapter">Super Resolution</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="viz3d.html"
+                        title="next chapter">Viz</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/viz/doc/viz.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="viz3d.html" title="Viz"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../../superres/doc/super_resolution.html" title="Super Resolution"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

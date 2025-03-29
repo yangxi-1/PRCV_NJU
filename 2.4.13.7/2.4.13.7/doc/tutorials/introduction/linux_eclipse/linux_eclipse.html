@@ -1,0 +1,365 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using OpenCV with Eclipse (plugin CDT) &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="Introduction to OpenCV" href="../table_of_content_introduction/table_of_content_introduction.html" />
+    <link rel="next" title="Installation in Windows" href="../windows_install/windows_install.html" />
+    <link rel="prev" title="Using OpenCV with gcc and CMake" href="../linux_gcc_cmake/linux_gcc_cmake.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../windows_install/windows_install.html" title="Installation in Windows"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../linux_gcc_cmake/linux_gcc_cmake.html" title="Using OpenCV with gcc and CMake"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_introduction/table_of_content_introduction.html" accesskey="U">Introduction to OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="using-opencv-with-eclipse-plugin-cdt">
+<span id="linux-eclipse-usage"></span><h1>Using OpenCV with Eclipse (plugin CDT)<a class="headerlink" href="#using-opencv-with-eclipse-plugin-cdt" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Two ways, one by forming a project directly, and another by CMake</p>
+</div>
+<div class="section" id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Having installed <a class="reference external" href="http://www.eclipse.org/">Eclipse</a> in your workstation (only the CDT plugin for C/C++ is needed). You can follow the following steps:<ul>
+<li>Go to the Eclipse site</li>
+<li>Download <a class="reference external" href="http://www.eclipse.org/downloads/packages/eclipse-ide-cc-developers/heliossr2">Eclipse IDE for C/C++ Developers</a> . Choose the link according to your workstation.</li>
+</ul>
+</li>
+<li>Having installed OpenCV. If not yet, go <a class="reference internal" href="../linux_install/linux_install.html#linux-installation"><span>here</span></a>.</li>
+</ol>
+</div>
+<div class="section" id="making-a-project">
+<h2>Making a project<a class="headerlink" href="#making-a-project" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Start Eclipse. Just run the executable that comes in the folder.</p>
+</li>
+<li><p class="first">Go to <strong>File -&gt; New -&gt; C/C++ Project</strong></p>
+<img alt="Eclipse Tutorial Screenshot 0" class="align-center" src="../../../../_images/a0.png" />
+</li>
+<li><p class="first">Choose a name for your project (i.e. DisplayImage). An <strong>Empty Project</strong> should be okay for this example.</p>
+<img alt="Eclipse Tutorial Screenshot 1" class="align-center" src="../../../../_images/a1.png" />
+</li>
+<li><p class="first">Leave everything else by default. Press <strong>Finish</strong>.</p>
+</li>
+<li><p class="first">Your project (in this case DisplayImage) should appear in the <strong>Project Navigator</strong> (usually at the left side of your window).</p>
+<img alt="Eclipse Tutorial Screenshot 3" class="align-center" src="../../../../_images/a3.png" />
+</li>
+<li><p class="first">Now, let&#8217;s add a source file using OpenCV:</p>
+<ul>
+<li><p class="first">Right click on <strong>DisplayImage</strong> (in the Navigator). <strong>New -&gt; Folder</strong> .</p>
+<img alt="Eclipse Tutorial Screenshot 4" class="align-center" src="../../../../_images/a4.png" />
+</li>
+<li><p class="first">Name your folder <strong>src</strong> and then hit <strong>Finish</strong></p>
+</li>
+<li><p class="first">Right click on your newly created <strong>src</strong> folder. Choose <strong>New source file</strong>:</p>
+</li>
+<li><p class="first">Call it <strong>DisplayImage.cpp</strong>. Hit <strong>Finish</strong></p>
+<img alt="Eclipse Tutorial Screenshot 7" class="align-center" src="../../../../_images/a7.png" />
+</li>
+</ul>
+</li>
+<li><p class="first">So, now you have a project with a empty .cpp file. Let&#8217;s fill it with some sample code (in other words, copy and paste the snippet below):</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&lt;cv.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;highgui.h&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">Mat</span> <span class="n">image</span><span class="p">;</span>
+  <span class="n">image</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+
+  <span class="k">if</span><span class="p">(</span> <span class="n">argc</span> <span class="o">!=</span> <span class="mi">2</span> <span class="o">||</span> <span class="o">!</span><span class="n">image</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span>
+    <span class="p">{</span>
+      <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;No image data </span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">);</span>
+      <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+  <span class="n">namedWindow</span><span class="p">(</span> <span class="s">&quot;Display Image&quot;</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+  <span class="n">imshow</span><span class="p">(</span> <span class="s">&quot;Display Image&quot;</span><span class="p">,</span> <span class="n">image</span> <span class="p">);</span>
+
+  <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">We are only missing one final step: To tell OpenCV where the OpenCV headers and libraries are. For this, do the following:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Go to  <strong>Project&#8211;&gt;Properties</strong></p>
+</li>
+<li><p class="first">In <strong>C/C++ Build</strong>, click on <strong>Settings</strong>. At the right, choose the <strong>Tool Settings</strong> Tab. Here we will enter the headers and libraries info:</p>
+<ol class="loweralpha">
+<li><p class="first">In <strong>GCC C++ Compiler</strong>, go to <strong>Includes</strong>. In <strong>Include paths(-l)</strong> you should include the path of the folder where opencv was installed. In our example, this is <code class="docutils literal"><span class="pre">/usr/local/include/opencv</span></code>.</p>
+<img alt="Eclipse Tutorial Screenshot 9" class="align-center" src="../../../../_images/a9.png" />
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>If you do not know where your opencv files are, open the <strong>Terminal</strong> and type:</p>
+<div class="highlight-bash"><div class="highlight"><pre>pkg-config --cflags opencv
+</pre></div>
+</div>
+<p>For instance, that command gave me this output:</p>
+<div class="last highlight-bash"><div class="highlight"><pre>-I/usr/local/include/opencv -I/usr/local/include
+</pre></div>
+</div>
+</div>
+</li>
+<li><p class="first">Now go to <strong>GCC C++ Linker</strong>,there you have to fill two spaces:</p>
+<p>First in <strong>Library search path (-L)</strong> you have to write the path to where the opencv libraries reside, in my case the path is:</p>
+<div class="highlight-python"><div class="highlight"><pre>/usr/local/lib
+</pre></div>
+</div>
+<p>Then in <strong>Libraries(-l)</strong> add the OpenCV libraries that you may need. Usually just the 3 first on the list below are enough (for simple applications) . In my case, I am putting all of them since I plan to use the whole bunch:</p>
+<p>opencv_core
+opencv_imgproc
+opencv_highgui
+opencv_ml
+opencv_video
+opencv_features2d
+opencv_calib3d
+opencv_objdetect
+opencv_contrib
+opencv_legacy
+opencv_flann</p>
+<img alt="Eclipse Tutorial Screenshot 10" class="align-center" src="../../../../_images/a10.png" />
+<p>If you don&#8217;t know where your libraries are (or you are just psychotic and want to make sure the path is fine), type in <strong>Terminal</strong>:</p>
+<div class="highlight-bash"><div class="highlight"><pre>pkg-config --libs opencv
+</pre></div>
+</div>
+<p>My output (in case you want to check) was:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>-L/usr/local/lib -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_ml -lopencv_video -lopencv_features2d -lopencv_calib3d -lopencv_objdetect -lopencv_contrib -lopencv_legacy -lopencv_flann</p>
+</div></blockquote>
+<p>Now you are done. Click <strong>OK</strong></p>
+</li>
+</ol>
+</li>
+<li><p class="first">Your project should be ready to be built. For this, go to <strong>Project-&gt;Build all</strong></p>
+<p>In the Console you should get something like</p>
+<img alt="Eclipse Tutorial Screenshot 12" class="align-center" src="../../../../_images/a12.png" />
+<p>If you check in your folder, there should be an executable there.</p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</div>
+<div class="section" id="running-the-executable">
+<h2>Running the executable<a class="headerlink" href="#running-the-executable" title="Permalink to this headline">¶</a></h2>
+<p>So, now we have an executable ready to run. If we were to use the Terminal, we would probably do something like:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">cd</span> &lt;DisplayImage_directory&gt;
+<span class="nb">cd</span> src
+./DisplayImage ../images/HappyLittleFish.png
+</pre></div>
+</div>
+<p>Assuming that the image to use as the argument would be located in &lt;DisplayImage_directory&gt;/images/HappyLittleFish.png. We can still do this, but let&#8217;s do it from Eclipse:</p>
+<ol class="arabic">
+<li><p class="first">Go to <strong>Run-&gt;Run Configurations</strong></p>
+</li>
+<li><p class="first">Under C/C++ Application you will see the name of your executable + Debug (if not, click over C/C++ Application a couple of times). Select the name (in this case <strong>DisplayImage Debug</strong>).</p>
+</li>
+<li><p class="first">Now, in the right side of the window, choose the <strong>Arguments</strong> Tab. Write the path of the image file we want to open (path relative to the workspace/DisplayImage folder). Let&#8217;s use <strong>HappyLittleFish.png</strong>:</p>
+<img alt="Eclipse Tutorial Screenshot 14" class="align-center" src="../../../../_images/a14.png" />
+</li>
+<li><p class="first">Click on the <strong>Apply</strong> button and then in Run. An OpenCV window should pop up with the fish image (or whatever you used).</p>
+<img alt="Eclipse Tutorial Screenshot 15" class="align-center" src="../../../../_images/a15.jpg" />
+</li>
+<li><p class="first">Congratulations! You are ready to have fun with OpenCV using Eclipse.</p>
+</li>
+</ol>
+<div class="section" id="v2-using-cmake-opencv-with-eclipse-plugin-cdt">
+<h3>V2: Using CMake+OpenCV with Eclipse (plugin CDT)<a class="headerlink" href="#v2-using-cmake-opencv-with-eclipse-plugin-cdt" title="Permalink to this headline">¶</a></h3>
+<p>Say you have or create a new file, <em>helloworld.cpp</em> in a directory called <em>foo</em>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&lt;cv.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;highgui.h&gt;</span><span class="cp"></span>
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">cvNamedWindow</span><span class="p">(</span> <span class="s">&quot;My Window&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+  <span class="n">IplImage</span> <span class="o">*</span><span class="n">img</span> <span class="o">=</span> <span class="n">cvCreateImage</span><span class="p">(</span> <span class="n">cvSize</span><span class="p">(</span> <span class="mi">640</span><span class="p">,</span> <span class="mi">480</span> <span class="p">),</span> <span class="n">IPL_DEPTH_8U</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+  <span class="n">CvFont</span> <span class="n">font</span><span class="p">;</span>
+  <span class="kt">double</span> <span class="n">hScale</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span>
+  <span class="kt">double</span> <span class="n">vScale</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">lineWidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="n">cvInitFont</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">font</span><span class="p">,</span> <span class="n">CV_FONT_HERSHEY_SIMPLEX</span> <span class="o">|</span> <span class="n">CV_FONT_ITALIC</span><span class="p">,</span>
+              <span class="n">hScale</span><span class="p">,</span> <span class="n">vScale</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lineWidth</span> <span class="p">);</span>
+  <span class="n">cvPutText</span><span class="p">(</span> <span class="n">img</span><span class="p">,</span> <span class="s">&quot;Hello World!&quot;</span><span class="p">,</span> <span class="n">cvPoint</span><span class="p">(</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">400</span> <span class="p">),</span> <span class="o">&amp;</span><span class="n">font</span><span class="p">,</span>
+             <span class="n">cvScalar</span><span class="p">(</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">);</span>
+  <span class="n">cvShowImage</span><span class="p">(</span> <span class="s">&quot;My Window&quot;</span><span class="p">,</span> <span class="n">img</span> <span class="p">);</span>
+  <span class="n">cvWaitKey</span><span class="p">();</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li>Create a build directory, say, under <em>foo</em>: <code class="docutils literal"><span class="pre">mkdir</span> <span class="pre">/build</span></code>.  Then <code class="docutils literal"><span class="pre">cd</span> <span class="pre">build</span></code>.</li>
+<li>Put a <em>CmakeLists.txt</em> file in build:</li>
+</ol>
+<div class="highlight-bash"><div class="highlight"><pre>PROJECT<span class="o">(</span> helloworld_proj <span class="o">)</span>
+FIND_PACKAGE<span class="o">(</span> OpenCV REQUIRED <span class="o">)</span>
+ADD_EXECUTABLE<span class="o">(</span> helloworld helloworld.cxx <span class="o">)</span>
+TARGET_LINK_LIBRARIES<span class="o">(</span> helloworld <span class="si">${</span><span class="nv">OpenCV_LIBS</span><span class="si">}</span> <span class="o">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li>Run: <code class="docutils literal"><span class="pre">cmake-gui</span> <span class="pre">..</span></code> and make sure you fill in where opencv was built.</li>
+<li>Then click <code class="docutils literal"><span class="pre">configure</span></code> and then <code class="docutils literal"><span class="pre">generate</span></code>. If it&#8217;s OK, <strong>quit cmake-gui</strong></li>
+<li>Run <code class="docutils literal"><span class="pre">make</span> <span class="pre">-j4</span></code>   <em>(the ``-j4`` is optional, it just tells the compiler to build in 4 threads)</em>. Make sure it builds.</li>
+<li>Start <code class="docutils literal"><span class="pre">eclipse</span></code> . Put the workspace in some directory but <strong>not</strong> in <code class="docutils literal"><span class="pre">foo</span></code> or <code class="docutils literal"><span class="pre">foo\\build</span></code></li>
+<li>Right click in the <code class="docutils literal"><span class="pre">Project</span> <span class="pre">Explorer</span></code> section. Select <code class="docutils literal"><span class="pre">Import</span></code>  And then open the <code class="docutils literal"><span class="pre">C/C++</span></code> filter. Choose <em>Existing Code</em> as a Makefile Project``</li>
+<li>Name your project, say <em>helloworld</em>. Browse to the Existing Code location <code class="docutils literal"><span class="pre">foo\\build</span></code> (where you ran your cmake-gui from). Select <em>Linux GCC</em> in the <em>&#8220;Toolchain for Indexer Settings&#8221;</em> and press <em>Finish</em>.</li>
+<li>Right click in the <code class="docutils literal"><span class="pre">Project</span> <span class="pre">Explorer</span></code> section. Select <code class="docutils literal"><span class="pre">Properties</span></code>. Under <code class="docutils literal"><span class="pre">C/C++</span> <span class="pre">Build</span></code>, set the <em>build directory:</em> from something like <code class="docutils literal"><span class="pre">${workspace_loc:/helloworld}</span></code> to <code class="docutils literal"><span class="pre">${workspace_loc:/helloworld}/build</span></code> since that&#8217;s where you are building to.</li>
+</ol>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li>You can also optionally modify the <code class="docutils literal"><span class="pre">Build</span> <span class="pre">command:</span></code> from <code class="docutils literal"><span class="pre">make</span></code> to something like <code class="docutils literal"><span class="pre">make</span> <span class="pre">VERBOSE=1</span> <span class="pre">-j4</span></code> which tells the compiler to produce detailed symbol files for debugging and also to compile in 4 parallel threads.</li>
+</ol>
+</div></blockquote>
+<ol class="arabic simple">
+<li>Done!</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Using OpenCV with Eclipse (plugin CDT)</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#making-a-project">Making a project</a></li>
+<li><a class="reference internal" href="#running-the-executable">Running the executable</a><ul>
+<li><a class="reference internal" href="#v2-using-cmake-opencv-with-eclipse-plugin-cdt">V2: Using CMake+OpenCV with Eclipse (plugin CDT)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../linux_gcc_cmake/linux_gcc_cmake.html"
+                        title="previous chapter">Using OpenCV with gcc and CMake</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../windows_install/windows_install.html"
+                        title="next chapter">Installation in Windows</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/introduction/linux_eclipse/linux_eclipse.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../windows_install/windows_install.html" title="Installation in Windows"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../linux_gcc_cmake/linux_gcc_cmake.html" title="Using OpenCV with gcc and CMake"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_introduction/table_of_content_introduction.html" >Introduction to OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

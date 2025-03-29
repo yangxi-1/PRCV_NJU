@@ -1,0 +1,778 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Feature Detection And Description &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="ocl. OpenCL-accelerated Computer Vision" href="ocl.html" />
+    <link rel="next" title="Video Analysis" href="video_analysis.html" />
+    <link rel="prev" title="Object Detection" href="object_detection.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="video_analysis.html" title="Video Analysis"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="object_detection.html" title="Object Detection"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" accesskey="U">ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="feature-detection-and-description">
+<h1>Feature Detection And Description<a class="headerlink" href="#feature-detection-and-description" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ocl-canny">
+<h2>ocl::Canny<a class="headerlink" href="#ocl-canny" title="Permalink to this headline">¶</a></h2>
+<p>Finds edges in an image using the <a class="reference internal" href="../../imgproc/doc/feature_detection.html#canny86" id="id1">[Canny86]</a> algorithm.</p>
+<dl class="function">
+<dt id="void ocl::Canny(const oclMat&amp; image, oclMat&amp; edges, double low_thresh, double high_thresh, int apperture_size , bool L2gradient)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">Canny</code><span class="sig-paren">(</span>const oclMat&amp; <strong>image</strong>, oclMat&amp; <strong>edges</strong>, double <strong>low_thresh</strong>, double <strong>high_thresh</strong>, int <strong>apperture_size</strong>=3, bool <strong>L2gradient</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::Canny(const oclMat& image, oclMat& edges, double low_thresh, double high_thresh, int apperture_size , bool L2gradient)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::Canny(const oclMat&amp; image, CannyBuf&amp; buf, oclMat&amp; edges, double low_thresh, double high_thresh, int apperture_size , bool L2gradient)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">Canny</code><span class="sig-paren">(</span>const oclMat&amp; <strong>image</strong>, CannyBuf&amp; <strong>buf</strong>, oclMat&amp; <strong>edges</strong>, double <strong>low_thresh</strong>, double <strong>high_thresh</strong>, int <strong>apperture_size</strong>=3, bool <strong>L2gradient</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::Canny(const oclMat& image, CannyBuf& buf, oclMat& edges, double low_thresh, double high_thresh, int apperture_size , bool L2gradient)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::Canny(const oclMat&amp; dx, const oclMat&amp; dy, oclMat&amp; edges, double low_thresh, double high_thresh, bool L2gradient)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">Canny</code><span class="sig-paren">(</span>const oclMat&amp; <strong>dx</strong>, const oclMat&amp; <strong>dy</strong>, oclMat&amp; <strong>edges</strong>, double <strong>low_thresh</strong>, double <strong>high_thresh</strong>, bool <strong>L2gradient</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::Canny(const oclMat& dx, const oclMat& dy, oclMat& edges, double low_thresh, double high_thresh, bool L2gradient)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::Canny(const oclMat&amp; dx, const oclMat&amp; dy, CannyBuf&amp; buf, oclMat&amp; edges, double low_thresh, double high_thresh, bool L2gradient)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">Canny</code><span class="sig-paren">(</span>const oclMat&amp; <strong>dx</strong>, const oclMat&amp; <strong>dy</strong>, CannyBuf&amp; <strong>buf</strong>, oclMat&amp; <strong>edges</strong>, double <strong>low_thresh</strong>, double <strong>high_thresh</strong>, bool <strong>L2gradient</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::Canny(const oclMat& dx, const oclMat& dy, CannyBuf& buf, oclMat& edges, double low_thresh, double high_thresh, bool L2gradient)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Single-channel 8-bit input image.</li>
+<li><strong>dx</strong> &#8211; First derivative of image in the vertical direction. Support only <code class="docutils literal"><span class="pre">CV_32S</span></code> type.</li>
+<li><strong>dy</strong> &#8211; First derivative of image in the horizontal direction. Support only <code class="docutils literal"><span class="pre">CV_32S</span></code> type.</li>
+<li><strong>edges</strong> &#8211; Output edge map. It has the same size and type as  <code class="docutils literal"><span class="pre">image</span></code> .</li>
+<li><strong>low_thresh</strong> &#8211; First threshold for the hysteresis procedure.</li>
+<li><strong>high_thresh</strong> &#8211; Second threshold for the hysteresis procedure.</li>
+<li><strong>apperture_size</strong> &#8211; Aperture size for the  <a class="reference internal" href="../../imgproc/doc/filtering.html#void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)" title="void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Sobel()</span></code></a>  operator.</li>
+<li><strong>L2gradient</strong> &#8211; Flag indicating whether a more accurate  <img class="math" src="../../../_images/math/c80021c104dcee49fc0f685e54711978dff03111.png" alt="L_2"/>  norm  <img class="math" src="../../../_images/math/be14865ba11769377900576b01b30a683f84d091.png" alt="=\sqrt{(dI/dx)^2 + (dI/dy)^2}"/>  should be used to compute the image gradient magnitude ( <code class="docutils literal"><span class="pre">L2gradient=true</span></code> ), or a faster default  <img class="math" src="../../../_images/math/99a8045a334a911a88e1d2e3805e17bd1d254c39.png" alt="L_1"/>  norm  <img class="math" src="../../../_images/math/50098b0fb8a0251ddd4ef15f5b037f7c61dccdb7.png" alt="=|dI/dx|+|dI/dy|"/>  is enough ( <code class="docutils literal"><span class="pre">L2gradient=false</span></code> ).</li>
+<li><strong>buf</strong> &#8211; Optional buffer to avoid extra memory allocations (for many calls with the same sizes).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/feature_detection.html#void Canny(InputArray image, OutputArray edges, double threshold1, double threshold2, int apertureSize, bool L2gradient)" title="void Canny(InputArray image, OutputArray edges, double threshold1, double threshold2, int apertureSize, bool L2gradient)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Canny()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-bruteforcematcher-ocl-base">
+<h2>ocl::BruteForceMatcher_OCL_base<a class="headerlink" href="#ocl-bruteforcematcher-ocl-base" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ocl::BruteForceMatcher_OCL_base">
+<em class="property">class </em><code class="descclassname">ocl::</code><code class="descname">BruteForceMatcher_OCL_base</code><a class="headerlink" href="#ocl::BruteForceMatcher_OCL_base" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Brute-force descriptor matcher. For each descriptor in the first set, this matcher finds the closest descriptor in the second set by trying each one. This descriptor matcher supports masking permissible matches between descriptor sets.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">BruteForceMatcher_OCL_base</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+        <span class="k">enum</span> <span class="n">DistType</span> <span class="p">{</span><span class="n">L1Dist</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">L2Dist</span><span class="p">,</span> <span class="n">HammingDist</span><span class="p">};</span>
+
+    <span class="c1">// Add descriptors to train descriptor collection.</span>
+    <span class="kt">void</span> <span class="nf">add</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">oclMat</span><span class="o">&gt;&amp;</span> <span class="n">descCollection</span><span class="p">);</span>
+
+    <span class="c1">// Get train descriptors collection.</span>
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">oclMat</span><span class="o">&gt;&amp;</span> <span class="n">getTrainDescriptors</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">// Clear train descriptors collection.</span>
+    <span class="kt">void</span> <span class="nf">clear</span><span class="p">();</span>
+
+    <span class="c1">// Return true if there are no train descriptors in collection.</span>
+    <span class="kt">bool</span> <span class="nf">empty</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">// Return true if the matcher supports mask in match methods.</span>
+    <span class="kt">bool</span> <span class="nf">isMaskSupported</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">matchSingle</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">train</span><span class="p">,</span>
+        <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">oclMat</span><span class="p">());</span>
+
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">matchDownload</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">);</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">matchConvert</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">match</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">train</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">oclMat</span><span class="p">());</span>
+
+    <span class="kt">void</span> <span class="nf">makeGpuCollection</span><span class="p">(</span><span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">trainCollection</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">maskCollection</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">oclMat</span><span class="o">&gt;&amp;</span> <span class="n">masks</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">oclMat</span><span class="o">&gt;</span><span class="p">());</span>
+
+    <span class="kt">void</span> <span class="nf">matchCollection</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">trainCollection</span><span class="p">,</span>
+        <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">imgIdx</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">maskCollection</span><span class="p">);</span>
+
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">matchDownload</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">imgIdx</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">);</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">matchConvert</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">imgIdx</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">match</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">oclMat</span><span class="o">&gt;&amp;</span> <span class="n">masks</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">oclMat</span><span class="o">&gt;</span><span class="p">());</span>
+
+    <span class="kt">void</span> <span class="nf">knnMatchSingle</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">train</span><span class="p">,</span>
+        <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">allDist</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">oclMat</span><span class="p">());</span>
+
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">knnMatchDownload</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">knnMatchConvert</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">knnMatch</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">train</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">oclMat</span><span class="p">(),</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">knnMatch2Collection</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">trainCollection</span><span class="p">,</span>
+        <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">imgIdx</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">maskCollection</span> <span class="o">=</span> <span class="n">oclMat</span><span class="p">());</span>
+
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">knnMatch2Download</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">imgIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">knnMatch2Convert</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">imgIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">knnMatch</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">oclMat</span><span class="o">&gt;&amp;</span> <span class="n">masks</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">oclMat</span><span class="o">&gt;</span><span class="p">(),</span>
+        <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">radiusMatchSingle</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">train</span><span class="p">,</span>
+        <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">nMatches</span><span class="p">,</span> <span class="kt">float</span> <span class="n">maxDistance</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">oclMat</span><span class="p">());</span>
+
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">radiusMatchDownload</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">nMatches</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">radiusMatchConvert</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">nMatches</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">radiusMatch</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">train</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">float</span> <span class="n">maxDistance</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">oclMat</span><span class="p">(),</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">radiusMatchCollection</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">imgIdx</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">nMatches</span><span class="p">,</span> <span class="kt">float</span> <span class="n">maxDistance</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">oclMat</span><span class="o">&gt;&amp;</span> <span class="n">masks</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">oclMat</span><span class="o">&gt;</span><span class="p">());</span>
+
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">radiusMatchDownload</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">imgIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">nMatches</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">radiusMatchConvert</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">imgIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">distance</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">nMatches</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">radiusMatch</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">query</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">float</span> <span class="n">maxDistance</span><span class="p">,</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">oclMat</span><span class="o">&gt;&amp;</span> <span class="n">masks</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">oclMat</span><span class="o">&gt;</span><span class="p">(),</span> <span class="kt">bool</span> <span class="n">compactResult</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+
+            <span class="n">DistType</span> <span class="n">distType</span><span class="p">;</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">oclMat</span><span class="o">&gt;</span> <span class="n">trainDescCollection</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class <code class="docutils literal"><span class="pre">BruteForceMatcher_OCL_base</span></code> has an interface similar to the class <a class="reference internal" href="../../features2d/doc/common_interfaces_of_descriptor_matchers.html#DescriptorMatcher : public Algorithm" title="class DescriptorMatcher : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">DescriptorMatcher</span></code></a>. It has two groups of <code class="docutils literal"><span class="pre">match</span></code> methods: for matching descriptors of one image with another image or with an image set. Also, all functions have an alternative to save results either to the GPU memory or to the CPU memory. <code class="docutils literal"><span class="pre">BruteForceMatcher_OCL_base</span></code> supports only the <code class="docutils literal"><span class="pre">L1&lt;float&gt;</span></code>, <code class="docutils literal"><span class="pre">L2&lt;float&gt;</span></code>, and <code class="docutils literal"><span class="pre">Hamming</span></code> distance types.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../features2d/doc/common_interfaces_of_descriptor_matchers.html#DescriptorMatcher : public Algorithm" title="class DescriptorMatcher : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">DescriptorMatcher</span></code></a>, <a class="reference internal" href="../../features2d/doc/common_interfaces_of_descriptor_matchers.html#BFMatcher : public DescriptorMatcher" title="class BFMatcher : public DescriptorMatcher"><code class="xref ocv ocv-class docutils literal"><span class="pre">BFMatcher</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-bruteforcematcher-ocl-base-match">
+<h2>ocl::BruteForceMatcher_OCL_base::match<a class="headerlink" href="#ocl-bruteforcematcher-ocl-base-match" title="Permalink to this headline">¶</a></h2>
+<p>Finds the best match for each descriptor from a query set with train descriptors.</p>
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::match(const oclMat&amp; query, const oclMat&amp; train, std::vector&lt;DMatch&gt;&amp; matches, const oclMat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">match</code><span class="sig-paren">(</span>const oclMat&amp; <strong>query</strong>, const oclMat&amp; <strong>train</strong>, std::vector&lt;DMatch&gt;&amp; <strong>matches</strong>, const oclMat&amp; <strong>mask</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::match(const oclMat& query, const oclMat& train, std::vector<DMatch>& matches, const oclMat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::matchSingle(const oclMat&amp; query, const oclMat&amp; train, oclMat&amp; trainIdx, oclMat&amp; distance, const oclMat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">matchSingle</code><span class="sig-paren">(</span>const oclMat&amp; <strong>query</strong>, const oclMat&amp; <strong>train</strong>, oclMat&amp; <strong>trainIdx</strong>, oclMat&amp; <strong>distance</strong>, const oclMat&amp; <strong>mask</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::matchSingle(const oclMat& query, const oclMat& train, oclMat& trainIdx, oclMat& distance, const oclMat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::match(const oclMat&amp; query, std::vector&lt;DMatch&gt;&amp; matches, const std::vector&lt;oclMat&gt;&amp; masks)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">match</code><span class="sig-paren">(</span>const oclMat&amp; <strong>query</strong>, std::vector&lt;DMatch&gt;&amp; <strong>matches</strong>, const std::vector&lt;oclMat&gt;&amp; <strong>masks</strong>=std::vector&lt;oclMat&gt;()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::match(const oclMat& query, std::vector<DMatch>& matches, const std::vector<oclMat>& masks)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::matchCollection(const oclMat&amp; query, const oclMat&amp; trainCollection, oclMat&amp; trainIdx, oclMat&amp; imgIdx, oclMat&amp; distance, const oclMat&amp; masks)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">matchCollection</code><span class="sig-paren">(</span>const oclMat&amp; <strong>query</strong>, const oclMat&amp; <strong>trainCollection</strong>, oclMat&amp; <strong>trainIdx</strong>, oclMat&amp; <strong>imgIdx</strong>, oclMat&amp; <strong>distance</strong>, const oclMat&amp; <strong>masks</strong>=oclMat() <span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::matchCollection(const oclMat& query, const oclMat& trainCollection, oclMat& trainIdx, oclMat& imgIdx, oclMat& distance, const oclMat& masks)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../features2d/doc/common_interfaces_of_descriptor_matchers.html#void DescriptorMatcher::match(const Mat&amp; queryDescriptors, const Mat&amp; trainDescriptors, vector&lt;DMatch&gt;&amp; matches, const Mat&amp; mask) const" title="void DescriptorMatcher::match(const Mat&amp; queryDescriptors, const Mat&amp; trainDescriptors, vector&lt;DMatch&gt;&amp; matches, const Mat&amp; mask) const"><code class="xref ocv ocv-func docutils literal"><span class="pre">DescriptorMatcher::match()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-bruteforcematcher-ocl-base-makegpucollection">
+<h2>ocl::BruteForceMatcher_OCL_base::makeGpuCollection<a class="headerlink" href="#ocl-bruteforcematcher-ocl-base-makegpucollection" title="Permalink to this headline">¶</a></h2>
+<p>Performs a GPU collection of train descriptors and masks in a suitable format for the <a class="reference internal" href="#void ocl::BruteForceMatcher_OCL_base::matchCollection(const oclMat&amp; query, const oclMat&amp; trainCollection, oclMat&amp; trainIdx, oclMat&amp; imgIdx, oclMat&amp; distance, const oclMat&amp; masks)" title="void ocl::BruteForceMatcher_OCL_base::matchCollection(const oclMat&amp; query, const oclMat&amp; trainCollection, oclMat&amp; trainIdx, oclMat&amp; imgIdx, oclMat&amp; distance, const oclMat&amp; masks)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::BruteForceMatcher_OCL_base::matchCollection()</span></code></a> function.</p>
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::makeGpuCollection(oclMat&amp; trainCollection, oclMat&amp; maskCollection, const vector&lt;oclMat&gt;&amp; masks)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">makeGpuCollection</code><span class="sig-paren">(</span>oclMat&amp; <strong>trainCollection</strong>, oclMat&amp; <strong>maskCollection</strong>, const vector&lt;oclMat&gt;&amp; <strong>masks</strong>=std::vector&lt;oclMat&gt;()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::makeGpuCollection(oclMat& trainCollection, oclMat& maskCollection, const vector<oclMat>& masks)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ocl-bruteforcematcher-ocl-base-matchdownload">
+<h2>ocl::BruteForceMatcher_OCL_base::matchDownload<a class="headerlink" href="#ocl-bruteforcematcher-ocl-base-matchdownload" title="Permalink to this headline">¶</a></h2>
+<p>Downloads matrices obtained via <a class="reference internal" href="#void ocl::BruteForceMatcher_OCL_base::matchSingle(const oclMat&amp; query, const oclMat&amp; train, oclMat&amp; trainIdx, oclMat&amp; distance, const oclMat&amp; mask)" title="void ocl::BruteForceMatcher_OCL_base::matchSingle(const oclMat&amp; query, const oclMat&amp; train, oclMat&amp; trainIdx, oclMat&amp; distance, const oclMat&amp; mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::BruteForceMatcher_OCL_base::matchSingle()</span></code></a> or <a class="reference internal" href="#void ocl::BruteForceMatcher_OCL_base::matchCollection(const oclMat&amp; query, const oclMat&amp; trainCollection, oclMat&amp; trainIdx, oclMat&amp; imgIdx, oclMat&amp; distance, const oclMat&amp; masks)" title="void ocl::BruteForceMatcher_OCL_base::matchCollection(const oclMat&amp; query, const oclMat&amp; trainCollection, oclMat&amp; trainIdx, oclMat&amp; imgIdx, oclMat&amp; distance, const oclMat&amp; masks)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::BruteForceMatcher_OCL_base::matchCollection()</span></code></a> to vector with <code class="xref ocv ocv-class docutils literal"><span class="pre">DMatch</span></code>.</p>
+<dl class="function">
+<dt id="static void ocl::BruteForceMatcher_OCL_base::matchDownload(const oclMat&amp; trainIdx, const oclMat&amp; distance, std::vector&lt;DMatch&gt;&amp; matches)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">matchDownload</code><span class="sig-paren">(</span>const oclMat&amp; <strong>trainIdx</strong>, const oclMat&amp; <strong>distance</strong>, std::vector&lt;DMatch&gt;&amp; <strong>matches</strong><span class="sig-paren">)</span><a class="headerlink" href="#static void ocl::BruteForceMatcher_OCL_base::matchDownload(const oclMat& trainIdx, const oclMat& distance, std::vector<DMatch>& matches)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="static void ocl::BruteForceMatcher_OCL_base::matchDownload(const oclMat&amp; trainIdx, const oclMat&amp; imgIdx, const oclMat&amp; distance, std::vector&lt;DMatch&gt;&amp; matches)">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">matchDownload</code><span class="sig-paren">(</span>const oclMat&amp; <strong>trainIdx</strong>, const oclMat&amp; <strong>imgIdx</strong>, const oclMat&amp; <strong>distance</strong>, std::vector&lt;DMatch&gt;&amp; <strong>matches</strong><span class="sig-paren">)</span><a class="headerlink" href="#static void ocl::BruteForceMatcher_OCL_base::matchDownload(const oclMat& trainIdx, const oclMat& imgIdx, const oclMat& distance, std::vector<DMatch>& matches)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ocl-bruteforcematcher-ocl-base-matchconvert">
+<h2>ocl::BruteForceMatcher_OCL_base::matchConvert<a class="headerlink" href="#ocl-bruteforcematcher-ocl-base-matchconvert" title="Permalink to this headline">¶</a></h2>
+<p>Converts matrices obtained via <a class="reference internal" href="#void ocl::BruteForceMatcher_OCL_base::matchSingle(const oclMat&amp; query, const oclMat&amp; train, oclMat&amp; trainIdx, oclMat&amp; distance, const oclMat&amp; mask)" title="void ocl::BruteForceMatcher_OCL_base::matchSingle(const oclMat&amp; query, const oclMat&amp; train, oclMat&amp; trainIdx, oclMat&amp; distance, const oclMat&amp; mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::BruteForceMatcher_OCL_base::matchSingle()</span></code></a> or <a class="reference internal" href="#void ocl::BruteForceMatcher_OCL_base::matchCollection(const oclMat&amp; query, const oclMat&amp; trainCollection, oclMat&amp; trainIdx, oclMat&amp; imgIdx, oclMat&amp; distance, const oclMat&amp; masks)" title="void ocl::BruteForceMatcher_OCL_base::matchCollection(const oclMat&amp; query, const oclMat&amp; trainCollection, oclMat&amp; trainIdx, oclMat&amp; imgIdx, oclMat&amp; distance, const oclMat&amp; masks)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::BruteForceMatcher_OCL_base::matchCollection()</span></code></a> to vector with <code class="xref ocv ocv-class docutils literal"><span class="pre">DMatch</span></code>.</p>
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::matchConvert(const Mat&amp; trainIdx, const Mat&amp; distance, std::vector&lt;DMatch&gt;&amp;matches)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">matchConvert</code><span class="sig-paren">(</span>const Mat&amp; <strong>trainIdx</strong>, const Mat&amp; <strong>distance</strong>, std::vector&lt;DMatch&gt;&amp; <strong>matches</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::matchConvert(const Mat& trainIdx, const Mat& distance, std::vector<DMatch>&matches)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::matchConvert(const Mat&amp; trainIdx, const Mat&amp; imgIdx, const Mat&amp; distance, std::vector&lt;DMatch&gt;&amp;matches)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">matchConvert</code><span class="sig-paren">(</span>const Mat&amp; <strong>trainIdx</strong>, const Mat&amp; <strong>imgIdx</strong>, const Mat&amp; <strong>distance</strong>, std::vector&lt;DMatch&gt;&amp; <strong>matches</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::matchConvert(const Mat& trainIdx, const Mat& imgIdx, const Mat& distance, std::vector<DMatch>&matches)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ocl-bruteforcematcher-ocl-base-knnmatch">
+<h2>ocl::BruteForceMatcher_OCL_base::knnMatch<a class="headerlink" href="#ocl-bruteforcematcher-ocl-base-knnmatch" title="Permalink to this headline">¶</a></h2>
+<p>Finds the <code class="docutils literal"><span class="pre">k</span></code> best matches for each descriptor from a query set with train descriptors.</p>
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::knnMatch(const oclMat&amp; query, const oclMat&amp; train, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp;matches, int k, const oclMat&amp; mask , bool compactResult)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">knnMatch</code><span class="sig-paren">(</span>const oclMat&amp; <strong>query</strong>, const oclMat&amp; <strong>train</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, int <strong>k</strong>, const oclMat&amp; <strong>mask</strong>=oclMat(), bool <strong>compactResult</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::knnMatch(const oclMat& query, const oclMat& train, std::vector< std::vector<DMatch> >&matches, int k, const oclMat& mask , bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::knnMatchSingle(const oclMat&amp; query, const oclMat&amp; train, oclMat&amp; trainIdx, oclMat&amp; distance, oclMat&amp; allDist, int k, const oclMat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">knnMatchSingle</code><span class="sig-paren">(</span>const oclMat&amp; <strong>query</strong>, const oclMat&amp; <strong>train</strong>, oclMat&amp; <strong>trainIdx</strong>, oclMat&amp; <strong>distance</strong>, oclMat&amp; <strong>allDist</strong>, int <strong>k</strong>, const oclMat&amp; <strong>mask</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::knnMatchSingle(const oclMat& query, const oclMat& train, oclMat& trainIdx, oclMat& distance, oclMat& allDist, int k, const oclMat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::knnMatch(const oclMat&amp; query, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp;matches, int k, const std::vector&lt;oclMat&gt;&amp;masks , bool compactResult)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">knnMatch</code><span class="sig-paren">(</span>const oclMat&amp; <strong>query</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, int <strong>k</strong>, const std::vector&lt;oclMat&gt;&amp; <strong>masks</strong>=std::vector&lt;oclMat&gt;(), bool <strong>compactResult</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::knnMatch(const oclMat& query, std::vector< std::vector<DMatch> >&matches, int k, const std::vector<oclMat>&masks , bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::knnMatch2Collection(const oclMat&amp; query, const oclMat&amp; trainCollection, oclMat&amp; trainIdx, oclMat&amp; imgIdx, oclMat&amp; distance, const oclMat&amp; maskCollection)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">knnMatch2Collection</code><span class="sig-paren">(</span>const oclMat&amp; <strong>query</strong>, const oclMat&amp; <strong>trainCollection</strong>, oclMat&amp; <strong>trainIdx</strong>, oclMat&amp; <strong>imgIdx</strong>, oclMat&amp; <strong>distance</strong>, const oclMat&amp; <strong>maskCollection</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::knnMatch2Collection(const oclMat& query, const oclMat& trainCollection, oclMat& trainIdx, oclMat& imgIdx, oclMat& distance, const oclMat& maskCollection)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>query</strong> &#8211; Query set of descriptors.</li>
+<li><strong>train</strong> &#8211; Training set of descriptors. It is not be added to train descriptors collection stored in the class object.</li>
+<li><strong>k</strong> &#8211; Number of the best matches per each query descriptor (or less if it is not possible).</li>
+<li><strong>mask</strong> &#8211; Mask specifying permissible matches between the input query and train matrices of descriptors.</li>
+<li><strong>compactResult</strong> &#8211; If <code class="docutils literal"><span class="pre">compactResult</span></code> is <code class="docutils literal"><span class="pre">true</span></code> , the <code class="docutils literal"><span class="pre">matches</span></code> vector does not contain matches for fully masked-out query descriptors.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns detected <code class="docutils literal"><span class="pre">k</span></code> (or less if not possible) matches in the increasing order by distance.</p>
+<p>The third variant of the method stores the results in GPU memory.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../features2d/doc/common_interfaces_of_descriptor_matchers.html#void DescriptorMatcher::knnMatch(const Mat&amp; queryDescriptors, const Mat&amp; trainDescriptors, vector&lt;vector&lt;DMatch&gt; &gt;&amp; matches, int k, const Mat&amp; mask, bool compactResult) const" title="void DescriptorMatcher::knnMatch(const Mat&amp; queryDescriptors, const Mat&amp; trainDescriptors, vector&lt;vector&lt;DMatch&gt; &gt;&amp; matches, int k, const Mat&amp; mask, bool compactResult) const"><code class="xref ocv ocv-func docutils literal"><span class="pre">DescriptorMatcher::knnMatch()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-bruteforcematcher-ocl-base-knnmatchdownload">
+<h2>ocl::BruteForceMatcher_OCL_base::knnMatchDownload<a class="headerlink" href="#ocl-bruteforcematcher-ocl-base-knnmatchdownload" title="Permalink to this headline">¶</a></h2>
+<p>Downloads matrices obtained via <a class="reference internal" href="#void ocl::BruteForceMatcher_OCL_base::knnMatchSingle(const oclMat&amp; query, const oclMat&amp; train, oclMat&amp; trainIdx, oclMat&amp; distance, oclMat&amp; allDist, int k, const oclMat&amp; mask)" title="void ocl::BruteForceMatcher_OCL_base::knnMatchSingle(const oclMat&amp; query, const oclMat&amp; train, oclMat&amp; trainIdx, oclMat&amp; distance, oclMat&amp; allDist, int k, const oclMat&amp; mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::BruteForceMatcher_OCL_base::knnMatchSingle()</span></code></a> or <a class="reference internal" href="#void ocl::BruteForceMatcher_OCL_base::knnMatch2Collection(const oclMat&amp; query, const oclMat&amp; trainCollection, oclMat&amp; trainIdx, oclMat&amp; imgIdx, oclMat&amp; distance, const oclMat&amp; maskCollection)" title="void ocl::BruteForceMatcher_OCL_base::knnMatch2Collection(const oclMat&amp; query, const oclMat&amp; trainCollection, oclMat&amp; trainIdx, oclMat&amp; imgIdx, oclMat&amp; distance, const oclMat&amp; maskCollection)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::BruteForceMatcher_OCL_base::knnMatch2Collection()</span></code></a> to vector with <code class="xref ocv ocv-class docutils literal"><span class="pre">DMatch</span></code>.</p>
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::knnMatchDownload(const oclMat&amp; trainIdx, const oclMat&amp; distance, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp;matches, bool compactResult)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">knnMatchDownload</code><span class="sig-paren">(</span>const oclMat&amp; <strong>trainIdx</strong>, const oclMat&amp; <strong>distance</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, bool <strong>compactResult</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::knnMatchDownload(const oclMat& trainIdx, const oclMat& distance, std::vector< std::vector<DMatch> >&matches, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::knnMatch2Download(const oclMat&amp; trainIdx, const oclMat&amp; imgIdx, const oclMat&amp; distance, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp; matches, bool compactResult)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">knnMatch2Download</code><span class="sig-paren">(</span>const oclMat&amp; <strong>trainIdx</strong>, const oclMat&amp; <strong>imgIdx</strong>, const oclMat&amp; <strong>distance</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, bool <strong>compactResult</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::knnMatch2Download(const oclMat& trainIdx, const oclMat& imgIdx, const oclMat& distance, std::vector< std::vector<DMatch> >& matches, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>If <code class="docutils literal"><span class="pre">compactResult</span></code> is <code class="docutils literal"><span class="pre">true</span></code> , the <code class="docutils literal"><span class="pre">matches</span></code> vector does not contain matches for fully masked-out query descriptors.</p>
+</div>
+<div class="section" id="ocl-bruteforcematcher-ocl-base-knnmatchconvert">
+<h2>ocl::BruteForceMatcher_OCL_base::knnMatchConvert<a class="headerlink" href="#ocl-bruteforcematcher-ocl-base-knnmatchconvert" title="Permalink to this headline">¶</a></h2>
+<p>Converts matrices obtained via <a class="reference internal" href="#void ocl::BruteForceMatcher_OCL_base::knnMatchSingle(const oclMat&amp; query, const oclMat&amp; train, oclMat&amp; trainIdx, oclMat&amp; distance, oclMat&amp; allDist, int k, const oclMat&amp; mask)" title="void ocl::BruteForceMatcher_OCL_base::knnMatchSingle(const oclMat&amp; query, const oclMat&amp; train, oclMat&amp; trainIdx, oclMat&amp; distance, oclMat&amp; allDist, int k, const oclMat&amp; mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::BruteForceMatcher_OCL_base::knnMatchSingle()</span></code></a> or <a class="reference internal" href="#void ocl::BruteForceMatcher_OCL_base::knnMatch2Collection(const oclMat&amp; query, const oclMat&amp; trainCollection, oclMat&amp; trainIdx, oclMat&amp; imgIdx, oclMat&amp; distance, const oclMat&amp; maskCollection)" title="void ocl::BruteForceMatcher_OCL_base::knnMatch2Collection(const oclMat&amp; query, const oclMat&amp; trainCollection, oclMat&amp; trainIdx, oclMat&amp; imgIdx, oclMat&amp; distance, const oclMat&amp; maskCollection)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::BruteForceMatcher_OCL_base::knnMatch2Collection()</span></code></a> to CPU vector with <code class="xref ocv ocv-class docutils literal"><span class="pre">DMatch</span></code>.</p>
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::knnMatchConvert(const Mat&amp; trainIdx, const Mat&amp; distance, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp;matches, bool compactResult)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">knnMatchConvert</code><span class="sig-paren">(</span>const Mat&amp; <strong>trainIdx</strong>, const Mat&amp; <strong>distance</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, bool <strong>compactResult</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::knnMatchConvert(const Mat& trainIdx, const Mat& distance, std::vector< std::vector<DMatch> >&matches, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::knnMatch2Convert(const Mat&amp; trainIdx, const Mat&amp; imgIdx, const Mat&amp; distance, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp; matches, bool compactResult)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">knnMatch2Convert</code><span class="sig-paren">(</span>const Mat&amp; <strong>trainIdx</strong>, const Mat&amp; <strong>imgIdx</strong>, const Mat&amp; <strong>distance</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, bool <strong>compactResult</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::knnMatch2Convert(const Mat& trainIdx, const Mat& imgIdx, const Mat& distance, std::vector< std::vector<DMatch> >& matches, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>If <code class="docutils literal"><span class="pre">compactResult</span></code> is <code class="docutils literal"><span class="pre">true</span></code> , the <code class="docutils literal"><span class="pre">matches</span></code> vector does not contain matches for fully masked-out query descriptors.</p>
+</div>
+<div class="section" id="ocl-bruteforcematcher-ocl-base-radiusmatch">
+<h2>ocl::BruteForceMatcher_OCL_base::radiusMatch<a class="headerlink" href="#ocl-bruteforcematcher-ocl-base-radiusmatch" title="Permalink to this headline">¶</a></h2>
+<p>For each query descriptor, finds the best matches with a distance less than a given threshold.</p>
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::radiusMatch(const oclMat&amp; query, const oclMat&amp; train, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp;matches, float maxDistance, const oclMat&amp; mask , bool compactResult)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">radiusMatch</code><span class="sig-paren">(</span>const oclMat&amp; <strong>query</strong>, const oclMat&amp; <strong>train</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, float <strong>maxDistance</strong>, const oclMat&amp; <strong>mask</strong>=oclMat(), bool <strong>compactResult</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::radiusMatch(const oclMat& query, const oclMat& train, std::vector< std::vector<DMatch> >&matches, float maxDistance, const oclMat& mask , bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::radiusMatchSingle(const oclMat&amp; query, const oclMat&amp; train, oclMat&amp; trainIdx, oclMat&amp; distance, oclMat&amp; nMatches, float maxDistance, const oclMat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">radiusMatchSingle</code><span class="sig-paren">(</span>const oclMat&amp; <strong>query</strong>, const oclMat&amp; <strong>train</strong>, oclMat&amp; <strong>trainIdx</strong>, oclMat&amp; <strong>distance</strong>, oclMat&amp; <strong>nMatches</strong>, float <strong>maxDistance</strong>, const oclMat&amp; <strong>mask</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::radiusMatchSingle(const oclMat& query, const oclMat& train, oclMat& trainIdx, oclMat& distance, oclMat& nMatches, float maxDistance, const oclMat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::radiusMatch(const oclMat&amp; query, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp;matches, float maxDistance, const std::vector&lt;oclMat&gt;&amp; masks , bool compactResult)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">radiusMatch</code><span class="sig-paren">(</span>const oclMat&amp; <strong>query</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, float <strong>maxDistance</strong>, const std::vector&lt;oclMat&gt;&amp; <strong>masks</strong>=std::vector&lt;oclMat&gt;(), bool <strong>compactResult</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::radiusMatch(const oclMat& query, std::vector< std::vector<DMatch> >&matches, float maxDistance, const std::vector<oclMat>& masks , bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::radiusMatchCollection(const oclMat&amp; query, oclMat&amp; trainIdx, oclMat&amp; imgIdx, oclMat&amp; distance, oclMat&amp; nMatches, float maxDistance, const std::vector&lt;oclMat&gt;&amp; masks)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">radiusMatchCollection</code><span class="sig-paren">(</span>const oclMat&amp; <strong>query</strong>, oclMat&amp; <strong>trainIdx</strong>, oclMat&amp; <strong>imgIdx</strong>, oclMat&amp; <strong>distance</strong>, oclMat&amp; <strong>nMatches</strong>, float <strong>maxDistance</strong>, const std::vector&lt;oclMat&gt;&amp; <strong>masks</strong>=std::vector&lt;oclMat&gt;()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::radiusMatchCollection(const oclMat& query, oclMat& trainIdx, oclMat& imgIdx, oclMat& distance, oclMat& nMatches, float maxDistance, const std::vector<oclMat>& masks)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>query</strong> &#8211; Query set of descriptors.</li>
+<li><strong>train</strong> &#8211; Training set of descriptors. It is not added to train descriptors collection stored in the class object.</li>
+<li><strong>maxDistance</strong> &#8211; Distance threshold.</li>
+<li><strong>mask</strong> &#8211; Mask specifying permissible matches between the input query and train matrices of descriptors.</li>
+<li><strong>compactResult</strong> &#8211; If <code class="docutils literal"><span class="pre">compactResult</span></code> is <code class="docutils literal"><span class="pre">true</span></code> , the <code class="docutils literal"><span class="pre">matches</span></code> vector does not contain matches for fully masked-out query descriptors.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns detected matches in the increasing order by distance.</p>
+<p>The methods work only on devices with the compute capability  <img class="math" src="../../../_images/math/77ba74f8ac6e8c6a4b9d346c1b25348df352ddd0.png" alt="&gt;="/> 1.1.</p>
+<p>The third variant of the method stores the results in GPU memory and does not store the points by the distance.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../features2d/doc/common_interfaces_of_descriptor_matchers.html#void DescriptorMatcher::radiusMatch(const Mat&amp; queryDescriptors, const Mat&amp; trainDescriptors, vector&lt;vector&lt;DMatch&gt; &gt;&amp; matches, float maxDistance, const Mat&amp; mask, bool compactResult) const" title="void DescriptorMatcher::radiusMatch(const Mat&amp; queryDescriptors, const Mat&amp; trainDescriptors, vector&lt;vector&lt;DMatch&gt; &gt;&amp; matches, float maxDistance, const Mat&amp; mask, bool compactResult) const"><code class="xref ocv ocv-func docutils literal"><span class="pre">DescriptorMatcher::radiusMatch()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-bruteforcematcher-ocl-base-radiusmatchdownload">
+<h2>ocl::BruteForceMatcher_OCL_base::radiusMatchDownload<a class="headerlink" href="#ocl-bruteforcematcher-ocl-base-radiusmatchdownload" title="Permalink to this headline">¶</a></h2>
+<p>Downloads matrices obtained via <a class="reference internal" href="#void ocl::BruteForceMatcher_OCL_base::radiusMatchSingle(const oclMat&amp; query, const oclMat&amp; train, oclMat&amp; trainIdx, oclMat&amp; distance, oclMat&amp; nMatches, float maxDistance, const oclMat&amp; mask)" title="void ocl::BruteForceMatcher_OCL_base::radiusMatchSingle(const oclMat&amp; query, const oclMat&amp; train, oclMat&amp; trainIdx, oclMat&amp; distance, oclMat&amp; nMatches, float maxDistance, const oclMat&amp; mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::BruteForceMatcher_OCL_base::radiusMatchSingle()</span></code></a> or <a class="reference internal" href="#void ocl::BruteForceMatcher_OCL_base::radiusMatchCollection(const oclMat&amp; query, oclMat&amp; trainIdx, oclMat&amp; imgIdx, oclMat&amp; distance, oclMat&amp; nMatches, float maxDistance, const std::vector&lt;oclMat&gt;&amp; masks)" title="void ocl::BruteForceMatcher_OCL_base::radiusMatchCollection(const oclMat&amp; query, oclMat&amp; trainIdx, oclMat&amp; imgIdx, oclMat&amp; distance, oclMat&amp; nMatches, float maxDistance, const std::vector&lt;oclMat&gt;&amp; masks)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::BruteForceMatcher_OCL_base::radiusMatchCollection()</span></code></a> to vector with <code class="xref ocv ocv-class docutils literal"><span class="pre">DMatch</span></code>.</p>
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::radiusMatchDownload(const oclMat&amp; trainIdx, const oclMat&amp; distance, const oclMat&amp; nMatches, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp;matches, bool compactResult)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">radiusMatchDownload</code><span class="sig-paren">(</span>const oclMat&amp; <strong>trainIdx</strong>, const oclMat&amp; <strong>distance</strong>, const oclMat&amp; <strong>nMatches</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, bool <strong>compactResult</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::radiusMatchDownload(const oclMat& trainIdx, const oclMat& distance, const oclMat& nMatches, std::vector< std::vector<DMatch> >&matches, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::radiusMatchDownload(const oclMat&amp; trainIdx, const oclMat&amp; imgIdx, const oclMat&amp; distance, const oclMat&amp; nMatches, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp; matches, bool compactResult)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">radiusMatchDownload</code><span class="sig-paren">(</span>const oclMat&amp; <strong>trainIdx</strong>, const oclMat&amp; <strong>imgIdx</strong>, const oclMat&amp; <strong>distance</strong>, const oclMat&amp; <strong>nMatches</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, bool <strong>compactResult</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::radiusMatchDownload(const oclMat& trainIdx, const oclMat& imgIdx, const oclMat& distance, const oclMat& nMatches, std::vector< std::vector<DMatch> >& matches, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>If <code class="docutils literal"><span class="pre">compactResult</span></code> is <code class="docutils literal"><span class="pre">true</span></code> , the <code class="docutils literal"><span class="pre">matches</span></code> vector does not contain matches for fully masked-out query descriptors.</p>
+</div>
+<div class="section" id="ocl-bruteforcematcher-ocl-base-radiusmatchconvert">
+<h2>ocl::BruteForceMatcher_OCL_base::radiusMatchConvert<a class="headerlink" href="#ocl-bruteforcematcher-ocl-base-radiusmatchconvert" title="Permalink to this headline">¶</a></h2>
+<p>Converts matrices obtained via <a class="reference internal" href="#void ocl::BruteForceMatcher_OCL_base::radiusMatchSingle(const oclMat&amp; query, const oclMat&amp; train, oclMat&amp; trainIdx, oclMat&amp; distance, oclMat&amp; nMatches, float maxDistance, const oclMat&amp; mask)" title="void ocl::BruteForceMatcher_OCL_base::radiusMatchSingle(const oclMat&amp; query, const oclMat&amp; train, oclMat&amp; trainIdx, oclMat&amp; distance, oclMat&amp; nMatches, float maxDistance, const oclMat&amp; mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::BruteForceMatcher_OCL_base::radiusMatchSingle()</span></code></a> or <a class="reference internal" href="#void ocl::BruteForceMatcher_OCL_base::radiusMatchCollection(const oclMat&amp; query, oclMat&amp; trainIdx, oclMat&amp; imgIdx, oclMat&amp; distance, oclMat&amp; nMatches, float maxDistance, const std::vector&lt;oclMat&gt;&amp; masks)" title="void ocl::BruteForceMatcher_OCL_base::radiusMatchCollection(const oclMat&amp; query, oclMat&amp; trainIdx, oclMat&amp; imgIdx, oclMat&amp; distance, oclMat&amp; nMatches, float maxDistance, const std::vector&lt;oclMat&gt;&amp; masks)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::BruteForceMatcher_OCL_base::radiusMatchCollection()</span></code></a> to vector with <code class="xref ocv ocv-class docutils literal"><span class="pre">DMatch</span></code>.</p>
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::radiusMatchConvert(const Mat&amp; trainIdx, const Mat&amp; distance, const Mat&amp; nMatches, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp;matches, bool compactResult)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">radiusMatchConvert</code><span class="sig-paren">(</span>const Mat&amp; <strong>trainIdx</strong>, const Mat&amp; <strong>distance</strong>, const Mat&amp; <strong>nMatches</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, bool <strong>compactResult</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::radiusMatchConvert(const Mat& trainIdx, const Mat& distance, const Mat& nMatches, std::vector< std::vector<DMatch> >&matches, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::BruteForceMatcher_OCL_base::radiusMatchConvert(const Mat&amp; trainIdx, const Mat&amp; imgIdx, const Mat&amp; distance, const Mat&amp; nMatches, std::vector&lt; std::vector&lt;DMatch&gt; &gt;&amp; matches, bool compactResult)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BruteForceMatcher_OCL_base::</code><code class="descname">radiusMatchConvert</code><span class="sig-paren">(</span>const Mat&amp; <strong>trainIdx</strong>, const Mat&amp; <strong>imgIdx</strong>, const Mat&amp; <strong>distance</strong>, const Mat&amp; <strong>nMatches</strong>, std::vector&lt;std::vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, bool <strong>compactResult</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BruteForceMatcher_OCL_base::radiusMatchConvert(const Mat& trainIdx, const Mat& imgIdx, const Mat& distance, const Mat& nMatches, std::vector< std::vector<DMatch> >& matches, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>If <code class="docutils literal"><span class="pre">compactResult</span></code> is <code class="docutils literal"><span class="pre">true</span></code> , the <code class="docutils literal"><span class="pre">matches</span></code> vector does not contain matches for fully masked-out query descriptors.</p>
+</div>
+<div class="section" id="ocl-hogdescriptor">
+<h2>ocl::HOGDescriptor<a class="headerlink" href="#ocl-hogdescriptor" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="ocl::HOGDescriptor">
+<em class="property">struct </em><code class="descclassname">ocl::</code><code class="descname">HOGDescriptor</code><a class="headerlink" href="#ocl::HOGDescriptor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The class implements Histogram of Oriented Gradients (<a class="reference internal" href="../../gpu/doc/object_detection.html#dalal2005" id="id2">[Dalal2005]</a>) object detector.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">CV_EXPORTS</span> <span class="n">HOGDescriptor</span>
+<span class="p">{</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">DEFAULT_WIN_SIGMA</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="p">};</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">DEFAULT_NLEVELS</span> <span class="o">=</span> <span class="mi">64</span> <span class="p">};</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">DESCR_FORMAT_ROW_BY_ROW</span><span class="p">,</span> <span class="n">DESCR_FORMAT_COL_BY_COL</span> <span class="p">};</span>
+
+    <span class="n">HOGDescriptor</span><span class="p">(</span><span class="n">Size</span> <span class="n">win_size</span><span class="o">=</span><span class="n">Size</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span> <span class="n">Size</span> <span class="n">block_size</span><span class="o">=</span><span class="n">Size</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span>
+                  <span class="n">Size</span> <span class="n">block_stride</span><span class="o">=</span><span class="n">Size</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">Size</span> <span class="n">cell_size</span><span class="o">=</span><span class="n">Size</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+                  <span class="kt">int</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="kt">double</span> <span class="n">win_sigma</span><span class="o">=</span><span class="n">DEFAULT_WIN_SIGMA</span><span class="p">,</span>
+                  <span class="kt">double</span> <span class="n">threshold_L2hys</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">gamma_correction</span><span class="o">=</span><span class="nb">true</span><span class="p">,</span>
+                  <span class="kt">int</span> <span class="n">nlevels</span><span class="o">=</span><span class="n">DEFAULT_NLEVELS</span><span class="p">);</span>
+
+    <span class="kt">size_t</span> <span class="nf">getDescriptorSize</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">size_t</span> <span class="nf">getBlockHistogramSize</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">setSVMDetector</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">detector</span><span class="p">);</span>
+
+    <span class="k">static</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">getDefaultPeopleDetector</span><span class="p">();</span>
+    <span class="k">static</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">getPeopleDetector48x96</span><span class="p">();</span>
+    <span class="k">static</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">getPeopleDetector64x128</span><span class="p">();</span>
+
+    <span class="kt">void</span> <span class="nf">detect</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">img</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;&amp;</span> <span class="n">found_locations</span><span class="p">,</span>
+                <span class="kt">double</span> <span class="n">hit_threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">Size</span> <span class="n">win_stride</span><span class="o">=</span><span class="n">Size</span><span class="p">(),</span>
+                <span class="n">Size</span> <span class="n">padding</span><span class="o">=</span><span class="n">Size</span><span class="p">());</span>
+
+    <span class="kt">void</span> <span class="nf">detectMultiScale</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">img</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Rect</span><span class="o">&gt;&amp;</span> <span class="n">found_locations</span><span class="p">,</span>
+                          <span class="kt">double</span> <span class="n">hit_threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">Size</span> <span class="n">win_stride</span><span class="o">=</span><span class="n">Size</span><span class="p">(),</span>
+                          <span class="n">Size</span> <span class="n">padding</span><span class="o">=</span><span class="n">Size</span><span class="p">(),</span> <span class="kt">double</span> <span class="n">scale0</span><span class="o">=</span><span class="mf">1.05</span><span class="p">,</span>
+                          <span class="kt">int</span> <span class="n">group_threshold</span><span class="o">=</span><span class="mi">2</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">getDescriptors</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">img</span><span class="p">,</span> <span class="n">Size</span> <span class="n">win_stride</span><span class="p">,</span>
+                        <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">descriptors</span><span class="p">,</span>
+                        <span class="kt">int</span> <span class="n">descr_format</span><span class="o">=</span><span class="n">DESCR_FORMAT_COL_BY_COL</span><span class="p">);</span>
+
+    <span class="n">Size</span> <span class="n">win_size</span><span class="p">;</span>
+    <span class="n">Size</span> <span class="n">block_size</span><span class="p">;</span>
+    <span class="n">Size</span> <span class="n">block_stride</span><span class="p">;</span>
+    <span class="n">Size</span> <span class="n">cell_size</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">nbins</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">win_sigma</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">threshold_L2hys</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">gamma_correction</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">nlevels</span><span class="p">;</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="c1">// Hidden</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Interfaces of all methods are kept similar to the <code class="docutils literal"><span class="pre">CPU</span> <span class="pre">HOG</span></code> descriptor and detector analogues as much as possible.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">(Ocl) An example using the HOG descriptor can be found at opencv_source_code/samples/ocl/hog.cpp</p>
+</div>
+</div>
+<div class="section" id="ocl-hogdescriptor-hogdescriptor">
+<h2>ocl::HOGDescriptor::HOGDescriptor<a class="headerlink" href="#ocl-hogdescriptor-hogdescriptor" title="Permalink to this headline">¶</a></h2>
+<p>Creates the <code class="docutils literal"><span class="pre">HOG</span></code> descriptor and detector.</p>
+<dl class="function">
+<dt id="ocl::HOGDescriptor::HOGDescriptor(Size win_size, Size block_size, Size block_stride, Size cell_size, int nbins, double win_sigma, double threshold_L2hys, bool gamma_correction, int nlevels)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ocl::HOGDescriptor::</code><code class="descname">HOGDescriptor</code><span class="sig-paren">(</span>Size <strong>win_size</strong>=Size(64, 128), Size <strong>block_size</strong>=Size(16, 16), Size <strong>block_stride</strong>=Size(8, 8), Size <strong>cell_size</strong>=Size(8, 8), int <strong>nbins</strong>=9, double <strong>win_sigma</strong>=DEFAULT_WIN_SIGMA, double <strong>threshold_L2hys</strong>=0.2, bool <strong>gamma_correction</strong>=true, int <strong>nlevels</strong>=DEFAULT_NLEVELS<span class="sig-paren">)</span><a class="headerlink" href="#ocl::HOGDescriptor::HOGDescriptor(Size win_size, Size block_size, Size block_stride, Size cell_size, int nbins, double win_sigma, double threshold_L2hys, bool gamma_correction, int nlevels)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>win_size</strong> &#8211; Detection window size. Align to block size and block stride.</li>
+<li><strong>block_size</strong> &#8211; Block size in pixels. Align to cell size. Only (16,16) is supported for now.</li>
+<li><strong>block_stride</strong> &#8211; Block stride. It must be a multiple of cell size.</li>
+<li><strong>cell_size</strong> &#8211; Cell size. Only (8, 8) is supported for now.</li>
+<li><strong>nbins</strong> &#8211; Number of bins. Only 9 bins per cell are supported for now.</li>
+<li><strong>win_sigma</strong> &#8211; Gaussian smoothing window parameter.</li>
+<li><strong>threshold_L2hys</strong> &#8211; L2-Hys normalization method shrinkage.</li>
+<li><strong>gamma_correction</strong> &#8211; Flag to specify whether the gamma correction preprocessing is required or not.</li>
+<li><strong>nlevels</strong> &#8211; Maximum number of detection window increases.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-hogdescriptor-getdescriptorsize">
+<h2>ocl::HOGDescriptor::getDescriptorSize<a class="headerlink" href="#ocl-hogdescriptor-getdescriptorsize" title="Permalink to this headline">¶</a></h2>
+<p>Returns the number of coefficients required for the classification.</p>
+<dl class="function">
+<dt id="size_t ocl::HOGDescriptor::getDescriptorSize() const">
+<strong>C++:</strong><code class="descname"> </code>size_t <code class="descclassname">ocl::HOGDescriptor::</code><code class="descname">getDescriptorSize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#size_t ocl::HOGDescriptor::getDescriptorSize() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ocl-hogdescriptor-getblockhistogramsize">
+<h2>ocl::HOGDescriptor::getBlockHistogramSize<a class="headerlink" href="#ocl-hogdescriptor-getblockhistogramsize" title="Permalink to this headline">¶</a></h2>
+<p>Returns the block histogram size.</p>
+<dl class="function">
+<dt id="size_t ocl::HOGDescriptor::getBlockHistogramSize() const">
+<strong>C++:</strong><code class="descname"> </code>size_t <code class="descclassname">ocl::HOGDescriptor::</code><code class="descname">getBlockHistogramSize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#size_t ocl::HOGDescriptor::getBlockHistogramSize() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ocl-hogdescriptor-setsvmdetector">
+<h2>ocl::HOGDescriptor::setSVMDetector<a class="headerlink" href="#ocl-hogdescriptor-setsvmdetector" title="Permalink to this headline">¶</a></h2>
+<p>Sets coefficients for the linear SVM classifier.</p>
+<dl class="function">
+<dt id="void ocl::HOGDescriptor::setSVMDetector(const vector&lt;float&gt;&amp; detector)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::HOGDescriptor::</code><code class="descname">setSVMDetector</code><span class="sig-paren">(</span>const vector&lt;float&gt;&amp; <strong>detector</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::HOGDescriptor::setSVMDetector(const vector<float>& detector)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ocl-hogdescriptor-getdefaultpeopledetector">
+<h2>ocl::HOGDescriptor::getDefaultPeopleDetector<a class="headerlink" href="#ocl-hogdescriptor-getdefaultpeopledetector" title="Permalink to this headline">¶</a></h2>
+<p>Returns coefficients of the classifier trained for people detection (for default window size).</p>
+<dl class="function">
+<dt id="static vector&lt;float&gt; ocl::HOGDescriptor::getDefaultPeopleDetector()">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> vector&lt;float&gt; <code class="descclassname">ocl::HOGDescriptor::</code><code class="descname">getDefaultPeopleDetector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#static vector<float> ocl::HOGDescriptor::getDefaultPeopleDetector()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ocl-hogdescriptor-getpeopledetector48x96">
+<h2>ocl::HOGDescriptor::getPeopleDetector48x96<a class="headerlink" href="#ocl-hogdescriptor-getpeopledetector48x96" title="Permalink to this headline">¶</a></h2>
+<p>Returns coefficients of the classifier trained for people detection (for 48x96 windows).</p>
+<dl class="function">
+<dt id="static vector&lt;float&gt; ocl::HOGDescriptor::getPeopleDetector48x96()">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> vector&lt;float&gt; <code class="descclassname">ocl::HOGDescriptor::</code><code class="descname">getPeopleDetector48x96</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#static vector<float> ocl::HOGDescriptor::getPeopleDetector48x96()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ocl-hogdescriptor-getpeopledetector64x128">
+<h2>ocl::HOGDescriptor::getPeopleDetector64x128<a class="headerlink" href="#ocl-hogdescriptor-getpeopledetector64x128" title="Permalink to this headline">¶</a></h2>
+<p>Returns coefficients of the classifier trained for people detection (for 64x128 windows).</p>
+<dl class="function">
+<dt id="static vector&lt;float&gt; ocl::HOGDescriptor::getPeopleDetector64x128()">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> vector&lt;float&gt; <code class="descclassname">ocl::HOGDescriptor::</code><code class="descname">getPeopleDetector64x128</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#static vector<float> ocl::HOGDescriptor::getPeopleDetector64x128()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ocl-hogdescriptor-detect">
+<h2>ocl::HOGDescriptor::detect<a class="headerlink" href="#ocl-hogdescriptor-detect" title="Permalink to this headline">¶</a></h2>
+<p>Performs object detection without a multi-scale window.</p>
+<dl class="function">
+<dt id="void ocl::HOGDescriptor::detect(const oclMat&amp; img, vector&lt;Point&gt;&amp; found_locations, double hit_threshold, Size win_stride, Size padding)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::HOGDescriptor::</code><code class="descname">detect</code><span class="sig-paren">(</span>const oclMat&amp; <strong>img</strong>, vector&lt;Point&gt;&amp; <strong>found_locations</strong>, double <strong>hit_threshold</strong>=0, Size <strong>win_stride</strong>=Size(), Size <strong>padding</strong>=Size()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::HOGDescriptor::detect(const oclMat& img, vector<Point>& found_locations, double hit_threshold, Size win_stride, Size padding)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img</strong> &#8211; Source image.  <code class="docutils literal"><span class="pre">CV_8UC1</span></code>  and  <code class="docutils literal"><span class="pre">CV_8UC4</span></code> types are supported for now.</li>
+<li><strong>found_locations</strong> &#8211; Left-top corner points of detected objects boundaries.</li>
+<li><strong>hit_threshold</strong> &#8211; Threshold for the distance between features and SVM classifying plane. Usually it is 0 and should be specfied in the detector coefficients (as the last free coefficient). But if the free coefficient is omitted (which is allowed), you can specify it manually here.</li>
+<li><strong>win_stride</strong> &#8211; Window stride. It must be a multiple of block stride.</li>
+<li><strong>padding</strong> &#8211; Mock parameter to keep the CPU interface compatibility. It must be (0,0).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-hogdescriptor-detectmultiscale">
+<h2>ocl::HOGDescriptor::detectMultiScale<a class="headerlink" href="#ocl-hogdescriptor-detectmultiscale" title="Permalink to this headline">¶</a></h2>
+<p>Performs object detection with a multi-scale window.</p>
+<dl class="function">
+<dt id="void ocl::HOGDescriptor::detectMultiScale(const oclMat&amp; img, vector&lt;Rect&gt;&amp; found_locations, double hit_threshold, Size win_stride, Size padding, double scale0, int group_threshold)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::HOGDescriptor::</code><code class="descname">detectMultiScale</code><span class="sig-paren">(</span>const oclMat&amp; <strong>img</strong>, vector&lt;Rect&gt;&amp; <strong>found_locations</strong>, double <strong>hit_threshold</strong>=0, Size <strong>win_stride</strong>=Size(), Size <strong>padding</strong>=Size(), double <strong>scale0</strong>=1.05, int <strong>group_threshold</strong>=2<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::HOGDescriptor::detectMultiScale(const oclMat& img, vector<Rect>& found_locations, double hit_threshold, Size win_stride, Size padding, double scale0, int group_threshold)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img</strong> &#8211; Source image. See  <a class="reference internal" href="#void ocl::HOGDescriptor::detect(const oclMat&amp; img, vector&lt;Point&gt;&amp; found_locations, double hit_threshold, Size win_stride, Size padding)" title="void ocl::HOGDescriptor::detect(const oclMat&amp; img, vector&lt;Point&gt;&amp; found_locations, double hit_threshold, Size win_stride, Size padding)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::HOGDescriptor::detect()</span></code></a>  for type limitations.</li>
+<li><strong>found_locations</strong> &#8211; Detected objects boundaries.</li>
+<li><strong>hit_threshold</strong> &#8211; Threshold for the distance between features and SVM classifying plane. See  <a class="reference internal" href="#void ocl::HOGDescriptor::detect(const oclMat&amp; img, vector&lt;Point&gt;&amp; found_locations, double hit_threshold, Size win_stride, Size padding)" title="void ocl::HOGDescriptor::detect(const oclMat&amp; img, vector&lt;Point&gt;&amp; found_locations, double hit_threshold, Size win_stride, Size padding)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::HOGDescriptor::detect()</span></code></a>  for details.</li>
+<li><strong>win_stride</strong> &#8211; Window stride. It must be a multiple of block stride.</li>
+<li><strong>padding</strong> &#8211; Mock parameter to keep the CPU interface compatibility. It must be (0,0).</li>
+<li><strong>scale0</strong> &#8211; Coefficient of the detection window increase.</li>
+<li><strong>group_threshold</strong> &#8211; Coefficient to regulate the similarity threshold. When detected, some objects can be covered by many rectangles. 0 means not to perform grouping. See  <a class="reference internal" href="../../objdetect/doc/cascade_classification.html#void groupRectangles(vector&lt;Rect&gt;&amp; rectList, int groupThreshold, double eps)" title="void groupRectangles(vector&lt;Rect&gt;&amp; rectList, int groupThreshold, double eps)"><code class="xref ocv ocv-func docutils literal"><span class="pre">groupRectangles()</span></code></a> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-hogdescriptor-getdescriptors">
+<h2>ocl::HOGDescriptor::getDescriptors<a class="headerlink" href="#ocl-hogdescriptor-getdescriptors" title="Permalink to this headline">¶</a></h2>
+<p>Returns block descriptors computed for the whole image.</p>
+<dl class="function">
+<dt id="void ocl::HOGDescriptor::getDescriptors(const oclMat&amp; img, Size win_stride, oclMat&amp; descriptors, int descr_format)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::HOGDescriptor::</code><code class="descname">getDescriptors</code><span class="sig-paren">(</span>const oclMat&amp; <strong>img</strong>, Size <strong>win_stride</strong>, oclMat&amp; <strong>descriptors</strong>, int <strong>descr_format</strong>=DESCR_FORMAT_COL_BY_COL<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::HOGDescriptor::getDescriptors(const oclMat& img, Size win_stride, oclMat& descriptors, int descr_format)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img</strong> &#8211; Source image. See  <a class="reference internal" href="#void ocl::HOGDescriptor::detect(const oclMat&amp; img, vector&lt;Point&gt;&amp; found_locations, double hit_threshold, Size win_stride, Size padding)" title="void ocl::HOGDescriptor::detect(const oclMat&amp; img, vector&lt;Point&gt;&amp; found_locations, double hit_threshold, Size win_stride, Size padding)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::HOGDescriptor::detect()</span></code></a>  for type limitations.</li>
+<li><strong>win_stride</strong> &#8211; Window stride. It must be a multiple of block stride.</li>
+<li><strong>descriptors</strong> &#8211; 2D array of descriptors.</li>
+<li><strong>descr_format</strong> &#8211; <p>Descriptor storage format:</p>
+<ul>
+<li><strong>DESCR_FORMAT_ROW_BY_ROW</strong> - Row-major order.</li>
+<li><strong>DESCR_FORMAT_COL_BY_COL</strong> - Column-major order.</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function is mainly used to learn the classifier.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Feature Detection And Description</a><ul>
+<li><a class="reference internal" href="#ocl-canny">ocl::Canny</a></li>
+<li><a class="reference internal" href="#ocl-bruteforcematcher-ocl-base">ocl::BruteForceMatcher_OCL_base</a></li>
+<li><a class="reference internal" href="#ocl-bruteforcematcher-ocl-base-match">ocl::BruteForceMatcher_OCL_base::match</a></li>
+<li><a class="reference internal" href="#ocl-bruteforcematcher-ocl-base-makegpucollection">ocl::BruteForceMatcher_OCL_base::makeGpuCollection</a></li>
+<li><a class="reference internal" href="#ocl-bruteforcematcher-ocl-base-matchdownload">ocl::BruteForceMatcher_OCL_base::matchDownload</a></li>
+<li><a class="reference internal" href="#ocl-bruteforcematcher-ocl-base-matchconvert">ocl::BruteForceMatcher_OCL_base::matchConvert</a></li>
+<li><a class="reference internal" href="#ocl-bruteforcematcher-ocl-base-knnmatch">ocl::BruteForceMatcher_OCL_base::knnMatch</a></li>
+<li><a class="reference internal" href="#ocl-bruteforcematcher-ocl-base-knnmatchdownload">ocl::BruteForceMatcher_OCL_base::knnMatchDownload</a></li>
+<li><a class="reference internal" href="#ocl-bruteforcematcher-ocl-base-knnmatchconvert">ocl::BruteForceMatcher_OCL_base::knnMatchConvert</a></li>
+<li><a class="reference internal" href="#ocl-bruteforcematcher-ocl-base-radiusmatch">ocl::BruteForceMatcher_OCL_base::radiusMatch</a></li>
+<li><a class="reference internal" href="#ocl-bruteforcematcher-ocl-base-radiusmatchdownload">ocl::BruteForceMatcher_OCL_base::radiusMatchDownload</a></li>
+<li><a class="reference internal" href="#ocl-bruteforcematcher-ocl-base-radiusmatchconvert">ocl::BruteForceMatcher_OCL_base::radiusMatchConvert</a></li>
+<li><a class="reference internal" href="#ocl-hogdescriptor">ocl::HOGDescriptor</a></li>
+<li><a class="reference internal" href="#ocl-hogdescriptor-hogdescriptor">ocl::HOGDescriptor::HOGDescriptor</a></li>
+<li><a class="reference internal" href="#ocl-hogdescriptor-getdescriptorsize">ocl::HOGDescriptor::getDescriptorSize</a></li>
+<li><a class="reference internal" href="#ocl-hogdescriptor-getblockhistogramsize">ocl::HOGDescriptor::getBlockHistogramSize</a></li>
+<li><a class="reference internal" href="#ocl-hogdescriptor-setsvmdetector">ocl::HOGDescriptor::setSVMDetector</a></li>
+<li><a class="reference internal" href="#ocl-hogdescriptor-getdefaultpeopledetector">ocl::HOGDescriptor::getDefaultPeopleDetector</a></li>
+<li><a class="reference internal" href="#ocl-hogdescriptor-getpeopledetector48x96">ocl::HOGDescriptor::getPeopleDetector48x96</a></li>
+<li><a class="reference internal" href="#ocl-hogdescriptor-getpeopledetector64x128">ocl::HOGDescriptor::getPeopleDetector64x128</a></li>
+<li><a class="reference internal" href="#ocl-hogdescriptor-detect">ocl::HOGDescriptor::detect</a></li>
+<li><a class="reference internal" href="#ocl-hogdescriptor-detectmultiscale">ocl::HOGDescriptor::detectMultiScale</a></li>
+<li><a class="reference internal" href="#ocl-hogdescriptor-getdescriptors">ocl::HOGDescriptor::getDescriptors</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="object_detection.html"
+                        title="previous chapter">Object Detection</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="video_analysis.html"
+                        title="next chapter">Video Analysis</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/ocl/doc/feature_detection_and_description.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="video_analysis.html" title="Video Analysis"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="object_detection.html" title="Object Detection"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" >ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Transformations &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="OpenCV Viz" href="../table_of_content_viz/table_of_content_viz.html" />
+    <link rel="next" title="Creating Widgets" href="../creating_widgets/creating_widgets.html" />
+    <link rel="prev" title="Pose of a widget" href="../widget_pose/widget_pose.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../creating_widgets/creating_widgets.html" title="Creating Widgets"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../widget_pose/widget_pose.html" title="Pose of a widget"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_viz/table_of_content_viz.html" accesskey="U"><strong>OpenCV Viz</strong></a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="transformations">
+<span id="id1"></span><h1>Transformations<a class="headerlink" href="#transformations" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>How to use makeTransformToGlobal to compute pose</li>
+<li>How to use makeCameraPose and Viz3d::setViewerPose</li>
+<li>How to visualize camera position by axes and by viewing frustum</li>
+</ul>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<p>You can download the code from <a class="reference download internal" href="../../../../_downloads/transformations.cpp" download=""><code class="xref download docutils literal"><span class="pre">here</span></code></a>.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&lt;opencv2/viz/vizcore.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @function cvcloud_load</span>
+<span class="cm"> * @brief load bunny.ply</span>
+<span class="cm"> */</span>
+<span class="n">Mat</span> <span class="nf">cvcloud_load</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Mat</span> <span class="n">cloud</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1889</span><span class="p">,</span> <span class="n">CV_32FC3</span><span class="p">);</span>
+    <span class="n">ifstream</span> <span class="n">ifs</span><span class="p">(</span><span class="s">&quot;bunny.ply&quot;</span><span class="p">);</span>
+
+    <span class="n">string</span> <span class="n">str</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">12</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">getline</span><span class="p">(</span><span class="n">ifs</span><span class="p">,</span> <span class="n">str</span><span class="p">);</span>
+
+    <span class="n">Point3f</span><span class="o">*</span> <span class="n">data</span> <span class="o">=</span> <span class="n">cloud</span><span class="p">.</span><span class="n">ptr</span><span class="o">&lt;</span><span class="n">cv</span><span class="o">::</span><span class="n">Point3f</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="kt">float</span> <span class="n">dummy1</span><span class="p">,</span> <span class="n">dummy2</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">1889</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">ifs</span> <span class="o">&gt;&gt;</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">y</span> <span class="o">&gt;&gt;</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">z</span> <span class="o">&gt;&gt;</span> <span class="n">dummy1</span> <span class="o">&gt;&gt;</span> <span class="n">dummy2</span><span class="p">;</span>
+
+    <span class="n">cloud</span> <span class="o">*=</span> <span class="mf">5.0f</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">cloud</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @function main</span>
+<span class="cm"> */</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argn</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">argn</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Usage: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;./transformations [ G | C ]&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">bool</span> <span class="n">camera_pov</span> <span class="o">=</span> <span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="sc">&#39;C&#39;</span><span class="p">);</span>
+
+    <span class="c1">/// Create a window</span>
+    <span class="n">viz</span><span class="o">::</span><span class="n">Viz3d</span> <span class="n">myWindow</span><span class="p">(</span><span class="s">&quot;Coordinate Frame&quot;</span><span class="p">);</span>
+
+    <span class="c1">/// Add coordinate axes</span>
+    <span class="n">myWindow</span><span class="p">.</span><span class="n">showWidget</span><span class="p">(</span><span class="s">&quot;Coordinate Widget&quot;</span><span class="p">,</span> <span class="n">viz</span><span class="o">::</span><span class="n">WCoordinateSystem</span><span class="p">());</span>
+
+    <span class="c1">/// Let&#39;s assume camera has the following properties</span>
+    <span class="n">Point3f</span> <span class="n">cam_pos</span><span class="p">(</span><span class="mf">3.0f</span><span class="p">,</span><span class="mf">3.0f</span><span class="p">,</span><span class="mf">3.0f</span><span class="p">),</span> <span class="n">cam_focal_point</span><span class="p">(</span><span class="mf">3.0f</span><span class="p">,</span><span class="mf">3.0f</span><span class="p">,</span><span class="mf">2.0f</span><span class="p">),</span> <span class="n">cam_y_dir</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">);</span>
+
+    <span class="c1">/// We can get the pose of the cam using makeCameraPose</span>
+    <span class="n">Affine3f</span> <span class="n">cam_pose</span> <span class="o">=</span> <span class="n">viz</span><span class="o">::</span><span class="n">makeCameraPose</span><span class="p">(</span><span class="n">cam_pos</span><span class="p">,</span> <span class="n">cam_focal_point</span><span class="p">,</span> <span class="n">cam_y_dir</span><span class="p">);</span>
+
+    <span class="c1">/// We can get the transformation matrix from camera coordinate system to global using</span>
+    <span class="c1">/// - makeTransformToGlobal. We need the axes of the camera</span>
+    <span class="n">Affine3f</span> <span class="n">transform</span> <span class="o">=</span> <span class="n">viz</span><span class="o">::</span><span class="n">makeTransformToGlobal</span><span class="p">(</span><span class="n">Vec3f</span><span class="p">(</span><span class="mf">0.0f</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">),</span> <span class="n">Vec3f</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">),</span> <span class="n">Vec3f</span><span class="p">(</span><span class="mf">0.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0f</span><span class="p">),</span> <span class="n">cam_pos</span><span class="p">);</span>
+
+    <span class="c1">/// Create a cloud widget.</span>
+    <span class="n">Mat</span> <span class="n">bunny_cloud</span> <span class="o">=</span> <span class="n">cvcloud_load</span><span class="p">();</span>
+    <span class="n">viz</span><span class="o">::</span><span class="n">WCloud</span> <span class="n">cloud_widget</span><span class="p">(</span><span class="n">bunny_cloud</span><span class="p">,</span> <span class="n">viz</span><span class="o">::</span><span class="n">Color</span><span class="o">::</span><span class="n">green</span><span class="p">());</span>
+
+    <span class="c1">/// Pose of the widget in camera frame</span>
+    <span class="n">Affine3f</span> <span class="n">cloud_pose</span> <span class="o">=</span> <span class="n">Affine3f</span><span class="p">().</span><span class="n">translate</span><span class="p">(</span><span class="n">Vec3f</span><span class="p">(</span><span class="mf">0.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">,</span><span class="mf">3.0f</span><span class="p">));</span>
+    <span class="c1">/// Pose of the widget in global frame</span>
+    <span class="n">Affine3f</span> <span class="n">cloud_pose_global</span> <span class="o">=</span> <span class="n">transform</span> <span class="o">*</span> <span class="n">cloud_pose</span><span class="p">;</span>
+
+    <span class="c1">/// Visualize camera frame</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">camera_pov</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">viz</span><span class="o">::</span><span class="n">WCameraPosition</span> <span class="n">cpw</span><span class="p">(</span><span class="mf">0.5</span><span class="p">);</span> <span class="c1">// Coordinate axes</span>
+        <span class="n">viz</span><span class="o">::</span><span class="n">WCameraPosition</span> <span class="n">cpw_frustum</span><span class="p">(</span><span class="n">Vec2f</span><span class="p">(</span><span class="mf">0.889484</span><span class="p">,</span> <span class="mf">0.523599</span><span class="p">));</span> <span class="c1">// Camera frustum</span>
+        <span class="n">myWindow</span><span class="p">.</span><span class="n">showWidget</span><span class="p">(</span><span class="s">&quot;CPW&quot;</span><span class="p">,</span> <span class="n">cpw</span><span class="p">,</span> <span class="n">cam_pose</span><span class="p">);</span>
+        <span class="n">myWindow</span><span class="p">.</span><span class="n">showWidget</span><span class="p">(</span><span class="s">&quot;CPW_FRUSTUM&quot;</span><span class="p">,</span> <span class="n">cpw_frustum</span><span class="p">,</span> <span class="n">cam_pose</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">/// Visualize widget</span>
+    <span class="n">myWindow</span><span class="p">.</span><span class="n">showWidget</span><span class="p">(</span><span class="s">&quot;bunny&quot;</span><span class="p">,</span> <span class="n">cloud_widget</span><span class="p">,</span> <span class="n">cloud_pose_global</span><span class="p">);</span>
+
+    <span class="c1">/// Set the viewer pose to that of camera</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">camera_pov</span><span class="p">)</span>
+        <span class="n">myWindow</span><span class="p">.</span><span class="n">setViewerPose</span><span class="p">(</span><span class="n">cam_pose</span><span class="p">);</span>
+
+    <span class="c1">/// Start event loop.</span>
+    <span class="n">myWindow</span><span class="p">.</span><span class="n">spin</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<p>Here is the general structure of the program:</p>
+<ul class="simple">
+<li>Create a visualization window.</li>
+</ul>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">/// Create a window</span>
+<span class="n">viz</span><span class="o">::</span><span class="n">Viz3d</span> <span class="n">myWindow</span><span class="p">(</span><span class="s">&quot;Transformations&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Get camera pose from camera position, camera focal point and y direction.</li>
+</ul>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">/// Let&#39;s assume camera has the following properties</span>
+<span class="n">Point3f</span> <span class="nf">cam_pos</span><span class="p">(</span><span class="mf">3.0f</span><span class="p">,</span><span class="mf">3.0f</span><span class="p">,</span><span class="mf">3.0f</span><span class="p">),</span> <span class="n">cam_focal_point</span><span class="p">(</span><span class="mf">3.0f</span><span class="p">,</span><span class="mf">3.0f</span><span class="p">,</span><span class="mf">2.0f</span><span class="p">),</span> <span class="n">cam_y_dir</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">);</span>
+
+<span class="c1">/// We can get the pose of the cam using makeCameraPose</span>
+<span class="n">Affine3f</span> <span class="n">cam_pose</span> <span class="o">=</span> <span class="n">viz</span><span class="o">::</span><span class="n">makeCameraPose</span><span class="p">(</span><span class="n">cam_pos</span><span class="p">,</span> <span class="n">cam_focal_point</span><span class="p">,</span> <span class="n">cam_y_dir</span><span class="p">);</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Obtain transform matrix knowing the axes of camera coordinate system.</li>
+</ul>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">/// We can get the transformation matrix from camera coordinate system to global using</span>
+<span class="c1">/// - makeTransformToGlobal. We need the axes of the camera</span>
+<span class="n">Affine3f</span> <span class="n">transform</span> <span class="o">=</span> <span class="n">viz</span><span class="o">::</span><span class="n">makeTransformToGlobal</span><span class="p">(</span><span class="n">Vec3f</span><span class="p">(</span><span class="mf">0.0f</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">),</span> <span class="n">Vec3f</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">),</span> <span class="n">Vec3f</span><span class="p">(</span><span class="mf">0.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0f</span><span class="p">),</span> <span class="n">cam_pos</span><span class="p">);</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Create a cloud widget from bunny.ply file</li>
+</ul>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">/// Create a cloud widget.</span>
+<span class="n">Mat</span> <span class="n">bunny_cloud</span> <span class="o">=</span> <span class="n">cvcloud_load</span><span class="p">();</span>
+<span class="n">viz</span><span class="o">::</span><span class="n">WCloud</span> <span class="n">cloud_widget</span><span class="p">(</span><span class="n">bunny_cloud</span><span class="p">,</span> <span class="n">viz</span><span class="o">::</span><span class="n">Color</span><span class="o">::</span><span class="n">green</span><span class="p">());</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Given the pose in camera coordinate system, estimate the global pose.</li>
+</ul>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">/// Pose of the widget in camera frame</span>
+<span class="n">Affine3f</span> <span class="n">cloud_pose</span> <span class="o">=</span> <span class="n">Affine3f</span><span class="p">().</span><span class="n">translate</span><span class="p">(</span><span class="n">Vec3f</span><span class="p">(</span><span class="mf">0.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">,</span><span class="mf">3.0f</span><span class="p">));</span>
+<span class="c1">/// Pose of the widget in global frame</span>
+<span class="n">Affine3f</span> <span class="n">cloud_pose_global</span> <span class="o">=</span> <span class="n">transform</span> <span class="o">*</span> <span class="n">cloud_pose</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>If the view point is set to be global, visualize camera coordinate frame and viewing frustum.</li>
+</ul>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">/// Visualize camera frame</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">camera_pov</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">viz</span><span class="o">::</span><span class="n">WCameraPosition</span> <span class="n">cpw</span><span class="p">(</span><span class="mf">0.5</span><span class="p">);</span> <span class="c1">// Coordinate axes</span>
+    <span class="n">viz</span><span class="o">::</span><span class="n">WCameraPosition</span> <span class="n">cpw_frustum</span><span class="p">(</span><span class="n">Vec2f</span><span class="p">(</span><span class="mf">0.889484</span><span class="p">,</span> <span class="mf">0.523599</span><span class="p">));</span> <span class="c1">// Camera frustum</span>
+    <span class="n">myWindow</span><span class="p">.</span><span class="n">showWidget</span><span class="p">(</span><span class="s">&quot;CPW&quot;</span><span class="p">,</span> <span class="n">cpw</span><span class="p">,</span> <span class="n">cam_pose</span><span class="p">);</span>
+    <span class="n">myWindow</span><span class="p">.</span><span class="n">showWidget</span><span class="p">(</span><span class="s">&quot;CPW_FRUSTUM&quot;</span><span class="p">,</span> <span class="n">cpw_frustum</span><span class="p">,</span> <span class="n">cam_pose</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Visualize the cloud widget with the estimated global pose</li>
+</ul>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">/// Visualize widget</span>
+<span class="n">myWindow</span><span class="p">.</span><span class="n">showWidget</span><span class="p">(</span><span class="s">&quot;bunny&quot;</span><span class="p">,</span> <span class="n">cloud_widget</span><span class="p">,</span> <span class="n">cloud_pose_global</span><span class="p">);</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>If the view point is set to be camera&#8217;s, set viewer pose to <strong>cam_pose</strong>.</li>
+</ul>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">/// Set the viewer pose to that of camera</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">camera_pov</span><span class="p">)</span>
+    <span class="n">myWindow</span><span class="p">.</span><span class="n">setViewerPose</span><span class="p">(</span><span class="n">cam_pose</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Here is the result from the camera point of view.</p>
+<blockquote>
+<div><img alt="Camera Viewpoint" class="align-center" src="../../../../_images/camera_view_point.png" />
+</div></blockquote>
+</li>
+<li><p class="first">Here is the result from global point of view.</p>
+<blockquote>
+<div><img alt="Global Viewpoint" class="align-center" src="../../../../_images/global_view_point1.png" />
+</div></blockquote>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Transformations</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#results">Results</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../widget_pose/widget_pose.html"
+                        title="previous chapter">Pose of a widget</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../creating_widgets/creating_widgets.html"
+                        title="next chapter">Creating Widgets</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/viz/transformations/transformations.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../creating_widgets/creating_widgets.html" title="Creating Widgets"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../widget_pose/widget_pose.html" title="Pose of a widget"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_viz/table_of_content_viz.html" ><strong>OpenCV Viz</strong></a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

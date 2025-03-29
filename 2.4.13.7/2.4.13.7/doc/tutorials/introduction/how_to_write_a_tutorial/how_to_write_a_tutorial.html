@@ -1,0 +1,501 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>How to write a tutorial for OpenCV &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="Introduction to OpenCV" href="../table_of_content_introduction/table_of_content_introduction.html" />
+    <link rel="next" title="core module. The Core Functionality" href="../../core/table_of_content_core/table_of_content_core.html" />
+    <link rel="prev" title="Load, Modify, and Save an Image" href="../load_save_image/load_save_image.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../core/table_of_content_core/table_of_content_core.html" title="core module. The Core Functionality"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../load_save_image/load_save_image.html" title="Load, Modify, and Save an Image"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_introduction/table_of_content_introduction.html" accesskey="U">Introduction to OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="how-to-write-a-tutorial-for-opencv">
+<span id="howtowritetutorial"></span><h1>How to write a tutorial for OpenCV<a class="headerlink" href="#how-to-write-a-tutorial-for-opencv" title="Permalink to this headline">¶</a></h1>
+<p>Okay, so assume you have just finished a project of yours implementing something
+based on OpenCV and you want to present/share it with the community. Luckily, OpenCV
+is an <em>open source project</em>. This means that anyone has access to the full source
+code and may propose extensions. And a good tutorial is a valuable addition to the
+library! Please read instructions on the contribution process here:
+<a class="reference external" href="http://opencv.org/contribute.html">http://opencv.org/contribute.html</a>. You may also find this page helpful:
+<a class="reference external" href="https://github.com/opencv/opencv/wiki/How_to_contribute/">How to contribute</a>.</p>
+<p>While making a robust and practical library (like OpenCV) is great, the success of a
+library also depends on how user friendly it is. To improve on this aspect, the
+OpenCV team has already been listening to user feedback at <a class="reference external" href="http://answers.opencv.org/">OpenCV Q&amp;A
+forum</a> and by making samples you can find in the source directories
+<code class="file docutils literal"><span class="pre">samples</span></code> folder. The addition of the tutorials (in both online and PDF format)
+is an extension of these efforts.</p>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>The tutorials are just as an important part of the library as the implementation of
+those crafty data structures and algorithms you can find in OpenCV. Therefore, the
+source codes for the tutorials are part of the library. And yes, I meant source
+codes. The reason for this formulation is that the tutorials are written by using the
+<a class="reference external" href="http://sphinx.pocoo.org/">Sphinx</a> documentation generation system. This is based on the popular Python
+documentation system called <a class="reference external" href="http://docutils.sourceforge.net/rst.html">reStructuredText</a> (reST). ReStructuredText is a really neat
+language that by using a few simple conventions (indentation, directives) and
+emulating old school email writing techniques (text only) tries to offer a simple
+way to create and edit documents. Sphinx extends this with some new features and
+creates the resulting document in both HTML (for web) and PDF (for offline usage)
+format.</p>
+<p>Usually, an OpenCV tutorial has the following parts:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>A source code demonstration of an OpenCV feature:</li>
+</ol>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li>One or more CPP, Python, Java or other type of files depending for what OpenCV offers support and for what language you make the tutorial.</li>
+<li>Occasionaly, input resource files required for running your tutorials application.</li>
+</ol>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li>A table of content entry (so people may easily find the tutorial):</li>
+</ol>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li>Adding your stuff to the tutorials table of content (<strong>reST</strong> file).</li>
+<li>Add an image file near the TOC entry.</li>
+</ol>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li>The content of the tutorial itself:</li>
+</ol>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li>The <strong>reST</strong> text of the tutorial</li>
+<li>Images following the idea that &#8220;<em>A picture is worth a thousand words</em>&#8221;.</li>
+<li>For more complex demonstrations you may create a video.</li>
+</ol>
+</div></blockquote>
+</div></blockquote>
+<p>As you can see you will need at least some basic knowledge of the <em>reST</em> system in order to complete the task at hand with success. However, don&#8217;t worry: <em>reST</em> (and <em>Sphinx</em>) was made with simplicity in mind. It is easy to grasp its basics. I found that the <a class="reference external" href="http://openalea.gforge.inria.fr/doc/openalea/doc/_build/html/source/tutorial/rest_syntax.html">OpenAlea documentations introduction on this subject</a> (or the <a class="reference external" href="http://thomas-cokelaer.info/tutorials/sphinx/rest_syntax.html">Thomas Cokelaer one</a>) to be enough for this. If for some directive or feature you need a more in-depth description look it up in the official <a class="reference external" href="http://docutils.sourceforge.net/rst.html">reStructuredText</a> help files or at the <a class="reference external" href="http://sphinx.pocoo.org/">Sphinx</a> documentation.</p>
+<p>In our world, achieving some tasks is possible in multiple ways. However, some of the roads to take may have obvious or hidden advantages over others. Then again, in some other cases it may come down to just simple user preference. Here, I&#8217;ll present how I decided to write the tutorials, based on my personal experience. If for some of them you know a better solution and you can back it up feel free to use that. I&#8217;ve nothing against it, as long as it gets the job done in an elegant fashion.</p>
+<p>Now the best option would be to do the integration yourself. For this, you first need to have the source code. I recommend following the guides for your operating system on acquiring OpenCV sources. For Linux users look <a class="reference internal" href="../linux_install/linux_install.html#linux-installation"><span>here</span></a> and for <a class="reference internal" href="../windows_install/windows_install.html#windows-installation"><span>Windows here</span></a>. You must also install python and sphinx with its dependencies in order to be able to build the documentation.</p>
+<p>Once you have downloaded the repository to your hard drive you can take a look in the OpenCV directory to make sure you have both the samples and doc folder present. Anyone may download the latest source files from <code class="file docutils literal"><span class="pre">git://github.com/opencv/opencv.git</span></code>. Nevertheless, not everyone has upload (commit/submit) rights. This is to protect the integrity of the library. If you plan doing more than one tutorial, and would like to have an account with commit user rights you should first register an account at <a class="reference external" href="http://code.opencv.org/">http://code.opencv.org/</a> and then contact OpenCV administrator <a class="reference external" href="mailto:-delete-admin&#37;&#52;&#48;-delete-opencv&#46;org">-delete-admin<span>&#64;</span>-delete-opencv<span>&#46;</span>org</a>. Otherwise, you can just send the resulting files to us at <a class="reference external" href="mailto:-delete-admin&#37;&#52;&#48;-delete-opencv&#46;org">-delete-admin<span>&#64;</span>-delete-opencv<span>&#46;</span>org</a> and we&#8217;ll add it.</p>
+</div>
+<div class="section" id="format-the-source-code">
+<h2>Format the Source Code<a class="headerlink" href="#format-the-source-code" title="Permalink to this headline">¶</a></h2>
+<p>Before I start this let it be clear: the main goal is to have a working sample code. However, for your tutorial to be of a top notch quality you should follow a few guidelines I am going to present here. In case you have an application using the older interface (with <em>IplImage</em>, <em>cvMat</em>, <em>cvLoadImage</em> and such) consider migrating it to the new C++ interface. The tutorials are intended to be an up to date help for our users. And as of OpenCV 2, the OpenCV emphasis is on using the less error prone and clearer C++ interface. Therefore, if possible, please convert your code to the C++ interface. For this it may help to read the <a class="reference internal" href="../../core/interoperability_with_OpenCV_1/interoperability_with_OpenCV_1.html#interoperabilitywithopencv1"><span>Interoperability with OpenCV 1</span></a> tutorial. However, once you have working OpenCV 2 code, then you should make your source code snippet as easy to read as possible. Here is some advice for this:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first">Add a standard output with the description of what your program does. Keep it short, but descriptive. This output is at the start of the program. In my example files this usually takes the form of a <em>help</em> function containing the output. This way, both the source file viewer and application runner can see what your sample is all about. Here&#8217;s an example of this:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">void</span> <span class="nf">help</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="n">cout</span>
+<span class="o">&lt;&lt;</span> <span class="s">&quot;--------------------------------------------------------------------------&quot;</span>   <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+<span class="o">&lt;&lt;</span> <span class="s">&quot;This program shows how to write video files. You can extract the R or G or B color channel &quot;</span>
+<span class="o">&lt;&lt;</span> <span class="s">&quot; of the input video. You can choose to use the source codec (Y) or select a custom one. (N)&quot;</span><span class="o">&lt;&lt;</span> <span class="n">endl</span>
+<span class="o">&lt;&lt;</span> <span class="s">&quot;Usage:&quot;</span>                                                                       <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+<span class="o">&lt;&lt;</span> <span class="s">&quot;./video-write inputvideoName [ R | G | B] [Y | N]&quot;</span>                            <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+<span class="o">&lt;&lt;</span> <span class="s">&quot;--------------------------------------------------------------------------&quot;</span>   <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+<span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// ...</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[],</span> <span class="kt">char</span> <span class="o">*</span><span class="n">window_name</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="n">help</span><span class="p">();</span>
+<span class="c1">// here comes the actual source code</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Additionally, finalize the description with a short usage guide. This way the user will know how to call your programs, which leads us to the next point.</p>
+</li>
+<li><p class="first">Prefer command line arguments over hard coded values. If your program has some variables that may be changed, use command line arguments for this. The tutorials can be a simple try-out ground for the user. If you offer command line arguments for the input image (for example), then you offer the possibility for the user to try it out with his/her own images, without the need to mess with the source code. In the above example, you can see that the input image, channel and codec selection may all be changed from the command line. Just compile the program and run it with your own input arguments.</p>
+</li>
+<li><p class="first">Be as verbose as possible. There is no shame in filling the source code with comments. This way the more advanced user may figure out what&#8217;s happening right from the sample code. This advice goes for the output console too. Specify to the user what&#8217;s happening. Never leave the user hanging there and thinking &#8220;is this program crashing, or just doing some computationally intensive task?.&#8221; So, if you do a training task that may take some time, make sure you print out a message about this before starting and after finishing it.</p>
+</li>
+<li><p class="first">Throw out unnecessary stuff from your source code. This is a warning to not take the previous point too seriously. Balance is the key. If it&#8217;s something that can be done in fewer lines or more simply, then that&#8217;s the way you should do it. Nevertheless, if you have omitted details, tell the user why you have chosen to do so. Keep the amount of information as low as possible, while still getting the job done in an elegant way.</p>
+</li>
+<li><p class="first">Put your sample file into the <code class="file docutils literal"><span class="pre">opencv/samples/cpp/tutorial_code/sectionName</span></code> folder. If you write a tutorial for languages other than cpp, then change that part of the path. Before completing this you need to decide the section (module) your tutorial belongs to. Decide which module your code relies on most heavily, and that is the one to use. If the answer to this question is more than one module then the <em>general</em> section is the one to use. To find the <em>opencv</em> directory, navigate to where you downloaded our repository.</p>
+</li>
+<li><p class="first">If the input resources are hard to acquire for the end user, consider adding a few of them to the <code class="file docutils literal"><span class="pre">opencv/samples/cpp/tutorial_code/images</span></code>. Make sure that whoever reads your code can try it out!</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="add-the-toc-entry">
+<h2>Add the TOC entry<a class="headerlink" href="#add-the-toc-entry" title="Permalink to this headline">¶</a></h2>
+<p>For this you will need to know some <a class="reference external" href="http://docutils.sourceforge.net/rst.html">reStructuredText</a>. There is no going around this. <a class="reference external" href="http://docutils.sourceforge.net/rst.html">reStructuredText</a> files have <strong>rst</strong> extensions. However, these are simple text files. You can use any text editor you like, but those that offer syntax highlighting for <a class="reference external" href="http://docutils.sourceforge.net/rst.html">reStructuredText</a> will be most useful.</p>
+<p>Adding your tutorial to a table of content is important for multiple reasons. First and foremost this will allow for the user base to find your tutorial from our website. Secondly, if you omit this, <em>Sphinx</em> will throw a warning that your tutorial file isn&#8217;t part of any TOC tree entry. And there is nothing more than the developer team hates than an ever increasing warning/error list in their builds. <em>Sphinx</em> also uses this to build the previous/back/up buttons on the website. Finally, omitting this step will mean your tutorial will <strong>not</strong> be added to the PDF version of the tutorials.</p>
+<p>Navigate to the <code class="file docutils literal"><span class="pre">opencv/doc/tutorials/section/table_of_content_section</span></code> folder (where the section is the module to which you&#8217;re adding the tutorial). Open the <em>table_of_content_section</em> file. Now this may have two forms. If no prior tutorials are present in this section, there will be a template containing a message about this, with the following form:</p>
+<div class="highlight-rst"><div class="highlight"><pre><span class="p">..</span> <span class="nt">_Table-Of-Content-Section:</span>
+
+ Section title
+ -----------------------------------------------------------
+ Description about the section.
+<span class="p"> ..</span> <span class="ow">include</span><span class="p">::</span> ../../definitions/noContent.rst
+<span class="p"> ..</span> <span class="ow">raw</span><span class="p">::</span> latex
+    \pagebreak
+</pre></div>
+</div>
+<p>The first line is a reference to the section title in the reST system. The section title will be a link and you may refer to it via the <code class="docutils literal"><span class="pre">:ref:</span></code> directive. The <em>include</em> directive imports the template text from the definition directory&#8217;s <em>noContent.rst</em> file. <em>Sphinx</em> does not create the PDF from scratch. It does this by first creating a LaTeX file, then creating the PDF from the LaTeX file. With the <em>raw</em> directive, you can directly add to an output file. Its unique argument tells Sphinx which output type to add the content of the directive to. For the PDFs it may happen that multiple sections will overlap on a single page. To avoid this at the end of the TOC we add a <em>pagebreak</em> latex command, that hints to the LaTeX system that the next line should be on a new page.</p>
+<p>If you have one of these, change it to match the following form:</p>
+<div class="highlight-rst"><div class="highlight"><pre><span class="p">..</span> <span class="nt">_Table-Of-Content-Section:</span>
+<span class="gh">Section title</span>
+<span class="gh">-----------------------------------------------------------</span>
+<span class="p">..</span> <span class="ow">include</span><span class="p">::</span> ../../definitions/tocDefinitions.rst
++
+  .. tabularcolumns:: m{100pt} m{300pt}
+<span class="p">  ..</span> <span class="ow">cssclass</span><span class="p">::</span> toctableopencv
+  =============== ======================================================
+   |MatBasicIma|  <span class="gs">**Title:**</span> <span class="na">:ref:</span><span class="nv">`matTheBasicImageContainer`</span>
+                  <span class="ge">*Compatibility:*</span> &gt; OpenCV 2.0
+                  <span class="ge">*Author:*</span> |Author_BernatG|
+                  You will learn how to store images in the memory and how to print out their content to the console.
+  =============== =====================================================
+<span class="p">  ..</span> <span class="nt">|MatBasicIma|</span> <span class="ow">image</span><span class="p">::</span> images/matTheBasicImageStructure.jpg
+                   <span class="nc">:height:</span> <span class="nf">90pt</span>
+                   <span class="nc">:width:</span>  <span class="nf">90pt</span>
+<span class="p">..</span> <span class="ow">raw</span><span class="p">::</span> latex
+
+   \pagebreak
+
+<span class="p">..</span> <span class="ow">toctree</span><span class="p">::</span>
+
+   <span class="nc">:hidden:</span>
+<span class="cp">   ../mat - the basic image container/mat - the basic image container</span>
+</pre></div>
+</div>
+<p>If this is already present, just add a new section of the content between the include and the raw directives (excluding those lines). Here you&#8217;ll see a new include directive. This should be present only once in a TOC tree, and the reST file contains the definitions of all the authors contributing to the OpenCV tutorials. We are a multicultural community and some of our name may contain some funky characters. However, reST <strong>only supports</strong> ANSI characters. Luckily we can specify Unicode characters with the <em>unicode</em> directive. Doing this for all of your tutorials is a troublesome procedure. Therefore, the tocDefinitions file contains the definition of your author name. Add it here once and afterwards just use the replace construction. For example, here&#8217;s the definition for my name:</p>
+<div class="highlight-rst"><div class="highlight"><pre><span class="p">..</span> <span class="nt">|Author_BernatG|</span> <span class="ow">unicode</span><span class="p">::</span> Bern U+00E1 t U+0020 G U+00E1 bor
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">|Author_BernatG|</span></code> is the text definition&#8217;s alias. I can use this later to add the definition, like I&#8217;ve done in the TOCs <em>Author</em> part. After the <code class="docutils literal"><span class="pre">::</span></code> and a space, you start the definition. If you want to add an UNICODE character (non-ASCII) leave an empty space and specify it in the format U+(UNICODE code). To find the UNICODE code of a character I recommend using the <a class="reference external" href="http://www.fileformat.info">FileFormat</a> website&#8217;s service. Spaces are trimmed from the definition, therefore we add a space by its UNICODE character (U+0020).
+Everything until the <em>raw</em> directive is part of a TOC tree entry. Here&#8217;s what a TOC entry will look like:</p>
+<div class="highlight-rst"><div class="highlight"><pre><span class="p">..</span> <span class="ow">tabularcolumns</span><span class="p">::</span> m{100pt} m{300pt}
+<span class="p">..</span> <span class="ow">cssclass</span><span class="p">::</span> toctableopencv
+=============== ======================================================
+ |MatBasicIma|  <span class="gs">**Title:**</span> <span class="na">:ref:</span><span class="nv">`matTheBasicImageContainer`</span>
+                <span class="ge">*Compatibility:*</span> &gt; OpenCV 2.0
+                <span class="ge">*Author:*</span> |Author_BernatG|
+                You will learn how to store images in the memory and how to print out their content to the console.
+=============== ======================================================
+<span class="p">..</span> <span class="nt">|MatBasicIma|</span> <span class="ow">image</span><span class="p">::</span> images/matTheBasicImageStructure.jpg
+                 <span class="nc">:height:</span> <span class="nf">90pt</span>
+                 <span class="nc">:width:</span>  <span class="nf">90pt</span>
+</pre></div>
+</div>
+<p>As you can see, we have an image to the left and a description box to the right. To create two boxes, we use a table with two columns and a single row. In the left column is the image and in the right one the description. However, the image directive is way too long to fit in a column. Therefore, we need to use the substitution definition system. We add this definition after the TOC tree. All images for the TOC tree are to be put in the images folder near its <a class="reference external" href="http://docutils.sourceforge.net/rst.html">reStructuredText</a> file. We use the point measurement system because we are also creating PDFs. PDFs are printable documents, where there is no such thing as pixels (px), just points (pt). And while generally space is no problem for web pages (we have monitors with <strong>huge</strong> resolutions) the size of the paper (A4 or letter) is constant and will be for a long time in the future. Therefore, size constraints come into play more with the PDF than the generated HTML code.</p>
+<p>Now your images should be as small as possible, while still conveying the intended information to the user. Remember that the tutorial will become part of the OpenCV source code. If you add large images (hence large image sizes) it will just increase the size of the repository pointlessly. If someone wants to download it later, its download time will be that much longer. Not to mention the larger PDF size for the tutorials and the longer load time for the web pages. In terms of pixels a TOC image should not be larger than 120 X 120 pixels. Resize your images if they are larger!</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you add a larger image and specify a smaller image size, <em>Sphinx</em> will not resize that. At build time it will add the full size image and the resize will be done by your browser after the image is loaded. A 120 X 120 image is somewhere below 10KB. If you add a 110KB image, you have just pointlessly added a 100KB extra data to transfer over the internet for every user!</p>
+</div>
+<p>Generally speaking you shouldn&#8217;t need to specify your images size (excluding the TOC entries). If not specified, <em>Sphinx</em> will use the size of the image itself (so no resize occurs). Then again, if for some reason you decide to specify a size, that should be the <strong>width</strong> of the image rather than its height. The reason for this again goes back to the PDFs. On a PDF page the height is larger than the width. In the PDF the images will not be resized. If you specify a size that does not fit in the page, then what does not fit in <strong>will be cut off</strong>. When creating images for your tutorial you should try to keep the image widths below 500 pixels, and calculate with around 400 point page width when specifying image widths.</p>
+<p>The image format depends on the content of the image. If you have a complex scene (many random like colors) then use <em>jpg</em>. Otherwise, prefer using <em>png</em>. There are even some tools out there that optimize the size of <em>PNG</em> images, such as <a class="reference external" href="http://pnggauntlet.com/">PNGGauntlet</a>. Use them to make your images as small as possible in size. Now on the right side column of the table we add the information about the tutorial:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first">The first line is the title of the tutorial. However, there is no need to specify it explicitly, since we can use the reference system. Sphinx will replace a <code class="docutils literal"><span class="pre">:ref:`matTheBasicImageContainer`</span></code> directive with a link using the title of the <code class="docutils literal"><span class="pre">matTheBasicImageContainer</span></code> section, which is defined in the tutorial. Here&#8217;s how the definition looks in my case:</p>
+<div class="highlight-rst"><div class="highlight"><pre><span class="p">..</span> <span class="nt">_matTheBasicImageContainer:</span>
+   Mat - The Basic Image Container
+   <span class="gs">******************************</span>*
+</pre></div>
+</div>
+<p>Note, that according to the <a class="reference external" href="http://docutils.sourceforge.net/rst.html">reStructuredText</a> rules the * should be as long as your title.</p>
+</li>
+<li><p class="first">Compatibility. Which version of OpenCV is required to run your sample code.</p>
+</li>
+<li><p class="first">Author. Use the substitution markup of <a class="reference external" href="http://docutils.sourceforge.net/rst.html">reStructuredText</a>.</p>
+</li>
+<li><p class="first">A short sentence describing the essence of your tutorial.</p>
+</li>
+</ul>
+</div>
+<p>Now before each TOC entry you need to add three lines:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="o">+</span>
+  <span class="p">..</span> <span class="n">tabularcolumns</span><span class="o">::</span> <span class="n">m</span><span class="p">{</span><span class="mi">100</span><span class="n">pt</span><span class="p">}</span> <span class="n">m</span><span class="p">{</span><span class="mi">300</span><span class="n">pt</span><span class="p">}</span>
+  <span class="p">..</span> <span class="n">cssclass</span><span class="o">::</span> <span class="n">toctableopencv</span>
+</pre></div>
+</div>
+<p>The plus sign (+) is to enumerate tutorials by using bullet points. So for every TOC entry we have a corresponding bullet point represented by the +. Sphinx is highly sensitive to indentation. This is used to express from which point until to which point does a construction last. Un-indentation means end of that construction. So to keep all the bullet points belonging to the same group the following TOC entry (until the next +) should be indented by two spaces.</p>
+<p>Here, I should also mention to <strong>always</strong> prefer using spaces instead of tabs. Working with only spaces means that if we both use monotype fonts we will see the same thing. Tab size is text editor dependent and so should be avoided. <em>Sphinx</em> translates all tabs into 8 spaces before interpreting it.</p>
+<p>It turns out that the automatic formatting of both the HTML and PDF (LaTeX) system messes up our tables. Therefore, we need to help them out a little. For the PDF generation we add the <code class="docutils literal"><span class="pre">..</span> <span class="pre">tabularcolumns::</span> <span class="pre">m{100pt}</span> <span class="pre">m{300pt}</span></code> directive. This means that the first column should be 100 points wide and middle aligned. For the HTML look we simply give the table a <em>toctableopencv</em> class. Then, we can modify the look of the table by modifying the CSS of our web page. The CSS definitions go into the <code class="file docutils literal"><span class="pre">opencv/doc/_themes/blue/static/default.css_t</span></code> file.</p>
+<div class="highlight-css"><div class="highlight"><pre><span class="nc">.toctableopencv</span>
+<span class="p">{</span>
+ <span class="nb">width</span><span class="o">:</span> <span class="m">100%</span> <span class="p">;</span>
+ <span class="nb">table-layout</span><span class="o">:</span> <span class="nb">fixed</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nc">.toctableopencv</span> <span class="nt">colgroup</span> <span class="nt">col</span><span class="nd">:first-child</span>
+<span class="p">{</span>
+ <span class="nb">width</span><span class="o">:</span> <span class="m">100pt</span> <span class="cp">!important</span><span class="p">;</span>
+ <span class="nb">max-width</span><span class="o">:</span> <span class="m">100pt</span> <span class="cp">!important</span><span class="p">;</span>
+ <span class="nb">min-width</span><span class="o">:</span> <span class="m">100pt</span> <span class="cp">!important</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nc">.toctableopencv</span> <span class="nt">colgroup</span> <span class="nt">col</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">2</span><span class="o">)</span>
+<span class="p">{</span>
+ <span class="nb">width</span><span class="o">:</span> <span class="m">100%</span> <span class="cp">!important</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>However, you should not need to modify this. Just add these three lines (plus keep the two space indentation) for all TOC entries you add. At the end of the TOC file you&#8217;ll find:</p>
+<div class="highlight-rst"><div class="highlight"><pre><span class="p">..</span> <span class="ow">raw</span><span class="p">::</span> latex
+   \pagebreak
+<span class="p">..</span> <span class="ow">toctree</span><span class="p">::</span>
+   <span class="nc">:hidden:</span>
+<span class="cp">   ../mat - the basic image container/mat - the basic image container</span>
+</pre></div>
+</div>
+<p>The page break entry is for separating sections and there should be only one in a TOC tree <a class="reference external" href="http://docutils.sourceforge.net/rst.html">reStructuredText</a> file. Finally, at the end of the TOC tree we need to add our tutorial to the <em>Sphinx</em> TOC tree system. <em>Sphinx</em> will use this to generate the previous/next/up information for the HTML file and add items to the PDF according to the order here. By default this TOC tree directive generates a simple table of contents. However, we already created a fancy looking one so we no longer need this basic one. Therefore, we add the <em>hidden</em> option to do not show it.</p>
+<p>The path is of a relative type. We step back in the file system and then go into the <code class="file docutils literal"><span class="pre">mat</span> <span class="pre">-</span> <span class="pre">the</span> <span class="pre">basic</span> <span class="pre">image</span> <span class="pre">container</span></code> directory for the <code class="file docutils literal"><span class="pre">mat</span> <span class="pre">-</span> <span class="pre">the</span> <span class="pre">basic</span> <span class="pre">image</span> <span class="pre">container.rst</span></code> file. Including the <em>rst</em> extension for the file is optional.</p>
+</div>
+<div class="section" id="write-the-tutorial">
+<h2>Write the tutorial<a class="headerlink" href="#write-the-tutorial" title="Permalink to this headline">¶</a></h2>
+<p>Create a folder with the name of your tutorial. Preferably, use small letters only. Then create a text file in this folder with the <em>rst</em> extension and the same name. If you have images for the tutorial create an <code class="file docutils literal"><span class="pre">images</span></code> folder and add your images there. When creating your images follow the guidelines described in the previous part!</p>
+<p>Now here&#8217;s our recommendation for the structure of the tutorial (although, remember that this is not carved in stone; if you have a better idea, use it!):</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first">Create the reference point and the title.</p>
+<div class="highlight-rst"><div class="highlight"><pre><span class="p">..</span> <span class="nt">_matTheBasicImageContainer:</span>
+<span class="gh">Mat - The Basic Image Container</span>
+<span class="gh">*******************************</span>
+</pre></div>
+</div>
+<p>You start the tutorial by specifying a reference point by the <code class="docutils literal"><span class="pre">..</span> <span class="pre">_matTheBasicImageContainer:</span></code> and then its title. The name of the reference point should be a unique one over the whole documentation. Therefore, do not use general names like <em>tutorial1</em>. Use the * character to underline the title for its full width. The subtitles of the tutorial should be underlined with = charachter.</p>
+</li>
+<li><p class="first">Goals. You start your tutorial by specifying what you will present. You can also enumerate the sub jobs to be done. For this you can use a bullet point construction. There is a single configuration file for both the reference manual and the tutorial documentation. In the reference manuals, we do not want any kind of bullet point style enumeration for the argument lists. Therefore, by default all the bullet points at this level are set to do not show the dot before the entries in the HTML. You can override this by putting the bullet point in a container. I&#8217;ve defined a square type bullet point view under the name <em>enumeratevisibleitemswithsquare</em>. The CSS style definition for this is again in the  <code class="file docutils literal"><span class="pre">opencvdoc_themesbluestaticdefault.css_t</span></code> file. Here&#8217;s a quick example of using it:</p>
+<div class="highlight-rst"><div class="highlight"><pre><span class="p">..</span> <span class="ow">container</span><span class="p">::</span> enumeratevisibleitemswithsquare
+   <span class="m">+</span> Create the reference point and the title.
+   <span class="m">+</span> Second entry
+   <span class="m">+</span> Third entry
+</pre></div>
+</div>
+<p>Note that you need to keep the indentation of the container directive. Directive indentations are always three (3) spaces. Here you may even give usage tips for your sample code.</p>
+</li>
+<li><p class="first">Source code. Present your samples code to the user. It&#8217;s a good idea to offer a quick download link for the HTML page by using the <em>download</em> directive and pointing out where the user may find your source code in the file system by using the <em>file</em> directive:</p>
+<div class="highlight-rst"><div class="highlight"><pre>Text <span class="na">:file:</span><span class="nv">`samples/cpp/tutorial_code/highgui/video-write/`</span> folder of the OpenCV source library
+or :download:`text to appear in the webpage
+<span class="nt">&lt;../../../../samples/cpp/tutorial_code/HighGUI/video-write/video-write.cpp&gt;</span>`.
+</pre></div>
+</div>
+<p>For the download link the path is a relative one, hence the multiple back stepping operations (..). Then you can add the source code either by using the <em>code block</em> directive or the <em>literal include</em> one. In case of the code block you will need to actually add all the source code text into your <a class="reference external" href="http://docutils.sourceforge.net/rst.html">reStructuredText</a> text and also apply the required indentation:</p>
+<div class="highlight-rst"><div class="highlight"><pre><span class="p">..</span> <span class="ow">code-block</span><span class="p">::</span> cpp
+   int i = 0;
+   l = ++j;
+</pre></div>
+</div>
+<p>The only argument of the directive is the language used (here CPP). Then you add the source code into its content (meaning one empty line after the directive) by keeping the indentation of the directive (3 spaces). With the <em>literal include</em> directive you do not need to add the source code of the sample. You just specify the sample and <em>Sphinx</em> will load it for you, during build time. Here&#8217;s an example usage:</p>
+<div class="highlight-rst"><div class="highlight"><pre><span class="p">..</span> <span class="ow">literalinclude</span><span class="p">::</span> ../../../../samples/cpp/tutorial_code/HighGUI/video-write/video-write.cpp
+   <span class="nc">:language:</span> <span class="nf">cpp</span>
+   <span class="nc">:linenos:</span>
+   <span class="nc">:tab-width:</span> <span class="nf">4</span>
+   <span class="nc">:lines:</span> <span class="nf">1-8, 21-22, 24-</span>
+</pre></div>
+</div>
+<p>After the directive you specify a relative path to the file from the directory containing the tutorial file. It has four options: the language to use, if you add the <code class="docutils literal"><span class="pre">:linenos:</span></code> the line numbers will be shown, you can specify the tab size with the <code class="docutils literal"><span class="pre">:tab-width:</span></code> and you do not need to load the whole file, you can show just the important lines. Use the <em>lines</em> option to hide redundant information (such as the <em>help</em> function). Here basically you specify ranges; if the second range line number is missing, then that means the range continues until the end of the file. The ranges specified here do no need to be in an ascending order: you may reorganize the structure of your sample inside the tutorial.</p>
+</li>
+<li><p class="first">The tutorial. Well here is where you put the explanation for what you have you used and why. Try to be short, clear, concise and yet thorough. There&#8217;s no magic formula. Look into a few already made tutorials and start out from there. Try to mix sample OpenCV code with your explanations. If it&#8217;s hard to describe something with words, don&#8217;t hesitate to add in a reasonable size image to overcome this issue.
+When you present OpenCV functionality it&#8217;s a good idea to give a link to the OpenCV data structure or function used. Because the OpenCV tutorials and reference manual are in separate PDF files it is not possible to make this link work for the PDF format. Therefore, we only use web page links to the <a class="reference external" href="http://docs.opencv.org">http://docs.opencv.org</a> website here. The OpenCV functions and data structures may be used for multiple tasks. Nevertheless, we want to avoid every user creating their own reference to a commonly used function. So for this we use the global link collection of <em>Sphinx</em>. This is defined in the file:<cite>opencv/doc/conf.py</cite> configuration file. Open it and go all the way down to the last entry:</p>
+<div class="highlight-py"><div class="highlight"><pre><span class="c1"># ---- External links for tutorials -----------------</span>
+<span class="n">extlinks</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;hgvideo&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>In short, here we defined a new <strong>hgvideo</strong> directive that refers to an external webpage link. Its usage is:</p>
+<div class="highlight-rst"><div class="highlight"><pre>A sample function of the highgui modules image write and read page is the <span class="na">:hgvideo:</span><span class="nv">`imread() function &lt;imread&gt;`</span>.
+</pre></div>
+</div>
+<p>Which turns into:</p>
+<blockquote>
+<div><p>A sample function of the highgui modules image write and read page is the <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#imread">imread() function</a>.</p>
+</div></blockquote>
+<p>The argument you give between the &lt;&gt; will be put in place of the <code class="docutils literal"><span class="pre">%s</span></code> in the above definition, allowing the link will anchor to the correct function. To find out the anchor of a given function just open up a web page, search for the function and click on it. In the address bar it should appear like: <code class="docutils literal"><span class="pre">http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#imread</span></code>.  Look here for the name of the directives for each page of the OpenCV reference manual. If none are present for one of them feel free to add one for it.
+For formulas, you can add LaTeX code that will translate in the web pages into images. You do this by using the <em>math</em> directive. A usage tip:</p>
+<div class="highlight-latex"><div class="highlight"><pre>.. math::
+   MSE = <span class="k">\frac</span><span class="nb">{</span>1<span class="nb">}{</span>c*i*j<span class="nb">}</span> <span class="k">\sum</span><span class="nb">{</span>(I<span class="nb">_</span>1-I<span class="nb">_</span>2)<span class="nb">^</span>2<span class="nb">}</span>
+</pre></div>
+</div>
+<p>That after build turns into:</p>
+<div class="math">
+<p><img src="../../../../_images/math/7c19db97f9d5ef88b1959d3ff916b483bd590015.png" alt="MSE = \frac{1}{c*i*j} \sum{(I_1-I_2)^2}"/></p>
+</div><p>You can even use it inline, for example: <code class="docutils literal"><span class="pre">:math:`</span> <span class="pre">MSE</span> <span class="pre">=</span> <span class="pre">\frac{1}{c*i*j}</span> <span class="pre">\sum{(I_1-I_2)^2}`</span></code> which turns into <img class="math" src="../../../../_images/math/062ec3fa256f13fa8a48be26d63f8439e18631a9.png" alt="MSE = \frac{1}{c*i*j} \sum{(I_1-I_2)^2}"/>.
+If you require some crazy LaTeX library extension you need to add those to the ones to use at build time. Look into the file:<cite>opencv/doc/conf.py</cite> configuration file for more information on this.</p>
+</li>
+<li><p class="first">Results. Well, depending on your program. you can show one of more of the following here:</p>
+<ul>
+<li><p class="first">Console outputs, by using the code block directive.</p>
+</li>
+<li><p class="first">Output images.</p>
+</li>
+<li><p class="first">Runtime videos, visualization. For this use your favorite screens capture software. <a class="reference external" href="http://www.techsmith.com/camtasia/">Camtasia Studio</a> certainly is one of the better choices, however their prices are out of this world. <a class="reference external" href="http://camstudio.org/">CamStudio</a> is a free alternative, but less powerful. If you do a video, you can upload it to YouTube and then use the raw directive with HTML option to embed it into the generated web page:</p>
+<div class="highlight-rst"><div class="highlight"><pre>You may observe a runtime instance of this on the <span class="s">`YouTube here </span><span class="si">&lt;https://www.youtube.com/watch?v=jpBwHxsl1_0&gt;</span><span class="s">`_</span>.
+
+<span class="p">..</span> <span class="ow">raw</span><span class="p">::</span> html
+
+   &lt;div align=&quot;center&quot;&gt;
+   &lt;iframe title=&quot;Creating a video with OpenCV&quot; width=&quot;560&quot; height=&quot;349&quot; src=&quot;https://www.youtube.com/embed/jpBwHxsl1_0?rel=0&amp;loop=1&quot; frameborder=&quot;0&quot; allowfullscreen align=&quot;middle&quot;&gt;&lt;/iframe&gt;
+   &lt;/div&gt;
+</pre></div>
+</div>
+<p>This results in the text and video: You may observe a runtime instance of this on the <a class="reference external" href="https://www.youtube.com/watch?v=jpBwHxsl1_0">YouTube here</a>.</p>
+<div align="center">
+<iframe title="Creating a video with OpenCV" width="560" height="349" src="https://www.youtube.com/embed/jpBwHxsl1_0?rel=0&loop=1" frameborder="0" allowfullscreen align="middle"></iframe>
+</div></li>
+</ul>
+<p>When these aren&#8217;t self-explanatory make sure to throw in a few guiding lines about what and why we can see.</p>
+</li>
+<li><p class="first">Build the documentation and check for errors or warnings. In the CMake make sure you check or pass the option for building documentation. Then simply build the <strong>docs</strong> project for the PDF file and the <strong>docs_html</strong> project for the web page. Read the output of the build and check for errors/warnings for what you have added. This is also the time to observe and correct any kind of <em>not so good looking</em> parts. Remember to keep our build logs clean.</p>
+</li>
+<li><p class="first">Read your tutorial again and check for both programming and spelling errors. If you found any, please correct them.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="take-home-the-pride-and-joy-of-a-job-well-done">
+<h2>Take home the pride and joy of a job well done!<a class="headerlink" href="#take-home-the-pride-and-joy-of-a-job-well-done" title="Permalink to this headline">¶</a></h2>
+<p>Once you are done please make a GitHub pull request with the tutorial. Now, to see
+your work <strong>live</strong> you may need to wait some time. The PDFs are usually updated at
+the launch of a new OpenCV version. The web pages are a little more diverse. They are
+automatically rebuilt nightly. Currently we use <code class="docutils literal"><span class="pre">2.4</span></code> and <code class="docutils literal"><span class="pre">master</span></code> branches for
+daily builds. So, if your pull request was merged to any of these branches, your
+material will be published at <a class="reference external" href="http:/docs.opencv.org/2.4">docs.opencv.org/2.4</a> or
+<a class="reference external" href="http:/docs.opencv.org/master">docs.opencv.org/master</a> correspondingly. Everything
+that was added to <code class="docutils literal"><span class="pre">2.4</span></code> is merged to <code class="docutils literal"><span class="pre">master</span></code> branch every week. Although we try
+to make a build every night, occasionally we might freeze any of the branches to fix
+upcoming issues. During this it may take a little longer to see your work online,
+however if you submitted it, be sure that eventually it will show up.</p>
+<p>If you have any questions or advices relating to this tutorial you can contact us at
+<a class="reference external" href="mailto:-delete-admin&#37;&#52;&#48;-delete-opencv&#46;org">-delete-admin<span>&#64;</span>-delete-opencv<span>&#46;</span>org</a> (delete the -delete- parts of that email address).</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">How to write a tutorial for OpenCV</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#format-the-source-code">Format the Source Code</a></li>
+<li><a class="reference internal" href="#add-the-toc-entry">Add the TOC entry</a></li>
+<li><a class="reference internal" href="#write-the-tutorial">Write the tutorial</a></li>
+<li><a class="reference internal" href="#take-home-the-pride-and-joy-of-a-job-well-done">Take home the pride and joy of a job well done!</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../load_save_image/load_save_image.html"
+                        title="previous chapter">Load, Modify, and Save an Image</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../core/table_of_content_core/table_of_content_core.html"
+                        title="next chapter"><em>core</em> module. The Core Functionality</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/introduction/how_to_write_a_tutorial/how_to_write_a_tutorial.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../core/table_of_content_core/table_of_content_core.html" title="core module. The Core Functionality"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../load_save_image/load_save_image.html" title="Load, Modify, and Save an Image"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_introduction/table_of_content_introduction.html" >Introduction to OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Clustering &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="flann. Clustering and Search in Multi-Dimensional Spaces" href="flann.html" />
+    <link rel="next" title="gpu. GPU-accelerated Computer Vision" href="../../gpu/doc/gpu.html" />
+    <link rel="prev" title="Fast Approximate Nearest Neighbor Search" href="flann_fast_approximate_nearest_neighbor_search.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../gpu/doc/gpu.html" title="gpu. GPU-accelerated Computer Vision"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="flann_fast_approximate_nearest_neighbor_search.html" title="Fast Approximate Nearest Neighbor Search"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="flann.html" accesskey="U">flann. Clustering and Search in Multi-Dimensional Spaces</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="clustering">
+<h1>Clustering<a class="headerlink" href="#clustering" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="flann-hierarchicalclustering-distance">
+<h2>flann::hierarchicalClustering&lt;Distance&gt;<a class="headerlink" href="#flann-hierarchicalclustering-distance" title="Permalink to this headline">¶</a></h2>
+<p>Clusters features using hierarchical k-means algorithm.</p>
+<dl class="function">
+<dt id="template&lt;typename Distance&gt; int flann::hierarchicalClustering(const Mat&amp; features, Mat&amp; centers, const cvflann::KMeansIndexParams&amp; params, Distance d)">
+<strong>C++:</strong><code class="descname"> </code>template&lt;typename Distance&gt; int <code class="descclassname">flann::</code><code class="descname">hierarchicalClustering</code><span class="sig-paren">(</span>const Mat&amp; <strong>features</strong>, Mat&amp; <strong>centers</strong>, const cvflann::KMeansIndexParams&amp; <strong>params</strong>, Distance <strong>d</strong>=Distance()<span class="sig-paren">)</span><a class="headerlink" href="#template<typename Distance> int flann::hierarchicalClustering(const Mat& features, Mat& centers, const cvflann::KMeansIndexParams& params, Distance d)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>features</strong> &#8211; The points to be clustered. The matrix must have elements of type <code class="docutils literal"><span class="pre">Distance::ElementType</span></code>.</li>
+<li><strong>centers</strong> &#8211; The centers of the clusters obtained. The matrix must have type <code class="docutils literal"><span class="pre">Distance::ResultType</span></code>. The number of rows in this matrix represents the number of clusters desired, however, because of the way the cut in the hierarchical tree is chosen, the number of clusters computed will be the highest number of the form  <code class="docutils literal"><span class="pre">(branching-1)*k+1</span></code>  that&#8217;s lower than the number of clusters desired, where  <code class="docutils literal"><span class="pre">branching</span></code>  is the tree&#8217;s branching factor (see description of the KMeansIndexParams).</li>
+<li><strong>params</strong> &#8211; Parameters used in the construction of the hierarchical k-means tree.</li>
+<li><strong>d</strong> &#8211; Distance to be used for clustering.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method clusters the given feature vectors by constructing a hierarchical k-means tree and choosing a cut in the tree that minimizes the cluster&#8217;s variance. It returns the number of clusters found.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Clustering</a><ul>
+<li><a class="reference internal" href="#flann-hierarchicalclustering-distance">flann::hierarchicalClustering&lt;Distance&gt;</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="flann_fast_approximate_nearest_neighbor_search.html"
+                        title="previous chapter">Fast Approximate Nearest Neighbor Search</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../gpu/doc/gpu.html"
+                        title="next chapter">gpu. GPU-accelerated Computer Vision</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/flann/doc/flann_clustering.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../gpu/doc/gpu.html" title="gpu. GPU-accelerated Computer Vision"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="flann_fast_approximate_nearest_neighbor_search.html" title="Fast Approximate Nearest Neighbor Search"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="flann.html" >flann. Clustering and Search in Multi-Dimensional Spaces</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Operations on Matrices &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="gpu. GPU-accelerated Computer Vision" href="gpu.html" />
+    <link rel="next" title="Per-element Operations" href="per_element_operations.html" />
+    <link rel="prev" title="Data Structures" href="data_structures.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="per_element_operations.html" title="Per-element Operations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="data_structures.html" title="Data Structures"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="gpu.html" accesskey="U">gpu. GPU-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="operations-on-matrices">
+<h1>Operations on Matrices<a class="headerlink" href="#operations-on-matrices" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gpu-gemm">
+<h2>gpu::gemm<a class="headerlink" href="#gpu-gemm" title="Permalink to this headline">¶</a></h2>
+<p>Performs generalized matrix multiplication.</p>
+<dl class="function">
+<dt id="void gpu::gemm(const GpuMat&amp; src1, const GpuMat&amp; src2, double alpha, const GpuMat&amp; src3, double beta, GpuMat&amp; dst, int flags , Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">gemm</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src1</strong>, const GpuMat&amp; <strong>src2</strong>, double <strong>alpha</strong>, const GpuMat&amp; <strong>src3</strong>, double <strong>beta</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>flags</strong>=0, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::gemm(const GpuMat& src1, const GpuMat& src2, double alpha, const GpuMat& src3, double beta, GpuMat& dst, int flags , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; First multiplied input matrix that should have  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> , <code class="docutils literal"><span class="pre">CV_64FC1</span></code> , <code class="docutils literal"><span class="pre">CV_32FC2</span></code> , or  <code class="docutils literal"><span class="pre">CV_64FC2</span></code>  type.</li>
+<li><strong>src2</strong> &#8211; Second multiplied input matrix of the same type as  <code class="docutils literal"><span class="pre">src1</span></code> .</li>
+<li><strong>alpha</strong> &#8211; Weight of the matrix product.</li>
+<li><strong>src3</strong> &#8211; Third optional delta matrix added to the matrix product. It should have the same type as  <code class="docutils literal"><span class="pre">src1</span></code>  and  <code class="docutils literal"><span class="pre">src2</span></code> .</li>
+<li><strong>beta</strong> &#8211; Weight of  <code class="docutils literal"><span class="pre">src3</span></code> .</li>
+<li><strong>dst</strong> &#8211; Destination matrix. It has the proper size and the same type as input matrices.</li>
+<li><strong>flags</strong> &#8211; <p>Operation flags:</p>
+<ul>
+<li><strong>GEMM_1_T</strong> transpose  <code class="docutils literal"><span class="pre">src1</span></code></li>
+<li><strong>GEMM_2_T</strong> transpose  <code class="docutils literal"><span class="pre">src2</span></code></li>
+<li><strong>GEMM_3_T</strong> transpose  <code class="docutils literal"><span class="pre">src3</span></code></li>
+</ul>
+</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function performs generalized matrix multiplication similar to the <code class="docutils literal"><span class="pre">gemm</span></code> functions in BLAS level 3. For example, <code class="docutils literal"><span class="pre">gemm(src1,</span> <span class="pre">src2,</span> <span class="pre">alpha,</span> <span class="pre">src3,</span> <span class="pre">beta,</span> <span class="pre">dst,</span> <span class="pre">GEMM_1_T</span> <span class="pre">+</span> <span class="pre">GEMM_3_T)</span></code> corresponds to</p>
+<div class="math">
+<p><img src="../../../_images/math/72710ead9ac964342ce03db0ec9bb8b21edd3d60.png" alt="\texttt{dst} =  \texttt{alpha} \cdot \texttt{src1} ^T  \cdot \texttt{src2} +  \texttt{beta} \cdot \texttt{src3} ^T"/></p>
+</div><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Transposition operation doesn&#8217;t support  <code class="docutils literal"><span class="pre">CV_64FC2</span></code>  input type.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void gemm(InputArray src1, InputArray src2, double alpha, InputArray src3, double beta, OutputArray dst, int flags)" title="void gemm(InputArray src1, InputArray src2, double alpha, InputArray src3, double beta, OutputArray dst, int flags)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gemm()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-transpose">
+<h2>gpu::transpose<a class="headerlink" href="#gpu-transpose" title="Permalink to this headline">¶</a></h2>
+<p>Transposes a matrix.</p>
+<dl class="function">
+<dt id="void gpu::transpose(const GpuMat&amp; src1, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">transpose</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src1</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::transpose(const GpuMat& src1, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src1</strong> &#8211; Source matrix. 1-, 4-, 8-byte element sizes are supported for now (CV_8UC1, CV_8UC4, CV_16UC2, CV_32FC1, etc).</li>
+<li><strong>dst</strong> &#8211; Destination matrix.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void transpose(InputArray src, OutputArray dst)" title="void transpose(InputArray src, OutputArray dst)"><code class="xref ocv ocv-func docutils literal"><span class="pre">transpose()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-flip">
+<h2>gpu::flip<a class="headerlink" href="#gpu-flip" title="Permalink to this headline">¶</a></h2>
+<p>Flips a 2D matrix around vertical, horizontal, or both axes.</p>
+<dl class="function">
+<dt id="void gpu::flip(const GpuMat&amp; a, GpuMat&amp; b, int flipCode, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">flip</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>a</strong>, GpuMat&amp; <strong>b</strong>, int <strong>flipCode</strong>, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::flip(const GpuMat& a, GpuMat& b, int flipCode, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>a</strong> &#8211; Source matrix. Supports 1, 3 and 4 channels images with <code class="docutils literal"><span class="pre">CV_8U</span></code>, <code class="docutils literal"><span class="pre">CV_16U</span></code>, <code class="docutils literal"><span class="pre">CV_32S</span></code> or <code class="docutils literal"><span class="pre">CV_32F</span></code> depth.</li>
+<li><strong>b</strong> &#8211; Destination matrix.</li>
+<li><strong>flipCode</strong> &#8211; <p>Flip mode for the source:</p>
+<ul>
+<li><code class="docutils literal"><span class="pre">0</span></code> Flips around x-axis.</li>
+<li><code class="docutils literal"><span class="pre">&gt;0</span></code> Flips around y-axis.</li>
+<li><code class="docutils literal"><span class="pre">&lt;0</span></code> Flips around both axes.</li>
+</ul>
+</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void flip(InputArray src, OutputArray dst, int flipCode)" title="void flip(InputArray src, OutputArray dst, int flipCode)"><code class="xref ocv ocv-func docutils literal"><span class="pre">flip()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-lut">
+<h2>gpu::LUT<a class="headerlink" href="#gpu-lut" title="Permalink to this headline">¶</a></h2>
+<p>Transforms the source matrix into the destination matrix using the given look-up table: <code class="docutils literal"><span class="pre">dst(I)</span> <span class="pre">=</span> <span class="pre">lut(src(I))</span></code></p>
+<dl class="function">
+<dt id="void gpu::LUT(const GpuMat&amp; src, const Mat&amp; lut, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">LUT</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, const Mat&amp; <strong>lut</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::LUT(const GpuMat& src, const Mat& lut, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source matrix.  <code class="docutils literal"><span class="pre">CV_8UC1</span></code>  and  <code class="docutils literal"><span class="pre">CV_8UC3</span></code>  matrices are supported for now.</li>
+<li><strong>lut</strong> &#8211; Look-up table of 256 elements. It is a continuous <code class="docutils literal"><span class="pre">CV_8U</span></code> matrix.</li>
+<li><strong>dst</strong> &#8211; Destination matrix with the same depth as  <code class="docutils literal"><span class="pre">lut</span></code>  and the same number of channels as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void LUT(InputArray src, InputArray lut, OutputArray dst, int interpolation)" title="void LUT(InputArray src, InputArray lut, OutputArray dst, int interpolation)"><code class="xref ocv ocv-func docutils literal"><span class="pre">LUT()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-merge">
+<h2>gpu::merge<a class="headerlink" href="#gpu-merge" title="Permalink to this headline">¶</a></h2>
+<p>Makes a multi-channel matrix out of several single-channel matrices.</p>
+<dl class="function">
+<dt id="void gpu::merge(const GpuMat* src, size_t n, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">merge</code><span class="sig-paren">(</span>const GpuMat* <strong>src</strong>, size_t <strong>n</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::merge(const GpuMat* src, size_t n, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::merge(const vector&lt;GpuMat&gt;&amp; src, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">merge</code><span class="sig-paren">(</span>const vector&lt;GpuMat&gt;&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::merge(const vector<GpuMat>& src, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Array/vector of source matrices.</li>
+<li><strong>n</strong> &#8211; Number of source matrices.</li>
+<li><strong>dst</strong> &#8211; Destination matrix.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void merge(const Mat* mv, size_t count, OutputArray dst)" title="void merge(const Mat* mv, size_t count, OutputArray dst)"><code class="xref ocv ocv-func docutils literal"><span class="pre">merge()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-split">
+<h2>gpu::split<a class="headerlink" href="#gpu-split" title="Permalink to this headline">¶</a></h2>
+<p>Copies each plane of a multi-channel matrix into an array.</p>
+<dl class="function">
+<dt id="void gpu::split(const GpuMat&amp; src, GpuMat* dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">split</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat* <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::split(const GpuMat& src, GpuMat* dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::split(const GpuMat&amp; src, vector&lt;GpuMat&gt;&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">split</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, vector&lt;GpuMat&gt;&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::split(const GpuMat& src, vector<GpuMat>& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source matrix.</li>
+<li><strong>dst</strong> &#8211; Destination array/vector of single-channel matrices.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void split(const Mat&amp; src, Mat* mvbegin)" title="void split(const Mat&amp; src, Mat* mvbegin)"><code class="xref ocv ocv-func docutils literal"><span class="pre">split()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-magnitude">
+<h2>gpu::magnitude<a class="headerlink" href="#gpu-magnitude" title="Permalink to this headline">¶</a></h2>
+<p>Computes magnitudes of complex matrix elements.</p>
+<dl class="function">
+<dt id="void gpu::magnitude(const GpuMat&amp; xy, GpuMat&amp; magnitude, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">magnitude</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>xy</strong>, GpuMat&amp; <strong>magnitude</strong>, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::magnitude(const GpuMat& xy, GpuMat& magnitude, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::magnitude(const GpuMat&amp; x, const GpuMat&amp; y, GpuMat&amp; magnitude, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">magnitude</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>x</strong>, const GpuMat&amp; <strong>y</strong>, GpuMat&amp; <strong>magnitude</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::magnitude(const GpuMat& x, const GpuMat& y, GpuMat& magnitude, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>xy</strong> &#8211; Source complex matrix in the interleaved format ( <code class="docutils literal"><span class="pre">CV_32FC2</span></code> ).</li>
+<li><strong>x</strong> &#8211; Source matrix containing real components ( <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ).</li>
+<li><strong>y</strong> &#8211; Source matrix containing imaginary components ( <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ).</li>
+<li><strong>magnitude</strong> &#8211; Destination matrix of float magnitudes ( <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ).</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void magnitude(InputArray x, InputArray y, OutputArray magnitude)" title="void magnitude(InputArray x, InputArray y, OutputArray magnitude)"><code class="xref ocv ocv-func docutils literal"><span class="pre">magnitude()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-magnitudesqr">
+<h2>gpu::magnitudeSqr<a class="headerlink" href="#gpu-magnitudesqr" title="Permalink to this headline">¶</a></h2>
+<p>Computes squared magnitudes of complex matrix elements.</p>
+<dl class="function">
+<dt id="void gpu::magnitudeSqr(const GpuMat&amp; xy, GpuMat&amp; magnitude, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">magnitudeSqr</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>xy</strong>, GpuMat&amp; <strong>magnitude</strong>, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::magnitudeSqr(const GpuMat& xy, GpuMat& magnitude, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::magnitudeSqr(const GpuMat&amp; x, const GpuMat&amp; y, GpuMat&amp; magnitude, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">magnitudeSqr</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>x</strong>, const GpuMat&amp; <strong>y</strong>, GpuMat&amp; <strong>magnitude</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::magnitudeSqr(const GpuMat& x, const GpuMat& y, GpuMat& magnitude, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>xy</strong> &#8211; Source complex matrix in the interleaved format ( <code class="docutils literal"><span class="pre">CV_32FC2</span></code> ).</li>
+<li><strong>x</strong> &#8211; Source matrix containing real components ( <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ).</li>
+<li><strong>y</strong> &#8211; Source matrix containing imaginary components ( <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ).</li>
+<li><strong>magnitude</strong> &#8211; Destination matrix of float magnitude squares ( <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ).</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-phase">
+<h2>gpu::phase<a class="headerlink" href="#gpu-phase" title="Permalink to this headline">¶</a></h2>
+<p>Computes polar angles of complex matrix elements.</p>
+<dl class="function">
+<dt id="void gpu::phase(const GpuMat&amp; x, const GpuMat&amp; y, GpuMat&amp; angle, bool angleInDegrees, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">phase</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>x</strong>, const GpuMat&amp; <strong>y</strong>, GpuMat&amp; <strong>angle</strong>, bool <strong>angleInDegrees</strong>=false, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::phase(const GpuMat& x, const GpuMat& y, GpuMat& angle, bool angleInDegrees, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; Source matrix containing real components ( <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ).</li>
+<li><strong>y</strong> &#8211; Source matrix containing imaginary components ( <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ).</li>
+<li><strong>angle</strong> &#8211; Destination matrix of angles ( <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ).</li>
+<li><strong>angleInDegrees</strong> &#8211; Flag for angles that must be evaluated in degrees.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void phase(InputArray x, InputArray y, OutputArray angle, bool angleInDegrees)" title="void phase(InputArray x, InputArray y, OutputArray angle, bool angleInDegrees)"><code class="xref ocv ocv-func docutils literal"><span class="pre">phase()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-carttopolar">
+<h2>gpu::cartToPolar<a class="headerlink" href="#gpu-carttopolar" title="Permalink to this headline">¶</a></h2>
+<p>Converts Cartesian coordinates into polar.</p>
+<dl class="function">
+<dt id="void gpu::cartToPolar(const GpuMat&amp; x, const GpuMat&amp; y, GpuMat&amp; magnitude, GpuMat&amp; angle, bool angleInDegrees, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">cartToPolar</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>x</strong>, const GpuMat&amp; <strong>y</strong>, GpuMat&amp; <strong>magnitude</strong>, GpuMat&amp; <strong>angle</strong>, bool <strong>angleInDegrees</strong>=false, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::cartToPolar(const GpuMat& x, const GpuMat& y, GpuMat& magnitude, GpuMat& angle, bool angleInDegrees, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; Source matrix containing real components ( <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ).</li>
+<li><strong>y</strong> &#8211; Source matrix containing imaginary components ( <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ).</li>
+<li><strong>magnitude</strong> &#8211; Destination matrix of float magnitudes ( <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ).</li>
+<li><strong>angle</strong> &#8211; Destination matrix of angles ( <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ).</li>
+<li><strong>angleInDegrees</strong> &#8211; Flag for angles that must be evaluated in degrees.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void cartToPolar(InputArray x, InputArray y, OutputArray magnitude, OutputArray angle, bool angleInDegrees)" title="void cartToPolar(InputArray x, InputArray y, OutputArray magnitude, OutputArray angle, bool angleInDegrees)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cartToPolar()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-polartocart">
+<h2>gpu::polarToCart<a class="headerlink" href="#gpu-polartocart" title="Permalink to this headline">¶</a></h2>
+<p>Converts polar coordinates into Cartesian.</p>
+<dl class="function">
+<dt id="void gpu::polarToCart(const GpuMat&amp; magnitude, const GpuMat&amp; angle, GpuMat&amp; x, GpuMat&amp; y, bool angleInDegrees, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">polarToCart</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>magnitude</strong>, const GpuMat&amp; <strong>angle</strong>, GpuMat&amp; <strong>x</strong>, GpuMat&amp; <strong>y</strong>, bool <strong>angleInDegrees</strong>=false, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::polarToCart(const GpuMat& magnitude, const GpuMat& angle, GpuMat& x, GpuMat& y, bool angleInDegrees, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>magnitude</strong> &#8211; Source matrix containing magnitudes ( <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ).</li>
+<li><strong>angle</strong> &#8211; Source matrix containing angles ( <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ).</li>
+<li><strong>x</strong> &#8211; Destination matrix of real components ( <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ).</li>
+<li><strong>y</strong> &#8211; Destination matrix of imaginary components ( <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ).</li>
+<li><strong>angleInDegrees</strong> &#8211; Flag that indicates angles in degrees.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void polarToCart(InputArray magnitude, InputArray angle, OutputArray x, OutputArray y, bool angleInDegrees)" title="void polarToCart(InputArray magnitude, InputArray angle, OutputArray x, OutputArray y, bool angleInDegrees)"><code class="xref ocv ocv-func docutils literal"><span class="pre">polarToCart()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-normalize">
+<h2>gpu::normalize<a class="headerlink" href="#gpu-normalize" title="Permalink to this headline">¶</a></h2>
+<p>Normalizes the norm or value range of an array.</p>
+<dl class="function">
+<dt id="void gpu::normalize(const GpuMat&amp; src, GpuMat&amp; dst, double alpha , double beta , int norm_type , int dtype , const GpuMat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">normalize</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, double <strong>alpha</strong>=1, double <strong>beta</strong>=0, int <strong>norm_type</strong>=NORM_L2, int <strong>dtype</strong>=-1, const GpuMat&amp; <strong>mask</strong>=GpuMat()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::normalize(const GpuMat& src, GpuMat& dst, double alpha , double beta , int norm_type , int dtype , const GpuMat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::normalize(const GpuMat&amp; src, GpuMat&amp; dst, double a, double b, int norm_type, int dtype, const GpuMat&amp; mask, GpuMat&amp; norm_buf, GpuMat&amp; cvt_buf)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">normalize</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, double <strong>a</strong>, double <strong>b</strong>, int <strong>norm_type</strong>, int <strong>dtype</strong>, const GpuMat&amp; <strong>mask</strong>, GpuMat&amp; <strong>norm_buf</strong>, GpuMat&amp; <strong>cvt_buf</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::normalize(const GpuMat& src, GpuMat& dst, double a, double b, int norm_type, int dtype, const GpuMat& mask, GpuMat& norm_buf, GpuMat& cvt_buf)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; input array.</li>
+<li><strong>dst</strong> &#8211; output array of the same size as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>alpha</strong> &#8211; norm value to normalize to or the lower range boundary in case of the range normalization.</li>
+<li><strong>beta</strong> &#8211; upper range boundary in case of the range normalization; it is not used for the norm normalization.</li>
+<li><strong>normType</strong> &#8211; normalization type (see the details below).</li>
+<li><strong>dtype</strong> &#8211; when negative, the output array has the same type as <code class="docutils literal"><span class="pre">src</span></code>; otherwise, it has the same number of channels as  <code class="docutils literal"><span class="pre">src</span></code> and the depth <code class="docutils literal"><span class="pre">=CV_MAT_DEPTH(dtype)</span></code>.</li>
+<li><strong>mask</strong> &#8211; optional operation mask.</li>
+<li><strong>norm_buf</strong> &#8211; Optional buffer to avoid extra memory allocations. It is resized automatically.</li>
+<li><strong>cvt_buf</strong> &#8211; Optional buffer to avoid extra memory allocations. It is resized automatically.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void normalize(InputArray src, OutputArray dst, double alpha, double beta, int norm_type, int dtype, InputArray mask)" title="void normalize(InputArray src, OutputArray dst, double alpha, double beta, int norm_type, int dtype, InputArray mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">normalize()</span></code></a></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Operations on Matrices</a><ul>
+<li><a class="reference internal" href="#gpu-gemm">gpu::gemm</a></li>
+<li><a class="reference internal" href="#gpu-transpose">gpu::transpose</a></li>
+<li><a class="reference internal" href="#gpu-flip">gpu::flip</a></li>
+<li><a class="reference internal" href="#gpu-lut">gpu::LUT</a></li>
+<li><a class="reference internal" href="#gpu-merge">gpu::merge</a></li>
+<li><a class="reference internal" href="#gpu-split">gpu::split</a></li>
+<li><a class="reference internal" href="#gpu-magnitude">gpu::magnitude</a></li>
+<li><a class="reference internal" href="#gpu-magnitudesqr">gpu::magnitudeSqr</a></li>
+<li><a class="reference internal" href="#gpu-phase">gpu::phase</a></li>
+<li><a class="reference internal" href="#gpu-carttopolar">gpu::cartToPolar</a></li>
+<li><a class="reference internal" href="#gpu-polartocart">gpu::polarToCart</a></li>
+<li><a class="reference internal" href="#gpu-normalize">gpu::normalize</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="data_structures.html"
+                        title="previous chapter">Data Structures</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="per_element_operations.html"
+                        title="next chapter">Per-element Operations</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/gpu/doc/operations_on_matrices.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="per_element_operations.html" title="Per-element Operations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="data_structures.html" title="Data Structures"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="gpu.html" >gpu. GPU-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

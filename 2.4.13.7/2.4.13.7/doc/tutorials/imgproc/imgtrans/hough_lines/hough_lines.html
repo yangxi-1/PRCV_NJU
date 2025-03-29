@@ -1,0 +1,427 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Hough Line Transform &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../../index.html" />
+    <link rel="up" title="imgproc module. Image Processing" href="../../table_of_content_imgproc/table_of_content_imgproc.html" />
+    <link rel="next" title="Hough Circle Transform" href="../hough_circle/hough_circle.html" />
+    <link rel="prev" title="Canny Edge Detector" href="../canny_detector/canny_detector.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../hough_circle/hough_circle.html" title="Hough Circle Transform"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../canny_detector/canny_detector.html" title="Canny Edge Detector"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" accesskey="U"><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="hough-line-transform">
+<span id="hough-lines"></span><h1>Hough Line Transform<a class="headerlink" href="#hough-line-transform" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<ul class="simple">
+<li>Use the OpenCV functions <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/feature_detection.html?highlight=houghlines#houghlines">HoughLines</a> and <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/feature_detection.html?highlight=houghlinesp#houghlinesp">HoughLinesP</a> to detect lines in an image.</li>
+</ul>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The explanation below belongs to the book <strong>Learning OpenCV</strong> by Bradski and Kaehler.</p>
+</div>
+<div class="section" id="id1">
+<h3>Hough Line Transform<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>The Hough Line Transform is a transform used to detect straight lines.</li>
+<li>To apply the Transform, first an edge detection pre-processing is desirable.</li>
+</ol>
+<div class="section" id="how-does-it-work">
+<h4>How does it work?<a class="headerlink" href="#how-does-it-work" title="Permalink to this headline">¶</a></h4>
+<ol class="arabic">
+<li><p class="first">As you know, a line in the image space can be expressed with two variables. For example:</p>
+<ol class="loweralpha simple">
+<li>In the <strong>Cartesian coordinate system:</strong>  Parameters: <img class="math" src="../../../../../_images/math/262dc8d91ee0c1acedb574767597f1e2256ead35.png" alt="(m,b)"/>.</li>
+<li>In the <strong>Polar coordinate system:</strong> Parameters: <img class="math" src="../../../../../_images/math/0fd7838e4ca21f78e83d493013a3578195aa73ab.png" alt="(r,\theta)"/></li>
+</ol>
+<img alt="Line variables" class="align-center" src="../../../../../_images/Hough_Lines_Tutorial_Theory_0.jpg" />
+<p>For Hough Transforms, we will express lines in the <em>Polar system</em>. Hence, a line equation can be written as:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/8f157755e2d247e3804674ab39847c2c4d0b729e.png" alt="y = \left ( -\dfrac{\cos \theta}{\sin \theta} \right ) x + \left ( \dfrac{r}{\sin \theta} \right )"/></p>
+</div></li>
+</ol>
+<blockquote>
+<div>Arranging the terms: <img class="math" src="../../../../../_images/math/5737d1f1e2399ff0b7a7fead452cca3e51d6f13c.png" alt="r = x \cos \theta + y \sin \theta"/></div></blockquote>
+<ol class="arabic">
+<li><p class="first">In general for each point <img class="math" src="../../../../../_images/math/993d630f6b21415dec6a1929b2865bd8d923642b.png" alt="(x_{0}, y_{0})"/>, we can define the family of lines that goes through that point as:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/4bd47147fa216130bfeaf0e8911534dd4719ed9c.png" alt="r_{\theta} = x_{0} \cdot \cos \theta  + y_{0} \cdot \sin \theta"/></p>
+</div><p>Meaning that each pair <img class="math" src="../../../../../_images/math/c55ee002b0cb5a711c8641a5545684b18b9d35d2.png" alt="(r_{\theta},\theta)"/> represents each line that passes by <img class="math" src="../../../../../_images/math/993d630f6b21415dec6a1929b2865bd8d923642b.png" alt="(x_{0}, y_{0})"/>.</p>
+</li>
+<li><p class="first">If for a given <img class="math" src="../../../../../_images/math/993d630f6b21415dec6a1929b2865bd8d923642b.png" alt="(x_{0}, y_{0})"/> we plot the family of lines that goes through it, we get a sinusoid. For instance, for <img class="math" src="../../../../../_images/math/212bb461f3b7d4c1df3ed90d3e7fe433ad194057.png" alt="x_{0} = 8"/> and <img class="math" src="../../../../../_images/math/221172790b5d0b1759022b709282f0a4e198f7be.png" alt="y_{0} = 6"/> we get the following plot (in a plane <img class="math" src="../../../../../_images/math/f324df69016bcdbbc6a6b842f7cdb42d6b305049.png" alt="\theta"/> - <img class="math" src="../../../../../_images/math/ad87c26146d46be66f1d2433d2d19bb0669f939c.png" alt="r"/>):</p>
+<img alt="Polar plot of a the family of lines of a point" class="align-center" src="../../../../../_images/Hough_Lines_Tutorial_Theory_1.jpg" />
+<p>We consider only points such that <img class="math" src="../../../../../_images/math/db1d719f4852c724f49ca0a3b003c75d67c91208.png" alt="r &gt; 0"/> and <img class="math" src="../../../../../_images/math/541f5602eca773dc128d4b90400ff500b9890dc8.png" alt="0&lt; \theta &lt; 2 \pi"/>.</p>
+</li>
+<li><p class="first">We can do the same operation above for all the points in an image. If the curves of two different points intersect in the plane <img class="math" src="../../../../../_images/math/f324df69016bcdbbc6a6b842f7cdb42d6b305049.png" alt="\theta"/> - <img class="math" src="../../../../../_images/math/ad87c26146d46be66f1d2433d2d19bb0669f939c.png" alt="r"/>, that means that both points belong to a same line. For instance, following with the example above and drawing the plot for two more points: <img class="math" src="../../../../../_images/math/69feefdce48406316531e306ee996a15353de20c.png" alt="x_{1} = 4"/>, <img class="math" src="../../../../../_images/math/bb662557c8ee341955c3b46a36dbd467f680a846.png" alt="y_{1} = 9"/> and <img class="math" src="../../../../../_images/math/479dd1d0fbcab423b0ec476dd27cc76cea2b3524.png" alt="x_{2} = 12"/>, <img class="math" src="../../../../../_images/math/1262682afda12e2558124ea9847e06543f949679.png" alt="y_{2} = 3"/>, we get:</p>
+<img alt="Polar plot of the family of lines for three points" class="align-center" src="../../../../../_images/Hough_Lines_Tutorial_Theory_2.jpg" />
+<p>The three plots intersect in one single point <img class="math" src="../../../../../_images/math/3596423d982a528afee913c7759a702eb8386306.png" alt="(0.925, 9.6)"/>, these coordinates are the parameters (<img class="math" src="../../../../../_images/math/03944eadfb6cd62543bf6204e7bbbfde6ce24931.png" alt="\theta, r"/>) or the line in which <img class="math" src="../../../../../_images/math/993d630f6b21415dec6a1929b2865bd8d923642b.png" alt="(x_{0}, y_{0})"/>, <img class="math" src="../../../../../_images/math/f7c4ba7c9e6a6033ae89b82c0fbf12f44bec3f58.png" alt="(x_{1}, y_{1})"/> and <img class="math" src="../../../../../_images/math/785a6a9ff64e313558bfef6f951fb20f6ded9c66.png" alt="(x_{2}, y_{2})"/> lay.</p>
+</li>
+<li><p class="first">What does all the stuff above mean? It means that in general, a line can be <em>detected</em> by finding the number of intersections between curves.The more curves intersecting means that the line represented by that intersection have more points. In general, we can define a <em>threshold</em> of the minimum number of intersections needed to <em>detect</em> a line.</p>
+</li>
+<li><p class="first">This is what the Hough Line Transform does. It keeps track of the intersection between curves of every point in the image. If the number of intersections is above some <em>threshold</em>, then it declares it as a line with the parameters <img class="math" src="../../../../../_images/math/0c4004f4e10242d0de4b68be044f79473dedb1c3.png" alt="(\theta, r_{\theta})"/> of the intersection point.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="standard-and-probabilistic-hough-line-transform">
+<h4>Standard and Probabilistic Hough Line Transform<a class="headerlink" href="#standard-and-probabilistic-hough-line-transform" title="Permalink to this headline">¶</a></h4>
+<p>OpenCV implements two kind of Hough Line Transforms:</p>
+<ol class="loweralpha simple">
+<li><strong>The Standard Hough Transform</strong></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li>It consists in pretty much what we just explained in the previous section. It gives you as result a vector of couples <img class="math" src="../../../../../_images/math/0c4004f4e10242d0de4b68be044f79473dedb1c3.png" alt="(\theta, r_{\theta})"/></li>
+<li>In OpenCV it is implemented with the function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/feature_detection.html?highlight=houghlines#houghlines">HoughLines</a></li>
+</ul>
+</div></blockquote>
+<ol class="loweralpha simple" start="2">
+<li><strong>The Probabilistic Hough Line Transform</strong></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li>A more efficient implementation of the Hough Line Transform. It gives as output the extremes of the detected lines <img class="math" src="../../../../../_images/math/d90ade3092520e67796797d00ffeadc6917d3c8f.png" alt="(x_{0}, y_{0}, x_{1}, y_{1})"/></li>
+<li>In OpenCV it is implemented with the function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/feature_detection.html?highlight=houghlinesp#houghlinesp">HoughLinesP</a></li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><strong>What does this program do?</strong><ul>
+<li>Loads an image</li>
+<li>Applies either a <em>Standard Hough Line Transform</em> or a <em>Probabilistic Line Transform</em>.</li>
+<li>Display the original image and the detected line in two windows.</li>
+</ul>
+</li>
+<li>The sample code that we will explain can be downloaded from  <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/houghlines.cpp">here</a>. A slightly fancier version (which shows both Hough standard and probabilistic with trackbars for changing the threshold values) can be found  <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/tutorial_code/ImgTrans/HoughLines_Demo.cpp">here</a>.</li>
+</ol>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;opencv2/highgui/highgui.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/imgproc/imgproc.hpp&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">help</span><span class="p">()</span>
+<span class="p">{</span>
+ <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">This program demonstrates line finding with the Hough transform.</span><span class="se">\n</span><span class="s">&quot;</span>
+         <span class="s">&quot;Usage:</span><span class="se">\n</span><span class="s">&quot;</span>
+         <span class="s">&quot;./houghlines &lt;image_name&gt;, Default is pic1.jpg</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+ <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">filename</span> <span class="o">=</span> <span class="n">argc</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="o">?</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">:</span> <span class="s">&quot;pic1.jpg&quot;</span><span class="p">;</span>
+
+ <span class="n">Mat</span> <span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+ <span class="k">if</span><span class="p">(</span><span class="n">src</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+ <span class="p">{</span>
+     <span class="n">help</span><span class="p">();</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;can not open &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">filename</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+     <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+ <span class="p">}</span>
+
+ <span class="n">Mat</span> <span class="n">dst</span><span class="p">,</span> <span class="n">cdst</span><span class="p">;</span>
+ <span class="n">Canny</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+ <span class="n">cvtColor</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">cdst</span><span class="p">,</span> <span class="n">CV_GRAY2BGR</span><span class="p">);</span>
+
+ <span class="cp">#if 0</span><span class="c"></span>
+<span class="c">  vector&lt;Vec2f&gt; lines;</span>
+<span class="c">  HoughLines(dst, lines, 1, CV_PI/180, 100, 0, 0 );</span>
+
+<span class="c">  for( size_t i = 0; i &lt; lines.size(); i++ )</span>
+<span class="c">  {</span>
+<span class="c">     float rho = lines[i][0], theta = lines[i][1];</span>
+<span class="c">     Point pt1, pt2;</span>
+<span class="c">     double a = cos(theta), b = sin(theta);</span>
+<span class="c">     double x0 = a*rho, y0 = b*rho;</span>
+<span class="c">     pt1.x = cvRound(x0 + 1000*(-b));</span>
+<span class="c">     pt1.y = cvRound(y0 + 1000*(a));</span>
+<span class="c">     pt2.x = cvRound(x0 - 1000*(-b));</span>
+<span class="c">     pt2.y = cvRound(y0 - 1000*(a));</span>
+<span class="c">     line( cdst, pt1, pt2, Scalar(0,0,255), 3, CV_AA);</span>
+<span class="c">  }</span>
+<span class="cp"> #else</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">Vec4i</span><span class="o">&gt;</span> <span class="n">lines</span><span class="p">;</span>
+  <span class="n">HoughLinesP</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">lines</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">CV_PI</span><span class="o">/</span><span class="mi">180</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">10</span> <span class="p">);</span>
+  <span class="k">for</span><span class="p">(</span> <span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">lines</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">Vec4i</span> <span class="n">l</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="n">line</span><span class="p">(</span> <span class="n">cdst</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">Point</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">l</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="n">CV_AA</span><span class="p">);</span>
+  <span class="p">}</span>
+ <span class="cp">#endif</span>
+ <span class="n">imshow</span><span class="p">(</span><span class="s">&quot;source&quot;</span><span class="p">,</span> <span class="n">src</span><span class="p">);</span>
+ <span class="n">imshow</span><span class="p">(</span><span class="s">&quot;detected lines&quot;</span><span class="p">,</span> <span class="n">cdst</span><span class="p">);</span>
+
+ <span class="n">waitKey</span><span class="p">();</span>
+
+ <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Load an image</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="n">src</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="p">{</span>
+  <span class="n">help</span><span class="p">();</span>
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;can not open &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">filename</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+  <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Detect the edges of the image by using a Canny detector</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Canny</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Now we will apply the Hough Line Transform. We will explain how to use both OpenCV functions available for this purpose:</p>
+</li>
+<li><p class="first"><strong>Standard Hough Line Transform</strong></p>
+<ol class="loweralpha">
+<li><p class="first">First, you apply the Transform:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vec2f</span><span class="o">&gt;</span> <span class="n">lines</span><span class="p">;</span>
+<span class="n">HoughLines</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">lines</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">CV_PI</span><span class="o">/</span><span class="mi">180</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>with the following arguments:</p>
+<ul class="simple">
+<li><em>dst</em>: Output of the edge detector. It should be a grayscale image (although in fact it is a binary one)</li>
+<li><em>lines</em>: A vector that will store the parameters <img class="math" src="../../../../../_images/math/0fd7838e4ca21f78e83d493013a3578195aa73ab.png" alt="(r,\theta)"/> of the detected lines</li>
+<li><em>rho</em> : The resolution of the parameter <img class="math" src="../../../../../_images/math/ad87c26146d46be66f1d2433d2d19bb0669f939c.png" alt="r"/> in pixels. We use <strong>1</strong> pixel.</li>
+<li><em>theta</em>: The resolution of the parameter <img class="math" src="../../../../../_images/math/f324df69016bcdbbc6a6b842f7cdb42d6b305049.png" alt="\theta"/> in radians. We use <strong>1 degree</strong> (CV_PI/180)</li>
+<li><em>threshold</em>: The minimum number of intersections to &#8220;<em>detect</em>&#8221; a line</li>
+<li><em>srn</em> and <em>stn</em>: Default parameters to zero. Check OpenCV reference for more info.</li>
+</ul>
+</li>
+<li><p class="first">And then you display the result by drawing the lines.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">for</span><span class="p">(</span> <span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">lines</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="kt">float</span> <span class="n">rho</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">theta</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span>
+  <span class="n">Point</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">;</span>
+  <span class="kt">double</span> <span class="n">a</span> <span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">b</span> <span class="o">=</span> <span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">);</span>
+  <span class="kt">double</span> <span class="n">x0</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">rho</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="n">b</span><span class="o">*</span><span class="n">rho</span><span class="p">;</span>
+  <span class="n">pt1</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">x0</span> <span class="o">+</span> <span class="mi">1000</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">b</span><span class="p">));</span>
+  <span class="n">pt1</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">y0</span> <span class="o">+</span> <span class="mi">1000</span><span class="o">*</span><span class="p">(</span><span class="n">a</span><span class="p">));</span>
+  <span class="n">pt2</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">x0</span> <span class="o">-</span> <span class="mi">1000</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">b</span><span class="p">));</span>
+  <span class="n">pt2</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">y0</span> <span class="o">-</span> <span class="mi">1000</span><span class="o">*</span><span class="p">(</span><span class="n">a</span><span class="p">));</span>
+  <span class="n">line</span><span class="p">(</span> <span class="n">cdst</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="n">CV_AA</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</li>
+<li><p class="first"><strong>Probabilistic Hough Line Transform</strong></p>
+<ol class="loweralpha">
+<li><p class="first">First you apply the transform:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vec4i</span><span class="o">&gt;</span> <span class="n">lines</span><span class="p">;</span>
+<span class="n">HoughLinesP</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">lines</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">CV_PI</span><span class="o">/</span><span class="mi">180</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">10</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>with the arguments:</p>
+<ul class="simple">
+<li><em>dst</em>: Output of the edge detector. It should be a grayscale image (although in fact it is a binary one)</li>
+<li><em>lines</em>: A vector that will store the parameters <img class="math" src="../../../../../_images/math/eecd0327bf37533168c28afe10795d75d647953e.png" alt="(x_{start}, y_{start}, x_{end}, y_{end})"/> of the detected lines</li>
+<li><em>rho</em> : The resolution of the parameter <img class="math" src="../../../../../_images/math/ad87c26146d46be66f1d2433d2d19bb0669f939c.png" alt="r"/> in pixels. We use <strong>1</strong> pixel.</li>
+<li><em>theta</em>: The resolution of the parameter <img class="math" src="../../../../../_images/math/f324df69016bcdbbc6a6b842f7cdb42d6b305049.png" alt="\theta"/> in radians. We use <strong>1 degree</strong> (CV_PI/180)</li>
+<li><em>threshold</em>: The minimum number of intersections to &#8220;<em>detect</em>&#8221; a line</li>
+<li><em>minLinLength</em>: The minimum number of points that can form a line. Lines with less than this number of points are disregarded.</li>
+<li><em>maxLineGap</em>: The maximum gap between two points to be considered in the same line.</li>
+</ul>
+</li>
+<li><p class="first">And then you display the result by drawing the lines.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">for</span><span class="p">(</span> <span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">lines</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">Vec4i</span> <span class="n">l</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="n">line</span><span class="p">(</span> <span class="n">cdst</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">Point</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">l</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="n">CV_AA</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</li>
+<li><p class="first">Display the original image and the detected lines:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">imshow</span><span class="p">(</span><span class="s">&quot;source&quot;</span><span class="p">,</span> <span class="n">src</span><span class="p">);</span>
+<span class="n">imshow</span><span class="p">(</span><span class="s">&quot;detected lines&quot;</span><span class="p">,</span> <span class="n">cdst</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Wait until the user exits the program</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">waitKey</span><span class="p">();</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="result">
+<h2>Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The results below are obtained using the slightly fancier version we mentioned in the <em>Code</em> section. It still implements the same stuff as above, only adding the Trackbar for the Threshold.</p>
+</div>
+<p>Using an input image such as:</p>
+<img alt="Result of detecting lines with Hough Transform" class="align-center" src="../../../../../_images/Hough_Lines_Tutorial_Original_Image.jpg" />
+<p>We get the following result by using the Probabilistic Hough Line Transform:</p>
+<img alt="Result of detecting lines with Hough Transform" class="align-center" src="../../../../../_images/Hough_Lines_Tutorial_Result.jpg" />
+<p>You may observe that the number of lines detected vary while you change the <em>threshold</em>. The explanation is sort of evident: If you establish a higher threshold, fewer lines will be detected (since you will need more points to declare a line detected).</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Hough Line Transform</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a><ul>
+<li><a class="reference internal" href="#id1">Hough Line Transform</a><ul>
+<li><a class="reference internal" href="#how-does-it-work">How does it work?</a></li>
+<li><a class="reference internal" href="#standard-and-probabilistic-hough-line-transform">Standard and Probabilistic Hough Line Transform</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#result">Result</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../canny_detector/canny_detector.html"
+                        title="previous chapter">Canny Edge Detector</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../hough_circle/hough_circle.html"
+                        title="next chapter">Hough Circle Transform</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../../_sources/doc/tutorials/imgproc/imgtrans/hough_lines/hough_lines.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../hough_circle/hough_circle.html" title="Hough Circle Transform"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../canny_detector/canny_detector.html" title="Canny Edge Detector"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" ><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

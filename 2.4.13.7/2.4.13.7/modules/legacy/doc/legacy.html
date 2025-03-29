@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>legacy. Deprecated stuff &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="OpenCV API Reference" href="../../refman.html" />
+    <link rel="next" title="Motion Analysis" href="motion_analysis.html" />
+    <link rel="prev" title="OpenFABMAP" href="../../contrib/doc/openfabmap.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="motion_analysis.html" title="Motion Analysis"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../../contrib/doc/openfabmap.html" title="OpenFABMAP"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" accesskey="U">OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="legacy-deprecated-stuff">
+<h1>legacy. Deprecated stuff<a class="headerlink" href="#legacy-deprecated-stuff" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="motion_analysis.html">Motion Analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis.html#calcopticalflowbm">CalcOpticalFlowBM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis.html#calcopticalflowhs">CalcOpticalFlowHS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motion_analysis.html#calcopticalflowlk">CalcOpticalFlowLK</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="expectation_maximization.html">Expectation Maximization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#cvemparams">CvEMParams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#cvemparams-cvemparams">CvEMParams::CvEMParams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#cvem">CvEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#cvem-train">CvEM::train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#cvem-predict">CvEM::predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#cvem-getnclusters">CvEM::getNClusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#cvem-getmeans">CvEM::getMeans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#cvem-getcovs">CvEM::getCovs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#cvem-getweights">CvEM::getWeights</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#cvem-getprobs">CvEM::getProbs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#cvem-getlikelihood">CvEM::getLikelihood</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#cvem-write">CvEM::write</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expectation_maximization.html#cvem-read">CvEM::read</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="histograms.html">Histograms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#calcpgh">CalcPGH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#queryhistvalue-d">QueryHistValue*D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="histograms.html#gethistvalue-d">GetHistValue_?D</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="planar_subdivisions.html">Planar Subdivisions (C API)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="planar_subdivisions.html#cvsubdiv2d">CvSubdiv2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="planar_subdivisions.html#cvquadedge2d">CvQuadEdge2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="planar_subdivisions.html#cvsubdiv2dpoint">CvSubdiv2DPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="planar_subdivisions.html#calcsubdivvoronoi2d">CalcSubdivVoronoi2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="planar_subdivisions.html#clearsubdivvoronoi2d">ClearSubdivVoronoi2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="planar_subdivisions.html#createsubdivdelaunay2d">CreateSubdivDelaunay2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="planar_subdivisions.html#findnearestpoint2d">FindNearestPoint2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="planar_subdivisions.html#subdiv2dedgedst">Subdiv2DEdgeDst</a></li>
+<li class="toctree-l2"><a class="reference internal" href="planar_subdivisions.html#subdiv2dgetedge">Subdiv2DGetEdge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="planar_subdivisions.html#subdiv2dnextedge">Subdiv2DNextEdge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="planar_subdivisions.html#subdiv2dlocate">Subdiv2DLocate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="planar_subdivisions.html#subdiv2drotateedge">Subdiv2DRotateEdge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="planar_subdivisions.html#subdivdelaunay2dinsert">SubdivDelaunay2DInsert</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="feature_detection_and_description.html">Feature Detection and Description</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#randomizedtree">RandomizedTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#randomizedtree-train">RandomizedTree::train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#randomizedtree-read">RandomizedTree::read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#randomizedtree-write">RandomizedTree::write</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#randomizedtree-applyquantization">RandomizedTree::applyQuantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#rtreenode">RTreeNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#rtreeclassifier">RTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#rtreeclassifier-train">RTreeClassifier::train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#rtreeclassifier-getsignature">RTreeClassifier::getSignature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#rtreeclassifier-getsparsesignature">RTreeClassifier::getSparseSignature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#rtreeclassifier-countnonzeroelements">RTreeClassifier::countNonZeroElements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#rtreeclassifier-read">RTreeClassifier::read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#rtreeclassifier-write">RTreeClassifier::write</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_detection_and_description.html#rtreeclassifier-setquantization">RTreeClassifier::setQuantization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="common_interfaces_of_descriptor_extractors.html">Common Interfaces of Descriptor Extractors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_descriptor_extractors.html#calonderdescriptorextractor">CalonderDescriptorExtractor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html">Common Interfaces of Generic Descriptor Matchers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html#onewaydescriptorbase">OneWayDescriptorBase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html#onewaydescriptormatcher">OneWayDescriptorMatcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html#fernclassifier">FernClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_interfaces_of_generic_descriptor_matchers.html#ferndescriptormatcher">FernDescriptorMatcher</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../../contrib/doc/openfabmap.html"
+                        title="previous chapter">OpenFABMAP</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="motion_analysis.html"
+                        title="next chapter">Motion Analysis</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/legacy/doc/legacy.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="motion_analysis.html" title="Motion Analysis"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../../contrib/doc/openfabmap.html" title="OpenFABMAP"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Data Structures and Utility Functions &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="ocl. OpenCL-accelerated Computer Vision" href="ocl.html" />
+    <link rel="next" title="Data Structures" href="data_structures.html" />
+    <link rel="prev" title="OpenCL Module Introduction" href="introduction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="data_structures.html" title="Data Structures"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="OpenCL Module Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" accesskey="U">ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="data-structures-and-utility-functions">
+<h1>Data Structures and Utility Functions<a class="headerlink" href="#data-structures-and-utility-functions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ocl-getopenclplatforms">
+<h2>ocl::getOpenCLPlatforms<a class="headerlink" href="#ocl-getopenclplatforms" title="Permalink to this headline">¶</a></h2>
+<p>Returns the list of OpenCL platforms</p>
+<dl class="function">
+<dt id="int ocl::getOpenCLPlatforms(PlatformsInfo&amp; platforms)">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">ocl::</code><code class="descname">getOpenCLPlatforms</code><span class="sig-paren">(</span>PlatformsInfo&amp; <strong>platforms</strong><span class="sig-paren">)</span><a class="headerlink" href="#int ocl::getOpenCLPlatforms(PlatformsInfo& platforms)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>platforms</strong> &#8211; Output variable</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-getopencldevices">
+<h2>ocl::getOpenCLDevices<a class="headerlink" href="#ocl-getopencldevices" title="Permalink to this headline">¶</a></h2>
+<p>Returns the list of devices</p>
+<dl class="function">
+<dt id="int ocl::getOpenCLDevices(DevicesInfo&amp; devices, int deviceType , const PlatformInfo* platform)">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">ocl::</code><code class="descname">getOpenCLDevices</code><span class="sig-paren">(</span>DevicesInfo&amp; <strong>devices</strong>, int <strong>deviceType</strong>=CVCL_DEVICE_TYPE_GPU, const PlatformInfo* <strong>platform</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#int ocl::getOpenCLDevices(DevicesInfo& devices, int deviceType , const PlatformInfo* platform)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>devices</strong> &#8211; Output variable</li>
+<li><strong>deviceType</strong> &#8211; Bitmask of <code class="docutils literal"><span class="pre">CVCL_DEVICE_TYPE_GPU</span></code>, <code class="docutils literal"><span class="pre">CVCL_DEVICE_TYPE_CPU</span></code> or <code class="docutils literal"><span class="pre">CVCL_DEVICE_TYPE_DEFAULT</span></code>.</li>
+<li><strong>platform</strong> &#8211; Specifies preferrable platform</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-setdevice">
+<h2>ocl::setDevice<a class="headerlink" href="#ocl-setdevice" title="Permalink to this headline">¶</a></h2>
+<p>Initialize OpenCL computation context</p>
+<dl class="function">
+<dt id="void ocl::setDevice(const DeviceInfo* info)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">setDevice</code><span class="sig-paren">(</span>const DeviceInfo* <strong>info</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::setDevice(const DeviceInfo* info)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>info</strong> &#8211; device info</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-initializecontext">
+<h2>ocl::initializeContext<a class="headerlink" href="#ocl-initializecontext" title="Permalink to this headline">¶</a></h2>
+<p>Alternative way to initialize OpenCL computation context.</p>
+<dl class="function">
+<dt id="void ocl::initializeContext(void* pClPlatform, void* pClContext, void* pClDevice)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">initializeContext</code><span class="sig-paren">(</span>void* <strong>pClPlatform</strong>, void* <strong>pClContext</strong>, void* <strong>pClDevice</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::initializeContext(void* pClPlatform, void* pClContext, void* pClDevice)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pClPlatform</strong> &#8211; selected <code class="docutils literal"><span class="pre">platform_id</span></code> (via pointer, parameter type is <code class="docutils literal"><span class="pre">cl_platform_id*</span></code>)</li>
+<li><strong>pClContext</strong> &#8211; selected <code class="docutils literal"><span class="pre">cl_context</span></code> (via pointer, parameter type is <code class="docutils literal"><span class="pre">cl_context*</span></code>)</li>
+<li><strong>pClDevice</strong> &#8211; selected <code class="docutils literal"><span class="pre">cl_device_id</span></code> (via pointer, parameter type is <code class="docutils literal"><span class="pre">cl_device_id*</span></code>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function can be used for context initialization with D3D/OpenGL interoperability.</p>
+</div>
+<div class="section" id="ocl-setbinarypath">
+<h2>ocl::setBinaryPath<a class="headerlink" href="#ocl-setbinarypath" title="Permalink to this headline">¶</a></h2>
+<p>Returns void</p>
+<dl class="function">
+<dt id="void ocl::setBinaryPath(const char *path)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">setBinaryPath</code><span class="sig-paren">(</span>const char* <strong>path</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::setBinaryPath(const char *path)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path</strong> &#8211; the path of OpenCL kernel binaries</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>If you call this function and set a valid path, the OCL module will save the compiled kernel to the address in the first time and reload the binary since that. It can save compilation time at the runtime.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Data Structures and Utility Functions</a><ul>
+<li><a class="reference internal" href="#ocl-getopenclplatforms">ocl::getOpenCLPlatforms</a></li>
+<li><a class="reference internal" href="#ocl-getopencldevices">ocl::getOpenCLDevices</a></li>
+<li><a class="reference internal" href="#ocl-setdevice">ocl::setDevice</a></li>
+<li><a class="reference internal" href="#ocl-initializecontext">ocl::initializeContext</a></li>
+<li><a class="reference internal" href="#ocl-setbinarypath">ocl::setBinaryPath</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="introduction.html"
+                        title="previous chapter">OpenCL Module Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="data_structures.html"
+                        title="next chapter">Data Structures</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/ocl/doc/structures_and_utility_functions.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="data_structures.html" title="Data Structures"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="OpenCL Module Introduction"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" >ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

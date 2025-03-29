@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>calib3d module. Camera calibration and 3D reconstruction &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="OpenCV Tutorials" href="../../tutorials.html" />
+    <link rel="next" title="Camera calibration with square chessboard" href="../camera_calibration_square_chess/camera_calibration_square_chess.html" />
+    <link rel="prev" title="Creating a video with OpenCV" href="../../highgui/video-write/video-write.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../camera_calibration_square_chess/camera_calibration_square_chess.html" title="Camera calibration with square chessboard"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../../highgui/video-write/video-write.html" title="Creating a video with OpenCV"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" accesskey="U">OpenCV Tutorials</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="calib3d-module-camera-calibration-and-3d-reconstruction">
+<span id="table-of-content-calib3d"></span><h1><em>calib3d</em> module. Camera calibration and 3D reconstruction<a class="headerlink" href="#calib3d-module-camera-calibration-and-3d-reconstruction" title="Permalink to this headline">¶</a></h1>
+<p>Although we got most of our images in a 2D format they do come from a 3D world. Here you will learn how to find out from the 2D images information about the 3D world.</p>
+<ul>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="26%" />
+<col width="74%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/camera_calibration_square_chess.jpg"><img alt="CameraCalSqChess" src="../../../../_images/camera_calibration_square_chess.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../camera_calibration_square_chess/camera_calibration_square_chess.html#cameracalibrationsquarechessboardtutorial"><span>Camera calibration with square chessboard</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Victor Eruhimov</p>
+<p class="last">You will use some chessboard images to calibrate your camera.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/camera_calibration.png"><img alt="CameraCalibration" src="../../../../_images/camera_calibration.png" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../camera_calibration/camera_calibration.html#cameracalibrationopencv"><span>Camera calibration With OpenCV</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Bernát Gábor</p>
+<p class="last">Camera calibration by using either the chessboard, circle or the asymmetrical circle pattern. Get the images either from a camera attached, a video file or from an image collection.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../../highgui/video-write/video-write.html"
+                        title="previous chapter">Creating a video with OpenCV</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../camera_calibration_square_chess/camera_calibration_square_chess.html"
+                        title="next chapter">Camera calibration with square chessboard</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/calib3d/table_of_content_calib3d/table_of_content_calib3d.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../camera_calibration_square_chess/camera_calibration_square_chess.html" title="Camera calibration with square chessboard"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../../highgui/video-write/video-write.html" title="Creating a video with OpenCV"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

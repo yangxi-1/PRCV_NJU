@@ -1,0 +1,475 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Template Matching &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../../index.html" />
+    <link rel="up" title="imgproc module. Image Processing" href="../../table_of_content_imgproc/table_of_content_imgproc.html" />
+    <link rel="next" title="Finding contours in your image" href="../../shapedescriptors/find_contours/find_contours.html" />
+    <link rel="prev" title="Back Projection" href="../back_projection/back_projection.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../shapedescriptors/find_contours/find_contours.html" title="Finding contours in your image"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../back_projection/back_projection.html" title="Back Projection"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" accesskey="U"><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="template-matching">
+<span id="id1"></span><h1>Template Matching<a class="headerlink" href="#template-matching" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Use the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/object_detection.html?highlight=matchtemplate#matchtemplate">matchTemplate</a> to search for matches between an image patch and an input image</li>
+<li>Use the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/operations_on_arrays.html?highlight=minmaxloc#minmaxloc">minMaxLoc</a> to find the maximum and minimum values (as well as their positions) in a given array.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="what-is-template-matching">
+<h3>What is template matching?<a class="headerlink" href="#what-is-template-matching" title="Permalink to this headline">¶</a></h3>
+<div class="enumeratevisibleitemswithsquare container">
+Template matching is a technique for finding areas of an image that match (are similar) to a template image (patch).</div>
+</div>
+<div class="section" id="how-does-it-work">
+<h3>How does it work?<a class="headerlink" href="#how-does-it-work" title="Permalink to this headline">¶</a></h3>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first">We need two primary components:</p>
+<ol class="loweralpha simple">
+<li><strong>Source image (I):</strong> The image in which we expect to find a match to the template image</li>
+<li><strong>Template image (T):</strong> The patch image which will be compared to the template image</li>
+</ol>
+<p>our goal is to detect the highest matching area:</p>
+<img alt="../../../../../_images/Template_Matching_Template_Theory_Summary.jpg" class="align-center" src="../../../../../_images/Template_Matching_Template_Theory_Summary.jpg" />
+</li>
+<li><p class="first">To identify the matching area, we have to <em>compare</em> the template image against the source image by sliding it:</p>
+<img alt="../../../../../_images/Template_Matching_Template_Theory_Sliding.jpg" class="align-center" src="../../../../../_images/Template_Matching_Template_Theory_Sliding.jpg" />
+</li>
+<li><p class="first">By <strong>sliding</strong>, we mean moving the patch one pixel at a time (left to right, up to down). At each location, a metric is calculated so it represents how &#8220;good&#8221; or &#8220;bad&#8221; the match at that location is (or how similar the patch is to that particular area of the source image).</p>
+</li>
+<li><p class="first">For each location of <strong>T</strong> over <strong>I</strong>, you <em>store</em> the metric in the <em>result matrix</em> <strong>(R)</strong>. Each location <img class="math" src="../../../../../_images/math/45b34b73b5a1fed1fd38b3a37ca1ada031de9970.png" alt="(x,y)"/> in <strong>R</strong> contains the match metric:</p>
+<img alt="../../../../../_images/Template_Matching_Template_Theory_Result.jpg" class="align-center" src="../../../../../_images/Template_Matching_Template_Theory_Result.jpg" />
+<p>the image above is the result <strong>R</strong> of sliding the patch with a metric <strong>TM_CCORR_NORMED</strong>. The brightest locations indicate the highest matches. As you can see, the location marked by the red circle is probably the one with the highest value, so that location (the rectangle formed by that point as a corner and width and height equal to the patch image) is considered the match.</p>
+</li>
+<li><p class="first">In practice, we use the function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/operations_on_arrays.html?highlight=minmaxloc#minmaxloc">minMaxLoc</a> to locate the highest value (or lower, depending of the type of matching method) in the <em>R</em> matrix.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="which-are-the-matching-methods-available-in-opencv">
+<h3>Which are the matching methods available in OpenCV?<a class="headerlink" href="#which-are-the-matching-methods-available-in-opencv" title="Permalink to this headline">¶</a></h3>
+<p>Good question. OpenCV implements Template matching in the function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/object_detection.html?highlight=matchtemplate#matchtemplate">matchTemplate</a>. The available methods are 6:</p>
+<ol class="loweralpha">
+<li><p class="first"><strong>method=CV_TM_SQDIFF</strong></p>
+<div class="math">
+<p><img src="../../../../../_images/math/f096a706cb9499736423f10d901c7fe13a1e6926.png" alt="R(x,y)= \sum _{x',y'} (T(x',y')-I(x+x',y+y'))^2"/></p>
+</div></li>
+<li><p class="first"><strong>method=CV_TM_SQDIFF_NORMED</strong></p>
+<div class="math">
+<p><img src="../../../../../_images/math/6d6a720237b3a4c1365c8e86a9cfcf0895d5e265.png" alt="R(x,y)= \frac{\sum_{x',y'} (T(x',y')-I(x+x',y+y'))^2}{\sqrt{\sum_{x',y'}T(x',y')^2 \cdot \sum_{x',y'} I(x+x',y+y')^2}}"/></p>
+</div></li>
+<li><p class="first"><strong>method=CV_TM_CCORR</strong></p>
+<div class="math">
+<p><img src="../../../../../_images/math/93f1747a86a3c5095a0e6a187442c6e2a0ae0968.png" alt="R(x,y)= \sum _{x',y'} (T(x',y')  \cdot I(x+x',y+y'))"/></p>
+</div></li>
+<li><p class="first"><strong>method=CV_TM_CCORR_NORMED</strong></p>
+<div class="math">
+<p><img src="../../../../../_images/math/6a72ad9ae17c4dad88e33ed16308fc1cfba549b8.png" alt="R(x,y)= \frac{\sum_{x',y'} (T(x',y') \cdot I(x+x',y+y'))}{\sqrt{\sum_{x',y'}T(x',y')^2 \cdot \sum_{x',y'} I(x+x',y+y')^2}}"/></p>
+</div></li>
+<li><p class="first"><strong>method=CV_TM_CCOEFF</strong></p>
+<div class="math">
+<p><img src="../../../../../_images/math/6d8865ea008412bdc246ace6f5a3fe0991502881.png" alt="R(x,y)= \sum _{x',y'} (T'(x',y')  \cdot I(x+x',y+y'))"/></p>
+</div><p>where</p>
+<div class="math">
+<p><img src="../../../../../_images/math/ffb6954b6020b02e13b73c79bd852c1627cfb79c.png" alt="\begin{array}{l} T'(x',y')=T(x',y') - 1/(w  \cdot h)  \cdot \sum _{x'',y''} T(x'',y'') \\ I'(x+x',y+y')=I(x+x',y+y') - 1/(w  \cdot h)  \cdot \sum _{x'',y''} I(x+x'',y+y'') \end{array}"/></p>
+</div></li>
+<li><p class="first"><strong>method=CV_TM_CCOEFF_NORMED</strong></p>
+<div class="math">
+<p><img src="../../../../../_images/math/235e42ec68d2d773899efcf0a4a9d35a7afedb64.png" alt="R(x,y)= \frac{ \sum_{x',y'} (T'(x',y') \cdot I'(x+x',y+y')) }{ \sqrt{\sum_{x',y'}T'(x',y')^2 \cdot \sum_{x',y'} I'(x+x',y+y')^2} }"/></p>
+</div></li>
+</ol>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first"><strong>What does this program do?</strong></p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Loads an input image and a image patch (<em>template</em>)</li>
+<li>Perform a template matching procedure by using the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/object_detection.html?highlight=matchtemplate#matchtemplate">matchTemplate</a> with any of the 6 matching methods described before. The user can choose the method by entering its selection in the Trackbar.</li>
+<li>Normalize the output of the matching procedure</li>
+<li>Localize the location with higher matching probability</li>
+<li>Draw a rectangle around the area corresponding to the highest match</li>
+</ul>
+</div>
+</li>
+<li><p class="first"><strong>Downloadable code</strong>:
+Click <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/tutorial_code/Histograms_Matching/MatchTemplate_Demo.cpp">here</a></p>
+</li>
+<li><p class="first"><strong>Code at glance:</strong></p>
+</li>
+</ul>
+</div>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;opencv2/highgui/highgui.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/imgproc/imgproc.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="c1">/// Global Variables</span>
+<span class="n">Mat</span> <span class="n">img</span><span class="p">;</span> <span class="n">Mat</span> <span class="n">templ</span><span class="p">;</span> <span class="n">Mat</span> <span class="n">result</span><span class="p">;</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">image_window</span> <span class="o">=</span> <span class="s">&quot;Source Image&quot;</span><span class="p">;</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">result_window</span> <span class="o">=</span> <span class="s">&quot;Result window&quot;</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="n">match_method</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">max_Trackbar</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+
+<span class="c1">/// Function Headers</span>
+<span class="kt">void</span> <span class="nf">MatchingMethod</span><span class="p">(</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="p">);</span>
+
+<span class="cm">/** @function main */</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">/// Load image and template</span>
+  <span class="n">img</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+  <span class="n">templ</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+
+  <span class="c1">/// Create windows</span>
+  <span class="n">namedWindow</span><span class="p">(</span> <span class="n">image_window</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+  <span class="n">namedWindow</span><span class="p">(</span> <span class="n">result_window</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+
+  <span class="c1">/// Create Trackbar</span>
+  <span class="kt">char</span><span class="o">*</span> <span class="n">trackbar_label</span> <span class="o">=</span> <span class="s">&quot;Method: </span><span class="se">\n</span><span class="s"> 0: SQDIFF </span><span class="se">\n</span><span class="s"> 1: SQDIFF NORMED </span><span class="se">\n</span><span class="s"> 2: TM CCORR </span><span class="se">\n</span><span class="s"> 3: TM CCORR NORMED </span><span class="se">\n</span><span class="s"> 4: TM COEFF </span><span class="se">\n</span><span class="s"> 5: TM COEFF NORMED&quot;</span><span class="p">;</span>
+  <span class="n">createTrackbar</span><span class="p">(</span> <span class="n">trackbar_label</span><span class="p">,</span> <span class="n">image_window</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">match_method</span><span class="p">,</span> <span class="n">max_Trackbar</span><span class="p">,</span> <span class="n">MatchingMethod</span> <span class="p">);</span>
+
+  <span class="n">MatchingMethod</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+
+  <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @function MatchingMethod</span>
+<span class="cm"> * @brief Trackbar callback</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="nf">MatchingMethod</span><span class="p">(</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">/// Source image to display</span>
+  <span class="n">Mat</span> <span class="n">img_display</span><span class="p">;</span>
+  <span class="n">img</span><span class="p">.</span><span class="n">copyTo</span><span class="p">(</span> <span class="n">img_display</span> <span class="p">);</span>
+
+  <span class="c1">/// Create the result matrix</span>
+  <span class="kt">int</span> <span class="n">result_cols</span> <span class="o">=</span>  <span class="n">img</span><span class="p">.</span><span class="n">cols</span> <span class="o">-</span> <span class="n">templ</span><span class="p">.</span><span class="n">cols</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">result_rows</span> <span class="o">=</span> <span class="n">img</span><span class="p">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">templ</span><span class="p">.</span><span class="n">rows</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="n">result</span><span class="p">.</span><span class="n">create</span><span class="p">(</span> <span class="n">result_rows</span><span class="p">,</span> <span class="n">result_cols</span><span class="p">,</span> <span class="n">CV_32FC1</span> <span class="p">);</span>
+
+  <span class="c1">/// Do the Matching and Normalize</span>
+  <span class="n">matchTemplate</span><span class="p">(</span> <span class="n">img</span><span class="p">,</span> <span class="n">templ</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">match_method</span> <span class="p">);</span>
+  <span class="n">normalize</span><span class="p">(</span> <span class="n">result</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">NORM_MINMAX</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+
+  <span class="c1">/// Localizing the best match with minMaxLoc</span>
+  <span class="kt">double</span> <span class="n">minVal</span><span class="p">;</span> <span class="kt">double</span> <span class="n">maxVal</span><span class="p">;</span> <span class="n">Point</span> <span class="n">minLoc</span><span class="p">;</span> <span class="n">Point</span> <span class="n">maxLoc</span><span class="p">;</span>
+  <span class="n">Point</span> <span class="n">matchLoc</span><span class="p">;</span>
+
+  <span class="n">minMaxLoc</span><span class="p">(</span> <span class="n">result</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">minVal</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">maxVal</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">minLoc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">maxLoc</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+
+  <span class="c1">/// For SQDIFF and SQDIFF_NORMED, the best matches are lower values. For all the other methods, the higher the better</span>
+  <span class="k">if</span><span class="p">(</span> <span class="n">match_method</span>  <span class="o">==</span> <span class="n">CV_TM_SQDIFF</span> <span class="o">||</span> <span class="n">match_method</span> <span class="o">==</span> <span class="n">CV_TM_SQDIFF_NORMED</span> <span class="p">)</span>
+    <span class="p">{</span> <span class="n">matchLoc</span> <span class="o">=</span> <span class="n">minLoc</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">else</span>
+    <span class="p">{</span> <span class="n">matchLoc</span> <span class="o">=</span> <span class="n">maxLoc</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="c1">/// Show me what you got</span>
+  <span class="n">rectangle</span><span class="p">(</span> <span class="n">img_display</span><span class="p">,</span> <span class="n">matchLoc</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="n">matchLoc</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">templ</span><span class="p">.</span><span class="n">cols</span> <span class="p">,</span> <span class="n">matchLoc</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">templ</span><span class="p">.</span><span class="n">rows</span> <span class="p">),</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+  <span class="n">rectangle</span><span class="p">(</span> <span class="n">result</span><span class="p">,</span> <span class="n">matchLoc</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="n">matchLoc</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">templ</span><span class="p">.</span><span class="n">cols</span> <span class="p">,</span> <span class="n">matchLoc</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">templ</span><span class="p">.</span><span class="n">rows</span> <span class="p">),</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+
+  <span class="n">imshow</span><span class="p">(</span> <span class="n">image_window</span><span class="p">,</span> <span class="n">img_display</span> <span class="p">);</span>
+  <span class="n">imshow</span><span class="p">(</span> <span class="n">result_window</span><span class="p">,</span> <span class="n">result</span> <span class="p">);</span>
+
+  <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Declare some global variables, such as the image, template and result matrices, as well as the match method and the window names:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">img</span><span class="p">;</span> <span class="n">Mat</span> <span class="n">templ</span><span class="p">;</span> <span class="n">Mat</span> <span class="n">result</span><span class="p">;</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">image_window</span> <span class="o">=</span> <span class="s">&quot;Source Image&quot;</span><span class="p">;</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">result_window</span> <span class="o">=</span> <span class="s">&quot;Result window&quot;</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="n">match_method</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">max_Trackbar</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Load the source image and template:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">img</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+<span class="n">templ</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create the windows to show the results:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">namedWindow</span><span class="p">(</span> <span class="n">image_window</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+<span class="n">namedWindow</span><span class="p">(</span> <span class="n">result_window</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create the Trackbar to enter the kind of matching method to be used. When a change is detected the callback function <strong>MatchingMethod</strong> is called.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">char</span><span class="o">*</span> <span class="n">trackbar_label</span> <span class="o">=</span> <span class="s">&quot;Method: </span><span class="se">\n</span><span class="s"> 0: SQDIFF </span><span class="se">\n</span><span class="s"> 1: SQDIFF NORMED </span><span class="se">\n</span><span class="s"> 2: TM CCORR </span><span class="se">\n</span><span class="s"> 3: TM CCORR NORMED </span><span class="se">\n</span><span class="s"> 4: TM COEFF </span><span class="se">\n</span><span class="s"> 5: TM COEFF NORMED&quot;</span><span class="p">;</span>
+<span class="n">createTrackbar</span><span class="p">(</span> <span class="n">trackbar_label</span><span class="p">,</span> <span class="n">image_window</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">match_method</span><span class="p">,</span> <span class="n">max_Trackbar</span><span class="p">,</span> <span class="n">MatchingMethod</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Wait until user exits the program.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Let&#8217;s check out the callback function. First, it makes a copy of the source image:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">img_display</span><span class="p">;</span>
+<span class="n">img</span><span class="p">.</span><span class="n">copyTo</span><span class="p">(</span> <span class="n">img_display</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Next, it creates the result matrix that will store the matching results for each template location. Observe in detail the size of the result matrix (which matches all possible locations for it)</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">int</span> <span class="n">result_cols</span> <span class="o">=</span>  <span class="n">img</span><span class="p">.</span><span class="n">cols</span> <span class="o">-</span> <span class="n">templ</span><span class="p">.</span><span class="n">cols</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">result_rows</span> <span class="o">=</span> <span class="n">img</span><span class="p">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">templ</span><span class="p">.</span><span class="n">rows</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+
+<span class="n">result</span><span class="p">.</span><span class="n">create</span><span class="p">(</span> <span class="n">result_rows</span><span class="p">,</span> <span class="n">result_cols</span><span class="p">,</span> <span class="n">CV_32FC1</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Perform the template matching operation:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">matchTemplate</span><span class="p">(</span> <span class="n">img</span><span class="p">,</span> <span class="n">templ</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">match_method</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>the arguments are naturally the input image <strong>I</strong>, the template <strong>T</strong>, the result <strong>R</strong> and the match_method (given by the Trackbar)</p>
+</li>
+<li><p class="first">We normalize the results:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">normalize</span><span class="p">(</span> <span class="n">result</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">NORM_MINMAX</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">We localize the minimum and maximum values in the result matrix <strong>R</strong> by using <a class="reference external" href="http://docs.opencv.org/modules/core/doc/operations_on_arrays.html?highlight=minmaxloc#minmaxloc">minMaxLoc</a>.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">double</span> <span class="n">minVal</span><span class="p">;</span> <span class="kt">double</span> <span class="n">maxVal</span><span class="p">;</span> <span class="n">Point</span> <span class="n">minLoc</span><span class="p">;</span> <span class="n">Point</span> <span class="n">maxLoc</span><span class="p">;</span>
+<span class="n">Point</span> <span class="n">matchLoc</span><span class="p">;</span>
+
+<span class="n">minMaxLoc</span><span class="p">(</span> <span class="n">result</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">minVal</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">maxVal</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">minLoc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">maxLoc</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>the function calls as arguments:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li><strong>result:</strong> The source array</li>
+<li><strong>&amp;minVal</strong> and <strong>&amp;maxVal:</strong> Variables to save the minimum and maximum values in <strong>result</strong></li>
+<li><strong>&amp;minLoc</strong> and <strong>&amp;maxLoc:</strong> The Point locations of the minimum and maximum values in the array.</li>
+<li><strong>Mat():</strong> Optional mask</li>
+</ul>
+</div>
+</li>
+<li><p class="first">For the first two methods ( CV_SQDIFF and CV_SQDIFF_NORMED ) the best match are the lowest values. For all the others, higher values represent better matches. So, we save the corresponding value in the <strong>matchLoc</strong> variable:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">if</span><span class="p">(</span> <span class="n">match_method</span>  <span class="o">==</span> <span class="n">CV_TM_SQDIFF</span> <span class="o">||</span> <span class="n">match_method</span> <span class="o">==</span> <span class="n">CV_TM_SQDIFF_NORMED</span> <span class="p">)</span>
+  <span class="p">{</span> <span class="n">matchLoc</span> <span class="o">=</span> <span class="n">minLoc</span><span class="p">;</span> <span class="p">}</span>
+<span class="k">else</span>
+  <span class="p">{</span> <span class="n">matchLoc</span> <span class="o">=</span> <span class="n">maxLoc</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Display the source image and the result matrix. Draw a rectangle around the highest possible matching area:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">rectangle</span><span class="p">(</span> <span class="n">img_display</span><span class="p">,</span> <span class="n">matchLoc</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="n">matchLoc</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">templ</span><span class="p">.</span><span class="n">cols</span> <span class="p">,</span> <span class="n">matchLoc</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">templ</span><span class="p">.</span><span class="n">rows</span> <span class="p">),</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+<span class="n">rectangle</span><span class="p">(</span> <span class="n">result</span><span class="p">,</span> <span class="n">matchLoc</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="n">matchLoc</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">templ</span><span class="p">.</span><span class="n">cols</span> <span class="p">,</span> <span class="n">matchLoc</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">templ</span><span class="p">.</span><span class="n">rows</span> <span class="p">),</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+
+<span class="n">imshow</span><span class="p">(</span> <span class="n">image_window</span><span class="p">,</span> <span class="n">img_display</span> <span class="p">);</span>
+<span class="n">imshow</span><span class="p">(</span> <span class="n">result_window</span><span class="p">,</span> <span class="n">result</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Testing our program with an input image such as:</p>
+<img alt="../../../../../_images/Template_Matching_Original_Image.jpg" class="align-center" src="../../../../../_images/Template_Matching_Original_Image.jpg" />
+<p>and a template image:</p>
+<img alt="../../../../../_images/Template_Matching_Template_Image.jpg" class="align-center" src="../../../../../_images/Template_Matching_Template_Image.jpg" />
+</li>
+<li><p class="first">Generate the following result matrices (first row are the standard methods SQDIFF, CCORR and CCOEFF, second row are the same methods in its normalized version). In the first column, the darkest is the better match, for the other two columns, the brighter a location, the higher the match.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><img alt="Result_0" class="align-middle" src="../../../../../_images/Template_Matching_Correl_Result_0.jpg" /></th>
+<th class="head"><img alt="Result_2" class="align-middle" src="../../../../../_images/Template_Matching_Correl_Result_2.jpg" /></th>
+<th class="head"><img alt="Result_4" class="align-middle" src="../../../../../_images/Template_Matching_Correl_Result_4.jpg" /></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><img alt="Result_1" class="align-middle" src="../../../../../_images/Template_Matching_Correl_Result_1.jpg" /></td>
+<td><img alt="Result_3" class="align-middle" src="../../../../../_images/Template_Matching_Correl_Result_3.jpg" /></td>
+<td><img alt="Result_5" class="align-middle" src="../../../../../_images/Template_Matching_Correl_Result_5.jpg" /></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p class="first">The right match is shown below (black rectangle around the face of the guy at the right). Notice that CCORR and CCDEFF gave erroneous best matches, however their normalized version did it right, this may be due to the fact that we are only considering the &#8220;highest match&#8221; and not the other possible high matches.</p>
+<img alt="../../../../../_images/Template_Matching_Image_Result.jpg" class="align-center" src="../../../../../_images/Template_Matching_Image_Result.jpg" />
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Template Matching</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a><ul>
+<li><a class="reference internal" href="#what-is-template-matching">What is template matching?</a></li>
+<li><a class="reference internal" href="#how-does-it-work">How does it work?</a></li>
+<li><a class="reference internal" href="#which-are-the-matching-methods-available-in-opencv">Which are the matching methods available in OpenCV?</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#results">Results</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../back_projection/back_projection.html"
+                        title="previous chapter">Back Projection</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../shapedescriptors/find_contours/find_contours.html"
+                        title="next chapter">Finding contours in your image</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../../_sources/doc/tutorials/imgproc/histograms/template_matching/template_matching.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../shapedescriptors/find_contours/find_contours.html" title="Finding contours in your image"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../back_projection/back_projection.html" title="Back Projection"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" ><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

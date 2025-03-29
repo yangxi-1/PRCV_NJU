@@ -1,0 +1,422 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>More Morphology Transformations &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="imgproc module. Image Processing" href="../table_of_content_imgproc/table_of_content_imgproc.html" />
+    <link rel="next" title="Image Pyramids" href="../pyramids/pyramids.html" />
+    <link rel="prev" title="Eroding and Dilating" href="../erosion_dilatation/erosion_dilatation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../pyramids/pyramids.html" title="Image Pyramids"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../erosion_dilatation/erosion_dilatation.html" title="Eroding and Dilating"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_imgproc/table_of_content_imgproc.html" accesskey="U"><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="more-morphology-transformations">
+<span id="morphology-2"></span><h1>More Morphology Transformations<a class="headerlink" href="#more-morphology-transformations" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Use the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=morphologyex#morphologyex">morphologyEx</a> to apply Morphological Transformation such as:<ul>
+<li>Opening</li>
+<li>Closing</li>
+<li>Morphological Gradient</li>
+<li>Top Hat</li>
+<li>Black Hat</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The explanation below belongs to the book <strong>Learning OpenCV</strong> by Bradski and Kaehler.</p>
+</div>
+<p>In the previous tutorial we covered two basic Morphology operations:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Erosion</li>
+<li>Dilation.</li>
+</ul>
+</div>
+<p>Based on these two we can effectuate more sophisticated transformations to our images. Here we discuss briefly 5 operations offered by OpenCV:</p>
+<div class="section" id="opening">
+<h3>Opening<a class="headerlink" href="#opening" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">It is obtained by the erosion of an image followed by a dilation.</p>
+<div class="math">
+<p><img src="../../../../_images/math/70a289e574594774f936ed8ff5f86c32ab53015d.png" alt="dst = open( src, element) = dilate( erode( src, element ) )"/></p>
+</div></li>
+<li><p class="first">Useful for removing small objects (it is assumed that the objects are bright on a dark foreground)</p>
+</li>
+<li><p class="first">For instance, check out the example below. The image at the left is the original and the image at the right is the result after applying the opening transformation. We can observe that the small spaces in the corners of the letter tend to dissapear.</p>
+<img alt="Opening" class="align-center" src="../../../../_images/Morphology_2_Tutorial_Theory_Opening.png" />
+</li>
+</ul>
+<p>For the sake of clarity, we have performed the opening operation (<img class="math" src="../../../../_images/math/5c1036f7a77e5904136840b28d7c262ba6d0ca2f.png" alt="7x7"/> rectangular structuring element) on the same original image but inverted such as the object in white is now the letter.</p>
+<blockquote>
+<div><img alt="Left image: original image inverted, right image: resulting opening" class="align-center" src="../../../../_images/Morphology_2_Tutorial_Theory_Opening_2.png" />
+</div></blockquote>
+</div>
+<div class="section" id="closing">
+<h3>Closing<a class="headerlink" href="#closing" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">It is obtained by the dilation of an image followed by an erosion.</p>
+<div class="math">
+<p><img src="../../../../_images/math/6eced184bc40b6b2b45c20fc626d2caa16fe0261.png" alt="dst = close( src, element ) = erode( dilate( src, element ) )"/></p>
+</div></li>
+<li><p class="first">Useful to remove small holes (dark regions).</p>
+<img alt="Closing example" class="align-center" src="../../../../_images/Morphology_2_Tutorial_Theory_Closing.png" />
+</li>
+</ul>
+<p>On the inverted image, we have performed the closing operation (<img class="math" src="../../../../_images/math/5c1036f7a77e5904136840b28d7c262ba6d0ca2f.png" alt="7x7"/> rectangular structuring element):</p>
+<blockquote>
+<div><img alt="Left image: original image inverted, right image: resulting closing" class="align-center" src="../../../../_images/Morphology_2_Tutorial_Theory_Closing_2.png" />
+</div></blockquote>
+</div>
+<div class="section" id="morphological-gradient">
+<h3>Morphological Gradient<a class="headerlink" href="#morphological-gradient" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">It is the difference between the dilation and the erosion of an image.</p>
+<div class="math">
+<p><img src="../../../../_images/math/a8091e58404246486b5e909490512c53e8aeb681.png" alt="dst = morph_{grad}( src, element ) = dilate( src, element ) - erode( src, element )"/></p>
+</div></li>
+<li><p class="first">It is useful for finding the outline of an object as can be seen below:</p>
+<img alt="Gradient" class="align-center" src="../../../../_images/Morphology_2_Tutorial_Theory_Gradient.png" />
+</li>
+</ul>
+</div>
+<div class="section" id="top-hat">
+<h3>Top Hat<a class="headerlink" href="#top-hat" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">It is the difference between an input image and its opening.</p>
+<div class="math">
+<p><img src="../../../../_images/math/d503289f9f97a46f1d95744af11aee18a86ec59c.png" alt="dst = tophat( src, element ) = src - open( src, element )"/></p>
+</div><img alt="Top Hat" class="align-center" src="../../../../_images/Morphology_2_Tutorial_Theory_TopHat.png" />
+</li>
+</ul>
+</div>
+<div class="section" id="black-hat">
+<h3>Black Hat<a class="headerlink" href="#black-hat" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">It is the difference between the closing and its input image</p>
+<div class="math">
+<p><img src="../../../../_images/math/b2e43cdd8d5a47001743fccf5796de61670bc57e.png" alt="dst = blackhat( src, element ) = close( src, element ) - src"/></p>
+</div><img alt="Black Hat" class="align-center" src="../../../../_images/Morphology_2_Tutorial_Theory_BlackHat.png" />
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial code&#8217;s is shown lines below. You can also download it from <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/tutorial_code/ImgProc/Morphology_2.cpp">here</a></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;opencv2/imgproc/imgproc.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/highgui/highgui.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="c1">/// Global variables</span>
+<span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="n">morph_elem</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">morph_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">morph_operator</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="k">const</span> <span class="n">max_operator</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="kt">int</span> <span class="k">const</span> <span class="n">max_elem</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="kt">int</span> <span class="k">const</span> <span class="n">max_kernel_size</span> <span class="o">=</span> <span class="mi">21</span><span class="p">;</span>
+
+<span class="kt">char</span><span class="o">*</span> <span class="n">window_name</span> <span class="o">=</span> <span class="s">&quot;Morphology Transformations Demo&quot;</span><span class="p">;</span>
+
+<span class="cm">/** Function Headers */</span>
+<span class="kt">void</span> <span class="nf">Morphology_Operations</span><span class="p">(</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="p">);</span>
+
+<span class="cm">/** @function main */</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">/// Load an image</span>
+  <span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">);</span>
+
+  <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">src</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span>
+  <span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+
+ <span class="c1">/// Create window</span>
+ <span class="n">namedWindow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+
+ <span class="c1">/// Create Trackbar to select Morphology operation</span>
+ <span class="n">createTrackbar</span><span class="p">(</span><span class="s">&quot;Operator:</span><span class="se">\n</span><span class="s"> 0: Opening - 1: Closing </span><span class="se">\n</span><span class="s"> 2: Gradient - 3: Top Hat </span><span class="se">\n</span><span class="s"> 4: Black Hat&quot;</span><span class="p">,</span> <span class="n">window_name</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">morph_operator</span><span class="p">,</span> <span class="n">max_operator</span><span class="p">,</span> <span class="n">Morphology_Operations</span> <span class="p">);</span>
+
+ <span class="c1">/// Create Trackbar to select kernel type</span>
+ <span class="n">createTrackbar</span><span class="p">(</span> <span class="s">&quot;Element:</span><span class="se">\n</span><span class="s"> 0: Rect - 1: Cross - 2: Ellipse&quot;</span><span class="p">,</span> <span class="n">window_name</span><span class="p">,</span>
+                 <span class="o">&amp;</span><span class="n">morph_elem</span><span class="p">,</span> <span class="n">max_elem</span><span class="p">,</span>
+                 <span class="n">Morphology_Operations</span> <span class="p">);</span>
+
+ <span class="c1">/// Create Trackbar to choose kernel size</span>
+ <span class="n">createTrackbar</span><span class="p">(</span> <span class="s">&quot;Kernel size:</span><span class="se">\n</span><span class="s"> 2n +1&quot;</span><span class="p">,</span> <span class="n">window_name</span><span class="p">,</span>
+                 <span class="o">&amp;</span><span class="n">morph_size</span><span class="p">,</span> <span class="n">max_kernel_size</span><span class="p">,</span>
+                 <span class="n">Morphology_Operations</span> <span class="p">);</span>
+
+ <span class="c1">/// Default start</span>
+ <span class="n">Morphology_Operations</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+
+ <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+ <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+ <span class="p">}</span>
+
+ <span class="cm">/**</span>
+<span class="cm">  * @function Morphology_Operations</span>
+<span class="cm">  */</span>
+<span class="kt">void</span> <span class="nf">Morphology_Operations</span><span class="p">(</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">// Since MORPH_X : 2,3,4,5 and 6</span>
+  <span class="kt">int</span> <span class="n">operation</span> <span class="o">=</span> <span class="n">morph_operator</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
+
+  <span class="n">Mat</span> <span class="n">element</span> <span class="o">=</span> <span class="n">getStructuringElement</span><span class="p">(</span> <span class="n">morph_elem</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span> <span class="mi">2</span><span class="o">*</span><span class="n">morph_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">morph_size</span><span class="o">+</span><span class="mi">1</span> <span class="p">),</span> <span class="n">Point</span><span class="p">(</span> <span class="n">morph_size</span><span class="p">,</span> <span class="n">morph_size</span> <span class="p">)</span> <span class="p">);</span>
+
+  <span class="c1">/// Apply the specified morphology operation</span>
+  <span class="n">morphologyEx</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">element</span> <span class="p">);</span>
+  <span class="n">imshow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">dst</span> <span class="p">);</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Let&#8217;s check the general structure of the program:</p>
+<ul>
+<li><p class="first">Load an image</p>
+</li>
+<li><p class="first">Create a window to display results of the Morphological operations</p>
+</li>
+<li><p class="first">Create 03 Trackbars for the user to enter parameters:</p>
+<ul>
+<li><p class="first">The first trackbar <strong>&#8220;Operator&#8221;</strong> returns the kind of morphology operation to use (<strong>morph_operator</strong>).</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">createTrackbar</span><span class="p">(</span><span class="s">&quot;Operator:</span><span class="se">\n</span><span class="s"> 0: Opening - 1: Closing </span><span class="se">\n</span><span class="s"> 2: Gradient - 3: Top Hat </span><span class="se">\n</span><span class="s"> 4: Black Hat&quot;</span><span class="p">,</span>
+               <span class="n">window_name</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">morph_operator</span><span class="p">,</span> <span class="n">max_operator</span><span class="p">,</span>
+               <span class="n">Morphology_Operations</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The second trackbar <strong>&#8220;Element&#8221;</strong> returns <strong>morph_elem</strong>, which indicates what kind of structure our kernel is:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">createTrackbar</span><span class="p">(</span> <span class="s">&quot;Element:</span><span class="se">\n</span><span class="s"> 0: Rect - 1: Cross - 2: Ellipse&quot;</span><span class="p">,</span> <span class="n">window_name</span><span class="p">,</span>
+                <span class="o">&amp;</span><span class="n">morph_elem</span><span class="p">,</span> <span class="n">max_elem</span><span class="p">,</span>
+                <span class="n">Morphology_Operations</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The final trackbar <strong>&#8220;Kernel Size&#8221;</strong> returns the size of the kernel to be used (<strong>morph_size</strong>)</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">createTrackbar</span><span class="p">(</span> <span class="s">&quot;Kernel size:</span><span class="se">\n</span><span class="s"> 2n +1&quot;</span><span class="p">,</span> <span class="n">window_name</span><span class="p">,</span>
+                <span class="o">&amp;</span><span class="n">morph_size</span><span class="p">,</span> <span class="n">max_kernel_size</span><span class="p">,</span>
+                <span class="n">Morphology_Operations</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="first">Every time we move any slider, the user&#8217;s function <strong>Morphology_Operations</strong> will be called to effectuate a new morphology operation and it will update the output image based on the current trackbar values.</p>
+<div class="highlight-cpp"><div class="highlight"><pre> <span class="cm">/**</span>
+<span class="cm">  * @function Morphology_Operations</span>
+<span class="cm">  */</span>
+<span class="kt">void</span> <span class="nf">Morphology_Operations</span><span class="p">(</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">// Since MORPH_X : 2,3,4,5 and 6</span>
+  <span class="kt">int</span> <span class="n">operation</span> <span class="o">=</span> <span class="n">morph_operator</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
+
+  <span class="n">Mat</span> <span class="n">element</span> <span class="o">=</span> <span class="n">getStructuringElement</span><span class="p">(</span> <span class="n">morph_elem</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span> <span class="mi">2</span><span class="o">*</span><span class="n">morph_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">morph_size</span><span class="o">+</span><span class="mi">1</span> <span class="p">),</span> <span class="n">Point</span><span class="p">(</span> <span class="n">morph_size</span><span class="p">,</span> <span class="n">morph_size</span> <span class="p">)</span> <span class="p">);</span>
+
+  <span class="c1">/// Apply the specified morphology operation</span>
+  <span class="n">morphologyEx</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">element</span> <span class="p">);</span>
+  <span class="n">imshow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">dst</span> <span class="p">);</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+<p>We can observe that the key function to perform the morphology transformations is <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=morphologyex#morphologyex">morphologyEx</a>. In this example we use four arguments (leaving the rest as defaults):</p>
+<ul>
+<li><p class="first"><strong>src</strong> : Source (input) image</p>
+</li>
+<li><p class="first"><strong>dst</strong>: Output image</p>
+</li>
+<li><p class="first"><strong>operation</strong>: The kind of morphology transformation to be performed. Note that we have 5 alternatives:</p>
+<ul class="simple">
+<li><em>Opening</em>: MORPH_OPEN : 2</li>
+<li><em>Closing</em>: MORPH_CLOSE: 3</li>
+<li><em>Gradient</em>: MORPH_GRADIENT: 4</li>
+<li><em>Top Hat</em>: MORPH_TOPHAT: 5</li>
+<li><em>Black Hat</em>: MORPH_BLACKHAT: 6</li>
+</ul>
+<p>As you can see the values range from &lt;2-6&gt;, that is why we add (+2) to the values entered by the Trackbar:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">int</span> <span class="n">operation</span> <span class="o">=</span> <span class="n">morph_operator</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>element</strong>: The kernel to be used. We use the function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=getstructuringelement#getstructuringelement">getStructuringElement</a> to define our own structure.</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">After compiling the code above we can execute it giving an image path as an argument. For this tutorial we use as input the image: <strong>baboon.png</strong>:</p>
+<img alt="Morphology 2: Original image" class="align-center" src="../../../../_images/Morphology_2_Tutorial_Original_Image.jpg" />
+</li>
+<li><p class="first">And here are two snapshots of the display window. The first picture shows the output after using the operator <strong>Opening</strong> with a cross kernel. The second picture (right side, shows the result of using a <strong>Blackhat</strong> operator with an ellipse kernel.</p>
+<img alt="Morphology 2: Result sample" class="align-center" src="../../../../_images/Morphology_2_Tutorial_Cover.jpg" />
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">More Morphology Transformations</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a><ul>
+<li><a class="reference internal" href="#opening">Opening</a></li>
+<li><a class="reference internal" href="#closing">Closing</a></li>
+<li><a class="reference internal" href="#morphological-gradient">Morphological Gradient</a></li>
+<li><a class="reference internal" href="#top-hat">Top Hat</a></li>
+<li><a class="reference internal" href="#black-hat">Black Hat</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#results">Results</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../erosion_dilatation/erosion_dilatation.html"
+                        title="previous chapter">Eroding and Dilating</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../pyramids/pyramids.html"
+                        title="next chapter">Image Pyramids</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/imgproc/opening_closing_hats/opening_closing_hats.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../pyramids/pyramids.html" title="Image Pyramids"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../erosion_dilatation/erosion_dilatation.html" title="Eroding and Dilating"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_imgproc/table_of_content_imgproc.html" ><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

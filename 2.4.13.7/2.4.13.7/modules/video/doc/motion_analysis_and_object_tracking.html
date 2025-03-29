@@ -1,0 +1,1264 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Motion Analysis and Object Tracking &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="video. Video Analysis" href="video.html" />
+    <link rel="next" title="calib3d. Camera Calibration and 3D Reconstruction" href="../../calib3d/doc/calib3d.html" />
+    <link rel="prev" title="video. Video Analysis" href="video.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../calib3d/doc/calib3d.html" title="calib3d. Camera Calibration and 3D Reconstruction"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="video.html" title="video. Video Analysis"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="video.html" accesskey="U">video. Video Analysis</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="motion-analysis-and-object-tracking">
+<h1>Motion Analysis and Object Tracking<a class="headerlink" href="#motion-analysis-and-object-tracking" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="calcopticalflowpyrlk">
+<h2>calcOpticalFlowPyrLK<a class="headerlink" href="#calcopticalflowpyrlk" title="Permalink to this headline">¶</a></h2>
+<p>Calculates an optical flow for a sparse feature set using the iterative Lucas-Kanade method with pyramids.</p>
+<dl class="function">
+<dt id="void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">calcOpticalFlowPyrLK</code><span class="sig-paren">(</span>InputArray <strong>prevImg</strong>, InputArray <strong>nextImg</strong>, InputArray <strong>prevPts</strong>, InputOutputArray <strong>nextPts</strong>, OutputArray <strong>status</strong>, OutputArray <strong>err</strong>, Size <strong>winSize</strong>=Size(21,21), int <strong>maxLevel</strong>=3, TermCriteria <strong>criteria</strong>=TermCriteria(TermCriteria::COUNT+TermCriteria::EPS, 30, 0.01), int <strong>flags</strong>=0, double <strong>minEigThreshold</strong>=1e-4 <span class="sig-paren">)</span><a class="headerlink" href="#void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.calcOpticalFlowPyrLK">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">calcOpticalFlowPyrLK</code><span class="sig-paren">(</span>prevImg, nextImg, prevPts<span class="optional">[</span>, nextPts<span class="optional">[</span>, status<span class="optional">[</span>, err<span class="optional">[</span>, winSize<span class="optional">[</span>, maxLevel<span class="optional">[</span>, criteria<span class="optional">[</span>, flags<span class="optional">[</span>, minEigThreshold<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; nextPts, status, err<a class="headerlink" href="#cv2.calcOpticalFlowPyrLK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvCalcOpticalFlowPyrLK(const CvArr* prev, const CvArr* curr, CvArr* prev_pyr, CvArr* curr_pyr, const CvPoint2D32f* prev_features, CvPoint2D32f* curr_features, int count, CvSize win_size, int level, char* status, float* track_error, CvTermCriteria criteria, int flags)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvCalcOpticalFlowPyrLK</code><span class="sig-paren">(</span>const CvArr* <strong>prev</strong>, const CvArr* <strong>curr</strong>, CvArr* <strong>prev_pyr</strong>, CvArr* <strong>curr_pyr</strong>, const CvPoint2D32f* <strong>prev_features</strong>, CvPoint2D32f* <strong>curr_features</strong>, int <strong>count</strong>, CvSize <strong>win_size</strong>, int <strong>level</strong>, char* <strong>status</strong>, float* <strong>track_error</strong>, CvTermCriteria <strong>criteria</strong>, int <strong>flags</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvCalcOpticalFlowPyrLK(const CvArr* prev, const CvArr* curr, CvArr* prev_pyr, CvArr* curr_pyr, const CvPoint2D32f* prev_features, CvPoint2D32f* curr_features, int count, CvSize win_size, int level, char* status, float* track_error, CvTermCriteria criteria, int flags)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CalcOpticalFlowPyrLK">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CalcOpticalFlowPyrLK</code><span class="sig-paren">(</span>prev, curr, prevPyr, currPyr, prevFeatures, winSize, level, criteria, flags, guesses=None) -&gt; (currFeatures, status, track_error<span class="sig-paren">)</span><a class="headerlink" href="#cv.CalcOpticalFlowPyrLK" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>prevImg</strong> &#8211; first 8-bit input image or pyramid constructed by <a class="reference internal" href="#int buildOpticalFlowPyramid(InputArray img, OutputArrayOfArrays pyramid, Size winSize, int maxLevel, bool withDerivatives , int pyrBorder , int derivBorder , bool tryReuseInputImage)" title="int buildOpticalFlowPyramid(InputArray img, OutputArrayOfArrays pyramid, Size winSize, int maxLevel, bool withDerivatives , int pyrBorder , int derivBorder , bool tryReuseInputImage)"><code class="xref ocv ocv-func docutils literal"><span class="pre">buildOpticalFlowPyramid()</span></code></a>.</li>
+<li><strong>nextImg</strong> &#8211; second input image or pyramid of the same size and the same type as <code class="docutils literal"><span class="pre">prevImg</span></code>.</li>
+<li><strong>prevPts</strong> &#8211; vector of 2D points for which the flow needs to be found; point coordinates must be single-precision floating-point numbers.</li>
+<li><strong>nextPts</strong> &#8211; output vector of 2D points (with single-precision floating-point coordinates) containing the calculated new positions of input features in the second image; when <code class="docutils literal"><span class="pre">OPTFLOW_USE_INITIAL_FLOW</span></code> flag is passed, the vector must have the same size as in the input.</li>
+<li><strong>status</strong> &#8211; output status vector (of unsigned chars); each element of the vector is set to 1 if the flow for the corresponding features has been found, otherwise, it is set to 0.</li>
+<li><strong>err</strong> &#8211; output vector of errors; each element of the vector is set to an error for the corresponding feature, type of the error measure can be set in <code class="docutils literal"><span class="pre">flags</span></code> parameter; if the flow wasn&#8217;t found then the error is not defined (use the <code class="docutils literal"><span class="pre">status</span></code> parameter to find such cases).</li>
+<li><strong>winSize</strong> &#8211; size of the search window at each pyramid level.</li>
+<li><strong>maxLevel</strong> &#8211; 0-based maximal pyramid level number; if set to 0, pyramids are not used (single level), if set to 1, two levels are used, and so on; if pyramids are passed to input then algorithm will use as many levels as pyramids have but no more than <code class="docutils literal"><span class="pre">maxLevel</span></code>.</li>
+<li><strong>criteria</strong> &#8211; parameter, specifying the termination criteria of the iterative search algorithm (after the specified maximum number of iterations  <code class="docutils literal"><span class="pre">criteria.maxCount</span></code>  or when the search window moves by less than  <code class="docutils literal"><span class="pre">criteria.epsilon</span></code>.</li>
+<li><strong>flags</strong> &#8211; <p>operation flags:</p>
+<ul>
+<li><strong>OPTFLOW_USE_INITIAL_FLOW</strong> uses initial estimations, stored in <code class="docutils literal"><span class="pre">nextPts</span></code>; if the flag is not set, then <code class="docutils literal"><span class="pre">prevPts</span></code> is copied to <code class="docutils literal"><span class="pre">nextPts</span></code> and is considered the initial estimate.</li>
+<li><strong>OPTFLOW_LK_GET_MIN_EIGENVALS</strong> use minimum eigen values as an error measure (see <code class="docutils literal"><span class="pre">minEigThreshold</span></code> description); if the flag is not set, then L1 distance between patches around the original and a moved point, divided by number of pixels in a window, is used as a error measure.</li>
+</ul>
+</li>
+<li><strong>minEigThreshold</strong> &#8211; the algorithm calculates the minimum eigen value of a 2x2 normal matrix of optical flow equations (this matrix is called a spatial gradient matrix in <a class="reference internal" href="#bouguet00" id="id1">[Bouguet00]</a>), divided by number of pixels in a window; if this value is less than <code class="docutils literal"><span class="pre">minEigThreshold</span></code>, then a corresponding feature is filtered out and its flow is not processed, so it allows to remove bad points and get a performance boost.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function implements a sparse iterative version of the Lucas-Kanade optical flow in pyramids. See <a class="reference internal" href="#bouguet00" id="id2">[Bouguet00]</a>. The function is parallelized with the TBB library.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example using the Lucas-Kanade optical flow algorithm can be found at opencv_source_code/samples/cpp/lkdemo.cpp</li>
+<li>(Python) An example using the Lucas-Kanade optical flow algorithm can be found at opencv_source_code/samples/python2/lk_track.py</li>
+<li>(Python) An example using the Lucas-Kanade tracker for homography matching can be found at opencv_source_code/samples/python2/lk_homography.py</li>
+</ul>
+</div>
+</div>
+<div class="section" id="buildopticalflowpyramid">
+<h2>buildOpticalFlowPyramid<a class="headerlink" href="#buildopticalflowpyramid" title="Permalink to this headline">¶</a></h2>
+<p>Constructs the image pyramid which can be passed to <a class="reference internal" href="#void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)" title="void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcOpticalFlowPyrLK()</span></code></a>.</p>
+<dl class="function">
+<dt id="int buildOpticalFlowPyramid(InputArray img, OutputArrayOfArrays pyramid, Size winSize, int maxLevel, bool withDerivatives , int pyrBorder , int derivBorder , bool tryReuseInputImage)">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descname">buildOpticalFlowPyramid</code><span class="sig-paren">(</span>InputArray <strong>img</strong>, OutputArrayOfArrays <strong>pyramid</strong>, Size <strong>winSize</strong>, int <strong>maxLevel</strong>, bool <strong>withDerivatives</strong>=true, int <strong>pyrBorder</strong>=BORDER_REFLECT_101, int <strong>derivBorder</strong>=BORDER_CONSTANT, bool <strong>tryReuseInputImage</strong>=true<span class="sig-paren">)</span><a class="headerlink" href="#int buildOpticalFlowPyramid(InputArray img, OutputArrayOfArrays pyramid, Size winSize, int maxLevel, bool withDerivatives , int pyrBorder , int derivBorder , bool tryReuseInputImage)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.buildOpticalFlowPyramid">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">buildOpticalFlowPyramid</code><span class="sig-paren">(</span>img, winSize, maxLevel<span class="optional">[</span>, pyramid<span class="optional">[</span>, withDerivatives<span class="optional">[</span>, pyrBorder<span class="optional">[</span>, derivBorder<span class="optional">[</span>, tryReuseInputImage<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; retval, pyramid<a class="headerlink" href="#cv2.buildOpticalFlowPyramid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>img</strong> &#8211; 8-bit input image.</li>
+<li><strong>pyramid</strong> &#8211; output pyramid.</li>
+<li><strong>winSize</strong> &#8211; window size of optical flow algorithm. Must be not less than <code class="docutils literal"><span class="pre">winSize</span></code> argument of <a class="reference internal" href="#void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)" title="void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcOpticalFlowPyrLK()</span></code></a>. It is needed to calculate required padding for pyramid levels.</li>
+<li><strong>maxLevel</strong> &#8211; 0-based maximal pyramid level number.</li>
+<li><strong>withDerivatives</strong> &#8211; set to precompute gradients for the every pyramid level. If pyramid is constructed without the gradients then <a class="reference internal" href="#void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)" title="void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcOpticalFlowPyrLK()</span></code></a> will calculate them internally.</li>
+<li><strong>pyrBorder</strong> &#8211; the border mode for pyramid layers.</li>
+<li><strong>derivBorder</strong> &#8211; the border mode for gradients.</li>
+<li><strong>tryReuseInputImage</strong> &#8211; put ROI of input image into the pyramid if possible. You can pass <code class="docutils literal"><span class="pre">false</span></code> to force data copying.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">number of levels in constructed pyramid. Can be less than <code class="docutils literal"><span class="pre">maxLevel</span></code>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="calcopticalflowfarneback">
+<h2>calcOpticalFlowFarneback<a class="headerlink" href="#calcopticalflowfarneback" title="Permalink to this headline">¶</a></h2>
+<p>Computes a dense optical flow using the Gunnar Farneback&#8217;s algorithm.</p>
+<dl class="function">
+<dt id="void calcOpticalFlowFarneback(InputArray prev, InputArray next, InputOutputArray flow, double pyr_scale, int levels, int winsize, int iterations, int poly_n, double poly_sigma, int flags)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">calcOpticalFlowFarneback</code><span class="sig-paren">(</span>InputArray <strong>prev</strong>, InputArray <strong>next</strong>, InputOutputArray <strong>flow</strong>, double <strong>pyr_scale</strong>, int <strong>levels</strong>, int <strong>winsize</strong>, int <strong>iterations</strong>, int <strong>poly_n</strong>, double <strong>poly_sigma</strong>, int <strong>flags</strong><span class="sig-paren">)</span><a class="headerlink" href="#void calcOpticalFlowFarneback(InputArray prev, InputArray next, InputOutputArray flow, double pyr_scale, int levels, int winsize, int iterations, int poly_n, double poly_sigma, int flags)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvCalcOpticalFlowFarneback(const CvArr* prev, const CvArr* next, CvArr* flow, double pyr_scale, int levels, int winsize, int iterations, int poly_n, double poly_sigma, int flags)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvCalcOpticalFlowFarneback</code><span class="sig-paren">(</span>const CvArr* <strong>prev</strong>, const CvArr* <strong>next</strong>, CvArr* <strong>flow</strong>, double <strong>pyr_scale</strong>, int <strong>levels</strong>, int <strong>winsize</strong>, int <strong>iterations</strong>, int <strong>poly_n</strong>, double <strong>poly_sigma</strong>, int <strong>flags</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvCalcOpticalFlowFarneback(const CvArr* prev, const CvArr* next, CvArr* flow, double pyr_scale, int levels, int winsize, int iterations, int poly_n, double poly_sigma, int flags)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.calcOpticalFlowFarneback">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">calcOpticalFlowFarneback</code><span class="sig-paren">(</span>prev, next, pyr_scale, levels, winsize, iterations, poly_n, poly_sigma, flags<span class="optional">[</span>, flow<span class="optional">]</span><span class="sig-paren">)</span> &rarr; flow<a class="headerlink" href="#cv2.calcOpticalFlowFarneback" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>prev</strong> &#8211; first 8-bit single-channel input image.</li>
+<li><strong>next</strong> &#8211; second input image of the same size and the same type as <code class="docutils literal"><span class="pre">prev</span></code>.</li>
+<li><strong>flow</strong> &#8211; computed flow image that has the same size as <code class="docutils literal"><span class="pre">prev</span></code> and type <code class="docutils literal"><span class="pre">CV_32FC2</span></code>.</li>
+<li><strong>pyr_scale</strong> &#8211; parameter, specifying the image scale (&lt;1) to build pyramids for each image; <code class="docutils literal"><span class="pre">pyr_scale=0.5</span></code> means a classical pyramid, where each next layer is twice smaller than the previous one.</li>
+<li><strong>levels</strong> &#8211; number of pyramid layers including the initial image; <code class="docutils literal"><span class="pre">levels=1</span></code> means that no extra layers are created and only the original images are used.</li>
+<li><strong>winsize</strong> &#8211; averaging window size; larger values increase the algorithm robustness to image noise and give more chances for fast motion detection, but yield more blurred motion field.</li>
+<li><strong>iterations</strong> &#8211; number of iterations the algorithm does at each pyramid level.</li>
+<li><strong>poly_n</strong> &#8211; size of the pixel neighborhood used to find polynomial expansion in each pixel; larger values mean that the image will be approximated with smoother surfaces, yielding more robust algorithm and more blurred  motion field, typically <code class="docutils literal"><span class="pre">poly_n</span></code> =5 or 7.</li>
+<li><strong>poly_sigma</strong> &#8211; standard deviation of the Gaussian that is used to smooth derivatives used as a basis for the polynomial expansion; for  <code class="docutils literal"><span class="pre">poly_n=5</span></code>, you can set <code class="docutils literal"><span class="pre">poly_sigma=1.1</span></code>, for <code class="docutils literal"><span class="pre">poly_n=7</span></code>, a good value would be <code class="docutils literal"><span class="pre">poly_sigma=1.5</span></code>.</li>
+<li><strong>flags</strong> &#8211; <p>operation flags that can be a combination of the following:</p>
+<ul>
+<li><strong>OPTFLOW_USE_INITIAL_FLOW</strong> uses the input  <code class="docutils literal"><span class="pre">flow</span></code>  as an initial flow approximation.</li>
+<li><strong>OPTFLOW_FARNEBACK_GAUSSIAN</strong> uses the Gaussian <img class="math" src="../../../_images/math/58841bc202b87ff23dc2f1bbc8bbfebe54767b8c.png" alt="\texttt{winsize}\times\texttt{winsize}"/> filter instead of a box filter of the same size for optical flow estimation; usually, this option gives z more accurate flow than with a box filter, at the cost of lower speed; normally, <code class="docutils literal"><span class="pre">winsize</span></code> for a Gaussian window should be set to a larger value to achieve the same level of robustness.</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function finds an optical flow for each <code class="docutils literal"><span class="pre">prev</span></code> pixel using the <a class="reference internal" href="#farneback2003" id="id3">[Farneback2003]</a> algorithm so that</p>
+<div class="math">
+<p><img src="../../../_images/math/fbf93c97d884d92c45f13996a3698283840829cd.png" alt="\texttt{prev} (y,x)  \sim \texttt{next} ( y + \texttt{flow} (y,x)[1],  x + \texttt{flow} (y,x)[0])"/></p>
+</div><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example using the optical flow algorithm described by Gunnar Farneback can be found at opencv_source_code/samples/cpp/fback.cpp</li>
+<li>(Python) An example using the optical flow algorithm described by Gunnar Farneback can be found at opencv_source_code/samples/python2/opt_flow.py</li>
+</ul>
+</div>
+</div>
+<div class="section" id="estimaterigidtransform">
+<h2>estimateRigidTransform<a class="headerlink" href="#estimaterigidtransform" title="Permalink to this headline">¶</a></h2>
+<p>Computes an optimal affine transformation between two 2D point sets.</p>
+<dl class="function">
+<dt id="Mat estimateRigidTransform(InputArray src, InputArray dst, bool fullAffine)">
+<strong>C++:</strong><code class="descname"> </code>Mat <code class="descname">estimateRigidTransform</code><span class="sig-paren">(</span>InputArray <strong>src</strong>, InputArray <strong>dst</strong>, bool <strong>fullAffine</strong><span class="sig-paren">)</span><a class="headerlink" href="#Mat estimateRigidTransform(InputArray src, InputArray dst, bool fullAffine)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.estimateRigidTransform">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">estimateRigidTransform</code><span class="sig-paren">(</span>src, dst, fullAffine<span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.estimateRigidTransform" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; First input 2D point set stored in <code class="docutils literal"><span class="pre">std::vector</span></code> or <code class="docutils literal"><span class="pre">Mat</span></code>, or an image stored in <code class="docutils literal"><span class="pre">Mat</span></code>.</li>
+<li><strong>dst</strong> &#8211; Second input 2D point set of the same size and the same type as <code class="docutils literal"><span class="pre">A</span></code>, or another image.</li>
+<li><strong>fullAffine</strong> &#8211; If true, the function finds an optimal affine transformation with no additional restrictions (6 degrees of freedom). Otherwise, the class of transformations to choose from is limited to combinations of translation, rotation, and uniform scaling (5 degrees of freedom).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function finds an optimal affine transform <em>[A|b]</em> (a <code class="docutils literal"><span class="pre">2</span> <span class="pre">x</span> <span class="pre">3</span></code> floating-point matrix) that approximates best the affine transformation between:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Two point sets</li>
+<li>Two raster images. In this case, the function first finds some features in the <code class="docutils literal"><span class="pre">src</span></code> image and finds the corresponding features in <code class="docutils literal"><span class="pre">dst</span></code> image. After that, the problem is reduced to the first case.</li>
+</ul>
+</div></blockquote>
+<p>In case of point sets, the problem is formulated as follows: you need to find a 2x2 matrix <em>A</em> and 2x1 vector <em>b</em> so that:</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/f8a14dd7db6d05574d1b960fe9f1e72bf48adf77.png" alt="[A^*|b^*] = arg  \min _{[A|b]}  \sum _i  \| \texttt{dst}[i] - A { \texttt{src}[i]}^T - b  \| ^2"/></p>
+</div><p>where <code class="docutils literal"><span class="pre">src[i]</span></code> and <code class="docutils literal"><span class="pre">dst[i]</span></code> are the i-th points in <code class="docutils literal"><span class="pre">src</span></code> and <code class="docutils literal"><span class="pre">dst</span></code>, respectively</p>
+<p><img class="math" src="../../../_images/math/9e97cf946936c8fb6ca6e71ae78ee6747072e80a.png" alt="[A|b]"/> can be either arbitrary (when <code class="docutils literal"><span class="pre">fullAffine=true</span></code> ) or have a form of</p>
+<div class="math">
+<p><img src="../../../_images/math/0a22facbc11cdd0f9b8d4658e0c145da2cb8730b.png" alt="\begin{bmatrix} a_{11} &amp; a_{12} &amp; b_1  \\ -a_{12} &amp; a_{11} &amp; b_2  \end{bmatrix}"/></p>
+</div><p>when <code class="docutils literal"><span class="pre">fullAffine=false</span></code> .</p>
+</div></blockquote>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/geometric_transformations.html#Mat getAffineTransform(InputArray src, InputArray dst)" title="Mat getAffineTransform(InputArray src, InputArray dst)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getAffineTransform()</span></code></a>,
+<a class="reference internal" href="../../imgproc/doc/geometric_transformations.html#Mat getPerspectiveTransform(InputArray src, InputArray dst)" title="Mat getPerspectiveTransform(InputArray src, InputArray dst)"><code class="xref ocv ocv-func docutils literal"><span class="pre">getPerspectiveTransform()</span></code></a>,
+<a class="reference internal" href="../../calib3d/doc/camera_calibration_and_3d_reconstruction.html#Mat findHomography(InputArray srcPoints, InputArray dstPoints, int method, double ransacReprojThreshold, OutputArray mask)" title="Mat findHomography(InputArray srcPoints, InputArray dstPoints, int method, double ransacReprojThreshold, OutputArray mask)"><code class="xref ocv ocv-func docutils literal"><span class="pre">findHomography()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="updatemotionhistory">
+<h2>updateMotionHistory<a class="headerlink" href="#updatemotionhistory" title="Permalink to this headline">¶</a></h2>
+<p>Updates the motion history image by a moving silhouette.</p>
+<dl class="function">
+<dt id="void updateMotionHistory(InputArray silhouette, InputOutputArray mhi, double timestamp, double duration)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">updateMotionHistory</code><span class="sig-paren">(</span>InputArray <strong>silhouette</strong>, InputOutputArray <strong>mhi</strong>, double <strong>timestamp</strong>, double <strong>duration</strong><span class="sig-paren">)</span><a class="headerlink" href="#void updateMotionHistory(InputArray silhouette, InputOutputArray mhi, double timestamp, double duration)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.updateMotionHistory">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">updateMotionHistory</code><span class="sig-paren">(</span>silhouette, mhi, timestamp, duration<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv2.updateMotionHistory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvUpdateMotionHistory(const CvArr* silhouette, CvArr* mhi, double timestamp, double duration)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvUpdateMotionHistory</code><span class="sig-paren">(</span>const CvArr* <strong>silhouette</strong>, CvArr* <strong>mhi</strong>, double <strong>timestamp</strong>, double <strong>duration</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvUpdateMotionHistory(const CvArr* silhouette, CvArr* mhi, double timestamp, double duration)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.UpdateMotionHistory">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">UpdateMotionHistory</code><span class="sig-paren">(</span>silhouette, mhi, timestamp, duration<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.UpdateMotionHistory" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>silhouette</strong> &#8211; Silhouette mask that has non-zero pixels where the motion occurs.</li>
+<li><strong>mhi</strong> &#8211; Motion history image that is updated by the function (single-channel, 32-bit floating-point).</li>
+<li><strong>timestamp</strong> &#8211; Current time in milliseconds or other units.</li>
+<li><strong>duration</strong> &#8211; Maximal duration of the motion track in the same units as  <code class="docutils literal"><span class="pre">timestamp</span></code> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function updates the motion history image as follows:</p>
+<div class="math">
+<p><img src="../../../_images/math/438fa5bcfce08dd7c39b24d4cf5b6b05ef5890c6.png" alt="\texttt{mhi} (x,y)= \forkthree{\texttt{timestamp}}{if $\texttt{silhouette}(x,y) \ne 0$}{0}{if $\texttt{silhouette}(x,y) = 0$ and $\texttt{mhi} &lt; (\texttt{timestamp} - \texttt{duration})$}{\texttt{mhi}(x,y)}{otherwise}"/></p>
+</div><p>That is, MHI pixels where the motion occurs are set to the current <code class="docutils literal"><span class="pre">timestamp</span></code> , while the pixels where the motion happened last time a long time ago are cleared.</p>
+<p>The function, together with
+<a class="reference internal" href="#void calcMotionGradient(InputArray mhi, OutputArray mask, OutputArray orientation, double delta1, double delta2, int apertureSize)" title="void calcMotionGradient(InputArray mhi, OutputArray mask, OutputArray orientation, double delta1, double delta2, int apertureSize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcMotionGradient()</span></code></a> and
+<a class="reference internal" href="#double calcGlobalOrientation(InputArray orientation, InputArray mask, InputArray mhi, double timestamp, double duration)" title="double calcGlobalOrientation(InputArray orientation, InputArray mask, InputArray mhi, double timestamp, double duration)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcGlobalOrientation()</span></code></a> , implements a motion templates technique described in
+<a class="reference internal" href="#davis97" id="id4">[Davis97]</a> and <a class="reference internal" href="#bradski00" id="id5">[Bradski00]</a>.
+See also the OpenCV sample <code class="docutils literal"><span class="pre">motempl.c</span></code> that demonstrates the use of all the motion template functions.</p>
+</div>
+<div class="section" id="calcmotiongradient">
+<h2>calcMotionGradient<a class="headerlink" href="#calcmotiongradient" title="Permalink to this headline">¶</a></h2>
+<p>Calculates a gradient orientation of a motion history image.</p>
+<dl class="function">
+<dt id="void calcMotionGradient(InputArray mhi, OutputArray mask, OutputArray orientation, double delta1, double delta2, int apertureSize)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">calcMotionGradient</code><span class="sig-paren">(</span>InputArray <strong>mhi</strong>, OutputArray <strong>mask</strong>, OutputArray <strong>orientation</strong>, double <strong>delta1</strong>, double <strong>delta2</strong>, int <strong>apertureSize</strong>=3 <span class="sig-paren">)</span><a class="headerlink" href="#void calcMotionGradient(InputArray mhi, OutputArray mask, OutputArray orientation, double delta1, double delta2, int apertureSize)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.calcMotionGradient">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">calcMotionGradient</code><span class="sig-paren">(</span>mhi, delta1, delta2<span class="optional">[</span>, mask<span class="optional">[</span>, orientation<span class="optional">[</span>, apertureSize<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; mask, orientation<a class="headerlink" href="#cv2.calcMotionGradient" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvCalcMotionGradient(const CvArr* mhi, CvArr* mask, CvArr* orientation, double delta1, double delta2, int aperture_size)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvCalcMotionGradient</code><span class="sig-paren">(</span>const CvArr* <strong>mhi</strong>, CvArr* <strong>mask</strong>, CvArr* <strong>orientation</strong>, double <strong>delta1</strong>, double <strong>delta2</strong>, int <strong>aperture_size</strong>=3 <span class="sig-paren">)</span><a class="headerlink" href="#void cvCalcMotionGradient(const CvArr* mhi, CvArr* mask, CvArr* orientation, double delta1, double delta2, int aperture_size)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CalcMotionGradient">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CalcMotionGradient</code><span class="sig-paren">(</span>mhi, mask, orientation, delta1, delta2, apertureSize=3<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.CalcMotionGradient" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mhi</strong> &#8211; Motion history single-channel floating-point image.</li>
+<li><strong>mask</strong> &#8211; Output mask image that has the type  <code class="docutils literal"><span class="pre">CV_8UC1</span></code>  and the same size as  <code class="docutils literal"><span class="pre">mhi</span></code> . Its non-zero elements mark pixels where the motion gradient data is correct.</li>
+<li><strong>orientation</strong> &#8211; Output motion gradient orientation image that has the same type and the same size as  <code class="docutils literal"><span class="pre">mhi</span></code> . Each pixel of the image is a motion orientation, from 0 to 360 degrees.</li>
+<li><strong>delta1</strong> &#8211; Minimal (or maximal) allowed difference between  <code class="docutils literal"><span class="pre">mhi</span></code>  values within a pixel neighborhood.</li>
+<li><strong>delta2</strong> &#8211; <p>Maximal (or minimal) allowed difference between  <code class="docutils literal"><span class="pre">mhi</span></code>  values within a pixel neighborhood. That is, the function finds the minimum ( <img class="math" src="../../../_images/math/416b197f28c1f2af45b74105c019d206d7a7b61d.png" alt="m(x,y)"/> ) and maximum ( <img class="math" src="../../../_images/math/1eff55524b436dd9950d31b176b4358fb73fc412.png" alt="M(x,y)"/> )  <code class="docutils literal"><span class="pre">mhi</span></code>  values over  <img class="math" src="../../../_images/math/4e17330236365b9188352f6e0aeef470b1f872f1.png" alt="3 \times 3"/>  neighborhood of each pixel and marks the motion orientation at  <img class="math" src="../../../_images/math/dee21a914bf9088bc0dfbd38a96c1f859c412ec7.png" alt="(x, y)"/>  as valid only if</p>
+<div class="math">
+<p><img src="../../../_images/math/4cd9ebdc2783861cac243d30459ee2f25801f9d3.png" alt="\min ( \texttt{delta1}  ,  \texttt{delta2}  )  \le  M(x,y)-m(x,y)  \le   \max ( \texttt{delta1}  , \texttt{delta2} )."/></p>
+</div></li>
+<li><strong>apertureSize</strong> &#8211; Aperture size of  the <a class="reference internal" href="../../imgproc/doc/filtering.html#void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)" title="void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Sobel()</span></code></a>  operator.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function calculates a gradient orientation at each pixel
+<img class="math" src="../../../_images/math/dee21a914bf9088bc0dfbd38a96c1f859c412ec7.png" alt="(x, y)"/> as:</p>
+<div class="math">
+<p><img src="../../../_images/math/d71b954f26528d8c6da0fa04c4e06a470a267ac3.png" alt="\texttt{orientation} (x,y)= \arctan{\frac{d\texttt{mhi}/dy}{d\texttt{mhi}/dx}}"/></p>
+</div><p>In fact,
+<a class="reference internal" href="../../core/doc/utility_and_system_functions_and_macros.html#float fastAtan2(float y, float x)" title="float fastAtan2(float y, float x)"><code class="xref ocv ocv-func docutils literal"><span class="pre">fastAtan2()</span></code></a> and
+<a class="reference internal" href="../../core/doc/operations_on_arrays.html#void phase(InputArray x, InputArray y, OutputArray angle, bool angleInDegrees)" title="void phase(InputArray x, InputArray y, OutputArray angle, bool angleInDegrees)"><code class="xref ocv ocv-func docutils literal"><span class="pre">phase()</span></code></a> are used so that the computed angle is measured in degrees and covers the full range 0..360. Also, the <code class="docutils literal"><span class="pre">mask</span></code> is filled to indicate pixels where the computed angle is valid.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>(Python) An example on how to perform a motion template technique can be found at opencv_source_code/samples/python2/motempl.py</li>
+</ul>
+</div>
+</div>
+<div class="section" id="calcglobalorientation">
+<h2>calcGlobalOrientation<a class="headerlink" href="#calcglobalorientation" title="Permalink to this headline">¶</a></h2>
+<p>Calculates a global motion orientation in a selected region.</p>
+<dl class="function">
+<dt id="double calcGlobalOrientation(InputArray orientation, InputArray mask, InputArray mhi, double timestamp, double duration)">
+<strong>C++:</strong><code class="descname"> </code>double <code class="descname">calcGlobalOrientation</code><span class="sig-paren">(</span>InputArray <strong>orientation</strong>, InputArray <strong>mask</strong>, InputArray <strong>mhi</strong>, double <strong>timestamp</strong>, double <strong>duration</strong><span class="sig-paren">)</span><a class="headerlink" href="#double calcGlobalOrientation(InputArray orientation, InputArray mask, InputArray mhi, double timestamp, double duration)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.calcGlobalOrientation">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">calcGlobalOrientation</code><span class="sig-paren">(</span>orientation, mask, mhi, timestamp, duration<span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.calcGlobalOrientation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="double cvCalcGlobalOrientation(const CvArr* orientation, const CvArr* mask, const CvArr* mhi, double timestamp, double duration)">
+<strong>C:</strong><code class="descname"> </code>double <code class="descname">cvCalcGlobalOrientation</code><span class="sig-paren">(</span>const CvArr* <strong>orientation</strong>, const CvArr* <strong>mask</strong>, const CvArr* <strong>mhi</strong>, double <strong>timestamp</strong>, double <strong>duration</strong><span class="sig-paren">)</span><a class="headerlink" href="#double cvCalcGlobalOrientation(const CvArr* orientation, const CvArr* mask, const CvArr* mhi, double timestamp, double duration)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CalcGlobalOrientation">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CalcGlobalOrientation</code><span class="sig-paren">(</span>orientation, mask, mhi, timestamp, duration<span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#cv.CalcGlobalOrientation" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>orientation</strong> &#8211; Motion gradient orientation image calculated by the function  <a class="reference internal" href="#void calcMotionGradient(InputArray mhi, OutputArray mask, OutputArray orientation, double delta1, double delta2, int apertureSize)" title="void calcMotionGradient(InputArray mhi, OutputArray mask, OutputArray orientation, double delta1, double delta2, int apertureSize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcMotionGradient()</span></code></a> .</li>
+<li><strong>mask</strong> &#8211; Mask image. It may be a conjunction of a valid gradient mask, also calculated by  <a class="reference internal" href="#void calcMotionGradient(InputArray mhi, OutputArray mask, OutputArray orientation, double delta1, double delta2, int apertureSize)" title="void calcMotionGradient(InputArray mhi, OutputArray mask, OutputArray orientation, double delta1, double delta2, int apertureSize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcMotionGradient()</span></code></a> , and the mask of a region whose direction needs to be calculated.</li>
+<li><strong>mhi</strong> &#8211; Motion history image calculated by  <a class="reference internal" href="#void updateMotionHistory(InputArray silhouette, InputOutputArray mhi, double timestamp, double duration)" title="void updateMotionHistory(InputArray silhouette, InputOutputArray mhi, double timestamp, double duration)"><code class="xref ocv ocv-func docutils literal"><span class="pre">updateMotionHistory()</span></code></a> .</li>
+<li><strong>timestamp</strong> &#8211; Timestamp passed to  <a class="reference internal" href="#void updateMotionHistory(InputArray silhouette, InputOutputArray mhi, double timestamp, double duration)" title="void updateMotionHistory(InputArray silhouette, InputOutputArray mhi, double timestamp, double duration)"><code class="xref ocv ocv-func docutils literal"><span class="pre">updateMotionHistory()</span></code></a> .</li>
+<li><strong>duration</strong> &#8211; Maximum duration of a motion track in milliseconds, passed to  <a class="reference internal" href="#void updateMotionHistory(InputArray silhouette, InputOutputArray mhi, double timestamp, double duration)" title="void updateMotionHistory(InputArray silhouette, InputOutputArray mhi, double timestamp, double duration)"><code class="xref ocv ocv-func docutils literal"><span class="pre">updateMotionHistory()</span></code></a> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function calculates an average
+motion direction in the selected region and returns the angle between
+0 degrees  and 360 degrees. The average direction is computed from
+the weighted orientation histogram, where a recent motion has a larger
+weight and the motion occurred in the past has a smaller weight, as recorded in <code class="docutils literal"><span class="pre">mhi</span></code> .</p>
+</div>
+<div class="section" id="segmentmotion">
+<h2>segmentMotion<a class="headerlink" href="#segmentmotion" title="Permalink to this headline">¶</a></h2>
+<p>Splits a motion history image into a few parts corresponding to separate independent motions (for example, left hand, right hand).</p>
+<dl class="function">
+<dt id="void segmentMotion(InputArray mhi, OutputArray segmask, vector&lt;Rect&gt;&amp; boundingRects, double timestamp, double segThresh)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">segmentMotion</code><span class="sig-paren">(</span>InputArray <strong>mhi</strong>, OutputArray <strong>segmask</strong>, vector&lt;Rect&gt;&amp; <strong>boundingRects</strong>, double <strong>timestamp</strong>, double <strong>segThresh</strong><span class="sig-paren">)</span><a class="headerlink" href="#void segmentMotion(InputArray mhi, OutputArray segmask, vector<Rect>& boundingRects, double timestamp, double segThresh)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.segmentMotion">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">segmentMotion</code><span class="sig-paren">(</span>mhi, timestamp, segThresh<span class="optional">[</span>, segmask<span class="optional">]</span><span class="sig-paren">)</span> &rarr; segmask, boundingRects<a class="headerlink" href="#cv2.segmentMotion" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="CvSeq* cvSegmentMotion(const CvArr* mhi, CvArr* seg_mask, CvMemStorage* storage, double timestamp, double seg_thresh)">
+<strong>C:</strong><code class="descname"> </code>CvSeq* <code class="descname">cvSegmentMotion</code><span class="sig-paren">(</span>const CvArr* <strong>mhi</strong>, CvArr* <strong>seg_mask</strong>, CvMemStorage* <strong>storage</strong>, double <strong>timestamp</strong>, double <strong>seg_thresh</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvSeq* cvSegmentMotion(const CvArr* mhi, CvArr* seg_mask, CvMemStorage* storage, double timestamp, double seg_thresh)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.SegmentMotion">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">SegmentMotion</code><span class="sig-paren">(</span>mhi, seg_mask, storage, timestamp, seg_thresh<span class="sig-paren">)</span> &rarr; boundingRects<a class="headerlink" href="#cv.SegmentMotion" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mhi</strong> &#8211; Motion history image.</li>
+<li><strong>segmask</strong> &#8211; Image where the found mask should be stored, single-channel, 32-bit floating-point.</li>
+<li><strong>boundingRects</strong> &#8211; Vector containing ROIs of motion connected components.</li>
+<li><strong>timestamp</strong> &#8211; Current time in milliseconds or other units.</li>
+<li><strong>segThresh</strong> &#8211; Segmentation threshold that is recommended to be equal to the interval between motion history &#8220;steps&#8221; or greater.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function finds all of the motion segments and marks them in <code class="docutils literal"><span class="pre">segmask</span></code> with individual values (1,2,...). It also computes a vector with ROIs of motion connected components. After that the motion direction for every component can be calculated with <a class="reference internal" href="#double calcGlobalOrientation(InputArray orientation, InputArray mask, InputArray mhi, double timestamp, double duration)" title="double calcGlobalOrientation(InputArray orientation, InputArray mask, InputArray mhi, double timestamp, double duration)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcGlobalOrientation()</span></code></a> using the extracted mask of the particular component.</p>
+</div>
+<div class="section" id="camshift">
+<h2>CamShift<a class="headerlink" href="#camshift" title="Permalink to this headline">¶</a></h2>
+<p>Finds an object center, size, and orientation.</p>
+<dl class="function">
+<dt id="RotatedRect CamShift(InputArray probImage, Rect&amp; window, TermCriteria criteria)">
+<strong>C++:</strong><code class="descname"> </code>RotatedRect <code class="descname">CamShift</code><span class="sig-paren">(</span>InputArray <strong>probImage</strong>, Rect&amp; <strong>window</strong>, TermCriteria <strong>criteria</strong><span class="sig-paren">)</span><a class="headerlink" href="#RotatedRect CamShift(InputArray probImage, Rect& window, TermCriteria criteria)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.CamShift">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">CamShift</code><span class="sig-paren">(</span>probImage, window, criteria<span class="sig-paren">)</span> &rarr; retval, window<a class="headerlink" href="#cv2.CamShift" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="int cvCamShift(const CvArr* prob_image, CvRect window, CvTermCriteria criteria, CvConnectedComp* comp, CvBox2D* box)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvCamShift</code><span class="sig-paren">(</span>const CvArr* <strong>prob_image</strong>, CvRect <strong>window</strong>, CvTermCriteria <strong>criteria</strong>, CvConnectedComp* <strong>comp</strong>, CvBox2D* <strong>box</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#int cvCamShift(const CvArr* prob_image, CvRect window, CvTermCriteria criteria, CvConnectedComp* comp, CvBox2D* box)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CamShift">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CamShift</code><span class="sig-paren">(</span>prob_image, window, criteria) -&gt; (int, comp, box<span class="sig-paren">)</span><a class="headerlink" href="#cv.CamShift" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>probImage</strong> &#8211; Back projection of the object histogram. See  <a class="reference internal" href="../../imgproc/doc/histograms.html#void calcBackProject(const Mat* images, int nimages, const int* channels, InputArray hist, OutputArray backProject, const float** ranges, double scale, bool uniform)" title="void calcBackProject(const Mat* images, int nimages, const int* channels, InputArray hist, OutputArray backProject, const float** ranges, double scale, bool uniform)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcBackProject()</span></code></a> .</li>
+<li><strong>window</strong> &#8211; Initial search window.</li>
+<li><strong>criteria</strong> &#8211; Stop criteria for the underlying  <a class="reference internal" href="#int meanShift(InputArray probImage, Rect&amp; window, TermCriteria criteria)" title="int meanShift(InputArray probImage, Rect&amp; window, TermCriteria criteria)"><code class="xref ocv ocv-func docutils literal"><span class="pre">meanShift()</span></code></a> .</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(in old interfaces) Number of iterations CAMSHIFT took to converge</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function implements the CAMSHIFT object tracking algorithm
+<a class="reference internal" href="#bradski98" id="id6">[Bradski98]</a>.
+First, it finds an object center using
+<a class="reference internal" href="#int meanShift(InputArray probImage, Rect&amp; window, TermCriteria criteria)" title="int meanShift(InputArray probImage, Rect&amp; window, TermCriteria criteria)"><code class="xref ocv ocv-func docutils literal"><span class="pre">meanShift()</span></code></a> and then adjusts the window size and finds the optimal rotation. The function returns the rotated rectangle structure that includes the object position, size, and orientation. The next position of the search window can be obtained with <code class="docutils literal"><span class="pre">RotatedRect::boundingRect()</span></code> .</p>
+<p>See the OpenCV sample <code class="docutils literal"><span class="pre">camshiftdemo.c</span></code> that tracks colored objects.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>(Python) A sample explaining the camshift tracking algorithm can be found at opencv_source_code/samples/python2/camshift.py</li>
+</ul>
+</div>
+</div>
+<div class="section" id="meanshift">
+<h2>meanShift<a class="headerlink" href="#meanshift" title="Permalink to this headline">¶</a></h2>
+<p>Finds an object on a back projection image.</p>
+<dl class="function">
+<dt id="int meanShift(InputArray probImage, Rect&amp; window, TermCriteria criteria)">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descname">meanShift</code><span class="sig-paren">(</span>InputArray <strong>probImage</strong>, Rect&amp; <strong>window</strong>, TermCriteria <strong>criteria</strong><span class="sig-paren">)</span><a class="headerlink" href="#int meanShift(InputArray probImage, Rect& window, TermCriteria criteria)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.meanShift">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">meanShift</code><span class="sig-paren">(</span>probImage, window, criteria<span class="sig-paren">)</span> &rarr; retval, window<a class="headerlink" href="#cv2.meanShift" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="int cvMeanShift(const CvArr* prob_image, CvRect window, CvTermCriteria criteria, CvConnectedComp* comp)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvMeanShift</code><span class="sig-paren">(</span>const CvArr* <strong>prob_image</strong>, CvRect <strong>window</strong>, CvTermCriteria <strong>criteria</strong>, CvConnectedComp* <strong>comp</strong><span class="sig-paren">)</span><a class="headerlink" href="#int cvMeanShift(const CvArr* prob_image, CvRect window, CvTermCriteria criteria, CvConnectedComp* comp)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.MeanShift">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">MeanShift</code><span class="sig-paren">(</span>prob_image, window, criteria<span class="sig-paren">)</span> &rarr; comp<a class="headerlink" href="#cv.MeanShift" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>probImage</strong> &#8211; Back projection of the object histogram. See  <a class="reference internal" href="../../imgproc/doc/histograms.html#void calcBackProject(const Mat* images, int nimages, const int* channels, InputArray hist, OutputArray backProject, const float** ranges, double scale, bool uniform)" title="void calcBackProject(const Mat* images, int nimages, const int* channels, InputArray hist, OutputArray backProject, const float** ranges, double scale, bool uniform)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcBackProject()</span></code></a> for details.</li>
+<li><strong>window</strong> &#8211; Initial search window.</li>
+<li><strong>criteria</strong> &#8211; Stop criteria for the iterative search algorithm.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Number of iterations CAMSHIFT took to converge.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function implements the iterative object search algorithm. It takes the input back projection of an object and the initial position. The mass center in <code class="docutils literal"><span class="pre">window</span></code> of the back projection image is computed and the search window center shifts to the mass center. The procedure is repeated until the specified number of iterations <code class="docutils literal"><span class="pre">criteria.maxCount</span></code> is done or until the window center shifts by less than <code class="docutils literal"><span class="pre">criteria.epsilon</span></code> . The algorithm is used inside
+<a class="reference internal" href="#RotatedRect CamShift(InputArray probImage, Rect&amp; window, TermCriteria criteria)" title="RotatedRect CamShift(InputArray probImage, Rect&amp; window, TermCriteria criteria)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CamShift()</span></code></a> and, unlike
+<a class="reference internal" href="#RotatedRect CamShift(InputArray probImage, Rect&amp; window, TermCriteria criteria)" title="RotatedRect CamShift(InputArray probImage, Rect&amp; window, TermCriteria criteria)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CamShift()</span></code></a> , the search window size or orientation do not change during the search. You can simply pass the output of
+<a class="reference internal" href="../../imgproc/doc/histograms.html#void calcBackProject(const Mat* images, int nimages, const int* channels, InputArray hist, OutputArray backProject, const float** ranges, double scale, bool uniform)" title="void calcBackProject(const Mat* images, int nimages, const int* channels, InputArray hist, OutputArray backProject, const float** ranges, double scale, bool uniform)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcBackProject()</span></code></a> to this function. But better results can be obtained if you pre-filter the back projection and remove the noise. For example, you can do this by retrieving connected components with
+<a class="reference internal" href="../../imgproc/doc/structural_analysis_and_shape_descriptors.html#void findContours(InputOutputArray image, OutputArrayOfArrays contours, OutputArray hierarchy, int mode, int method, Point offset)" title="void findContours(InputOutputArray image, OutputArrayOfArrays contours, OutputArray hierarchy, int mode, int method, Point offset)"><code class="xref ocv ocv-func docutils literal"><span class="pre">findContours()</span></code></a> , throwing away contours with small area (
+<a class="reference internal" href="../../imgproc/doc/structural_analysis_and_shape_descriptors.html#double contourArea(InputArray contour, bool oriented)" title="double contourArea(InputArray contour, bool oriented)"><code class="xref ocv ocv-func docutils literal"><span class="pre">contourArea()</span></code></a> ), and rendering the  remaining contours with
+<a class="reference internal" href="../../imgproc/doc/structural_analysis_and_shape_descriptors.html#void drawContours(InputOutputArray image, InputArrayOfArrays contours, int contourIdx, const Scalar&amp; color, int thickness, int lineType, InputArray hierarchy, int maxLevel, Point offset)" title="void drawContours(InputOutputArray image, InputArrayOfArrays contours, int contourIdx, const Scalar&amp; color, int thickness, int lineType, InputArray hierarchy, int maxLevel, Point offset)"><code class="xref ocv ocv-func docutils literal"><span class="pre">drawContours()</span></code></a> .</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>A mean-shift tracking sample can be found at opencv_source_code/samples/cpp/camshiftdemo.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="kalmanfilter">
+<h2>KalmanFilter<a class="headerlink" href="#kalmanfilter" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="KalmanFilter">
+<em class="property">class </em><code class="descname">KalmanFilter</code><a class="headerlink" href="#KalmanFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Kalman filter class.</p>
+</dd></dl>
+
+<p>The class implements a standard Kalman filter
+<a class="reference external" href="http://en.wikipedia.org/wiki/Kalman_filter">http://en.wikipedia.org/wiki/Kalman_filter</a>, <a class="reference internal" href="#welch95" id="id7">[Welch95]</a>. However, you can modify <code class="docutils literal"><span class="pre">transitionMatrix</span></code>, <code class="docutils literal"><span class="pre">controlMatrix</span></code>, and <code class="docutils literal"><span class="pre">measurementMatrix</span></code> to get an extended Kalman filter functionality. See the OpenCV sample <code class="docutils literal"><span class="pre">kalman.cpp</span></code> .</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example using the standard Kalman filter can be found at opencv_source_code/samples/cpp/kalman.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="kalmanfilter-kalmanfilter">
+<h2>KalmanFilter::KalmanFilter<a class="headerlink" href="#kalmanfilter-kalmanfilter" title="Permalink to this headline">¶</a></h2>
+<p>The constructors.</p>
+<dl class="function">
+<dt id="KalmanFilter::KalmanFilter()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">KalmanFilter::</code><code class="descname">KalmanFilter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#KalmanFilter::KalmanFilter()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="KalmanFilter::KalmanFilter(int dynamParams, int measureParams, int controlParams, int type)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">KalmanFilter::</code><code class="descname">KalmanFilter</code><span class="sig-paren">(</span>int <strong>dynamParams</strong>, int <strong>measureParams</strong>, int <strong>controlParams</strong>=0, int <strong>type</strong>=CV_32F<span class="sig-paren">)</span><a class="headerlink" href="#KalmanFilter::KalmanFilter(int dynamParams, int measureParams, int controlParams, int type)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.KalmanFilter">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">KalmanFilter</code><span class="sig-paren">(</span><span class="optional">[</span>dynamParams, measureParams<span class="optional">[</span>, controlParams<span class="optional">[</span>, type<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; &lt;KalmanFilter object&gt;<a class="headerlink" href="#cv2.KalmanFilter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="CvKalman* cvCreateKalman(int dynam_params, int measure_params, int control_params)">
+<strong>C:</strong><code class="descname"> </code>CvKalman* <code class="descname">cvCreateKalman</code><span class="sig-paren">(</span>int <strong>dynam_params</strong>, int <strong>measure_params</strong>, int <strong>control_params</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#CvKalman* cvCreateKalman(int dynam_params, int measure_params, int control_params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CreateKalman">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CreateKalman</code><span class="sig-paren">(</span>dynam_params, measure_params, control_params=0<span class="sig-paren">)</span> &rarr; CvKalman<a class="headerlink" href="#cv.CreateKalman" title="Permalink to this definition">¶</a></dt>
+<dd><p>The full constructor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dynamParams</strong> &#8211; Dimensionality of the state.</li>
+<li><strong>measureParams</strong> &#8211; Dimensionality of the measurement.</li>
+<li><strong>controlParams</strong> &#8211; Dimensionality of the control vector.</li>
+<li><strong>type</strong> &#8211; Type of the created matrices that should be <code class="docutils literal"><span class="pre">CV_32F</span></code> or <code class="docutils literal"><span class="pre">CV_64F</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In C API when <code class="docutils literal"><span class="pre">CvKalman*</span> <span class="pre">kalmanFilter</span></code> structure is not needed anymore, it should be released with <code class="docutils literal"><span class="pre">cvReleaseKalman(&amp;kalmanFilter)</span></code></p>
+</div>
+</div>
+<div class="section" id="kalmanfilter-init">
+<h2>KalmanFilter::init<a class="headerlink" href="#kalmanfilter-init" title="Permalink to this headline">¶</a></h2>
+<p>Re-initializes Kalman filter. The previous content is destroyed.</p>
+<dl class="function">
+<dt id="void KalmanFilter::init(int dynamParams, int measureParams, int controlParams, int type)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">KalmanFilter::</code><code class="descname">init</code><span class="sig-paren">(</span>int <strong>dynamParams</strong>, int <strong>measureParams</strong>, int <strong>controlParams</strong>=0, int <strong>type</strong>=CV_32F<span class="sig-paren">)</span><a class="headerlink" href="#void KalmanFilter::init(int dynamParams, int measureParams, int controlParams, int type)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dynamParams</strong> &#8211; Dimensionalityensionality of the state.</li>
+<li><strong>measureParams</strong> &#8211; Dimensionality of the measurement.</li>
+<li><strong>controlParams</strong> &#8211; Dimensionality of the control vector.</li>
+<li><strong>type</strong> &#8211; Type of the created matrices that should be <code class="docutils literal"><span class="pre">CV_32F</span></code> or <code class="docutils literal"><span class="pre">CV_64F</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="kalmanfilter-predict">
+<h2>KalmanFilter::predict<a class="headerlink" href="#kalmanfilter-predict" title="Permalink to this headline">¶</a></h2>
+<p>Computes a predicted state.</p>
+<dl class="function">
+<dt id="const Mat&amp; KalmanFilter::predict(const Mat&amp; control)">
+<strong>C++:</strong><code class="descname"> </code>const Mat&amp; <code class="descclassname">KalmanFilter::</code><code class="descname">predict</code><span class="sig-paren">(</span>const Mat&amp; <strong>control</strong>=Mat()<span class="sig-paren">)</span><a class="headerlink" href="#const Mat& KalmanFilter::predict(const Mat& control)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.KalmanFilter.predict">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.KalmanFilter.</code><code class="descname">predict</code><span class="sig-paren">(</span><span class="optional">[</span>control<span class="optional">]</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.KalmanFilter.predict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="const CvMat* cvKalmanPredict(CvKalman* kalman, const CvMat* control)">
+<strong>C:</strong><code class="descname"> </code>const CvMat* <code class="descname">cvKalmanPredict</code><span class="sig-paren">(</span>CvKalman* <strong>kalman</strong>, const CvMat* <strong>control</strong>=NULL<span class="sig-paren">)</span><a class="headerlink" href="#const CvMat* cvKalmanPredict(CvKalman* kalman, const CvMat* control)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.KalmanPredict">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">KalmanPredict</code><span class="sig-paren">(</span>kalman, control=None<span class="sig-paren">)</span> &rarr; mat<a class="headerlink" href="#cv.KalmanPredict" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>control</strong> &#8211; The optional input control</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="kalmanfilter-correct">
+<h2>KalmanFilter::correct<a class="headerlink" href="#kalmanfilter-correct" title="Permalink to this headline">¶</a></h2>
+<p>Updates the predicted state from the measurement.</p>
+<dl class="function">
+<dt id="const Mat&amp; KalmanFilter::correct(const Mat&amp; measurement)">
+<strong>C++:</strong><code class="descname"> </code>const Mat&amp; <code class="descclassname">KalmanFilter::</code><code class="descname">correct</code><span class="sig-paren">(</span>const Mat&amp; <strong>measurement</strong><span class="sig-paren">)</span><a class="headerlink" href="#const Mat& KalmanFilter::correct(const Mat& measurement)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.KalmanFilter.correct">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.KalmanFilter.</code><code class="descname">correct</code><span class="sig-paren">(</span>measurement<span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.KalmanFilter.correct" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="const CvMat* cvKalmanCorrect(CvKalman* kalman, const CvMat* measurement)">
+<strong>C:</strong><code class="descname"> </code>const CvMat* <code class="descname">cvKalmanCorrect</code><span class="sig-paren">(</span>CvKalman* <strong>kalman</strong>, const CvMat* <strong>measurement</strong><span class="sig-paren">)</span><a class="headerlink" href="#const CvMat* cvKalmanCorrect(CvKalman* kalman, const CvMat* measurement)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.KalmanCorrect">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">KalmanCorrect</code><span class="sig-paren">(</span>kalman, measurement<span class="sig-paren">)</span> &rarr; mat<a class="headerlink" href="#cv.KalmanCorrect" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>measurement</strong> &#8211; The measured system parameters</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="backgroundsubtractor">
+<h2>BackgroundSubtractor<a class="headerlink" href="#backgroundsubtractor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="BackgroundSubtractor : public Algorithm">
+<em class="property">class </em><code class="descname">BackgroundSubtractor</code> : <em class="property">public</em> <code class="descname">Algorithm</code><a class="headerlink" href="#BackgroundSubtractor : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for background/foreground segmentation.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">BackgroundSubtractor</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Algorithm</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">BackgroundSubtractor</span><span class="p">();</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">operator</span><span class="p">()(</span><span class="n">InputArray</span> <span class="n">image</span><span class="p">,</span> <span class="n">OutputArray</span> <span class="n">fgmask</span><span class="p">,</span> <span class="kt">double</span> <span class="n">learningRate</span><span class="o">=</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">getBackgroundImage</span><span class="p">(</span><span class="n">OutputArray</span> <span class="n">backgroundImage</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class is only used to define the common interface for the whole family of background/foreground segmentation algorithms.</p>
+</div>
+<div class="section" id="backgroundsubtractor-operator">
+<h2>BackgroundSubtractor::operator()<a class="headerlink" href="#backgroundsubtractor-operator" title="Permalink to this headline">¶</a></h2>
+<p>Computes a foreground mask.</p>
+<dl class="function">
+<dt id="void BackgroundSubtractor::operator()(InputArray image, OutputArray fgmask, double learningRate)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">BackgroundSubtractor::</code><code class="descname">operator()</code><span class="sig-paren">(</span>InputArray <strong>image</strong>, OutputArray <strong>fgmask</strong>, double <strong>learningRate</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#void BackgroundSubtractor::operator()(InputArray image, OutputArray fgmask, double learningRate)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.BackgroundSubtractor.apply">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.BackgroundSubtractor.</code><code class="descname">apply</code><span class="sig-paren">(</span>image<span class="optional">[</span>, fgmask<span class="optional">[</span>, learningRate<span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; fgmask<a class="headerlink" href="#cv2.BackgroundSubtractor.apply" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Next video frame.</li>
+<li><strong>fgmask</strong> &#8211; The output foreground mask as an 8-bit binary image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="backgroundsubtractor-getbackgroundimage">
+<h2>BackgroundSubtractor::getBackgroundImage<a class="headerlink" href="#backgroundsubtractor-getbackgroundimage" title="Permalink to this headline">¶</a></h2>
+<p>Computes a background image.</p>
+<dl class="function">
+<dt id="void BackgroundSubtractor::getBackgroundImage(OutputArray backgroundImage) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">BackgroundSubtractor::</code><code class="descname">getBackgroundImage</code><span class="sig-paren">(</span>OutputArray <strong>backgroundImage</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void BackgroundSubtractor::getBackgroundImage(OutputArray backgroundImage) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>backgroundImage</strong> &#8211; The output background image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Sometimes the background image can be very blurry, as it contain the average background statistics.</p>
+</div>
+</div>
+<div class="section" id="backgroundsubtractormog">
+<h2>BackgroundSubtractorMOG<a class="headerlink" href="#backgroundsubtractormog" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="BackgroundSubtractorMOG : public BackgroundSubtractor">
+<em class="property">class </em><code class="descname">BackgroundSubtractorMOG</code> : <em class="property">public</em> <code class="descname">BackgroundSubtractor</code><a class="headerlink" href="#BackgroundSubtractorMOG : public BackgroundSubtractor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Gaussian Mixture-based Background/Foreground Segmentation Algorithm.</p>
+<p>The class implements the algorithm described in P. KadewTraKuPong and R. Bowden, <em>An improved adaptive background mixture model for real-time tracking with shadow detection</em>, Proc. 2nd European Workshop on Advanced Video-Based Surveillance Systems, 2001: <a class="reference external" href="http://personal.ee.surrey.ac.uk/Personal/R.Bowden/publications/avbs01/avbs01.pdf">http://personal.ee.surrey.ac.uk/Personal/R.Bowden/publications/avbs01/avbs01.pdf</a></p>
+</div>
+<div class="section" id="backgroundsubtractormog-backgroundsubtractormog">
+<h2>BackgroundSubtractorMOG::BackgroundSubtractorMOG<a class="headerlink" href="#backgroundsubtractormog-backgroundsubtractormog" title="Permalink to this headline">¶</a></h2>
+<p>The constructors.</p>
+<dl class="function">
+<dt id="BackgroundSubtractorMOG::BackgroundSubtractorMOG()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">BackgroundSubtractorMOG::</code><code class="descname">BackgroundSubtractorMOG</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#BackgroundSubtractorMOG::BackgroundSubtractorMOG()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="BackgroundSubtractorMOG::BackgroundSubtractorMOG(int history, int nmixtures, double backgroundRatio, double noiseSigma)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">BackgroundSubtractorMOG::</code><code class="descname">BackgroundSubtractorMOG</code><span class="sig-paren">(</span>int <strong>history</strong>, int <strong>nmixtures</strong>, double <strong>backgroundRatio</strong>, double <strong>noiseSigma</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#BackgroundSubtractorMOG::BackgroundSubtractorMOG(int history, int nmixtures, double backgroundRatio, double noiseSigma)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.BackgroundSubtractorMOG">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">BackgroundSubtractorMOG</code><span class="sig-paren">(</span><span class="optional">[</span>history, nmixtures, backgroundRatio<span class="optional">[</span>, noiseSigma<span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; &lt;BackgroundSubtractorMOG object&gt;<a class="headerlink" href="#cv2.BackgroundSubtractorMOG" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>history</strong> &#8211; Length of the history.</li>
+<li><strong>nmixtures</strong> &#8211; Number of Gaussian mixtures.</li>
+<li><strong>backgroundRatio</strong> &#8211; Background ratio.</li>
+<li><strong>noiseSigma</strong> &#8211; Noise strength.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Default constructor sets all parameters to default values.</p>
+</div>
+<div class="section" id="backgroundsubtractormog-operator">
+<h2>BackgroundSubtractorMOG::operator()<a class="headerlink" href="#backgroundsubtractormog-operator" title="Permalink to this headline">¶</a></h2>
+<p>Updates the background model and returns the foreground mask</p>
+<dl class="function">
+<dt id="void BackgroundSubtractorMOG::operator()(InputArray image, OutputArray fgmask, double learningRate)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">BackgroundSubtractorMOG::</code><code class="descname">operator()</code><span class="sig-paren">(</span>InputArray <strong>image</strong>, OutputArray <strong>fgmask</strong>, double <strong>learningRate</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#void BackgroundSubtractorMOG::operator()(InputArray image, OutputArray fgmask, double learningRate)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Parameters are the same as in <a class="reference internal" href="#void BackgroundSubtractor::operator()(InputArray image, OutputArray fgmask, double learningRate)" title="void BackgroundSubtractor::operator()(InputArray image, OutputArray fgmask, double learningRate)"><code class="xref ocv ocv-funcx docutils literal"><span class="pre">BackgroundSubtractor::operator()</span></code></a></p>
+</div>
+<div class="section" id="backgroundsubtractormog2">
+<h2>BackgroundSubtractorMOG2<a class="headerlink" href="#backgroundsubtractormog2" title="Permalink to this headline">¶</a></h2>
+<p>Gaussian Mixture-based Background/Foreground Segmentation Algorithm.</p>
+<dl class="class">
+<dt id="BackgroundSubtractorMOG2 : public BackgroundSubtractor">
+<em class="property">class </em><code class="descname">BackgroundSubtractorMOG2</code> : <em class="property">public</em> <code class="descname">BackgroundSubtractor</code><a class="headerlink" href="#BackgroundSubtractorMOG2 : public BackgroundSubtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Here are important members of the class that control the algorithm, which you can set after constructing the class instance:</p>
+<dl class="member">
+<dt id="int nmixtures">
+int <code class="descname">nmixtures</code><a class="headerlink" href="#int nmixtures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum allowed number of mixture components. Actual number is determined dynamically per pixel.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float backgroundRatio">
+float <code class="descname">backgroundRatio</code><a class="headerlink" href="#float backgroundRatio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Threshold defining whether the component is significant enough to be included into the background model ( corresponds to <code class="docutils literal"><span class="pre">TB=1-cf</span></code> from the paper??which paper??). <code class="docutils literal"><span class="pre">cf=0.1</span> <span class="pre">=&gt;</span> <span class="pre">TB=0.9</span></code> is default. For <code class="docutils literal"><span class="pre">alpha=0.001</span></code>, it means that the mode should exist for approximately 105 frames before it is considered foreground.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float varThresholdGen">
+float <code class="descname">varThresholdGen</code><a class="headerlink" href="#float varThresholdGen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Threshold for the squared Mahalanobis distance that helps decide when a sample is close to the existing components (corresponds to <code class="docutils literal"><span class="pre">Tg</span></code>). If it is not close to any component, a new component is generated. <code class="docutils literal"><span class="pre">3</span> <span class="pre">sigma</span> <span class="pre">=&gt;</span> <span class="pre">Tg=3*3=9</span></code> is default. A smaller <code class="docutils literal"><span class="pre">Tg</span></code> value generates more components. A higher <code class="docutils literal"><span class="pre">Tg</span></code> value may result in a small number of components but they can grow too large.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float fVarInit">
+float <code class="descname">fVarInit</code><a class="headerlink" href="#float fVarInit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial variance for the newly generated components. It affects the speed of adaptation. The parameter value is based on your estimate of the typical standard deviation from the images. OpenCV uses 15 as a reasonable value.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float fVarMin">
+float <code class="descname">fVarMin</code><a class="headerlink" href="#float fVarMin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameter used to further control the variance.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float fVarMax">
+float <code class="descname">fVarMax</code><a class="headerlink" href="#float fVarMax" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameter used to further control the variance.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float fCT">
+float <code class="descname">fCT</code><a class="headerlink" href="#float fCT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Complexity reduction parameter. This parameter defines the number of samples needed to accept to prove the component exists. <code class="docutils literal"><span class="pre">CT=0.05</span></code> is a default value for all the samples. By setting <code class="docutils literal"><span class="pre">CT=0</span></code> you get an algorithm very similar to the standard Stauffer&amp;Grimson algorithm.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="uchar nShadowDetection">
+uchar <code class="descname">nShadowDetection</code><a class="headerlink" href="#uchar nShadowDetection" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value for marking shadow pixels in the output foreground mask. Default value is 127.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float fTau">
+float <code class="descname">fTau</code><a class="headerlink" href="#float fTau" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shadow threshold. The shadow is detected if the pixel is a darker version of the background. <code class="docutils literal"><span class="pre">Tau</span></code> is a threshold defining how much darker the shadow can be. <code class="docutils literal"><span class="pre">Tau=</span> <span class="pre">0.5</span></code> means that if a pixel is more than twice darker then it is not shadow. See Prati,Mikic,Trivedi,Cucchiarra, <em>Detecting Moving Shadows...</em>, IEEE PAMI,2003.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>The class implements the Gaussian mixture model background subtraction described in:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Z.Zivkovic, <em>Improved adaptive Gausian mixture model for background subtraction</em>, International Conference Pattern Recognition, UK, August, 2004, <a class="reference external" href="http://www.zoranz.net/Publications/zivkovic2004ICPR.pdf">http://www.zoranz.net/Publications/zivkovic2004ICPR.pdf</a>. The code is very fast and performs also shadow detection. Number of Gausssian components is adapted per pixel.</li>
+<li>Z.Zivkovic, F. van der Heijden, <em>Efficient Adaptive Density Estimapion per Image Pixel for the Task of Background Subtraction</em>, Pattern Recognition Letters, vol. 27, no. 7, pages 773-780, 2006. The algorithm similar to the standard Stauffer&amp;Grimson algorithm with additional selection of the number of the Gaussian components based on: Z.Zivkovic, F.van der Heijden, Recursive unsupervised learning of finite mixture models, IEEE Trans. on Pattern Analysis and Machine Intelligence, vol.26, no.5, pages 651-656, 2004.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="backgroundsubtractormog2-backgroundsubtractormog2">
+<h2>BackgroundSubtractorMOG2::BackgroundSubtractorMOG2<a class="headerlink" href="#backgroundsubtractormog2-backgroundsubtractormog2" title="Permalink to this headline">¶</a></h2>
+<p>The constructors.</p>
+<dl class="function">
+<dt id="BackgroundSubtractorMOG2::BackgroundSubtractorMOG2()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">BackgroundSubtractorMOG2::</code><code class="descname">BackgroundSubtractorMOG2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#BackgroundSubtractorMOG2::BackgroundSubtractorMOG2()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="BackgroundSubtractorMOG2::BackgroundSubtractorMOG2(int history, float varThreshold, bool bShadowDetection)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">BackgroundSubtractorMOG2::</code><code class="descname">BackgroundSubtractorMOG2</code><span class="sig-paren">(</span>int <strong>history</strong>, float <strong>varThreshold</strong>, bool <strong>bShadowDetection</strong>=true <span class="sig-paren">)</span><a class="headerlink" href="#BackgroundSubtractorMOG2::BackgroundSubtractorMOG2(int history, float varThreshold, bool bShadowDetection)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>history</strong> &#8211; Length of the history.</li>
+<li><strong>varThreshold</strong> &#8211; Threshold on the squared Mahalanobis distance to decide whether it is well described by the background model (see Cthr??). This parameter does not affect the background update. A typical value could be 4 sigma, that is, <code class="docutils literal"><span class="pre">varThreshold=4*4=16;</span></code> (see Tb??).</li>
+<li><strong>bShadowDetection</strong> &#8211; Parameter defining whether shadow detection should be enabled (<code class="docutils literal"><span class="pre">true</span></code> or <code class="docutils literal"><span class="pre">false</span></code>).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="backgroundsubtractormog2-operator">
+<h2>BackgroundSubtractorMOG2::operator()<a class="headerlink" href="#backgroundsubtractormog2-operator" title="Permalink to this headline">¶</a></h2>
+<p>Updates the background model and computes the foreground mask</p>
+<dl class="function">
+<dt id="void BackgroundSubtractorMOG2::operator()(InputArray image, OutputArray fgmask, double learningRate)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">BackgroundSubtractorMOG2::</code><code class="descname">operator()</code><span class="sig-paren">(</span>InputArray <strong>image</strong>, OutputArray <strong>fgmask</strong>, double <strong>learningRate</strong>=-1<span class="sig-paren">)</span><a class="headerlink" href="#void BackgroundSubtractorMOG2::operator()(InputArray image, OutputArray fgmask, double learningRate)" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#void BackgroundSubtractor::operator()(InputArray image, OutputArray fgmask, double learningRate)" title="void BackgroundSubtractor::operator()(InputArray image, OutputArray fgmask, double learningRate)"><code class="xref ocv ocv-funcx docutils literal"><span class="pre">BackgroundSubtractor::operator()</span></code></a>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="backgroundsubtractormog2-getbackgroundimage">
+<h2>BackgroundSubtractorMOG2::getBackgroundImage<a class="headerlink" href="#backgroundsubtractormog2-getbackgroundimage" title="Permalink to this headline">¶</a></h2>
+<p>Returns background image</p>
+<dl class="function">
+<dt id="void BackgroundSubtractorMOG2::getBackgroundImage(OutputArray backgroundImage)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">BackgroundSubtractorMOG2::</code><code class="descname">getBackgroundImage</code><span class="sig-paren">(</span>OutputArray <strong>backgroundImage</strong><span class="sig-paren">)</span><a class="headerlink" href="#void BackgroundSubtractorMOG2::getBackgroundImage(OutputArray backgroundImage)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>See <a class="reference internal" href="#void BackgroundSubtractor::getBackgroundImage(OutputArray backgroundImage) const" title="void BackgroundSubtractor::getBackgroundImage(OutputArray backgroundImage) const"><code class="xref ocv ocv-func docutils literal"><span class="pre">BackgroundSubtractor::getBackgroundImage()</span></code></a>.</p>
+</div>
+<div class="section" id="calcopticalflowsf">
+<h2>calcOpticalFlowSF<a class="headerlink" href="#calcopticalflowsf" title="Permalink to this headline">¶</a></h2>
+<p>Calculate an optical flow using &#8220;SimpleFlow&#8221; algorithm.</p>
+<dl class="function">
+<dt id="void calcOpticalFlowSF(Mat&amp; from, Mat&amp; to, Mat&amp; flow, int layers, int averaging_block_size, int max_flow)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">calcOpticalFlowSF</code><span class="sig-paren">(</span>Mat&amp; <strong>from</strong>, Mat&amp; <strong>to</strong>, Mat&amp; <strong>flow</strong>, int <strong>layers</strong>, int <strong>averaging_block_size</strong>, int <strong>max_flow</strong><span class="sig-paren">)</span><a class="headerlink" href="#void calcOpticalFlowSF(Mat& from, Mat& to, Mat& flow, int layers, int averaging_block_size, int max_flow)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void calcOpticalFlowSF(Mat&amp; from, Mat&amp; to, Mat&amp; flow, int layers, int averaging_block_size, int max_flow, double sigma_dist, double sigma_color, int postprocess_window, double sigma_dist_fix, double sigma_color_fix, double occ_thr, int upscale_averaging_radius, double upscale_sigma_dist, double upscale_sigma_color, double speed_up_thr)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">calcOpticalFlowSF</code><span class="sig-paren">(</span>Mat&amp; <strong>from</strong>, Mat&amp; <strong>to</strong>, Mat&amp; <strong>flow</strong>, int <strong>layers</strong>, int <strong>averaging_block_size</strong>, int <strong>max_flow</strong>, double <strong>sigma_dist</strong>, double <strong>sigma_color</strong>, int <strong>postprocess_window</strong>, double <strong>sigma_dist_fix</strong>, double <strong>sigma_color_fix</strong>, double <strong>occ_thr</strong>, int <strong>upscale_averaging_radius</strong>, double <strong>upscale_sigma_dist</strong>, double <strong>upscale_sigma_color</strong>, double <strong>speed_up_thr</strong><span class="sig-paren">)</span><a class="headerlink" href="#void calcOpticalFlowSF(Mat& from, Mat& to, Mat& flow, int layers, int averaging_block_size, int max_flow, double sigma_dist, double sigma_color, int postprocess_window, double sigma_dist_fix, double sigma_color_fix, double occ_thr, int upscale_averaging_radius, double upscale_sigma_dist, double upscale_sigma_color, double speed_up_thr)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>prev</strong> &#8211; First 8-bit 3-channel image.</li>
+<li><strong>next</strong> &#8211; Second 8-bit 3-channel image</li>
+<li><strong>flowX</strong> &#8211; X-coordinate of estimated flow</li>
+<li><strong>flowY</strong> &#8211; Y-coordinate of estimated flow</li>
+<li><strong>layers</strong> &#8211; Number of layers</li>
+<li><strong>averaging_block_size</strong> &#8211; Size of block through which we sum up when calculate cost function for pixel</li>
+<li><strong>max_flow</strong> &#8211; maximal flow that we search at each level</li>
+<li><strong>sigma_dist</strong> &#8211; vector smooth spatial sigma parameter</li>
+<li><strong>sigma_color</strong> &#8211; vector smooth color sigma parameter</li>
+<li><strong>postprocess_window</strong> &#8211; window size for postprocess cross bilateral filter</li>
+<li><strong>sigma_dist_fix</strong> &#8211; spatial sigma for postprocess cross bilateralf filter</li>
+<li><strong>sigma_color_fix</strong> &#8211; color sigma for postprocess cross bilateral filter</li>
+<li><strong>occ_thr</strong> &#8211; threshold for detecting occlusions</li>
+<li><strong>upscale_averaging_radiud</strong> &#8211; window size for bilateral upscale operation</li>
+<li><strong>upscale_sigma_dist</strong> &#8211; spatial sigma for bilateral upscale operation</li>
+<li><strong>upscale_sigma_color</strong> &#8211; color sigma for bilateral upscale operation</li>
+<li><strong>speed_up_thr</strong> &#8211; threshold to detect point with irregular flow - where flow should be recalculated after upscale</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>See <a class="reference internal" href="#tao2012" id="id8">[Tao2012]</a>. And site of project - <a class="reference external" href="http://graphics.berkeley.edu/papers/Tao-SAN-2012-05/">http://graphics.berkeley.edu/papers/Tao-SAN-2012-05/</a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example using the simpleFlow algorithm can be found at opencv_source_code/samples/cpp/simpleflow_demo.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="createoptflow-dualtvl1">
+<h2>createOptFlow_DualTVL1<a class="headerlink" href="#createoptflow-dualtvl1" title="Permalink to this headline">¶</a></h2>
+<p>&#8220;Dual TV L1&#8221; Optical Flow Algorithm.</p>
+<dl class="function">
+<dt id="Ptr&lt;DenseOpticalFlow&gt; createOptFlow_DualTVL1()">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;DenseOpticalFlow&gt; <code class="descname">createOptFlow_DualTVL1</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Ptr<DenseOpticalFlow> createOptFlow_DualTVL1()" title="Permalink to this definition">¶</a></dt>
+<dd><p>The class implements the &#8220;Dual TV L1&#8221; optical flow algorithm described in <a class="reference internal" href="#zach2007" id="id9">[Zach2007]</a> and <a class="reference internal" href="#javier2012" id="id10">[Javier2012]</a> .</p>
+<p>Here are important members of the class that control the algorithm, which you can set after constructing the class instance:</p>
+<blockquote>
+<div><dl class="member">
+<dt id="double tau">
+double <code class="descname">tau</code><a class="headerlink" href="#double tau" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time step of the numerical scheme.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="double lambda">
+double <code class="descname">lambda</code><a class="headerlink" href="#double lambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Weight parameter for the data term, attachment parameter. This is the most relevant parameter, which determines the smoothness of the output. The smaller this parameter is, the smoother the solutions we obtain. It depends on the range of motions of the images, so its value should be adapted to each image sequence.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="double theta">
+double <code class="descname">theta</code><a class="headerlink" href="#double theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Weight parameter for (u - v)^2, tightness parameter. It serves as a link between the attachment and the regularization terms. In theory, it should have a small value in order to maintain both parts in correspondence. The method is stable for a large range of values of this parameter.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int nscales">
+int <code class="descname">nscales</code><a class="headerlink" href="#int nscales" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of scales used to create the pyramid of images.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int warps">
+int <code class="descname">warps</code><a class="headerlink" href="#int warps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of warpings per scale. Represents the number of times that I1(x+u0) and grad( I1(x+u0) ) are computed per scale. This is a parameter that assures the stability of the method. It also affects the running time, so it is a compromise between speed and accuracy.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="double epsilon">
+double <code class="descname">epsilon</code><a class="headerlink" href="#double epsilon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stopping criterion threshold used in the numerical scheme, which is a trade-off between precision and running time. A small value will yield more accurate solutions at the expense of a slower convergence.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int iterations">
+int <code class="descname">iterations</code><a class="headerlink" href="#int iterations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stopping criterion iterations number used in the numerical scheme.</p>
+</dd></dl>
+
+</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="denseopticalflow-calc">
+<h2>DenseOpticalFlow::calc<a class="headerlink" href="#denseopticalflow-calc" title="Permalink to this headline">¶</a></h2>
+<p>Calculates an optical flow.</p>
+<dl class="function">
+<dt id="void DenseOpticalFlow::calc(InputArray I0, InputArray I1, InputOutputArray flow)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">DenseOpticalFlow::</code><code class="descname">calc</code><span class="sig-paren">(</span>InputArray <strong>I0</strong>, InputArray <strong>I1</strong>, InputOutputArray <strong>flow</strong><span class="sig-paren">)</span><a class="headerlink" href="#void DenseOpticalFlow::calc(InputArray I0, InputArray I1, InputOutputArray flow)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>prev</strong> &#8211; first 8-bit single-channel input image.</li>
+<li><strong>next</strong> &#8211; second input image of the same size and the same type as <code class="docutils literal"><span class="pre">prev</span></code> .</li>
+<li><strong>flow</strong> &#8211; computed flow image that has the same size as <code class="docutils literal"><span class="pre">prev</span></code> and type <code class="docutils literal"><span class="pre">CV_32FC2</span></code> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="denseopticalflow-collectgarbage">
+<h2>DenseOpticalFlow::collectGarbage<a class="headerlink" href="#denseopticalflow-collectgarbage" title="Permalink to this headline">¶</a></h2>
+<p>Releases all inner buffers.</p>
+<dl class="function">
+<dt id="void DenseOpticalFlow::collectGarbage()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">DenseOpticalFlow::</code><code class="descname">collectGarbage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void DenseOpticalFlow::collectGarbage()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<table class="docutils citation" frame="void" id="bouguet00" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Bouguet00]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> Jean-Yves Bouguet. Pyramidal Implementation of the Lucas Kanade Feature Tracker.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="bradski98" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[Bradski98]</a></td><td>Bradski, G.R. &#8220;Computer Vision Face Tracking for Use in a Perceptual User Interface&#8221;, Intel, 1998</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="bradski00" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[Bradski00]</a></td><td>Davis, J.W. and Bradski, G.R. “Motion Segmentation and Pose Recognition with Motion History Gradients”, WACV00, 2000</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="davis97" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[Davis97]</a></td><td>Davis, J.W. and Bobick, A.F. “The Representation and Recognition of Action Using Temporal Templates”, CVPR97, 1997</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="farneback2003" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[Farneback2003]</a></td><td>Gunnar Farneback, Two-frame motion estimation based on polynomial expansion, Lecture Notes in Computer Science, 2003, (2749), , 363-370.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="horn81" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Horn81]</td><td>Berthold K.P. Horn and Brian G. Schunck. Determining Optical Flow. Artificial Intelligence, 17, pp. 185-203, 1981.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="lucas81" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Lucas81]</td><td>Lucas, B., and Kanade, T. An Iterative Image Registration Technique with an Application to Stereo Vision, Proc. of 7th International Joint Conference on Artificial Intelligence (IJCAI), pp. 674-679.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="welch95" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[Welch95]</a></td><td>Greg Welch and Gary Bishop “An Introduction to the Kalman Filter”, 1995</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="tao2012" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[Tao2012]</a></td><td>Michael Tao, Jiamin Bai, Pushmeet Kohli and Sylvain Paris. SimpleFlow: A Non-iterative, Sublinear Optical Flow Algorithm. Computer Graphics Forum (Eurographics 2012)</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="zach2007" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id9">[Zach2007]</a></td><td><ol class="first last upperalpha simple" start="3">
+<li>Zach, T. Pock and H. Bischof. &#8220;A Duality Based Approach for Realtime TV-L1 Optical Flow&#8221;, In Proceedings of Pattern Recognition (DAGM), Heidelberg, Germany, pp. 214-223, 2007</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="javier2012" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id10">[Javier2012]</a></td><td>Javier Sanchez, Enric Meinhardt-Llopis and Gabriele Facciolo. &#8220;TV-L1 Optical Flow Estimation&#8221;.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Motion Analysis and Object Tracking</a><ul>
+<li><a class="reference internal" href="#calcopticalflowpyrlk">calcOpticalFlowPyrLK</a></li>
+<li><a class="reference internal" href="#buildopticalflowpyramid">buildOpticalFlowPyramid</a></li>
+<li><a class="reference internal" href="#calcopticalflowfarneback">calcOpticalFlowFarneback</a></li>
+<li><a class="reference internal" href="#estimaterigidtransform">estimateRigidTransform</a></li>
+<li><a class="reference internal" href="#updatemotionhistory">updateMotionHistory</a></li>
+<li><a class="reference internal" href="#calcmotiongradient">calcMotionGradient</a></li>
+<li><a class="reference internal" href="#calcglobalorientation">calcGlobalOrientation</a></li>
+<li><a class="reference internal" href="#segmentmotion">segmentMotion</a></li>
+<li><a class="reference internal" href="#camshift">CamShift</a></li>
+<li><a class="reference internal" href="#meanshift">meanShift</a></li>
+<li><a class="reference internal" href="#kalmanfilter">KalmanFilter</a></li>
+<li><a class="reference internal" href="#kalmanfilter-kalmanfilter">KalmanFilter::KalmanFilter</a></li>
+<li><a class="reference internal" href="#kalmanfilter-init">KalmanFilter::init</a></li>
+<li><a class="reference internal" href="#kalmanfilter-predict">KalmanFilter::predict</a></li>
+<li><a class="reference internal" href="#kalmanfilter-correct">KalmanFilter::correct</a></li>
+<li><a class="reference internal" href="#backgroundsubtractor">BackgroundSubtractor</a></li>
+<li><a class="reference internal" href="#backgroundsubtractor-operator">BackgroundSubtractor::operator()</a></li>
+<li><a class="reference internal" href="#backgroundsubtractor-getbackgroundimage">BackgroundSubtractor::getBackgroundImage</a></li>
+<li><a class="reference internal" href="#backgroundsubtractormog">BackgroundSubtractorMOG</a></li>
+<li><a class="reference internal" href="#backgroundsubtractormog-backgroundsubtractormog">BackgroundSubtractorMOG::BackgroundSubtractorMOG</a></li>
+<li><a class="reference internal" href="#backgroundsubtractormog-operator">BackgroundSubtractorMOG::operator()</a></li>
+<li><a class="reference internal" href="#backgroundsubtractormog2">BackgroundSubtractorMOG2</a></li>
+<li><a class="reference internal" href="#backgroundsubtractormog2-backgroundsubtractormog2">BackgroundSubtractorMOG2::BackgroundSubtractorMOG2</a></li>
+<li><a class="reference internal" href="#backgroundsubtractormog2-operator">BackgroundSubtractorMOG2::operator()</a></li>
+<li><a class="reference internal" href="#backgroundsubtractormog2-getbackgroundimage">BackgroundSubtractorMOG2::getBackgroundImage</a></li>
+<li><a class="reference internal" href="#calcopticalflowsf">calcOpticalFlowSF</a></li>
+<li><a class="reference internal" href="#createoptflow-dualtvl1">createOptFlow_DualTVL1</a></li>
+<li><a class="reference internal" href="#denseopticalflow-calc">DenseOpticalFlow::calc</a></li>
+<li><a class="reference internal" href="#denseopticalflow-collectgarbage">DenseOpticalFlow::collectGarbage</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="video.html"
+                        title="previous chapter">video. Video Analysis</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../calib3d/doc/calib3d.html"
+                        title="next chapter">calib3d. Camera Calibration and 3D Reconstruction</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/video/doc/motion_analysis_and_object_tracking.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../calib3d/doc/calib3d.html" title="calib3d. Camera Calibration and 3D Reconstruction"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="video.html" title="video. Video Analysis"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="video.html" >video. Video Analysis</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

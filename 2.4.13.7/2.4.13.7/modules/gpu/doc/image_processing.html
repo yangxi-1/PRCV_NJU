@@ -1,0 +1,1674 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Image Processing &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="gpu. GPU-accelerated Computer Vision" href="gpu.html" />
+    <link rel="next" title="Matrix Reductions" href="matrix_reductions.html" />
+    <link rel="prev" title="Per-element Operations" href="per_element_operations.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="matrix_reductions.html" title="Matrix Reductions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="per_element_operations.html" title="Per-element Operations"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="gpu.html" accesskey="U">gpu. GPU-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="image-processing">
+<h1>Image Processing<a class="headerlink" href="#image-processing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gpu-meanshiftfiltering">
+<h2>gpu::meanShiftFiltering<a class="headerlink" href="#gpu-meanshiftfiltering" title="Permalink to this headline">¶</a></h2>
+<p>Performs mean-shift filtering for each point of the source image.</p>
+<dl class="function">
+<dt id="void gpu::meanShiftFiltering(const GpuMat&amp; src, GpuMat&amp; dst, int sp, int sr, TermCriteria criteria, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">meanShiftFiltering</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>sp</strong>, int <strong>sr</strong>, TermCriteria <strong>criteria</strong>=TermCriteria(TermCriteria::MAX_ITER + TermCriteria::EPS, 5, 1), Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::meanShiftFiltering(const GpuMat& src, GpuMat& dst, int sp, int sr, TermCriteria criteria, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Only  <code class="docutils literal"><span class="pre">CV_8UC4</span></code> images are supported for now.</li>
+<li><strong>dst</strong> &#8211; Destination image containing the color of mapped points. It has the same size and type as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>sp</strong> &#8211; Spatial window radius.</li>
+<li><strong>sr</strong> &#8211; Color window radius.</li>
+<li><strong>criteria</strong> &#8211; Termination criteria. See <a class="reference internal" href="../../core/doc/basic_structures.html#TermCriteria" title="class TermCriteria"><code class="xref ocv ocv-class docutils literal"><span class="pre">TermCriteria</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>It maps each point of the source image into another point. As a result, you have a new color and new position of each point.</p>
+</div>
+<div class="section" id="gpu-meanshiftproc">
+<h2>gpu::meanShiftProc<a class="headerlink" href="#gpu-meanshiftproc" title="Permalink to this headline">¶</a></h2>
+<p>Performs a mean-shift procedure and stores information about processed points (their colors and positions) in two images.</p>
+<dl class="function">
+<dt id="void gpu::meanShiftProc(const GpuMat&amp; src, GpuMat&amp; dstr, GpuMat&amp; dstsp, int sp, int sr, TermCriteria criteria, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">meanShiftProc</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dstr</strong>, GpuMat&amp; <strong>dstsp</strong>, int <strong>sp</strong>, int <strong>sr</strong>, TermCriteria <strong>criteria</strong>=TermCriteria(TermCriteria::MAX_ITER + TermCriteria::EPS, 5, 1), Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::meanShiftProc(const GpuMat& src, GpuMat& dstr, GpuMat& dstsp, int sp, int sr, TermCriteria criteria, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Only  <code class="docutils literal"><span class="pre">CV_8UC4</span></code> images are supported for now.</li>
+<li><strong>dstr</strong> &#8211; Destination image containing the color of mapped points. The size and type is the same as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>dstsp</strong> &#8211; Destination image containing the position of mapped points. The size is the same as  <code class="docutils literal"><span class="pre">src</span></code> size. The type is  <code class="docutils literal"><span class="pre">CV_16SC2</span></code> .</li>
+<li><strong>sp</strong> &#8211; Spatial window radius.</li>
+<li><strong>sr</strong> &#8211; Color window radius.</li>
+<li><strong>criteria</strong> &#8211; Termination criteria. See <a class="reference internal" href="../../core/doc/basic_structures.html#TermCriteria" title="class TermCriteria"><code class="xref ocv ocv-class docutils literal"><span class="pre">TermCriteria</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void gpu::meanShiftFiltering(const GpuMat&amp; src, GpuMat&amp; dst, int sp, int sr, TermCriteria criteria, Stream&amp; stream)" title="void gpu::meanShiftFiltering(const GpuMat&amp; src, GpuMat&amp; dst, int sp, int sr, TermCriteria criteria, Stream&amp; stream)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::meanShiftFiltering()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-meanshiftsegmentation">
+<h2>gpu::meanShiftSegmentation<a class="headerlink" href="#gpu-meanshiftsegmentation" title="Permalink to this headline">¶</a></h2>
+<p>Performs a mean-shift segmentation of the source image and eliminates small segments.</p>
+<dl class="function">
+<dt id="void gpu::meanShiftSegmentation(const GpuMat&amp; src, Mat&amp; dst, int sp, int sr, int minsize, TermCriteria criteria)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">meanShiftSegmentation</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, Mat&amp; <strong>dst</strong>, int <strong>sp</strong>, int <strong>sr</strong>, int <strong>minsize</strong>, TermCriteria <strong>criteria</strong>=TermCriteria(TermCriteria::MAX_ITER + TermCriteria::EPS, 5, 1)<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::meanShiftSegmentation(const GpuMat& src, Mat& dst, int sp, int sr, int minsize, TermCriteria criteria)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Only  <code class="docutils literal"><span class="pre">CV_8UC4</span></code> images are supported for now.</li>
+<li><strong>dst</strong> &#8211; Segmented image with the same size and type as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>sp</strong> &#8211; Spatial window radius.</li>
+<li><strong>sr</strong> &#8211; Color window radius.</li>
+<li><strong>minsize</strong> &#8211; Minimum segment size. Smaller segments are merged.</li>
+<li><strong>criteria</strong> &#8211; Termination criteria. See <a class="reference internal" href="../../core/doc/basic_structures.html#TermCriteria" title="class TermCriteria"><code class="xref ocv ocv-class docutils literal"><span class="pre">TermCriteria</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-integral">
+<h2>gpu::integral<a class="headerlink" href="#gpu-integral" title="Permalink to this headline">¶</a></h2>
+<p>Computes an integral image.</p>
+<dl class="function">
+<dt id="void gpu::integral(const GpuMat&amp; src, GpuMat&amp; sum, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">integral</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>sum</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::integral(const GpuMat& src, GpuMat& sum, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Only  <code class="docutils literal"><span class="pre">CV_8UC1</span></code> images are supported for now.</li>
+<li><strong>sum</strong> &#8211; Integral image containing 32-bit unsigned integer values packed into  <code class="docutils literal"><span class="pre">CV_32SC1</span></code> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/miscellaneous_transformations.html#void integral(InputArray src, OutputArray sum, int sdepth)" title="void integral(InputArray src, OutputArray sum, int sdepth)"><code class="xref ocv ocv-func docutils literal"><span class="pre">integral()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-sqrintegral">
+<h2>gpu::sqrIntegral<a class="headerlink" href="#gpu-sqrintegral" title="Permalink to this headline">¶</a></h2>
+<p>Computes a squared integral image.</p>
+<dl class="function">
+<dt id="void gpu::sqrIntegral(const GpuMat&amp; src, GpuMat&amp; sqsum, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">sqrIntegral</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>sqsum</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::sqrIntegral(const GpuMat& src, GpuMat& sqsum, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Only  <code class="docutils literal"><span class="pre">CV_8UC1</span></code> images are supported for now.</li>
+<li><strong>sqsum</strong> &#8211; Squared integral image containing 64-bit unsigned integer values packed into  <code class="docutils literal"><span class="pre">CV_64FC1</span></code> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-columnsum">
+<h2>gpu::columnSum<a class="headerlink" href="#gpu-columnsum" title="Permalink to this headline">¶</a></h2>
+<p>Computes a vertical (column) sum.</p>
+<dl class="function">
+<dt id="void gpu::columnSum(const GpuMat&amp; src, GpuMat&amp; sum)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">columnSum</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>sum</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::columnSum(const GpuMat& src, GpuMat& sum)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Only  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> images are supported for now.</li>
+<li><strong>sum</strong> &#8211; Destination image of the  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> type.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-cornerharris">
+<h2>gpu::cornerHarris<a class="headerlink" href="#gpu-cornerharris" title="Permalink to this headline">¶</a></h2>
+<p>Computes the Harris cornerness criteria at each image pixel.</p>
+<dl class="function">
+<dt id="void gpu::cornerHarris(const GpuMat&amp; src, GpuMat&amp; dst, int blockSize, int ksize, double k, int borderType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">cornerHarris</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>blockSize</strong>, int <strong>ksize</strong>, double <strong>k</strong>, int <strong>borderType</strong>=BORDER_REFLECT101<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::cornerHarris(const GpuMat& src, GpuMat& dst, int blockSize, int ksize, double k, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Only  <code class="docutils literal"><span class="pre">CV_8UC1</span></code> and  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> images are supported for now.</li>
+<li><strong>dst</strong> &#8211; Destination image containing cornerness values. It has the same size as <code class="docutils literal"><span class="pre">src</span></code> and <code class="docutils literal"><span class="pre">CV_32FC1</span></code> type.</li>
+<li><strong>blockSize</strong> &#8211; Neighborhood size.</li>
+<li><strong>ksize</strong> &#8211; Aperture parameter for the Sobel operator.</li>
+<li><strong>k</strong> &#8211; Harris detector free parameter.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. Only  <code class="docutils literal"><span class="pre">BORDER_REFLECT101</span></code> and  <code class="docutils literal"><span class="pre">BORDER_REPLICATE</span></code> are supported for now.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/feature_detection.html#void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)" title="void cornerHarris(InputArray src, OutputArray dst, int blockSize, int ksize, double k, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerHarris()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-cornermineigenval">
+<h2>gpu::cornerMinEigenVal<a class="headerlink" href="#gpu-cornermineigenval" title="Permalink to this headline">¶</a></h2>
+<p>Computes the minimum eigen value of a 2x2 derivative covariation matrix at each pixel (the cornerness criteria).</p>
+<dl class="function">
+<dt id="void gpu::cornerMinEigenVal(const GpuMat&amp; src, GpuMat&amp; dst, int blockSize, int ksize, int borderType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">cornerMinEigenVal</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>blockSize</strong>, int <strong>ksize</strong>, int <strong>borderType</strong>=BORDER_REFLECT101<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::cornerMinEigenVal(const GpuMat& src, GpuMat& dst, int blockSize, int ksize, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::cornerMinEigenVal(const GpuMat&amp; src, GpuMat&amp; dst, GpuMat&amp; Dx, GpuMat&amp; Dy, int blockSize, int ksize, int borderType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">cornerMinEigenVal</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, GpuMat&amp; <strong>Dx</strong>, GpuMat&amp; <strong>Dy</strong>, int <strong>blockSize</strong>, int <strong>ksize</strong>, int <strong>borderType</strong>=BORDER_REFLECT101<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::cornerMinEigenVal(const GpuMat& src, GpuMat& dst, GpuMat& Dx, GpuMat& Dy, int blockSize, int ksize, int borderType)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::cornerMinEigenVal(const GpuMat&amp; src, GpuMat&amp; dst, GpuMat&amp; Dx, GpuMat&amp; Dy, GpuMat&amp; buf, int blockSize, int ksize, int borderType, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">cornerMinEigenVal</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, GpuMat&amp; <strong>Dx</strong>, GpuMat&amp; <strong>Dy</strong>, GpuMat&amp; <strong>buf</strong>, int <strong>blockSize</strong>, int <strong>ksize</strong>, int <strong>borderType</strong>=BORDER_REFLECT101, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::cornerMinEigenVal(const GpuMat& src, GpuMat& dst, GpuMat& Dx, GpuMat& Dy, GpuMat& buf, int blockSize, int ksize, int borderType, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Only  <code class="docutils literal"><span class="pre">CV_8UC1</span></code> and  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> images are supported for now.</li>
+<li><strong>dst</strong> &#8211; Destination image containing cornerness values. The size is the same. The type is  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> .</li>
+<li><strong>blockSize</strong> &#8211; Neighborhood size.</li>
+<li><strong>ksize</strong> &#8211; Aperture parameter for the Sobel operator.</li>
+<li><strong>borderType</strong> &#8211; Pixel extrapolation method. Only <code class="docutils literal"><span class="pre">BORDER_REFLECT101</span></code> and <code class="docutils literal"><span class="pre">BORDER_REPLICATE</span></code> are supported for now.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/feature_detection.html#void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="void cornerMinEigenVal(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerMinEigenVal()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-mulspectrums">
+<h2>gpu::mulSpectrums<a class="headerlink" href="#gpu-mulspectrums" title="Permalink to this headline">¶</a></h2>
+<p>Performs a per-element multiplication of two Fourier spectrums.</p>
+<dl class="function">
+<dt id="void gpu::mulSpectrums(const GpuMat&amp; a, const GpuMat&amp; b, GpuMat&amp; c, int flags, bool conjB, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">mulSpectrums</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>a</strong>, const GpuMat&amp; <strong>b</strong>, GpuMat&amp; <strong>c</strong>, int <strong>flags</strong>, bool <strong>conjB</strong>=false, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::mulSpectrums(const GpuMat& a, const GpuMat& b, GpuMat& c, int flags, bool conjB, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>a</strong> &#8211; First spectrum.</li>
+<li><strong>b</strong> &#8211; Second spectrum with the same size and type as  <code class="docutils literal"><span class="pre">a</span></code> .</li>
+<li><strong>c</strong> &#8211; Destination spectrum.</li>
+<li><strong>flags</strong> &#8211; Mock parameter used for CPU/GPU interfaces similarity, simply add a <cite>0</cite> value.</li>
+<li><strong>conjB</strong> &#8211; Optional flag to specify if the second spectrum needs to be conjugated before the multiplication.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Only full (not packed) <code class="docutils literal"><span class="pre">CV_32FC2</span></code> complex spectrums in the interleaved format are supported for now.</p>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void mulSpectrums(InputArray a, InputArray b, OutputArray c, int flags, bool conjB)" title="void mulSpectrums(InputArray a, InputArray b, OutputArray c, int flags, bool conjB)"><code class="xref ocv ocv-func docutils literal"><span class="pre">mulSpectrums()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-mulandscalespectrums">
+<h2>gpu::mulAndScaleSpectrums<a class="headerlink" href="#gpu-mulandscalespectrums" title="Permalink to this headline">¶</a></h2>
+<p>Performs a per-element multiplication of two Fourier spectrums and scales the result.</p>
+<dl class="function">
+<dt id="void gpu::mulAndScaleSpectrums(const GpuMat&amp; a, const GpuMat&amp; b, GpuMat&amp; c, int flags, float scale, bool conjB, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">mulAndScaleSpectrums</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>a</strong>, const GpuMat&amp; <strong>b</strong>, GpuMat&amp; <strong>c</strong>, int <strong>flags</strong>, float <strong>scale</strong>, bool <strong>conjB</strong>=false, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::mulAndScaleSpectrums(const GpuMat& a, const GpuMat& b, GpuMat& c, int flags, float scale, bool conjB, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>a</strong> &#8211; First spectrum.</li>
+<li><strong>b</strong> &#8211; Second spectrum with the same size and type as  <code class="docutils literal"><span class="pre">a</span></code> .</li>
+<li><strong>c</strong> &#8211; Destination spectrum.</li>
+<li><strong>flags</strong> &#8211; Mock parameter used for CPU/GPU interfaces similarity.</li>
+<li><strong>scale</strong> &#8211; Scale constant.</li>
+<li><strong>conjB</strong> &#8211; Optional flag to specify if the second spectrum needs to be conjugated before the multiplication.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Only full (not packed) <code class="docutils literal"><span class="pre">CV_32FC2</span></code> complex spectrums in the interleaved format are supported for now.</p>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void mulSpectrums(InputArray a, InputArray b, OutputArray c, int flags, bool conjB)" title="void mulSpectrums(InputArray a, InputArray b, OutputArray c, int flags, bool conjB)"><code class="xref ocv ocv-func docutils literal"><span class="pre">mulSpectrums()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-dft">
+<h2>gpu::dft<a class="headerlink" href="#gpu-dft" title="Permalink to this headline">¶</a></h2>
+<p>Performs a forward or inverse discrete Fourier transform (1D or 2D) of the floating point matrix.</p>
+<dl class="function">
+<dt id="void gpu::dft(const GpuMat&amp; src, GpuMat&amp; dst, Size dft_size, int flags, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">dft</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, Size <strong>dft_size</strong>, int <strong>flags</strong>=0, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::dft(const GpuMat& src, GpuMat& dst, Size dft_size, int flags, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source matrix (real or complex).</li>
+<li><strong>dst</strong> &#8211; Destination matrix (real or complex).</li>
+<li><strong>dft_size</strong> &#8211; Size of a discrete Fourier transform.</li>
+<li><strong>flags</strong> &#8211; <p>Optional flags:</p>
+<ul>
+<li><strong>DFT_ROWS</strong> transforms each individual row of the source matrix.</li>
+<li><strong>DFT_SCALE</strong> scales the result: divide it by the number of elements in the transform (obtained from  <code class="docutils literal"><span class="pre">dft_size</span></code> ).</li>
+<li><strong>DFT_INVERSE</strong> inverts DFT. Use for complex-complex cases (real-complex and complex-real cases are always forward and inverse, respectively).</li>
+<li><strong>DFT_REAL_OUTPUT</strong> specifies the output as real. The source matrix is the result of real-complex transform, so the destination matrix must be real.</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Use to handle real matrices ( <code class="docutils literal"><span class="pre">CV32FC1</span></code> ) and complex matrices in the interleaved format ( <code class="docutils literal"><span class="pre">CV32FC2</span></code> ).</p>
+<p>The source matrix should be continuous, otherwise reallocation and data copying is performed. The function chooses an operation mode depending on the flags, size, and channel count of the source matrix:</p>
+<blockquote>
+<div><ul class="simple">
+<li>If the source matrix is complex and the output is not specified as real, the destination matrix is complex and has the <code class="docutils literal"><span class="pre">dft_size</span></code>    size and <code class="docutils literal"><span class="pre">CV_32FC2</span></code>    type. The destination matrix contains a full result of the DFT (forward or inverse).</li>
+<li>If the source matrix is complex and the output is specified as real, the function assumes that its input is the result of the forward transform (see the next item). The destination matrix has the <code class="docutils literal"><span class="pre">dft_size</span></code> size and <code class="docutils literal"><span class="pre">CV_32FC1</span></code> type. It contains the result of the inverse DFT.</li>
+<li>If the source matrix is real (its type is <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ), forward DFT is performed. The result of the DFT is packed into complex ( <code class="docutils literal"><span class="pre">CV_32FC2</span></code> ) matrix. So, the width of the destination matrix is <code class="docutils literal"><span class="pre">dft_size.width</span> <span class="pre">/</span> <span class="pre">2</span> <span class="pre">+</span> <span class="pre">1</span></code> . But if the source is a single column, the height is reduced instead of the width.</li>
+</ul>
+</div></blockquote>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/operations_on_arrays.html#void dft(InputArray src, OutputArray dst, int flags, int nonzeroRows)" title="void dft(InputArray src, OutputArray dst, int flags, int nonzeroRows)"><code class="xref ocv ocv-func docutils literal"><span class="pre">dft()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-convolvebuf">
+<h2>gpu::ConvolveBuf<a class="headerlink" href="#gpu-convolvebuf" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="gpu::ConvolveBuf">
+<em class="property">struct </em><code class="descclassname">gpu::</code><code class="descname">ConvolveBuf</code><a class="headerlink" href="#gpu::ConvolveBuf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class providing a memory buffer for <a class="reference internal" href="#void gpu::convolve(const GpuMat&amp; image, const GpuMat&amp; templ, GpuMat&amp; result, bool ccorr)" title="void gpu::convolve(const GpuMat&amp; image, const GpuMat&amp; templ, GpuMat&amp; result, bool ccorr)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::convolve()</span></code></a> function, plus it allows to adjust some specific parameters.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">CV_EXPORTS</span> <span class="n">ConvolveBuf</span>
+<span class="p">{</span>
+    <span class="n">Size</span> <span class="n">result_size</span><span class="p">;</span>
+    <span class="n">Size</span> <span class="n">block_size</span><span class="p">;</span>
+    <span class="n">Size</span> <span class="n">user_block_size</span><span class="p">;</span>
+    <span class="n">Size</span> <span class="n">dft_size</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">spect_len</span><span class="p">;</span>
+
+    <span class="n">GpuMat</span> <span class="n">image_spect</span><span class="p">,</span> <span class="n">templ_spect</span><span class="p">,</span> <span class="n">result_spect</span><span class="p">;</span>
+    <span class="n">GpuMat</span> <span class="n">image_block</span><span class="p">,</span> <span class="n">templ_block</span><span class="p">,</span> <span class="n">result_data</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">create</span><span class="p">(</span><span class="n">Size</span> <span class="n">image_size</span><span class="p">,</span> <span class="n">Size</span> <span class="n">templ_size</span><span class="p">);</span>
+    <span class="k">static</span> <span class="n">Size</span> <span class="nf">estimateBlockSize</span><span class="p">(</span><span class="n">Size</span> <span class="n">result_size</span><span class="p">,</span> <span class="n">Size</span> <span class="n">templ_size</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>You can use field <cite>user_block_size</cite> to set specific block size for <a class="reference internal" href="#void gpu::convolve(const GpuMat&amp; image, const GpuMat&amp; templ, GpuMat&amp; result, bool ccorr)" title="void gpu::convolve(const GpuMat&amp; image, const GpuMat&amp; templ, GpuMat&amp; result, bool ccorr)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::convolve()</span></code></a> function. If you leave its default value <cite>Size(0,0)</cite> then automatic estimation of block size will be used (which is optimized for speed). By varying <cite>user_block_size</cite> you can reduce memory requirements at the cost of speed.</p>
+</div>
+<div class="section" id="gpu-convolvebuf-create">
+<h2>gpu::ConvolveBuf::create<a class="headerlink" href="#gpu-convolvebuf-create" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="gpu::ConvolveBuf::create(Size image_size, Size templ_size)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">gpu::ConvolveBuf::</code><code class="descname">create</code><span class="sig-paren">(</span>Size <strong>image_size</strong>, Size <strong>templ_size</strong><span class="sig-paren">)</span><a class="headerlink" href="#gpu::ConvolveBuf::create(Size image_size, Size templ_size)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Constructs a buffer for <a class="reference internal" href="#void gpu::convolve(const GpuMat&amp; image, const GpuMat&amp; templ, GpuMat&amp; result, bool ccorr)" title="void gpu::convolve(const GpuMat&amp; image, const GpuMat&amp; templ, GpuMat&amp; result, bool ccorr)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::convolve()</span></code></a> function with respective arguments.</p>
+</div>
+<div class="section" id="gpu-convolve">
+<h2>gpu::convolve<a class="headerlink" href="#gpu-convolve" title="Permalink to this headline">¶</a></h2>
+<p>Computes a convolution (or cross-correlation) of two images.</p>
+<dl class="function">
+<dt id="void gpu::convolve(const GpuMat&amp; image, const GpuMat&amp; templ, GpuMat&amp; result, bool ccorr)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">convolve</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>image</strong>, const GpuMat&amp; <strong>templ</strong>, GpuMat&amp; <strong>result</strong>, bool <strong>ccorr</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::convolve(const GpuMat& image, const GpuMat& templ, GpuMat& result, bool ccorr)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::convolve(const GpuMat&amp; image, const GpuMat&amp; templ, GpuMat&amp; result, bool ccorr, ConvolveBuf&amp; buf, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">convolve</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>image</strong>, const GpuMat&amp; <strong>templ</strong>, GpuMat&amp; <strong>result</strong>, bool <strong>ccorr</strong>, ConvolveBuf&amp; <strong>buf</strong>, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::convolve(const GpuMat& image, const GpuMat& templ, GpuMat& result, bool ccorr, ConvolveBuf& buf, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Source image. Only  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> images are supported for now.</li>
+<li><strong>templ</strong> &#8211; Template image. The size is not greater than the  <code class="docutils literal"><span class="pre">image</span></code> size. The type is the same as  <code class="docutils literal"><span class="pre">image</span></code> .</li>
+<li><strong>result</strong> &#8211; Result image. If  <code class="docutils literal"><span class="pre">image</span></code> is  <em>W x H</em>  and <code class="docutils literal"><span class="pre">templ</span></code> is  <em>w x h</em>, then  <code class="docutils literal"><span class="pre">result</span></code> must be <em>W-w+1 x H-h+1</em>.</li>
+<li><strong>ccorr</strong> &#8211; Flags to evaluate cross-correlation instead of convolution.</li>
+<li><strong>buf</strong> &#8211; Optional buffer to avoid extra memory allocations and to adjust some specific parameters. See <a class="reference internal" href="#gpu::ConvolveBuf" title="struct gpu::ConvolveBuf"><code class="xref ocv ocv-struct docutils literal"><span class="pre">gpu::ConvolveBuf</span></code></a>.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="image_filtering.html#void gpu::filter2D(const GpuMat&amp; src, GpuMat&amp; dst, int ddepth, const Mat&amp; kernel, Point anchor, int borderType , Stream&amp; stream)" title="void gpu::filter2D(const GpuMat&amp; src, GpuMat&amp; dst, int ddepth, const Mat&amp; kernel, Point anchor, int borderType , Stream&amp; stream)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::filter2D()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-matchtemplatebuf">
+<h2>gpu::MatchTemplateBuf<a class="headerlink" href="#gpu-matchtemplatebuf" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="gpu::MatchTemplateBuf">
+<em class="property">struct </em><code class="descclassname">gpu::</code><code class="descname">MatchTemplateBuf</code><a class="headerlink" href="#gpu::MatchTemplateBuf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class providing memory buffers for <a class="reference internal" href="#void gpu::matchTemplate(const GpuMat&amp; image, const GpuMat&amp; templ, GpuMat&amp; result, int method, Stream &amp;stream)" title="void gpu::matchTemplate(const GpuMat&amp; image, const GpuMat&amp; templ, GpuMat&amp; result, int method, Stream &amp;stream)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::matchTemplate()</span></code></a> function, plus it allows to adjust some specific parameters.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">CV_EXPORTS</span> <span class="n">MatchTemplateBuf</span>
+<span class="p">{</span>
+    <span class="n">Size</span> <span class="n">user_block_size</span><span class="p">;</span>
+    <span class="n">GpuMat</span> <span class="n">imagef</span><span class="p">,</span> <span class="n">templf</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GpuMat</span><span class="o">&gt;</span> <span class="n">images</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GpuMat</span><span class="o">&gt;</span> <span class="n">image_sums</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GpuMat</span><span class="o">&gt;</span> <span class="n">image_sqsums</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>You can use field <cite>user_block_size</cite> to set specific block size for <a class="reference internal" href="#void gpu::matchTemplate(const GpuMat&amp; image, const GpuMat&amp; templ, GpuMat&amp; result, int method, Stream &amp;stream)" title="void gpu::matchTemplate(const GpuMat&amp; image, const GpuMat&amp; templ, GpuMat&amp; result, int method, Stream &amp;stream)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::matchTemplate()</span></code></a> function. If you leave its default value <cite>Size(0,0)</cite> then automatic estimation of block size will be used (which is optimized for speed). By varying <cite>user_block_size</cite> you can reduce memory requirements at the cost of speed.</p>
+</div>
+<div class="section" id="gpu-matchtemplate">
+<h2>gpu::matchTemplate<a class="headerlink" href="#gpu-matchtemplate" title="Permalink to this headline">¶</a></h2>
+<p>Computes a proximity map for a raster template and an image where the template is searched for.</p>
+<dl class="function">
+<dt id="void gpu::matchTemplate(const GpuMat&amp; image, const GpuMat&amp; templ, GpuMat&amp; result, int method, Stream &amp;stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">matchTemplate</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>image</strong>, const GpuMat&amp; <strong>templ</strong>, GpuMat&amp; <strong>result</strong>, int <strong>method</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::matchTemplate(const GpuMat& image, const GpuMat& templ, GpuMat& result, int method, Stream &stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::matchTemplate(const GpuMat&amp; image, const GpuMat&amp; templ, GpuMat&amp; result, int method, MatchTemplateBuf &amp;buf, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">matchTemplate</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>image</strong>, const GpuMat&amp; <strong>templ</strong>, GpuMat&amp; <strong>result</strong>, int <strong>method</strong>, MatchTemplateBuf&amp; <strong>buf</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::matchTemplate(const GpuMat& image, const GpuMat& templ, GpuMat& result, int method, MatchTemplateBuf &buf, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Source image.  <code class="docutils literal"><span class="pre">CV_32F</span></code> and  <code class="docutils literal"><span class="pre">CV_8U</span></code> depth images (1..4 channels) are supported for now.</li>
+<li><strong>templ</strong> &#8211; Template image with the size and type the same as  <code class="docutils literal"><span class="pre">image</span></code> .</li>
+<li><strong>result</strong> &#8211; Map containing comparison results ( <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ). If  <code class="docutils literal"><span class="pre">image</span></code> is  <em>W x H</em>  and <code class="docutils literal"><span class="pre">templ</span></code> is  <em>w x h</em>, then  <code class="docutils literal"><span class="pre">result</span></code> must be <em>W-w+1 x H-h+1</em>.</li>
+<li><strong>method</strong> &#8211; Specifies the way to compare the template with the image.</li>
+<li><strong>buf</strong> &#8211; Optional buffer to avoid extra memory allocations and to adjust some specific parameters. See <a class="reference internal" href="#gpu::MatchTemplateBuf" title="struct gpu::MatchTemplateBuf"><code class="xref ocv ocv-struct docutils literal"><span class="pre">gpu::MatchTemplateBuf</span></code></a>.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The following methods are supported for the <code class="docutils literal"><span class="pre">CV_8U</span></code> depth images for now:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">CV_TM_SQDIFF</span></code></li>
+<li><code class="docutils literal"><span class="pre">CV_TM_SQDIFF_NORMED</span></code></li>
+<li><code class="docutils literal"><span class="pre">CV_TM_CCORR</span></code></li>
+<li><code class="docutils literal"><span class="pre">CV_TM_CCORR_NORMED</span></code></li>
+<li><code class="docutils literal"><span class="pre">CV_TM_CCOEFF</span></code></li>
+<li><code class="docutils literal"><span class="pre">CV_TM_CCOEFF_NORMED</span></code></li>
+</ul>
+<p>The following methods are supported for the <code class="docutils literal"><span class="pre">CV_32F</span></code> images for now:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">CV_TM_SQDIFF</span></code></li>
+<li><code class="docutils literal"><span class="pre">CV_TM_CCORR</span></code></li>
+</ul>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/object_detection.html#void matchTemplate(InputArray image, InputArray templ, OutputArray result, int method)" title="void matchTemplate(InputArray image, InputArray templ, OutputArray result, int method)"><code class="xref ocv ocv-func docutils literal"><span class="pre">matchTemplate()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-remap">
+<h2>gpu::remap<a class="headerlink" href="#gpu-remap" title="Permalink to this headline">¶</a></h2>
+<p>Applies a generic geometrical transformation to an image.</p>
+<dl class="function">
+<dt id="void gpu::remap(const GpuMat&amp; src, GpuMat&amp; dst, const GpuMat&amp; xmap, const GpuMat&amp; ymap, int interpolation, int borderMode, Scalar borderValue, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">remap</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, const GpuMat&amp; <strong>xmap</strong>, const GpuMat&amp; <strong>ymap</strong>, int <strong>interpolation</strong>, int <strong>borderMode</strong>=BORDER_CONSTANT, Scalar <strong>borderValue</strong>=Scalar(), Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::remap(const GpuMat& src, GpuMat& dst, const GpuMat& xmap, const GpuMat& ymap, int interpolation, int borderMode, Scalar borderValue, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.</li>
+<li><strong>dst</strong> &#8211; Destination image with the size the same as  <code class="docutils literal"><span class="pre">xmap</span></code> and the type the same as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>xmap</strong> &#8211; X values. Only  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> type is supported.</li>
+<li><strong>ymap</strong> &#8211; Y values. Only  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> type is supported.</li>
+<li><strong>interpolation</strong> &#8211; Interpolation method (see  <a class="reference internal" href="../../imgproc/doc/geometric_transformations.html#void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)" title="void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)"><code class="xref ocv ocv-func docutils literal"><span class="pre">resize()</span></code></a> ). <code class="docutils literal"><span class="pre">INTER_NEAREST</span></code> , <code class="docutils literal"><span class="pre">INTER_LINEAR</span></code> and <code class="docutils literal"><span class="pre">INTER_CUBIC</span></code> are supported for now.</li>
+<li><strong>borderMode</strong> &#8211; Pixel extrapolation method (see  <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a> ). <code class="docutils literal"><span class="pre">BORDER_REFLECT101</span></code> , <code class="docutils literal"><span class="pre">BORDER_REPLICATE</span></code> , <code class="docutils literal"><span class="pre">BORDER_CONSTANT</span></code> , <code class="docutils literal"><span class="pre">BORDER_REFLECT</span></code> and <code class="docutils literal"><span class="pre">BORDER_WRAP</span></code> are supported for now.</li>
+<li><strong>borderValue</strong> &#8211; Value used in case of a constant border. By default, it is 0.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function transforms the source image using the specified map:</p>
+<div class="math">
+<p><img src="../../../_images/math/b0eecaee482527864b90a79b080b98bdca21ba2c.png" alt="\texttt{dst} (x,y) =  \texttt{src} (xmap(x,y), ymap(x,y))"/></p>
+</div><p>Values of pixels with non-integer coordinates are computed using the bilinear interpolation.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/geometric_transformations.html#void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)" title="void remap(InputArray src, OutputArray dst, InputArray map1, InputArray map2, int interpolation, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">remap()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-cvtcolor">
+<h2>gpu::cvtColor<a class="headerlink" href="#gpu-cvtcolor" title="Permalink to this headline">¶</a></h2>
+<p>Converts an image from one color space to another.</p>
+<dl class="function">
+<dt id="void gpu::cvtColor(const GpuMat&amp; src, GpuMat&amp; dst, int code, int dcn , Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">cvtColor</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>code</strong>, int <strong>dcn</strong>=0, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::cvtColor(const GpuMat& src, GpuMat& dst, int code, int dcn , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image with  <code class="docutils literal"><span class="pre">CV_8U</span></code> , <code class="docutils literal"><span class="pre">CV_16U</span></code> , or  <code class="docutils literal"><span class="pre">CV_32F</span></code> depth and 1, 3, or 4 channels.</li>
+<li><strong>dst</strong> &#8211; Destination image with the same size and depth as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>code</strong> &#8211; Color space conversion code. For details, see  <a class="reference internal" href="../../imgproc/doc/miscellaneous_transformations.html#void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)" title="void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cvtColor()</span></code></a> . Conversion to/from Luv and Bayer color spaces is not supported.</li>
+<li><strong>dcn</strong> &#8211; Number of channels in the destination image. If the parameter is 0, the number of the channels is derived automatically from  <code class="docutils literal"><span class="pre">src</span></code> and the  <code class="docutils literal"><span class="pre">code</span></code> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>3-channel color spaces (like <code class="docutils literal"><span class="pre">HSV</span></code>, <code class="docutils literal"><span class="pre">XYZ</span></code>, and so on) can be stored in a 4-channel image for better performance.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/miscellaneous_transformations.html#void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)" title="void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cvtColor()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-swapchannels">
+<h2>gpu::swapChannels<a class="headerlink" href="#gpu-swapchannels" title="Permalink to this headline">¶</a></h2>
+<p>Exchanges the color channels of an image in-place.</p>
+<dl class="function">
+<dt id="void gpu::swapChannels(GpuMat&amp; image, const int dstOrder[4], Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">swapChannels</code><span class="sig-paren">(</span>GpuMat&amp; <strong>image</strong>, const int <strong>dstOrder</strong>[4], Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::swapChannels(GpuMat& image, const int dstOrder[4], Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Source image. Supports only <code class="docutils literal"><span class="pre">CV_8UC4</span></code> type.</li>
+<li><strong>dstOrder</strong> &#8211; Integer array describing how channel values are permutated. The n-th entry of the array contains the number of the channel that is stored in the n-th channel of the output image. E.g. Given an RGBA image, aDstOrder = [3,2,1,0] converts this to ABGR channel order.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The methods support arbitrary permutations of the original channels, including replication.</p>
+</div>
+<div class="section" id="gpu-threshold">
+<h2>gpu::threshold<a class="headerlink" href="#gpu-threshold" title="Permalink to this headline">¶</a></h2>
+<p>Applies a fixed-level threshold to each array element.</p>
+<dl class="function">
+<dt id="double gpu::threshold(const GpuMat&amp; src, GpuMat&amp; dst, double thresh, double maxval, int type, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>double <code class="descclassname">gpu::</code><code class="descname">threshold</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, double <strong>thresh</strong>, double <strong>maxval</strong>, int <strong>type</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#double gpu::threshold(const GpuMat& src, GpuMat& dst, double thresh, double maxval, int type, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source array (single-channel).</li>
+<li><strong>dst</strong> &#8211; Destination array with the same size and type as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>thresh</strong> &#8211; Threshold value.</li>
+<li><strong>maxval</strong> &#8211; Maximum value to use with  <code class="docutils literal"><span class="pre">THRESH_BINARY</span></code> and  <code class="docutils literal"><span class="pre">THRESH_BINARY_INV</span></code> threshold types.</li>
+<li><strong>type</strong> &#8211; Threshold type. For details, see  <a class="reference internal" href="../../imgproc/doc/miscellaneous_transformations.html#double threshold(InputArray src, OutputArray dst, double thresh, double maxval, int type)" title="double threshold(InputArray src, OutputArray dst, double thresh, double maxval, int type)"><code class="xref ocv ocv-func docutils literal"><span class="pre">threshold()</span></code></a> . The <code class="docutils literal"><span class="pre">THRESH_OTSU</span></code> threshold type is not supported.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/miscellaneous_transformations.html#double threshold(InputArray src, OutputArray dst, double thresh, double maxval, int type)" title="double threshold(InputArray src, OutputArray dst, double thresh, double maxval, int type)"><code class="xref ocv ocv-func docutils literal"><span class="pre">threshold()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-resize">
+<h2>gpu::resize<a class="headerlink" href="#gpu-resize" title="Permalink to this headline">¶</a></h2>
+<p>Resizes an image.</p>
+<dl class="function">
+<dt id="void gpu::resize(const GpuMat&amp; src, GpuMat&amp; dst, Size dsize, double fx, double fy, int interpolation , Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">resize</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, Size <strong>dsize</strong>, double <strong>fx</strong>=0, double <strong>fy</strong>=0, int <strong>interpolation</strong>=INTER_LINEAR, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::resize(const GpuMat& src, GpuMat& dst, Size dsize, double fx, double fy, int interpolation , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.</li>
+<li><strong>dst</strong> &#8211; Destination image  with the same type as  <code class="docutils literal"><span class="pre">src</span></code> . The size is <code class="docutils literal"><span class="pre">dsize</span></code> (when it is non-zero) or the size is computed from  <code class="docutils literal"><span class="pre">src.size()</span></code> , <code class="docutils literal"><span class="pre">fx</span></code> , and  <code class="docutils literal"><span class="pre">fy</span></code> .</li>
+<li><strong>dsize</strong> &#8211; <p>Destination image size. If it is zero, it is computed as:</p>
+<div class="math">
+<p><img src="../../../_images/math/35ed0468ed221de8a5f35516bceafda9788cd015.png" alt="\texttt{dsize = Size(round(fx*src.cols), round(fy*src.rows))}"/></p>
+</div><p>Either  <code class="docutils literal"><span class="pre">dsize</span></code> or both  <code class="docutils literal"><span class="pre">fx</span></code> and  <code class="docutils literal"><span class="pre">fy</span></code> must be non-zero.</p>
+</li>
+<li><strong>fx</strong> &#8211; <p>Scale factor along the horizontal axis. If it is zero, it is computed as:</p>
+<div class="math">
+<p><img src="../../../_images/math/68bc15bc90b1ec313d34f5d72485fa04c51f5c3e.png" alt="\texttt{(double)dsize.width/src.cols}"/></p>
+</div></li>
+<li><strong>fy</strong> &#8211; <p>Scale factor along the vertical axis. If it is zero, it is computed as:</p>
+<div class="math">
+<p><img src="../../../_images/math/af495c626474d56d29d356d581a18f143109e972.png" alt="\texttt{(double)dsize.height/src.rows}"/></p>
+</div></li>
+<li><strong>interpolation</strong> &#8211; Interpolation method. <code class="docutils literal"><span class="pre">INTER_NEAREST</span></code> , <code class="docutils literal"><span class="pre">INTER_LINEAR</span></code> and <code class="docutils literal"><span class="pre">INTER_CUBIC</span></code> are supported for now.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/geometric_transformations.html#void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)" title="void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)"><code class="xref ocv ocv-func docutils literal"><span class="pre">resize()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-warpaffine">
+<h2>gpu::warpAffine<a class="headerlink" href="#gpu-warpaffine" title="Permalink to this headline">¶</a></h2>
+<p>Applies an affine transformation to an image.</p>
+<dl class="function">
+<dt id="void gpu::warpAffine(const GpuMat&amp; src, GpuMat&amp; dst, const Mat&amp; M, Size dsize, int flags, int borderMode, Scalar borderValue, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">warpAffine</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, const Mat&amp; <strong>M</strong>, Size <strong>dsize</strong>, int <strong>flags</strong>=INTER_LINEAR, int <strong>borderMode</strong>=BORDER_CONSTANT, Scalar <strong>borderValue</strong>=Scalar(), Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::warpAffine(const GpuMat& src, GpuMat& dst, const Mat& M, Size dsize, int flags, int borderMode, Scalar borderValue, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.  <code class="docutils literal"><span class="pre">CV_8U</span></code> , <code class="docutils literal"><span class="pre">CV_16U</span></code> , <code class="docutils literal"><span class="pre">CV_32S</span></code> , or  <code class="docutils literal"><span class="pre">CV_32F</span></code> depth and 1, 3, or 4 channels are supported.</li>
+<li><strong>dst</strong> &#8211; Destination image with the same type as  <code class="docutils literal"><span class="pre">src</span></code> . The size is  <code class="docutils literal"><span class="pre">dsize</span></code> .</li>
+<li><strong>M</strong> &#8211; <em>2x3</em>  transformation matrix.</li>
+<li><strong>dsize</strong> &#8211; Size of the destination image.</li>
+<li><strong>flags</strong> &#8211; Combination of interpolation methods (see  <a class="reference internal" href="../../imgproc/doc/geometric_transformations.html#void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)" title="void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)"><code class="xref ocv ocv-func docutils literal"><span class="pre">resize()</span></code></a>) and the optional flag  <code class="docutils literal"><span class="pre">WARP_INVERSE_MAP</span></code> specifying that  <code class="docutils literal"><span class="pre">M</span></code> is an inverse transformation ( <code class="docutils literal"><span class="pre">dst=&gt;src</span></code> ). Only <code class="docutils literal"><span class="pre">INTER_NEAREST</span></code> , <code class="docutils literal"><span class="pre">INTER_LINEAR</span></code> , and  <code class="docutils literal"><span class="pre">INTER_CUBIC</span></code> interpolation methods are supported.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/geometric_transformations.html#void warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)" title="void warpAffine(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">warpAffine()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-buildwarpaffinemaps">
+<h2>gpu::buildWarpAffineMaps<a class="headerlink" href="#gpu-buildwarpaffinemaps" title="Permalink to this headline">¶</a></h2>
+<p>Builds transformation maps for affine transformation.</p>
+<dl class="function">
+<dt id="void gpu::buildWarpAffineMaps(const Mat&amp; M, bool inverse, Size dsize, GpuMat&amp; xmap, GpuMat&amp; ymap, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">buildWarpAffineMaps</code><span class="sig-paren">(</span>const Mat&amp; <strong>M</strong>, bool <strong>inverse</strong>, Size <strong>dsize</strong>, GpuMat&amp; <strong>xmap</strong>, GpuMat&amp; <strong>ymap</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::buildWarpAffineMaps(const Mat& M, bool inverse, Size dsize, GpuMat& xmap, GpuMat& ymap, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>M</strong> &#8211; <em>2x3</em>  transformation matrix.</li>
+<li><strong>inverse</strong> &#8211; Flag  specifying that  <code class="docutils literal"><span class="pre">M</span></code> is an inverse transformation ( <code class="docutils literal"><span class="pre">dst=&gt;src</span></code> ).</li>
+<li><strong>dsize</strong> &#8211; Size of the destination image.</li>
+<li><strong>xmap</strong> &#8211; X values with  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> type.</li>
+<li><strong>ymap</strong> &#8211; Y values with  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> type.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void gpu::warpAffine(const GpuMat&amp; src, GpuMat&amp; dst, const Mat&amp; M, Size dsize, int flags, int borderMode, Scalar borderValue, Stream&amp; stream)" title="void gpu::warpAffine(const GpuMat&amp; src, GpuMat&amp; dst, const Mat&amp; M, Size dsize, int flags, int borderMode, Scalar borderValue, Stream&amp; stream)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::warpAffine()</span></code></a> , <a class="reference internal" href="#void gpu::remap(const GpuMat&amp; src, GpuMat&amp; dst, const GpuMat&amp; xmap, const GpuMat&amp; ymap, int interpolation, int borderMode, Scalar borderValue, Stream&amp; stream)" title="void gpu::remap(const GpuMat&amp; src, GpuMat&amp; dst, const GpuMat&amp; xmap, const GpuMat&amp; ymap, int interpolation, int borderMode, Scalar borderValue, Stream&amp; stream)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::remap()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-warpperspective">
+<h2>gpu::warpPerspective<a class="headerlink" href="#gpu-warpperspective" title="Permalink to this headline">¶</a></h2>
+<p>Applies a perspective transformation to an image.</p>
+<dl class="function">
+<dt id="void gpu::warpPerspective(const GpuMat&amp; src, GpuMat&amp; dst, const Mat&amp; M, Size dsize, int flags, int borderMode, Scalar borderValue, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">warpPerspective</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, const Mat&amp; <strong>M</strong>, Size <strong>dsize</strong>, int <strong>flags</strong>=INTER_LINEAR, int <strong>borderMode</strong>=BORDER_CONSTANT, Scalar <strong>borderValue</strong>=Scalar(), Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::warpPerspective(const GpuMat& src, GpuMat& dst, const Mat& M, Size dsize, int flags, int borderMode, Scalar borderValue, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. <code class="docutils literal"><span class="pre">CV_8U</span></code> , <code class="docutils literal"><span class="pre">CV_16U</span></code> , <code class="docutils literal"><span class="pre">CV_32S</span></code> , or  <code class="docutils literal"><span class="pre">CV_32F</span></code> depth and 1, 3, or 4 channels are supported.</li>
+<li><strong>dst</strong> &#8211; Destination image with the same type as  <code class="docutils literal"><span class="pre">src</span></code> . The size is  <code class="docutils literal"><span class="pre">dsize</span></code> .</li>
+<li><strong>M</strong> &#8211; <em>3x3</em> transformation matrix.</li>
+<li><strong>dsize</strong> &#8211; Size of the destination image.</li>
+<li><strong>flags</strong> &#8211; Combination of interpolation methods (see  <a class="reference internal" href="../../imgproc/doc/geometric_transformations.html#void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)" title="void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)"><code class="xref ocv ocv-func docutils literal"><span class="pre">resize()</span></code></a> ) and the optional flag  <code class="docutils literal"><span class="pre">WARP_INVERSE_MAP</span></code> specifying that  <code class="docutils literal"><span class="pre">M</span></code> is the inverse transformation ( <code class="docutils literal"><span class="pre">dst</span> <span class="pre">=&gt;</span> <span class="pre">src</span></code> ). Only  <code class="docutils literal"><span class="pre">INTER_NEAREST</span></code> , <code class="docutils literal"><span class="pre">INTER_LINEAR</span></code> , and  <code class="docutils literal"><span class="pre">INTER_CUBIC</span></code> interpolation methods are supported.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/geometric_transformations.html#void warpPerspective(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)" title="void warpPerspective(InputArray src, OutputArray dst, InputArray M, Size dsize, int flags, int borderMode, const Scalar&amp; borderValue)"><code class="xref ocv ocv-func docutils literal"><span class="pre">warpPerspective()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-buildwarpperspectivemaps">
+<h2>gpu::buildWarpPerspectiveMaps<a class="headerlink" href="#gpu-buildwarpperspectivemaps" title="Permalink to this headline">¶</a></h2>
+<p>Builds transformation maps for perspective transformation.</p>
+<dl class="function">
+<dt>
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">buildWarpAffineMaps</code><span class="sig-paren">(</span>const Mat&amp; <strong>M</strong>, bool <strong>inverse</strong>, Size <strong>dsize</strong>, GpuMat&amp; <strong>xmap</strong>, GpuMat&amp; <strong>ymap</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>M</strong> &#8211; <em>3x3</em>  transformation matrix.</li>
+<li><strong>inverse</strong> &#8211; Flag  specifying that  <code class="docutils literal"><span class="pre">M</span></code> is an inverse transformation ( <code class="docutils literal"><span class="pre">dst=&gt;src</span></code> ).</li>
+<li><strong>dsize</strong> &#8211; Size of the destination image.</li>
+<li><strong>xmap</strong> &#8211; X values with  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> type.</li>
+<li><strong>ymap</strong> &#8211; Y values with  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> type.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void gpu::warpPerspective(const GpuMat&amp; src, GpuMat&amp; dst, const Mat&amp; M, Size dsize, int flags, int borderMode, Scalar borderValue, Stream&amp; stream)" title="void gpu::warpPerspective(const GpuMat&amp; src, GpuMat&amp; dst, const Mat&amp; M, Size dsize, int flags, int borderMode, Scalar borderValue, Stream&amp; stream)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::warpPerspective()</span></code></a> , <a class="reference internal" href="#void gpu::remap(const GpuMat&amp; src, GpuMat&amp; dst, const GpuMat&amp; xmap, const GpuMat&amp; ymap, int interpolation, int borderMode, Scalar borderValue, Stream&amp; stream)" title="void gpu::remap(const GpuMat&amp; src, GpuMat&amp; dst, const GpuMat&amp; xmap, const GpuMat&amp; ymap, int interpolation, int borderMode, Scalar borderValue, Stream&amp; stream)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::remap()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-rotate">
+<h2>gpu::rotate<a class="headerlink" href="#gpu-rotate" title="Permalink to this headline">¶</a></h2>
+<p>Rotates an image around the origin (0,0) and then shifts it.</p>
+<dl class="function">
+<dt id="void gpu::rotate(const GpuMat&amp; src, GpuMat&amp; dst, Size dsize, double angle, double xShift , double yShift , int interpolation , Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">rotate</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, Size <strong>dsize</strong>, double <strong>angle</strong>, double <strong>xShift</strong>=0, double <strong>yShift</strong>=0, int <strong>interpolation</strong>=INTER_LINEAR, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::rotate(const GpuMat& src, GpuMat& dst, Size dsize, double angle, double xShift , double yShift , int interpolation , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Supports 1, 3 or 4 channels images with <code class="docutils literal"><span class="pre">CV_8U</span></code> , <code class="docutils literal"><span class="pre">CV_16U</span></code> or <code class="docutils literal"><span class="pre">CV_32F</span></code> depth.</li>
+<li><strong>dst</strong> &#8211; Destination image with the same type as  <code class="docutils literal"><span class="pre">src</span></code> . The size is  <code class="docutils literal"><span class="pre">dsize</span></code> .</li>
+<li><strong>dsize</strong> &#8211; Size of the destination image.</li>
+<li><strong>angle</strong> &#8211; Angle of rotation in degrees.</li>
+<li><strong>xShift</strong> &#8211; Shift along the horizontal axis.</li>
+<li><strong>yShift</strong> &#8211; Shift along the vertical axis.</li>
+<li><strong>interpolation</strong> &#8211; Interpolation method. Only  <code class="docutils literal"><span class="pre">INTER_NEAREST</span></code> , <code class="docutils literal"><span class="pre">INTER_LINEAR</span></code> , and  <code class="docutils literal"><span class="pre">INTER_CUBIC</span></code> are supported.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void gpu::warpAffine(const GpuMat&amp; src, GpuMat&amp; dst, const Mat&amp; M, Size dsize, int flags, int borderMode, Scalar borderValue, Stream&amp; stream)" title="void gpu::warpAffine(const GpuMat&amp; src, GpuMat&amp; dst, const Mat&amp; M, Size dsize, int flags, int borderMode, Scalar borderValue, Stream&amp; stream)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::warpAffine()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-copymakeborder">
+<h2>gpu::copyMakeBorder<a class="headerlink" href="#gpu-copymakeborder" title="Permalink to this headline">¶</a></h2>
+<p>Forms a border around an image.</p>
+<dl class="function">
+<dt id="void gpu::copyMakeBorder(const GpuMat&amp; src, GpuMat&amp; dst, int top, int bottom, int left, int right, int borderType, const Scalar&amp; value , Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">copyMakeBorder</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>top</strong>, int <strong>bottom</strong>, int <strong>left</strong>, int <strong>right</strong>, int <strong>borderType</strong>, const Scalar&amp; <strong>value</strong>=Scalar(), Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::copyMakeBorder(const GpuMat& src, GpuMat& dst, int top, int bottom, int left, int right, int borderType, const Scalar& value , Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. <code class="docutils literal"><span class="pre">CV_8UC1</span></code> , <code class="docutils literal"><span class="pre">CV_8UC4</span></code> , <code class="docutils literal"><span class="pre">CV_32SC1</span></code> , and  <code class="docutils literal"><span class="pre">CV_32FC1</span></code> types are supported.</li>
+<li><strong>dst</strong> &#8211; Destination image with the same type as  <code class="docutils literal"><span class="pre">src</span></code>. The size is  <code class="docutils literal"><span class="pre">Size(src.cols+left+right,</span> <span class="pre">src.rows+top+bottom)</span></code> .</li>
+<li><strong>top</strong> &#8211; </li>
+<li><strong>bottom</strong> &#8211; </li>
+<li><strong>left</strong> &#8211; </li>
+<li><strong>right</strong> &#8211; Number of pixels in each direction from the source image rectangle to extrapolate. For example:  <code class="docutils literal"><span class="pre">top=1,</span> <span class="pre">bottom=1,</span> <span class="pre">left=1,</span> <span class="pre">right=1</span></code> mean that 1 pixel-wide border needs to be built.</li>
+<li><strong>borderType</strong> &#8211; Border type. See  <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a> for details. <code class="docutils literal"><span class="pre">BORDER_REFLECT101</span></code> , <code class="docutils literal"><span class="pre">BORDER_REPLICATE</span></code> , <code class="docutils literal"><span class="pre">BORDER_CONSTANT</span></code> , <code class="docutils literal"><span class="pre">BORDER_REFLECT</span></code> and <code class="docutils literal"><span class="pre">BORDER_WRAP</span></code> are supported for now.</li>
+<li><strong>value</strong> &#8211; Border value.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#void copyMakeBorder(InputArray src, OutputArray dst, int top, int bottom, int left, int right, int borderType, const Scalar&amp; value)" title="void copyMakeBorder(InputArray src, OutputArray dst, int top, int bottom, int left, int right, int borderType, const Scalar&amp; value)"><code class="xref ocv ocv-func docutils literal"><span class="pre">copyMakeBorder()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-rectstddev">
+<h2>gpu::rectStdDev<a class="headerlink" href="#gpu-rectstddev" title="Permalink to this headline">¶</a></h2>
+<p>Computes a standard deviation of integral images.</p>
+<dl class="function">
+<dt id="void gpu::rectStdDev(const GpuMat&amp; src, const GpuMat&amp; sqr, GpuMat&amp; dst, const Rect&amp; rect, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">rectStdDev</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, const GpuMat&amp; <strong>sqr</strong>, GpuMat&amp; <strong>dst</strong>, const Rect&amp; <strong>rect</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::rectStdDev(const GpuMat& src, const GpuMat& sqr, GpuMat& dst, const Rect& rect, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Only the <code class="docutils literal"><span class="pre">CV_32SC1</span></code> type is supported.</li>
+<li><strong>sqr</strong> &#8211; Squared source image. Only  the <code class="docutils literal"><span class="pre">CV_32FC1</span></code> type is supported.</li>
+<li><strong>dst</strong> &#8211; Destination image with the same type and size as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>rect</strong> &#8211; Rectangular window.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-evenlevels">
+<h2>gpu::evenLevels<a class="headerlink" href="#gpu-evenlevels" title="Permalink to this headline">¶</a></h2>
+<p>Computes levels with even distribution.</p>
+<dl class="function">
+<dt id="void gpu::evenLevels(GpuMat&amp; levels, int nLevels, int lowerLevel, int upperLevel)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">evenLevels</code><span class="sig-paren">(</span>GpuMat&amp; <strong>levels</strong>, int <strong>nLevels</strong>, int <strong>lowerLevel</strong>, int <strong>upperLevel</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::evenLevels(GpuMat& levels, int nLevels, int lowerLevel, int upperLevel)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>levels</strong> &#8211; Destination array.  <code class="docutils literal"><span class="pre">levels</span></code> has 1 row, <code class="docutils literal"><span class="pre">nLevels</span></code> columns, and the <code class="docutils literal"><span class="pre">CV_32SC1</span></code> type.</li>
+<li><strong>nLevels</strong> &#8211; Number of computed levels.  <code class="docutils literal"><span class="pre">nLevels</span></code> must be at least 2.</li>
+<li><strong>lowerLevel</strong> &#8211; Lower boundary value of the lowest level.</li>
+<li><strong>upperLevel</strong> &#8211; Upper boundary value of the greatest level.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-histeven">
+<h2>gpu::histEven<a class="headerlink" href="#gpu-histeven" title="Permalink to this headline">¶</a></h2>
+<p>Calculates a histogram with evenly distributed bins.</p>
+<dl class="function">
+<dt id="void gpu::histEven(const GpuMat&amp; src, GpuMat&amp; hist, int histSize, int lowerLevel, int upperLevel, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">histEven</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>hist</strong>, int <strong>histSize</strong>, int <strong>lowerLevel</strong>, int <strong>upperLevel</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::histEven(const GpuMat& src, GpuMat& hist, int histSize, int lowerLevel, int upperLevel, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::histEven(const GpuMat&amp; src, GpuMat&amp; hist, GpuMat&amp; buf, int histSize, int lowerLevel, int upperLevel, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">histEven</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>hist</strong>, GpuMat&amp; <strong>buf</strong>, int <strong>histSize</strong>, int <strong>lowerLevel</strong>, int <strong>upperLevel</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::histEven(const GpuMat& src, GpuMat& hist, GpuMat& buf, int histSize, int lowerLevel, int upperLevel, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::histEven(const GpuMat&amp; src, GpuMat hist[4], int histSize[4], int lowerLevel[4], int upperLevel[4], Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">histEven</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat <strong>hist</strong>[4], int <strong>histSize</strong>[4], int <strong>lowerLevel</strong>[4], int <strong>upperLevel</strong>[4], Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::histEven(const GpuMat& src, GpuMat hist[4], int histSize[4], int lowerLevel[4], int upperLevel[4], Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::histEven(const GpuMat&amp; src, GpuMat hist[4], GpuMat&amp; buf, int histSize[4], int lowerLevel[4], int upperLevel[4], Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">histEven</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat <strong>hist</strong>[4], GpuMat&amp; <strong>buf</strong>, int <strong>histSize</strong>[4], int <strong>lowerLevel</strong>[4], int <strong>upperLevel</strong>[4], Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::histEven(const GpuMat& src, GpuMat hist[4], GpuMat& buf, int histSize[4], int lowerLevel[4], int upperLevel[4], Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. <code class="docutils literal"><span class="pre">CV_8U</span></code>, <code class="docutils literal"><span class="pre">CV_16U</span></code>, or <code class="docutils literal"><span class="pre">CV_16S</span></code> depth and 1 or 4 channels are supported. For a four-channel image, all channels are processed separately.</li>
+<li><strong>hist</strong> &#8211; Destination histogram with one row, <code class="docutils literal"><span class="pre">histSize</span></code> columns, and the <code class="docutils literal"><span class="pre">CV_32S</span></code> type.</li>
+<li><strong>histSize</strong> &#8211; Size of the histogram.</li>
+<li><strong>lowerLevel</strong> &#8211; Lower boundary of lowest-level bin.</li>
+<li><strong>upperLevel</strong> &#8211; Upper boundary of highest-level bin.</li>
+<li><strong>buf</strong> &#8211; Optional buffer to avoid extra memory allocations (for many calls with the same sizes).</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-histrange">
+<h2>gpu::histRange<a class="headerlink" href="#gpu-histrange" title="Permalink to this headline">¶</a></h2>
+<p>Calculates a histogram with bins determined by the <code class="docutils literal"><span class="pre">levels</span></code> array.</p>
+<dl class="function">
+<dt id="void gpu::histRange(const GpuMat&amp; src, GpuMat&amp; hist, const GpuMat&amp; levels, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">histRange</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>hist</strong>, const GpuMat&amp; <strong>levels</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::histRange(const GpuMat& src, GpuMat& hist, const GpuMat& levels, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::histRange(const GpuMat&amp; src, GpuMat&amp; hist, const GpuMat&amp; levels, GpuMat&amp; buf, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">histRange</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>hist</strong>, const GpuMat&amp; <strong>levels</strong>, GpuMat&amp; <strong>buf</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::histRange(const GpuMat& src, GpuMat& hist, const GpuMat& levels, GpuMat& buf, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. <code class="docutils literal"><span class="pre">CV_8U</span></code> , <code class="docutils literal"><span class="pre">CV_16U</span></code> , or  <code class="docutils literal"><span class="pre">CV_16S</span></code> depth and 1 or 4 channels are supported. For a four-channel image, all channels are processed separately.</li>
+<li><strong>hist</strong> &#8211; Destination histogram with one row, <code class="docutils literal"><span class="pre">(levels.cols-1)</span></code> columns, and the  <code class="docutils literal"><span class="pre">CV_32SC1</span></code> type.</li>
+<li><strong>levels</strong> &#8211; Number of levels in the histogram.</li>
+<li><strong>buf</strong> &#8211; Optional buffer to avoid extra memory allocations (for many calls with the same sizes).</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-calchist">
+<h2>gpu::calcHist<a class="headerlink" href="#gpu-calchist" title="Permalink to this headline">¶</a></h2>
+<p>Calculates histogram for one channel 8-bit image.</p>
+<dl class="function">
+<dt id="void gpu::calcHist(const GpuMat&amp; src, GpuMat&amp; hist, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">calcHist</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>hist</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::calcHist(const GpuMat& src, GpuMat& hist, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::calcHist(const GpuMat&amp; src, GpuMat&amp; hist, GpuMat&amp; buf, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">calcHist</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>hist</strong>, GpuMat&amp; <strong>buf</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::calcHist(const GpuMat& src, GpuMat& hist, GpuMat& buf, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.</li>
+<li><strong>hist</strong> &#8211; Destination histogram with one row, 256 columns, and the  <code class="docutils literal"><span class="pre">CV_32SC1</span></code> type.</li>
+<li><strong>buf</strong> &#8211; Optional buffer to avoid extra memory allocations (for many calls with the same sizes).</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-equalizehist">
+<h2>gpu::equalizeHist<a class="headerlink" href="#gpu-equalizehist" title="Permalink to this headline">¶</a></h2>
+<p>Equalizes the histogram of a grayscale image.</p>
+<dl class="function">
+<dt id="void gpu::equalizeHist(const GpuMat&amp; src, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">equalizeHist</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::equalizeHist(const GpuMat& src, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::equalizeHist(const GpuMat&amp; src, GpuMat&amp; dst, GpuMat&amp; hist, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">equalizeHist</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, GpuMat&amp; <strong>hist</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::equalizeHist(const GpuMat& src, GpuMat& dst, GpuMat& hist, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::equalizeHist(const GpuMat&amp; src, GpuMat&amp; dst, GpuMat&amp; hist, GpuMat&amp; buf, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">equalizeHist</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, GpuMat&amp; <strong>hist</strong>, GpuMat&amp; <strong>buf</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::equalizeHist(const GpuMat& src, GpuMat& dst, GpuMat& hist, GpuMat& buf, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.</li>
+<li><strong>dst</strong> &#8211; Destination image.</li>
+<li><strong>hist</strong> &#8211; Destination histogram with one row, 256 columns, and the  <code class="docutils literal"><span class="pre">CV_32SC1</span></code> type.</li>
+<li><strong>buf</strong> &#8211; Optional buffer to avoid extra memory allocations (for many calls with the same sizes).</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/histograms.html#void equalizeHist(InputArray src, OutputArray dst)" title="void equalizeHist(InputArray src, OutputArray dst)"><code class="xref ocv ocv-func docutils literal"><span class="pre">equalizeHist()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-buildwarpplanemaps">
+<h2>gpu::buildWarpPlaneMaps<a class="headerlink" href="#gpu-buildwarpplanemaps" title="Permalink to this headline">¶</a></h2>
+<p>Builds plane warping maps.</p>
+<dl class="function">
+<dt id="void gpu::buildWarpPlaneMaps(Size src_size, Rect dst_roi, const Mat &amp; K, const Mat&amp; R, const Mat &amp; T, float scale, GpuMat&amp; map_x, GpuMat&amp; map_y, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">buildWarpPlaneMaps</code><span class="sig-paren">(</span>Size <strong>src_size</strong>, Rect <strong>dst_roi</strong>, const Mat&amp; <strong>K</strong>, const Mat&amp; <strong>R</strong>, const Mat&amp; <strong>T</strong>, float <strong>scale</strong>, GpuMat&amp; <strong>map_x</strong>, GpuMat&amp; <strong>map_y</strong>, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::buildWarpPlaneMaps(Size src_size, Rect dst_roi, const Mat & K, const Mat& R, const Mat & T, float scale, GpuMat& map_x, GpuMat& map_y, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-buildwarpcylindricalmaps">
+<h2>gpu::buildWarpCylindricalMaps<a class="headerlink" href="#gpu-buildwarpcylindricalmaps" title="Permalink to this headline">¶</a></h2>
+<p>Builds cylindrical warping maps.</p>
+<dl class="function">
+<dt id="void gpu::buildWarpCylindricalMaps(Size src_size, Rect dst_roi, const Mat &amp; K, const Mat&amp; R, float scale, GpuMat&amp; map_x, GpuMat&amp; map_y, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">buildWarpCylindricalMaps</code><span class="sig-paren">(</span>Size <strong>src_size</strong>, Rect <strong>dst_roi</strong>, const Mat&amp; <strong>K</strong>, const Mat&amp; <strong>R</strong>, float <strong>scale</strong>, GpuMat&amp; <strong>map_x</strong>, GpuMat&amp; <strong>map_y</strong>, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::buildWarpCylindricalMaps(Size src_size, Rect dst_roi, const Mat & K, const Mat& R, float scale, GpuMat& map_x, GpuMat& map_y, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-buildwarpsphericalmaps">
+<h2>gpu::buildWarpSphericalMaps<a class="headerlink" href="#gpu-buildwarpsphericalmaps" title="Permalink to this headline">¶</a></h2>
+<p>Builds spherical warping maps.</p>
+<dl class="function">
+<dt id="void gpu::buildWarpSphericalMaps(Size src_size, Rect dst_roi, const Mat &amp; K, const Mat&amp; R, float scale, GpuMat&amp; map_x, GpuMat&amp; map_y, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">buildWarpSphericalMaps</code><span class="sig-paren">(</span>Size <strong>src_size</strong>, Rect <strong>dst_roi</strong>, const Mat&amp; <strong>K</strong>, const Mat&amp; <strong>R</strong>, float <strong>scale</strong>, GpuMat&amp; <strong>map_x</strong>, GpuMat&amp; <strong>map_y</strong>, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::buildWarpSphericalMaps(Size src_size, Rect dst_roi, const Mat & K, const Mat& R, float scale, GpuMat& map_x, GpuMat& map_y, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-pyrdown">
+<h2>gpu::pyrDown<a class="headerlink" href="#gpu-pyrdown" title="Permalink to this headline">¶</a></h2>
+<p>Smoothes an image and downsamples it.</p>
+<dl class="function">
+<dt id="void gpu::pyrDown(const GpuMat&amp; src, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">pyrDown</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::pyrDown(const GpuMat& src, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.</li>
+<li><strong>dst</strong> &#8211; Destination image. Will have <code class="docutils literal"><span class="pre">Size((src.cols+1)/2,</span> <span class="pre">(src.rows+1)/2)</span></code> size and the same type as <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#void pyrDown(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)" title="void pyrDown(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">pyrDown()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-pyrup">
+<h2>gpu::pyrUp<a class="headerlink" href="#gpu-pyrup" title="Permalink to this headline">¶</a></h2>
+<p>Upsamples an image and then smoothes it.</p>
+<dl class="function">
+<dt id="void gpu::pyrUp(const GpuMat&amp; src, GpuMat&amp; dst, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">pyrUp</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::pyrUp(const GpuMat& src, GpuMat& dst, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image.</li>
+<li><strong>dst</strong> &#8211; Destination image. Will have <code class="docutils literal"><span class="pre">Size(src.cols*2,</span> <span class="pre">src.rows*2)</span></code> size and the same type as <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#void pyrUp(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)" title="void pyrUp(InputArray src, OutputArray dst, const Size&amp; dstsize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">pyrUp()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-blendlinear">
+<h2>gpu::blendLinear<a class="headerlink" href="#gpu-blendlinear" title="Permalink to this headline">¶</a></h2>
+<p>Performs linear blending of two images.</p>
+<dl class="function">
+<dt id="void gpu::blendLinear(const GpuMat&amp; img1, const GpuMat&amp; img2, const GpuMat&amp; weights1, const GpuMat&amp; weights2, GpuMat&amp; result, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">blendLinear</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>img1</strong>, const GpuMat&amp; <strong>img2</strong>, const GpuMat&amp; <strong>weights1</strong>, const GpuMat&amp; <strong>weights2</strong>, GpuMat&amp; <strong>result</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::blendLinear(const GpuMat& img1, const GpuMat& img2, const GpuMat& weights1, const GpuMat& weights2, GpuMat& result, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img1</strong> &#8211; First image. Supports only <code class="docutils literal"><span class="pre">CV_8U</span></code> and <code class="docutils literal"><span class="pre">CV_32F</span></code> depth.</li>
+<li><strong>img2</strong> &#8211; Second image. Must have the same size and the same type as <code class="docutils literal"><span class="pre">img1</span></code> .</li>
+<li><strong>weights1</strong> &#8211; Weights for first image. Must have tha same size as <code class="docutils literal"><span class="pre">img1</span></code> . Supports only <code class="docutils literal"><span class="pre">CV_32F</span></code> type.</li>
+<li><strong>weights2</strong> &#8211; Weights for second image. Must have tha same size as <code class="docutils literal"><span class="pre">img2</span></code> . Supports only <code class="docutils literal"><span class="pre">CV_32F</span></code> type.</li>
+<li><strong>result</strong> &#8211; Destination image.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-bilateralfilter">
+<h2>gpu::bilateralFilter<a class="headerlink" href="#gpu-bilateralfilter" title="Permalink to this headline">¶</a></h2>
+<p>Performs bilateral filtering of passed image</p>
+<dl class="function">
+<dt id="void gpu::bilateralFilter(const GpuMat&amp; src, GpuMat&amp; dst, int kernel_size, float sigma_color, float sigma_spatial, int borderMode, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">bilateralFilter</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>kernel_size</strong>, float <strong>sigma_color</strong>, float <strong>sigma_spatial</strong>, int <strong>borderMode</strong>=BORDER_DEFAULT, Stream&amp; <strong>stream</strong>=Stream::Null() <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::bilateralFilter(const GpuMat& src, GpuMat& dst, int kernel_size, float sigma_color, float sigma_spatial, int borderMode, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Supports only (channles != 2 &amp;&amp; depth() != CV_8S &amp;&amp; depth() != CV_32S &amp;&amp; depth() != CV_64F).</li>
+<li><strong>dst</strong> &#8211; Destination imagwe.</li>
+<li><strong>kernel_size</strong> &#8211; Kernel window size.</li>
+<li><strong>sigma_color</strong> &#8211; Filter sigma in the color space.</li>
+<li><strong>sigma_spatial</strong> &#8211; Filter sigma in the coordinate space.</li>
+<li><strong>borderMode</strong> &#8211; Border type. See <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a> for details. <code class="docutils literal"><span class="pre">BORDER_REFLECT101</span></code> , <code class="docutils literal"><span class="pre">BORDER_REPLICATE</span></code> , <code class="docutils literal"><span class="pre">BORDER_CONSTANT</span></code> , <code class="docutils literal"><span class="pre">BORDER_REFLECT</span></code> and <code class="docutils literal"><span class="pre">BORDER_WRAP</span></code> are supported for now.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/filtering.html#void bilateralFilter(InputArray src, OutputArray dst, int d, double sigmaColor, double sigmaSpace, int borderType)" title="void bilateralFilter(InputArray src, OutputArray dst, int d, double sigmaColor, double sigmaSpace, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">bilateralFilter()</span></code></a>,</p>
+</div>
+</div>
+<div class="section" id="gpu-nonlocalmeans">
+<h2>gpu::nonLocalMeans<a class="headerlink" href="#gpu-nonlocalmeans" title="Permalink to this headline">¶</a></h2>
+<p>Performs pure non local means denoising without any simplification, and thus it is not fast.</p>
+<dl class="function">
+<dt id="void gpu::nonLocalMeans(const GpuMat&amp; src, GpuMat&amp; dst, float h, int search_window , int block_size , int borderMode , Stream&amp; s)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">nonLocalMeans</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, float <strong>h</strong>, int <strong>search_window</strong>=21, int <strong>block_size</strong>=7, int <strong>borderMode</strong>=BORDER_DEFAULT, Stream&amp; <strong>s</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::nonLocalMeans(const GpuMat& src, GpuMat& dst, float h, int search_window , int block_size , int borderMode , Stream& s)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source image. Supports only CV_8UC1, CV_8UC2 and CV_8UC3.</li>
+<li><strong>dst</strong> &#8211; Destination image.</li>
+<li><strong>h</strong> &#8211; Filter sigma regulating filter strength for color.</li>
+<li><strong>search_window</strong> &#8211; Size of search window.</li>
+<li><strong>block_size</strong> &#8211; Size of block used for computing weights.</li>
+<li><strong>borderMode</strong> &#8211; Border type. See <a class="reference internal" href="../../imgproc/doc/filtering.html#int borderInterpolate(int p, int len, int borderType)" title="int borderInterpolate(int p, int len, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">borderInterpolate()</span></code></a> for details. <code class="docutils literal"><span class="pre">BORDER_REFLECT101</span></code> , <code class="docutils literal"><span class="pre">BORDER_REPLICATE</span></code> , <code class="docutils literal"><span class="pre">BORDER_CONSTANT</span></code> , <code class="docutils literal"><span class="pre">BORDER_REFLECT</span></code> and <code class="docutils literal"><span class="pre">BORDER_WRAP</span></code> are supported for now.</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../photo/doc/denoising.html#void fastNlMeansDenoising(InputArray src, OutputArray dst, float h, int templateWindowSize, int searchWindowSize)" title="void fastNlMeansDenoising(InputArray src, OutputArray dst, float h, int templateWindowSize, int searchWindowSize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">fastNlMeansDenoising()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-fastnonlocalmeansdenoising">
+<h2>gpu::FastNonLocalMeansDenoising<a class="headerlink" href="#gpu-fastnonlocalmeansdenoising" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::FastNonLocalMeansDenoising">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">FastNonLocalMeansDenoising</code><a class="headerlink" href="#gpu::FastNonLocalMeansDenoising" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">FastNonLocalMeansDenoising</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">//! Simple method, recommended for grayscale images (though it supports multichannel images)</span>
+    <span class="kt">void</span> <span class="n">simpleMethod</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">src</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">dst</span><span class="p">,</span> <span class="kt">float</span> <span class="n">h</span><span class="p">,</span> <span class="kt">int</span> <span class="n">search_window</span> <span class="o">=</span> <span class="mi">21</span><span class="p">,</span> <span class="kt">int</span> <span class="n">block_size</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">s</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">())</span>
+    <span class="c1">//! Processes luminance and color components separatelly</span>
+    <span class="kt">void</span> <span class="n">labMethod</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">src</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">dst</span><span class="p">,</span> <span class="kt">float</span> <span class="n">h_luminance</span><span class="p">,</span> <span class="kt">float</span> <span class="n">h_color</span><span class="p">,</span> <span class="kt">int</span> <span class="n">search_window</span> <span class="o">=</span> <span class="mi">21</span><span class="p">,</span> <span class="kt">int</span> <span class="n">block_size</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">s</span> <span class="o">=</span> <span class="n">Stream</span><span class="o">::</span><span class="n">Null</span><span class="p">())</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>The class implements fast approximate Non Local Means Denoising algorithm.</p>
+</div>
+<div class="section" id="gpu-fastnonlocalmeansdenoising-simplemethod">
+<h2>gpu::FastNonLocalMeansDenoising::simpleMethod()<a class="headerlink" href="#gpu-fastnonlocalmeansdenoising-simplemethod" title="Permalink to this headline">¶</a></h2>
+<p>Perform image denoising using Non-local Means Denoising algorithm <a class="reference external" href="http://www.ipol.im/pub/algo/bcm_non_local_means_denoising">http://www.ipol.im/pub/algo/bcm_non_local_means_denoising</a> with several computational optimizations. Noise expected to be a gaussian white noise</p>
+<dl class="function">
+<dt id="void gpu::FastNonLocalMeansDenoising::simpleMethod(const GpuMat&amp; src, GpuMat&amp; dst, float h, int search_window , int block_size , Stream&amp; s)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::FastNonLocalMeansDenoising::</code><code class="descname">simpleMethod</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, float <strong>h</strong>, int <strong>search_window</strong>=21, int <strong>block_size</strong>=7, Stream&amp; <strong>s</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::FastNonLocalMeansDenoising::simpleMethod(const GpuMat& src, GpuMat& dst, float h, int search_window , int block_size , Stream& s)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input 8-bit 1-channel, 2-channel or 3-channel image.</li>
+<li><strong>dst</strong> &#8211; Output image with the same size and type as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>h</strong> &#8211; Parameter regulating filter strength. Big h value perfectly removes noise but also removes image details, smaller h value preserves details but also preserves some noise</li>
+<li><strong>search_window</strong> &#8211; Size in pixels of the window that is used to compute weighted average for given pixel. Should be odd. Affect performance linearly: greater search_window - greater denoising time. Recommended value 21 pixels</li>
+<li><strong>block_size</strong> &#8211; Size in pixels of the template patch that is used to compute weights. Should be odd. Recommended value 7 pixels</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous invocations.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This function expected to be applied to grayscale images. For colored images look at <code class="docutils literal"><span class="pre">FastNonLocalMeansDenoising::labMethod</span></code>.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../photo/doc/denoising.html#void fastNlMeansDenoising(InputArray src, OutputArray dst, float h, int templateWindowSize, int searchWindowSize)" title="void fastNlMeansDenoising(InputArray src, OutputArray dst, float h, int templateWindowSize, int searchWindowSize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">fastNlMeansDenoising()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-fastnonlocalmeansdenoising-labmethod">
+<h2>gpu::FastNonLocalMeansDenoising::labMethod()<a class="headerlink" href="#gpu-fastnonlocalmeansdenoising-labmethod" title="Permalink to this headline">¶</a></h2>
+<p>Modification of <code class="docutils literal"><span class="pre">FastNonLocalMeansDenoising::simpleMethod</span></code> for color images</p>
+<dl class="function">
+<dt id="void gpu::FastNonLocalMeansDenoising::labMethod(const GpuMat&amp; src, GpuMat&amp; dst, float h_luminance, float h_color, int search_window , int block_size , Stream&amp; s)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::FastNonLocalMeansDenoising::</code><code class="descname">labMethod</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, float <strong>h_luminance</strong>, float <strong>h_color</strong>, int <strong>search_window</strong>=21, int <strong>block_size</strong>=7, Stream&amp; <strong>s</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::FastNonLocalMeansDenoising::labMethod(const GpuMat& src, GpuMat& dst, float h_luminance, float h_color, int search_window , int block_size , Stream& s)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Input 8-bit 3-channel image.</li>
+<li><strong>dst</strong> &#8211; Output image with the same size and type as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+<li><strong>h_luminance</strong> &#8211; Parameter regulating filter strength. Big h value perfectly removes noise but also removes image details, smaller h value preserves details but also preserves some noise</li>
+<li><strong>float</strong> &#8211; The same as h but for color components. For most images value equals 10 will be enought to remove colored noise and do not distort colors</li>
+<li><strong>search_window</strong> &#8211; Size in pixels of the window that is used to compute weighted average for given pixel. Should be odd. Affect performance linearly: greater search_window - greater denoising time. Recommended value 21 pixels</li>
+<li><strong>block_size</strong> &#8211; Size in pixels of the template patch that is used to compute weights. Should be odd. Recommended value 7 pixels</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous invocations.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function converts image to CIELAB colorspace and then separately denoise L and AB components with given h parameters using <code class="docutils literal"><span class="pre">FastNonLocalMeansDenoising::simpleMethod</span></code> function.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../photo/doc/denoising.html#void fastNlMeansDenoisingColored(InputArray src, OutputArray dst, float h, float hColor, int templateWindowSize, int searchWindowSize)" title="void fastNlMeansDenoisingColored(InputArray src, OutputArray dst, float h, float hColor, int templateWindowSize, int searchWindowSize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">fastNlMeansDenoisingColored()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-alphacomp">
+<h2>gpu::alphaComp<a class="headerlink" href="#gpu-alphacomp" title="Permalink to this headline">¶</a></h2>
+<p>Composites two images using alpha opacity values contained in each image.</p>
+<dl class="function">
+<dt id="void gpu::alphaComp(const GpuMat&amp; img1, const GpuMat&amp; img2, GpuMat&amp; dst, int alpha_op, Stream&amp; stream)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">alphaComp</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>img1</strong>, const GpuMat&amp; <strong>img2</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>alpha_op</strong>, Stream&amp; <strong>stream</strong>=Stream::Null()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::alphaComp(const GpuMat& img1, const GpuMat& img2, GpuMat& dst, int alpha_op, Stream& stream)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img1</strong> &#8211; First image. Supports <code class="docutils literal"><span class="pre">CV_8UC4</span></code> , <code class="docutils literal"><span class="pre">CV_16UC4</span></code> , <code class="docutils literal"><span class="pre">CV_32SC4</span></code> and <code class="docutils literal"><span class="pre">CV_32FC4</span></code> types.</li>
+<li><strong>img2</strong> &#8211; Second image. Must have the same size and the same type as <code class="docutils literal"><span class="pre">img1</span></code> .</li>
+<li><strong>dst</strong> &#8211; Destination image.</li>
+<li><strong>alpha_op</strong> &#8211; <p>Flag specifying the alpha-blending operation:</p>
+<ul>
+<li><strong>ALPHA_OVER</strong></li>
+<li><strong>ALPHA_IN</strong></li>
+<li><strong>ALPHA_OUT</strong></li>
+<li><strong>ALPHA_ATOP</strong></li>
+<li><strong>ALPHA_XOR</strong></li>
+<li><strong>ALPHA_PLUS</strong></li>
+<li><strong>ALPHA_OVER_PREMUL</strong></li>
+<li><strong>ALPHA_IN_PREMUL</strong></li>
+<li><strong>ALPHA_OUT_PREMUL</strong></li>
+<li><strong>ALPHA_ATOP_PREMUL</strong></li>
+<li><strong>ALPHA_XOR_PREMUL</strong></li>
+<li><strong>ALPHA_PLUS_PREMUL</strong></li>
+<li><strong>ALPHA_PREMUL</strong></li>
+</ul>
+</li>
+<li><strong>stream</strong> &#8211; Stream for the asynchronous version.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example demonstrating the use of alphaComp can be found at opencv_source_code/samples/gpu/alpha_comp.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="gpu-canny">
+<h2>gpu::Canny<a class="headerlink" href="#gpu-canny" title="Permalink to this headline">¶</a></h2>
+<p>Finds edges in an image using the <a class="reference internal" href="../../imgproc/doc/feature_detection.html#canny86" id="id1">[Canny86]</a> algorithm.</p>
+<dl class="function">
+<dt id="void gpu::Canny(const GpuMat&amp; image, GpuMat&amp; edges, double low_thresh, double high_thresh, int apperture_size , bool L2gradient)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">Canny</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>image</strong>, GpuMat&amp; <strong>edges</strong>, double <strong>low_thresh</strong>, double <strong>high_thresh</strong>, int <strong>apperture_size</strong>=3, bool <strong>L2gradient</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::Canny(const GpuMat& image, GpuMat& edges, double low_thresh, double high_thresh, int apperture_size , bool L2gradient)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::Canny(const GpuMat&amp; image, CannyBuf&amp; buf, GpuMat&amp; edges, double low_thresh, double high_thresh, int apperture_size , bool L2gradient)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">Canny</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>image</strong>, CannyBuf&amp; <strong>buf</strong>, GpuMat&amp; <strong>edges</strong>, double <strong>low_thresh</strong>, double <strong>high_thresh</strong>, int <strong>apperture_size</strong>=3, bool <strong>L2gradient</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::Canny(const GpuMat& image, CannyBuf& buf, GpuMat& edges, double low_thresh, double high_thresh, int apperture_size , bool L2gradient)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::Canny(const GpuMat&amp; dx, const GpuMat&amp; dy, GpuMat&amp; edges, double low_thresh, double high_thresh, bool L2gradient)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">Canny</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>dx</strong>, const GpuMat&amp; <strong>dy</strong>, GpuMat&amp; <strong>edges</strong>, double <strong>low_thresh</strong>, double <strong>high_thresh</strong>, bool <strong>L2gradient</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::Canny(const GpuMat& dx, const GpuMat& dy, GpuMat& edges, double low_thresh, double high_thresh, bool L2gradient)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::Canny(const GpuMat&amp; dx, const GpuMat&amp; dy, CannyBuf&amp; buf, GpuMat&amp; edges, double low_thresh, double high_thresh, bool L2gradient)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">Canny</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>dx</strong>, const GpuMat&amp; <strong>dy</strong>, CannyBuf&amp; <strong>buf</strong>, GpuMat&amp; <strong>edges</strong>, double <strong>low_thresh</strong>, double <strong>high_thresh</strong>, bool <strong>L2gradient</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::Canny(const GpuMat& dx, const GpuMat& dy, CannyBuf& buf, GpuMat& edges, double low_thresh, double high_thresh, bool L2gradient)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Single-channel 8-bit input image.</li>
+<li><strong>dx</strong> &#8211; First derivative of image in the vertical direction. Support only <code class="docutils literal"><span class="pre">CV_32S</span></code> type.</li>
+<li><strong>dy</strong> &#8211; First derivative of image in the horizontal direction. Support only <code class="docutils literal"><span class="pre">CV_32S</span></code> type.</li>
+<li><strong>edges</strong> &#8211; Output edge map. It has the same size and type as  <code class="docutils literal"><span class="pre">image</span></code> .</li>
+<li><strong>low_thresh</strong> &#8211; First threshold for the hysteresis procedure.</li>
+<li><strong>high_thresh</strong> &#8211; Second threshold for the hysteresis procedure.</li>
+<li><strong>apperture_size</strong> &#8211; Aperture size for the  <a class="reference internal" href="../../imgproc/doc/filtering.html#void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)" title="void Sobel(InputArray src, OutputArray dst, int ddepth, int dx, int dy, int ksize, double scale, double delta, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Sobel()</span></code></a>  operator.</li>
+<li><strong>L2gradient</strong> &#8211; Flag indicating whether a more accurate  <img class="math" src="../../../_images/math/c80021c104dcee49fc0f685e54711978dff03111.png" alt="L_2"/>  norm  <img class="math" src="../../../_images/math/be14865ba11769377900576b01b30a683f84d091.png" alt="=\sqrt{(dI/dx)^2 + (dI/dy)^2}"/>  should be used to compute the image gradient magnitude ( <code class="docutils literal"><span class="pre">L2gradient=true</span></code> ), or a faster default  <img class="math" src="../../../_images/math/99a8045a334a911a88e1d2e3805e17bd1d254c39.png" alt="L_1"/>  norm  <img class="math" src="../../../_images/math/50098b0fb8a0251ddd4ef15f5b037f7c61dccdb7.png" alt="=|dI/dx|+|dI/dy|"/>  is enough ( <code class="docutils literal"><span class="pre">L2gradient=false</span></code> ).</li>
+<li><strong>buf</strong> &#8211; Optional buffer to avoid extra memory allocations (for many calls with the same sizes).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/feature_detection.html#void Canny(InputArray image, OutputArray edges, double threshold1, double threshold2, int apertureSize, bool L2gradient)" title="void Canny(InputArray image, OutputArray edges, double threshold1, double threshold2, int apertureSize, bool L2gradient)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Canny()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-houghlines">
+<h2>gpu::HoughLines<a class="headerlink" href="#gpu-houghlines" title="Permalink to this headline">¶</a></h2>
+<p>Finds lines in a binary image using the classical Hough transform.</p>
+<dl class="function">
+<dt id="void gpu::HoughLines(const GpuMat&amp; src, GpuMat&amp; lines, float rho, float theta, int threshold, bool doSort , int maxLines)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">HoughLines</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>lines</strong>, float <strong>rho</strong>, float <strong>theta</strong>, int <strong>threshold</strong>, bool <strong>doSort</strong>=false, int <strong>maxLines</strong>=4096<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::HoughLines(const GpuMat& src, GpuMat& lines, float rho, float theta, int threshold, bool doSort , int maxLines)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::HoughLines(const GpuMat&amp; src, GpuMat&amp; lines, HoughLinesBuf&amp; buf, float rho, float theta, int threshold, bool doSort , int maxLines)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">HoughLines</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>lines</strong>, HoughLinesBuf&amp; <strong>buf</strong>, float <strong>rho</strong>, float <strong>theta</strong>, int <strong>threshold</strong>, bool <strong>doSort</strong>=false, int <strong>maxLines</strong>=4096<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::HoughLines(const GpuMat& src, GpuMat& lines, HoughLinesBuf& buf, float rho, float theta, int threshold, bool doSort , int maxLines)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; 8-bit, single-channel binary source image.</li>
+<li><strong>lines</strong> &#8211; Output vector of lines. Each line is represented by a two-element vector  <img class="math" src="../../../_images/math/9dade0b8c81764b99b163a1ac2ef198e74a32045.png" alt="(\rho, \theta)"/> .  <img class="math" src="../../../_images/math/2b6a0a1d67cf5985b52f3c718c5a9bc38c01e568.png" alt="\rho"/>  is the distance from the coordinate origin  <img class="math" src="../../../_images/math/efcf02ab5643293fb10588214b1ed71ead4edd4c.png" alt="(0,0)"/>  (top-left corner of the image).  <img class="math" src="../../../_images/math/f324df69016bcdbbc6a6b842f7cdb42d6b305049.png" alt="\theta"/>  is the line rotation angle in radians ( <img class="math" src="../../../_images/math/857b27e518060c40f2159daef1ca113faa081d3f.png" alt="0 \sim \textrm{vertical line}, \pi/2 \sim \textrm{horizontal line}"/> ).</li>
+<li><strong>rho</strong> &#8211; Distance resolution of the accumulator in pixels.</li>
+<li><strong>theta</strong> &#8211; Angle resolution of the accumulator in radians.</li>
+<li><strong>threshold</strong> &#8211; Accumulator threshold parameter. Only those lines are returned that get enough votes ( <img class="math" src="../../../_images/math/6104115b7991b520555581f27af6a3da5c991419.png" alt="&gt;\texttt{threshold}"/> ).</li>
+<li><strong>doSort</strong> &#8211; Performs lines sort by votes.</li>
+<li><strong>maxLines</strong> &#8211; Maximum number of output lines.</li>
+<li><strong>buf</strong> &#8211; Optional buffer to avoid extra memory allocations (for many calls with the same sizes).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/feature_detection.html#void HoughLines(InputArray image, OutputArray lines, double rho, double theta, int threshold, double srn, double stn)" title="void HoughLines(InputArray image, OutputArray lines, double rho, double theta, int threshold, double srn, double stn)"><code class="xref ocv ocv-func docutils literal"><span class="pre">HoughLines()</span></code></a></p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example using the Hough lines detector can be found at opencv_source_code/samples/gpu/houghlines.cpp</li>
+</ul>
+</div>
+</div>
+<div class="section" id="gpu-houghlinesdownload">
+<h2>gpu::HoughLinesDownload<a class="headerlink" href="#gpu-houghlinesdownload" title="Permalink to this headline">¶</a></h2>
+<p>Downloads results from <a class="reference internal" href="#void gpu::HoughLines(const GpuMat&amp; src, GpuMat&amp; lines, float rho, float theta, int threshold, bool doSort , int maxLines)" title="void gpu::HoughLines(const GpuMat&amp; src, GpuMat&amp; lines, float rho, float theta, int threshold, bool doSort , int maxLines)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::HoughLines()</span></code></a> to host memory.</p>
+<dl class="function">
+<dt id="void gpu::HoughLinesDownload(const GpuMat&amp; d_lines, OutputArray h_lines, OutputArray h_votes)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">HoughLinesDownload</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>d_lines</strong>, OutputArray <strong>h_lines</strong>, OutputArray <strong>h_votes</strong>=noArray()<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::HoughLinesDownload(const GpuMat& d_lines, OutputArray h_lines, OutputArray h_votes)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>d_lines</strong> &#8211; Result of <a class="reference internal" href="#void gpu::HoughLines(const GpuMat&amp; src, GpuMat&amp; lines, float rho, float theta, int threshold, bool doSort , int maxLines)" title="void gpu::HoughLines(const GpuMat&amp; src, GpuMat&amp; lines, float rho, float theta, int threshold, bool doSort , int maxLines)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::HoughLines()</span></code></a> .</li>
+<li><strong>h_lines</strong> &#8211; Output host array.</li>
+<li><strong>h_votes</strong> &#8211; Optional output array for line&#8217;s votes.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void gpu::HoughLines(const GpuMat&amp; src, GpuMat&amp; lines, float rho, float theta, int threshold, bool doSort , int maxLines)" title="void gpu::HoughLines(const GpuMat&amp; src, GpuMat&amp; lines, float rho, float theta, int threshold, bool doSort , int maxLines)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::HoughLines()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-houghcircles">
+<h2>gpu::HoughCircles<a class="headerlink" href="#gpu-houghcircles" title="Permalink to this headline">¶</a></h2>
+<p>Finds circles in a grayscale image using the Hough transform.</p>
+<dl class="function">
+<dt id="void gpu::HoughCircles(const GpuMat&amp; src, GpuMat&amp; circles, int method, float dp, float minDist, int cannyThreshold, int votesThreshold, int minRadius, int maxRadius, int maxCircles)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">HoughCircles</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>circles</strong>, int <strong>method</strong>, float <strong>dp</strong>, float <strong>minDist</strong>, int <strong>cannyThreshold</strong>, int <strong>votesThreshold</strong>, int <strong>minRadius</strong>, int <strong>maxRadius</strong>, int <strong>maxCircles</strong>=4096<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::HoughCircles(const GpuMat& src, GpuMat& circles, int method, float dp, float minDist, int cannyThreshold, int votesThreshold, int minRadius, int maxRadius, int maxCircles)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::HoughCircles(const GpuMat&amp; src, GpuMat&amp; circles, HoughCirclesBuf&amp; buf, int method, float dp, float minDist, int cannyThreshold, int votesThreshold, int minRadius, int maxRadius, int maxCircles)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">HoughCircles</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>circles</strong>, HoughCirclesBuf&amp; <strong>buf</strong>, int <strong>method</strong>, float <strong>dp</strong>, float <strong>minDist</strong>, int <strong>cannyThreshold</strong>, int <strong>votesThreshold</strong>, int <strong>minRadius</strong>, int <strong>maxRadius</strong>, int <strong>maxCircles</strong>=4096<span class="sig-paren">)</span><a class="headerlink" href="#void gpu::HoughCircles(const GpuMat& src, GpuMat& circles, HoughCirclesBuf& buf, int method, float dp, float minDist, int cannyThreshold, int votesThreshold, int minRadius, int maxRadius, int maxCircles)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; 8-bit, single-channel grayscale input image.</li>
+<li><strong>circles</strong> &#8211; Output vector of found circles. Each vector is encoded as a 3-element floating-point vector  <img class="math" src="../../../_images/math/0e71bb2a73928b62cb9c577dcb727bc51a361e85.png" alt="(x, y, radius)"/> .</li>
+<li><strong>method</strong> &#8211; Detection method to use. Currently, the only implemented method is  <code class="docutils literal"><span class="pre">CV_HOUGH_GRADIENT</span></code> , which is basically  <em>21HT</em> , described in  <a class="reference internal" href="../../imgproc/doc/feature_detection.html#yuen90" id="id2">[Yuen90]</a>.</li>
+<li><strong>dp</strong> &#8211; Inverse ratio of the accumulator resolution to the image resolution. For example, if  <code class="docutils literal"><span class="pre">dp=1</span></code> , the accumulator has the same resolution as the input image. If  <code class="docutils literal"><span class="pre">dp=2</span></code> , the accumulator has half as big width and height.</li>
+<li><strong>minDist</strong> &#8211; Minimum distance between the centers of the detected circles. If the parameter is too small, multiple neighbor circles may be falsely detected in addition to a true one. If it is too large, some circles may be missed.</li>
+<li><strong>cannyThreshold</strong> &#8211; The higher threshold of the two passed to  the <a class="reference internal" href="#void gpu::Canny(const GpuMat&amp; image, GpuMat&amp; edges, double low_thresh, double high_thresh, int apperture_size , bool L2gradient)" title="void gpu::Canny(const GpuMat&amp; image, GpuMat&amp; edges, double low_thresh, double high_thresh, int apperture_size , bool L2gradient)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::Canny()</span></code></a>  edge detector (the lower one is twice smaller).</li>
+<li><strong>votesThreshold</strong> &#8211; The accumulator threshold for the circle centers at the detection stage. The smaller it is, the more false circles may be detected.</li>
+<li><strong>minRadius</strong> &#8211; Minimum circle radius.</li>
+<li><strong>maxRadius</strong> &#8211; Maximum circle radius.</li>
+<li><strong>maxCircles</strong> &#8211; Maximum number of output circles.</li>
+<li><strong>buf</strong> &#8211; Optional buffer to avoid extra memory allocations (for many calls with the same sizes).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/feature_detection.html#void HoughCircles(InputArray image, OutputArray circles, int method, double dp, double minDist, double param1, double param2, int minRadius, int maxRadius)" title="void HoughCircles(InputArray image, OutputArray circles, int method, double dp, double minDist, double param1, double param2, int minRadius, int maxRadius)"><code class="xref ocv ocv-func docutils literal"><span class="pre">HoughCircles()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-houghcirclesdownload">
+<h2>gpu::HoughCirclesDownload<a class="headerlink" href="#gpu-houghcirclesdownload" title="Permalink to this headline">¶</a></h2>
+<p>Downloads results from <a class="reference internal" href="#void gpu::HoughCircles(const GpuMat&amp; src, GpuMat&amp; circles, int method, float dp, float minDist, int cannyThreshold, int votesThreshold, int minRadius, int maxRadius, int maxCircles)" title="void gpu::HoughCircles(const GpuMat&amp; src, GpuMat&amp; circles, int method, float dp, float minDist, int cannyThreshold, int votesThreshold, int minRadius, int maxRadius, int maxCircles)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::HoughCircles()</span></code></a> to host memory.</p>
+<dl class="function">
+<dt id="void gpu::HoughCirclesDownload(const GpuMat&amp; d_circles, OutputArray h_circles)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">HoughCirclesDownload</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>d_circles</strong>, OutputArray <strong>h_circles</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::HoughCirclesDownload(const GpuMat& d_circles, OutputArray h_circles)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>d_circles</strong> &#8211; Result of <a class="reference internal" href="#void gpu::HoughCircles(const GpuMat&amp; src, GpuMat&amp; circles, int method, float dp, float minDist, int cannyThreshold, int votesThreshold, int minRadius, int maxRadius, int maxCircles)" title="void gpu::HoughCircles(const GpuMat&amp; src, GpuMat&amp; circles, int method, float dp, float minDist, int cannyThreshold, int votesThreshold, int minRadius, int maxRadius, int maxCircles)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::HoughCircles()</span></code></a> .</li>
+<li><strong>h_circles</strong> &#8211; Output host array.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void gpu::HoughCircles(const GpuMat&amp; src, GpuMat&amp; circles, int method, float dp, float minDist, int cannyThreshold, int votesThreshold, int minRadius, int maxRadius, int maxCircles)" title="void gpu::HoughCircles(const GpuMat&amp; src, GpuMat&amp; circles, int method, float dp, float minDist, int cannyThreshold, int votesThreshold, int minRadius, int maxRadius, int maxCircles)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::HoughCircles()</span></code></a></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Image Processing</a><ul>
+<li><a class="reference internal" href="#gpu-meanshiftfiltering">gpu::meanShiftFiltering</a></li>
+<li><a class="reference internal" href="#gpu-meanshiftproc">gpu::meanShiftProc</a></li>
+<li><a class="reference internal" href="#gpu-meanshiftsegmentation">gpu::meanShiftSegmentation</a></li>
+<li><a class="reference internal" href="#gpu-integral">gpu::integral</a></li>
+<li><a class="reference internal" href="#gpu-sqrintegral">gpu::sqrIntegral</a></li>
+<li><a class="reference internal" href="#gpu-columnsum">gpu::columnSum</a></li>
+<li><a class="reference internal" href="#gpu-cornerharris">gpu::cornerHarris</a></li>
+<li><a class="reference internal" href="#gpu-cornermineigenval">gpu::cornerMinEigenVal</a></li>
+<li><a class="reference internal" href="#gpu-mulspectrums">gpu::mulSpectrums</a></li>
+<li><a class="reference internal" href="#gpu-mulandscalespectrums">gpu::mulAndScaleSpectrums</a></li>
+<li><a class="reference internal" href="#gpu-dft">gpu::dft</a></li>
+<li><a class="reference internal" href="#gpu-convolvebuf">gpu::ConvolveBuf</a></li>
+<li><a class="reference internal" href="#gpu-convolvebuf-create">gpu::ConvolveBuf::create</a></li>
+<li><a class="reference internal" href="#gpu-convolve">gpu::convolve</a></li>
+<li><a class="reference internal" href="#gpu-matchtemplatebuf">gpu::MatchTemplateBuf</a></li>
+<li><a class="reference internal" href="#gpu-matchtemplate">gpu::matchTemplate</a></li>
+<li><a class="reference internal" href="#gpu-remap">gpu::remap</a></li>
+<li><a class="reference internal" href="#gpu-cvtcolor">gpu::cvtColor</a></li>
+<li><a class="reference internal" href="#gpu-swapchannels">gpu::swapChannels</a></li>
+<li><a class="reference internal" href="#gpu-threshold">gpu::threshold</a></li>
+<li><a class="reference internal" href="#gpu-resize">gpu::resize</a></li>
+<li><a class="reference internal" href="#gpu-warpaffine">gpu::warpAffine</a></li>
+<li><a class="reference internal" href="#gpu-buildwarpaffinemaps">gpu::buildWarpAffineMaps</a></li>
+<li><a class="reference internal" href="#gpu-warpperspective">gpu::warpPerspective</a></li>
+<li><a class="reference internal" href="#gpu-buildwarpperspectivemaps">gpu::buildWarpPerspectiveMaps</a></li>
+<li><a class="reference internal" href="#gpu-rotate">gpu::rotate</a></li>
+<li><a class="reference internal" href="#gpu-copymakeborder">gpu::copyMakeBorder</a></li>
+<li><a class="reference internal" href="#gpu-rectstddev">gpu::rectStdDev</a></li>
+<li><a class="reference internal" href="#gpu-evenlevels">gpu::evenLevels</a></li>
+<li><a class="reference internal" href="#gpu-histeven">gpu::histEven</a></li>
+<li><a class="reference internal" href="#gpu-histrange">gpu::histRange</a></li>
+<li><a class="reference internal" href="#gpu-calchist">gpu::calcHist</a></li>
+<li><a class="reference internal" href="#gpu-equalizehist">gpu::equalizeHist</a></li>
+<li><a class="reference internal" href="#gpu-buildwarpplanemaps">gpu::buildWarpPlaneMaps</a></li>
+<li><a class="reference internal" href="#gpu-buildwarpcylindricalmaps">gpu::buildWarpCylindricalMaps</a></li>
+<li><a class="reference internal" href="#gpu-buildwarpsphericalmaps">gpu::buildWarpSphericalMaps</a></li>
+<li><a class="reference internal" href="#gpu-pyrdown">gpu::pyrDown</a></li>
+<li><a class="reference internal" href="#gpu-pyrup">gpu::pyrUp</a></li>
+<li><a class="reference internal" href="#gpu-blendlinear">gpu::blendLinear</a></li>
+<li><a class="reference internal" href="#gpu-bilateralfilter">gpu::bilateralFilter</a></li>
+<li><a class="reference internal" href="#gpu-nonlocalmeans">gpu::nonLocalMeans</a></li>
+<li><a class="reference internal" href="#gpu-fastnonlocalmeansdenoising">gpu::FastNonLocalMeansDenoising</a></li>
+<li><a class="reference internal" href="#gpu-fastnonlocalmeansdenoising-simplemethod">gpu::FastNonLocalMeansDenoising::simpleMethod()</a></li>
+<li><a class="reference internal" href="#gpu-fastnonlocalmeansdenoising-labmethod">gpu::FastNonLocalMeansDenoising::labMethod()</a></li>
+<li><a class="reference internal" href="#gpu-alphacomp">gpu::alphaComp</a></li>
+<li><a class="reference internal" href="#gpu-canny">gpu::Canny</a></li>
+<li><a class="reference internal" href="#gpu-houghlines">gpu::HoughLines</a></li>
+<li><a class="reference internal" href="#gpu-houghlinesdownload">gpu::HoughLinesDownload</a></li>
+<li><a class="reference internal" href="#gpu-houghcircles">gpu::HoughCircles</a></li>
+<li><a class="reference internal" href="#gpu-houghcirclesdownload">gpu::HoughCirclesDownload</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="per_element_operations.html"
+                        title="previous chapter">Per-element Operations</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="matrix_reductions.html"
+                        title="next chapter">Matrix Reductions</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/gpu/doc/image_processing.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="matrix_reductions.html" title="Matrix Reductions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="per_element_operations.html" title="Per-element Operations"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="gpu.html" >gpu. GPU-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

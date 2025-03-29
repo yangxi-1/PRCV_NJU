@@ -1,0 +1,714 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>core. The Core Functionality &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="OpenCV API Reference" href="../../refman.html" />
+    <link rel="next" title="Basic Structures" href="basic_structures.html" />
+    <link rel="prev" title="Introduction" href="intro.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="basic_structures.html" title="Basic Structures"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" accesskey="U">OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="core-the-core-functionality">
+<h1>core. The Core Functionality<a class="headerlink" href="#core-the-core-functionality" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="basic_structures.html">Basic Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#datatype">DataType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#point">Point_</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#point3">Point3_</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#size">Size_</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#rect">Rect_</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#rotatedrect">RotatedRect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#termcriteria">TermCriteria</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#termcriteria-termcriteria">TermCriteria::TermCriteria</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#termcriteria-operator-cvtermcriteria">TermCriteria::operator CvTermCriteria</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#matx">Matx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#vec">Vec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#scalar">Scalar_</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#range">Range</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#ptr">Ptr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#ptr-ptr">Ptr::Ptr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#id2">Ptr::~Ptr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#ptr-operator">Ptr::operator =</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#ptr-addref">Ptr::addref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#ptr-release">Ptr::release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#ptr-delete-obj">Ptr::delete_obj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#ptr-empty">Ptr::empty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#id3">Ptr::operator -&gt;</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#ptr-operator-tp">Ptr::operator _Tp*</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat">Mat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#matrix-expressions">Matrix Expressions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-mat">Mat::Mat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#id4">Mat::~Mat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-operator">Mat::operator =</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-row">Mat::row</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-col">Mat::col</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-rowrange">Mat::rowRange</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-colrange">Mat::colRange</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-diag">Mat::diag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-clone">Mat::clone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-copyto">Mat::copyTo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-convertto">Mat::convertTo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-assignto">Mat::assignTo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-setto">Mat::setTo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-reshape">Mat::reshape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-t">Mat::t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-inv">Mat::inv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-mul">Mat::mul</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-cross">Mat::cross</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-dot">Mat::dot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-zeros">Mat::zeros</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-ones">Mat::ones</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-eye">Mat::eye</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-create">Mat::create</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-addref">Mat::addref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-release">Mat::release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-resize">Mat::resize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-reserve">Mat::reserve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-push-back">Mat::push_back</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-pop-back">Mat::pop_back</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-locateroi">Mat::locateROI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-adjustroi">Mat::adjustROI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#id6">Mat::operator()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-operator-cvmat">Mat::operator CvMat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-operator-iplimage">Mat::operator IplImage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-total">Mat::total</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-iscontinuous">Mat::isContinuous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-elemsize">Mat::elemSize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-elemsize1">Mat::elemSize1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-type">Mat::type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-depth">Mat::depth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-channels">Mat::channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-step1">Mat::step1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-size">Mat::size</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-empty">Mat::empty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-ptr">Mat::ptr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-at">Mat::at</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-begin">Mat::begin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#mat-end">Mat::end</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#id7">Mat_</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#inputarray">InputArray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#outputarray">OutputArray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#narymatiterator">NAryMatIterator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat">SparseMat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-sparsemat">SparseMat::SparseMat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#id8">SparseMat::~SparseMat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-operator">SparseMat::operator=</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-clone">SparseMat::clone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-copyto">SparseMat::copyTo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparcemat-convertto">SparceMat::convertTo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-create">SparseMat:create</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-clear">SparseMat::clear</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-addref">SparseMat::addref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-release">SparseMat::release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-cvsparsemat">SparseMat::CvSparseMat *</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-elemsize">SparseMat::elemSize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-elemsize1">SparseMat::elemSize1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-type">SparseMat::type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-depth">SparseMat::depth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-channels">SparseMat::channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-size">SparseMat::size</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-dims">SparseMat::dims</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-nzcount">SparseMat::nzcount</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-hash">SparseMat::hash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-ptr">SparseMat::ptr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#sparsemat-erase">SparseMat::erase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#id9">SparseMat_</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#algorithm">Algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#algorithm-name">Algorithm::name</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#algorithm-get">Algorithm::get</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#algorithm-set">Algorithm::set</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#algorithm-write">Algorithm::write</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#algorithm-read">Algorithm::read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#algorithm-getlist">Algorithm::getList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#algorithm-create">Algorithm::create</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_structures.html#creating-own-algorithms">Creating Own Algorithms</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="old_basic_structures.html">Basic C Structures and Operations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#cvpoint">CvPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#cvpoint2d32f">CvPoint2D32f</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#cvpoint3d32f">CvPoint3D32f</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#cvpoint2d64f">CvPoint2D64f</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#cvpoint3d64f">CvPoint3D64f</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#cvsize">CvSize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#cvsize2d32f">CvSize2D32f</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#cvrect">CvRect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#cvbox2d">CvBox2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#cvscalar">CvScalar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#cvtermcriteria">CvTermCriteria</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#cvmat">CvMat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#cvmatnd">CvMatND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#cvsparsemat">CvSparseMat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#iplimage">IplImage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#cvarr">CvArr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#clearnd">ClearND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#cloneimage">CloneImage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#clonemat">CloneMat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#clonematnd">CloneMatND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#clonesparsemat">CloneSparseMat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#convertscale">ConvertScale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#copy">Copy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#createdata">CreateData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#createimage">CreateImage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#createimageheader">CreateImageHeader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#createmat">CreateMat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#creatematheader">CreateMatHeader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#creatematnd">CreateMatND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#creatematndheader">CreateMatNDHeader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#createsparsemat">CreateSparseMat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#crossproduct">CrossProduct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#dotproduct">DotProduct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#get-d">Get?D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#getcol-s">GetCol(s)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#getdiag">GetDiag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#getdims">GetDims</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#getdimsize">GetDimSize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#getelemtype">GetElemType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#getimage">GetImage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#getimagecoi">GetImageCOI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#getimageroi">GetImageROI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#getmat">GetMat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#getnextsparsenode">GetNextSparseNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#getrawdata">GetRawData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#getreal-d">GetReal?D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#getrow-s">GetRow(s)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#getsize">GetSize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#getsubrect">GetSubRect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#decrefdata">DecRefData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#increfdata">IncRefData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#initimageheader">InitImageHeader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#initmatheader">InitMatHeader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#initmatndheader">InitMatNDHeader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#initsparsematiterator">InitSparseMatIterator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#mat">Mat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#ptr-d">Ptr?D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#releasedata">ReleaseData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#releaseimage">ReleaseImage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#releaseimageheader">ReleaseImageHeader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#releasemat">ReleaseMat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#releasematnd">ReleaseMatND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#releasesparsemat">ReleaseSparseMat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#resetimageroi">ResetImageROI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#reshape">Reshape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#reshapematnd">ReshapeMatND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#set">Set</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#set-d">Set?D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#setdata">SetData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#setimagecoi">SetImageCOI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#setimageroi">SetImageROI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#setreal-d">SetReal?D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#setzero">SetZero</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#mget">mGet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#mset">mSet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#setiplallocators">SetIPLAllocators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#rng">RNG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#randarr">RandArr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#randint">RandInt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#randreal">RandReal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_basic_structures.html#fromarray">fromarray</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dynamic_structures.html">Dynamic Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#cvmemstorage">CvMemStorage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#cvmemblock">CvMemBlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#cvmemstoragepos">CvMemStoragePos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#cvseq">CvSeq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#cvslice">CvSlice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#cvset">CvSet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#cvsetelem">CvSetElem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#cvgraph">CvGraph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#cvgraphvtx">CvGraphVtx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#cvgraphedge">CvGraphEdge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#cvgraphscanner">CvGraphScanner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#cvtreenodeiterator">CvTreeNodeIterator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#cleargraph">ClearGraph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#clearmemstorage">ClearMemStorage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#clearseq">ClearSeq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#clearset">ClearSet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#clonegraph">CloneGraph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#cloneseq">CloneSeq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#createchildmemstorage">CreateChildMemStorage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#creategraph">CreateGraph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#creategraphscanner">CreateGraphScanner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#creatememstorage">CreateMemStorage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#createseq">CreateSeq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#createset">CreateSet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#cvtseqtoarray">CvtSeqToArray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#endwriteseq">EndWriteSeq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#findgraphedge">FindGraphEdge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#findgraphedgebyptr">FindGraphEdgeByPtr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#flushseqwriter">FlushSeqWriter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#getgraphvtx">GetGraphVtx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#getseqelem">GetSeqElem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#getseqreaderpos">GetSeqReaderPos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#getsetelem">GetSetElem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#graphaddedge">GraphAddEdge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#graphaddedgebyptr">GraphAddEdgeByPtr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#graphaddvtx">GraphAddVtx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#graphedgeidx">GraphEdgeIdx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#graphremoveedge">GraphRemoveEdge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#graphremoveedgebyptr">GraphRemoveEdgeByPtr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#graphremovevtx">GraphRemoveVtx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#graphremovevtxbyptr">GraphRemoveVtxByPtr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#graphvtxdegree">GraphVtxDegree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#graphvtxdegreebyptr">GraphVtxDegreeByPtr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#graphvtxidx">GraphVtxIdx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#inittreenodeiterator">InitTreeNodeIterator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#insertnodeintotree">InsertNodeIntoTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#makeseqheaderforarray">MakeSeqHeaderForArray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#memstoragealloc">MemStorageAlloc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#memstorageallocstring">MemStorageAllocString</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#nextgraphitem">NextGraphItem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#nexttreenode">NextTreeNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#prevtreenode">PrevTreeNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#releasegraphscanner">ReleaseGraphScanner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#releasememstorage">ReleaseMemStorage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#restorememstoragepos">RestoreMemStoragePos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#savememstoragepos">SaveMemStoragePos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#seqelemidx">SeqElemIdx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#seqinsert">SeqInsert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#seqinsertslice">SeqInsertSlice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#seqinvert">SeqInvert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#seqpop">SeqPop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#seqpopfront">SeqPopFront</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#seqpopmulti">SeqPopMulti</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#seqpush">SeqPush</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#seqpushfront">SeqPushFront</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#seqpushmulti">SeqPushMulti</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#seqremove">SeqRemove</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#seqremoveslice">SeqRemoveSlice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#seqsearch">SeqSearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#seqslice">SeqSlice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#seqsort">SeqSort</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#setadd">SetAdd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#setnew">SetNew</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#setremove">SetRemove</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#setremovebyptr">SetRemoveByPtr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#setseqblocksize">SetSeqBlockSize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#setseqreaderpos">SetSeqReaderPos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#startappendtoseq">StartAppendToSeq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#startreadseq">StartReadSeq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#startwriteseq">StartWriteSeq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_structures.html#treetonodeseq">TreeToNodeSeq</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="operations_on_arrays.html">Operations on Arrays</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#abs">abs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#absdiff">absdiff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#add">add</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#addweighted">addWeighted</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#bitwise-and">bitwise_and</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#bitwise-not">bitwise_not</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#bitwise-or">bitwise_or</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#bitwise-xor">bitwise_xor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#calccovarmatrix">calcCovarMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#carttopolar">cartToPolar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#checkrange">checkRange</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#compare">compare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#completesymm">completeSymm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#convertscaleabs">convertScaleAbs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#countnonzero">countNonZero</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#cvarrtomat">cvarrToMat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#dct">dct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#dft">dft</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#divide">divide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#determinant">determinant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#eigen">eigen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#exp">exp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#extractimagecoi">extractImageCOI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#insertimagecoi">insertImageCOI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#flip">flip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#gemm">gemm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#getconvertelem">getConvertElem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#getoptimaldftsize">getOptimalDFTSize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#idct">idct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#idft">idft</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#inrange">inRange</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#invert">invert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#log">log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#lut">LUT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#magnitude">magnitude</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#mahalanobis">Mahalanobis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#max">max</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#mean">mean</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#meanstddev">meanStdDev</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#merge">merge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#min">min</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#minmaxidx">minMaxIdx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#minmaxloc">minMaxLoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#mixchannels">mixChannels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#mulspectrums">mulSpectrums</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#multiply">multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#multransposed">mulTransposed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#norm">norm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#normalize">normalize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#pca">PCA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#pca-pca">PCA::PCA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#pca-operator">PCA::operator ()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#pca-project">PCA::project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#pca-backproject">PCA::backProject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#perspectivetransform">perspectiveTransform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#phase">phase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#polartocart">polarToCart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#pow">pow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#rng">RNG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#rng-rng">RNG::RNG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#rng-next">RNG::next</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#rng-operator-t">RNG::operator T</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#rng-operator">RNG::operator ()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#rng-uniform">RNG::uniform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#rng-gaussian">RNG::gaussian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#rng-fill">RNG::fill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#randu">randu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#randn">randn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#randshuffle">randShuffle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#reduce">reduce</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#repeat">repeat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#scaleadd">scaleAdd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#setidentity">setIdentity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#solve">solve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#solvecubic">solveCubic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#solvepoly">solvePoly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#sort">sort</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#sortidx">sortIdx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#split">split</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#sqrt">sqrt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#subtract">subtract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#svd">SVD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#svd-svd">SVD::SVD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#svd-operator">SVD::operator ()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#svd-compute">SVD::compute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#svd-solvez">SVD::solveZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#svd-backsubst">SVD::backSubst</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#sum">sum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#therng">theRNG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#trace">trace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#transform">transform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations_on_arrays.html#transpose">transpose</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="drawing_functions.html">Drawing Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="drawing_functions.html#circle">circle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drawing_functions.html#clipline">clipLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drawing_functions.html#ellipse">ellipse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drawing_functions.html#ellipse2poly">ellipse2Poly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drawing_functions.html#fillconvexpoly">fillConvexPoly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drawing_functions.html#fillpoly">fillPoly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drawing_functions.html#gettextsize">getTextSize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drawing_functions.html#initfont">InitFont</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drawing_functions.html#line">line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drawing_functions.html#arrowedline">arrowedLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drawing_functions.html#lineiterator">LineIterator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drawing_functions.html#rectangle">rectangle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drawing_functions.html#polylines">polylines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drawing_functions.html#puttext">putText</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="xml_yaml_persistence.html">XML/YAML Persistence</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#xml-yaml-file-storages-writing-to-a-file-storage">XML/YAML file storages. Writing to a file storage.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#reading-data-from-a-file-storage">Reading data from a file storage.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filestorage">FileStorage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filestorage-filestorage">FileStorage::FileStorage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filestorage-open">FileStorage::open</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filestorage-isopened">FileStorage::isOpened</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filestorage-release">FileStorage::release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filestorage-releaseandgetstring">FileStorage::releaseAndGetString</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filestorage-getfirsttoplevelnode">FileStorage::getFirstTopLevelNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filestorage-root">FileStorage::root</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filestorage-operator">FileStorage::operator[]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#id1">FileStorage::operator*</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filestorage-writeraw">FileStorage::writeRaw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filestorage-writeobj">FileStorage::writeObj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filestorage-getdefaultobjectname">FileStorage::getDefaultObjectName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#operator">operator &lt;&lt;</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#id2">operator &gt;&gt;</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode">FileNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-filenode">FileNode::FileNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-operator">FileNode::operator[]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-type">FileNode::type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-empty">FileNode::empty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-isnone">FileNode::isNone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-isseq">FileNode::isSeq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-ismap">FileNode::isMap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-isint">FileNode::isInt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-isreal">FileNode::isReal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-isstring">FileNode::isString</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-isnamed">FileNode::isNamed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-name">FileNode::name</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-size">FileNode::size</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-operator-int">FileNode::operator int</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-operator-float">FileNode::operator float</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-operator-double">FileNode::operator double</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-operator-string">FileNode::operator string</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#id3">FileNode::operator*</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-begin">FileNode::begin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-end">FileNode::end</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-readraw">FileNode::readRaw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenode-readobj">FileNode::readObj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenodeiterator">FileNodeIterator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenodeiterator-filenodeiterator">FileNodeIterator::FileNodeIterator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenodeiterator-operator">FileNodeIterator::operator*</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#id4">FileNodeIterator::operator-&gt;</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#id5">FileNodeIterator::operator ++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#id6">FileNodeIterator::operator &#8211;</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#id7">FileNodeIterator::operator +=</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#id8">FileNodeIterator::operator -=</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xml_yaml_persistence.html#filenodeiterator-readraw">FileNodeIterator::readRaw</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="old_xml_yaml_persistence.html">XML/YAML Persistence (C API)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#cvfilestorage">CvFileStorage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#cvfilenode">CvFileNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#cvattrlist">CvAttrList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#cvtypeinfo">CvTypeInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#clone">Clone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#endwritestruct">EndWriteStruct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#findtype">FindType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#firsttype">FirstType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#getfilenode">GetFileNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#getfilenodebyname">GetFileNodeByName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#getfilenodename">GetFileNodeName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#gethashedkey">GetHashedKey</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#getrootfilenode">GetRootFileNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#load">Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#openfilestorage">OpenFileStorage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#read">Read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#readbyname">ReadByName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#readint">ReadInt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#readintbyname">ReadIntByName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#readrawdata">ReadRawData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#readrawdataslice">ReadRawDataSlice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#readreal">ReadReal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#readrealbyname">ReadRealByName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#readstring">ReadString</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#readstringbyname">ReadStringByName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#registertype">RegisterType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#release">Release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#releasefilestorage">ReleaseFileStorage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#save">Save</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#startnextstream">StartNextStream</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#startreadrawdata">StartReadRawData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#startwritestruct">StartWriteStruct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#typeof">TypeOf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#unregistertype">UnregisterType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#write">Write</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#writecomment">WriteComment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#writefilenode">WriteFileNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#writeint">WriteInt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#writerawdata">WriteRawData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#writereal">WriteReal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="old_xml_yaml_persistence.html#writestring">WriteString</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="clustering.html">Clustering</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="clustering.html#kmeans">kmeans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clustering.html#partition">partition</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="utility_and_system_functions_and_macros.html">Utility and System Functions and Macros</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#alignptr">alignPtr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#alignsize">alignSize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#allocate">allocate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#deallocate">deallocate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#fastatan2">fastAtan2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#cuberoot">cubeRoot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#ceil">Ceil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#floor">Floor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#round">Round</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#isinf">IsInf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#isnan">IsNaN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#cv-assert">CV_Assert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#error">error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#exception">Exception</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#fastmalloc">fastMalloc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#fastfree">fastFree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#format">format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#getbuildinformation">getBuildInformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#checkhardwaresupport">checkHardwareSupport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#getnumberofcpus">getNumberOfCPUs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#getnumthreads">getNumThreads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#getthreadnum">getThreadNum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#gettickcount">getTickCount</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#gettickfrequency">getTickFrequency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#getcputickcount">getCPUTickCount</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#saturate-cast">saturate_cast</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#setnumthreads">setNumThreads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#setuseoptimized">setUseOptimized</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_and_system_functions_and_macros.html#useoptimized">useOptimized</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="opengl_interop.html">OpenGL interoperability</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#general-information">General Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-buffer">ogl::Buffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-buffer-target">ogl::Buffer::Target</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-buffer-buffer">ogl::Buffer::Buffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-buffer-create">ogl::Buffer::create</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-buffer-release">ogl::Buffer::release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-buffer-setautorelease">ogl::Buffer::setAutoRelease</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-buffer-copyfrom">ogl::Buffer::copyFrom</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-buffer-copyto">ogl::Buffer::copyTo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-buffer-clone">ogl::Buffer::clone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-buffer-bind">ogl::Buffer::bind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-buffer-unbind">ogl::Buffer::unbind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-buffer-maphost">ogl::Buffer::mapHost</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-buffer-unmaphost">ogl::Buffer::unmapHost</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-buffer-mapdevice">ogl::Buffer::mapDevice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-buffer-unmapdevice">ogl::Buffer::unmapDevice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-texture2d">ogl::Texture2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-texture2d-format">ogl::Texture2D::Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-texture2d-texture2d">ogl::Texture2D::Texture2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-texture2d-create">ogl::Texture2D::create</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-texture2d-release">ogl::Texture2D::release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-texture2d-setautorelease">ogl::Texture2D::setAutoRelease</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-texture2d-copyfrom">ogl::Texture2D::copyFrom</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-texture2d-copyto">ogl::Texture2D::copyTo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-texture2d-bind">ogl::Texture2D::bind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-arrays">ogl::Arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-arrays-setvertexarray">ogl::Arrays::setVertexArray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-arrays-resetvertexarray">ogl::Arrays::resetVertexArray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-arrays-setcolorarray">ogl::Arrays::setColorArray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-arrays-resetcolorarray">ogl::Arrays::resetColorArray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-arrays-setnormalarray">ogl::Arrays::setNormalArray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-arrays-resetnormalarray">ogl::Arrays::resetNormalArray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-arrays-settexcoordarray">ogl::Arrays::setTexCoordArray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-arrays-resettexcoordarray">ogl::Arrays::resetTexCoordArray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-arrays-release">ogl::Arrays::release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-arrays-setautorelease">ogl::Arrays::setAutoRelease</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-arrays-bind">ogl::Arrays::bind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-arrays-size">ogl::Arrays::size</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#ogl-render">ogl::render</a></li>
+<li class="toctree-l2"><a class="reference internal" href="opengl_interop.html#gpu-setgldevice">gpu::setGlDevice</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="intro.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="basic_structures.html"
+                        title="next chapter">Basic Structures</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/core/doc/core.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="basic_structures.html" title="Basic Structures"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

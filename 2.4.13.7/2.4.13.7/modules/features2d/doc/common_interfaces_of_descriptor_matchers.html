@@ -1,0 +1,538 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Common Interfaces of Descriptor Matchers &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="features2d. 2D Features Framework" href="features2d.html" />
+    <link rel="next" title="Common Interfaces of Generic Descriptor Matchers" href="common_interfaces_of_generic_descriptor_matchers.html" />
+    <link rel="prev" title="Common Interfaces of Descriptor Extractors" href="common_interfaces_of_descriptor_extractors.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="common_interfaces_of_generic_descriptor_matchers.html" title="Common Interfaces of Generic Descriptor Matchers"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="common_interfaces_of_descriptor_extractors.html" title="Common Interfaces of Descriptor Extractors"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="features2d.html" accesskey="U">features2d. 2D Features Framework</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="common-interfaces-of-descriptor-matchers">
+<h1>Common Interfaces of Descriptor Matchers<a class="headerlink" href="#common-interfaces-of-descriptor-matchers" title="Permalink to this headline">¶</a></h1>
+<p>Matchers of keypoint descriptors in OpenCV have wrappers with a common interface that enables you to easily switch
+between different algorithms solving the same problem. This section is devoted to matching descriptors
+that are represented as vectors in a multidimensional space. All objects that implement <code class="docutils literal"><span class="pre">vector</span></code>
+descriptor matchers inherit the
+<a class="reference internal" href="#DescriptorMatcher : public Algorithm" title="class DescriptorMatcher : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">DescriptorMatcher</span></code></a> interface.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example explaining keypoint matching can be found at opencv_source_code/samples/cpp/descriptor_extractor_matcher.cpp</li>
+<li>An example on descriptor matching evaluation can be found at opencv_source_code/samples/cpp/detector_descriptor_matcher_evaluation.cpp</li>
+<li>An example on one to many image matching can be found at opencv_source_code/samples/cpp/matching_to_many_images.cpp</li>
+</ul>
+</div>
+<div class="section" id="dmatch">
+<h2>DMatch<a class="headerlink" href="#dmatch" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="DMatch">
+<em class="property">struct </em><code class="descname">DMatch</code><a class="headerlink" href="#DMatch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class for matching keypoint descriptors: query descriptor index,
+train descriptor index, train image index, and distance between descriptors.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">DMatch</span>
+<span class="p">{</span>
+    <span class="n">DMatch</span><span class="p">()</span> <span class="o">:</span> <span class="n">queryIdx</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">trainIdx</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">imgIdx</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+               <span class="n">distance</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">())</span> <span class="p">{}</span>
+    <span class="n">DMatch</span><span class="p">(</span> <span class="kt">int</span> <span class="n">_queryIdx</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_trainIdx</span><span class="p">,</span> <span class="kt">float</span> <span class="n">_distance</span> <span class="p">)</span> <span class="o">:</span>
+            <span class="n">queryIdx</span><span class="p">(</span><span class="n">_queryIdx</span><span class="p">),</span> <span class="n">trainIdx</span><span class="p">(</span><span class="n">_trainIdx</span><span class="p">),</span> <span class="n">imgIdx</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">distance</span><span class="p">(</span><span class="n">_distance</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="n">DMatch</span><span class="p">(</span> <span class="kt">int</span> <span class="n">_queryIdx</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_trainIdx</span><span class="p">,</span> <span class="kt">int</span> <span class="n">_imgIdx</span><span class="p">,</span> <span class="kt">float</span> <span class="n">_distance</span> <span class="p">)</span> <span class="o">:</span>
+            <span class="n">queryIdx</span><span class="p">(</span><span class="n">_queryIdx</span><span class="p">),</span> <span class="n">trainIdx</span><span class="p">(</span><span class="n">_trainIdx</span><span class="p">),</span> <span class="n">imgIdx</span><span class="p">(</span><span class="n">_imgIdx</span><span class="p">),</span>
+            <span class="n">distance</span><span class="p">(</span><span class="n">_distance</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="kt">int</span> <span class="n">queryIdx</span><span class="p">;</span> <span class="c1">// query descriptor index</span>
+    <span class="kt">int</span> <span class="n">trainIdx</span><span class="p">;</span> <span class="c1">// train descriptor index</span>
+    <span class="kt">int</span> <span class="n">imgIdx</span><span class="p">;</span>   <span class="c1">// train image index</span>
+
+    <span class="kt">float</span> <span class="n">distance</span><span class="p">;</span>
+
+    <span class="c1">// less is better</span>
+    <span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span> <span class="k">const</span> <span class="n">DMatch</span> <span class="o">&amp;</span><span class="n">m</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="descriptormatcher">
+<h2>DescriptorMatcher<a class="headerlink" href="#descriptormatcher" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="DescriptorMatcher : public Algorithm">
+<em class="property">class </em><code class="descname">DescriptorMatcher</code> : <em class="property">public</em> <code class="descname">Algorithm</code><a class="headerlink" href="#DescriptorMatcher : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Abstract base class for matching keypoint descriptors. It has two groups
+of match methods: for matching descriptors of an image with another image or
+with an image set.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">DescriptorMatcher</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">DescriptorMatcher</span><span class="p">();</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">add</span><span class="p">(</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;&amp;</span> <span class="n">descriptors</span> <span class="p">);</span>
+
+    <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;&amp;</span> <span class="n">getTrainDescriptors</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">clear</span><span class="p">();</span>
+    <span class="kt">bool</span> <span class="nf">empty</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">isMaskSupported</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">train</span><span class="p">();</span>
+
+    <span class="cm">/*</span>
+<span class="cm">     * Group of methods to match descriptors from an image pair.</span>
+<span class="cm">     */</span>
+    <span class="kt">void</span> <span class="nf">match</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">queryDescriptors</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainDescriptors</span><span class="p">,</span>
+                <span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">mask</span><span class="o">=</span><span class="n">Mat</span><span class="p">()</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="nf">knnMatch</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">queryDescriptors</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainDescriptors</span><span class="p">,</span>
+                   <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">,</span>
+                   <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">mask</span><span class="o">=</span><span class="n">Mat</span><span class="p">(),</span> <span class="kt">bool</span> <span class="n">compactResult</span><span class="o">=</span><span class="nb">false</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="nf">radiusMatch</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">queryDescriptors</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainDescriptors</span><span class="p">,</span>
+                      <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">float</span> <span class="n">maxDistance</span><span class="p">,</span>
+                      <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">mask</span><span class="o">=</span><span class="n">Mat</span><span class="p">(),</span> <span class="kt">bool</span> <span class="n">compactResult</span><span class="o">=</span><span class="nb">false</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="cm">/*</span>
+<span class="cm">     * Group of methods to match descriptors from one image to an image set.</span>
+<span class="cm">     */</span>
+    <span class="kt">void</span> <span class="nf">match</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">queryDescriptors</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span>
+                <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;&amp;</span> <span class="n">masks</span><span class="o">=</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;</span><span class="p">()</span> <span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">knnMatch</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">queryDescriptors</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span>
+                   <span class="kt">int</span> <span class="n">k</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;&amp;</span> <span class="n">masks</span><span class="o">=</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;</span><span class="p">(),</span>
+                   <span class="kt">bool</span> <span class="n">compactResult</span><span class="o">=</span><span class="nb">false</span> <span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">radiusMatch</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">queryDescriptors</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span>
+                      <span class="kt">float</span> <span class="n">maxDistance</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;&amp;</span> <span class="n">masks</span><span class="o">=</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;</span><span class="p">(),</span>
+                      <span class="kt">bool</span> <span class="n">compactResult</span><span class="o">=</span><span class="nb">false</span> <span class="p">);</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">read</span><span class="p">(</span> <span class="k">const</span> <span class="n">FileNode</span><span class="o">&amp;</span> <span class="p">);</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">write</span><span class="p">(</span> <span class="n">FileStorage</span><span class="o">&amp;</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">DescriptorMatcher</span><span class="o">&gt;</span> <span class="n">clone</span><span class="p">(</span> <span class="kt">bool</span> <span class="n">emptyTrainData</span><span class="o">=</span><span class="nb">false</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">static</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">DescriptorMatcher</span><span class="o">&gt;</span> <span class="n">create</span><span class="p">(</span> <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">descriptorMatcherType</span> <span class="p">);</span>
+
+<span class="k">protected</span><span class="o">:</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;</span> <span class="n">trainDescCollection</span><span class="p">;</span>
+    <span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="descriptormatcher-add">
+<h2>DescriptorMatcher::add<a class="headerlink" href="#descriptormatcher-add" title="Permalink to this headline">¶</a></h2>
+<p>Adds descriptors to train a descriptor collection. If the collection <code class="docutils literal"><span class="pre">trainDescCollectionis</span></code> is not empty, the new descriptors are added to existing train descriptors.</p>
+<dl class="function">
+<dt id="void DescriptorMatcher::add(const vector&lt;Mat&gt;&amp; descriptors)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">DescriptorMatcher::</code><code class="descname">add</code><span class="sig-paren">(</span>const vector&lt;Mat&gt;&amp; <strong>descriptors</strong><span class="sig-paren">)</span><a class="headerlink" href="#void DescriptorMatcher::add(const vector<Mat>& descriptors)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>descriptors</strong> &#8211; Descriptors to add. Each  <code class="docutils literal"><span class="pre">descriptors[i]</span></code>  is a set of descriptors from the same train image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="descriptormatcher-gettraindescriptors">
+<h2>DescriptorMatcher::getTrainDescriptors<a class="headerlink" href="#descriptormatcher-gettraindescriptors" title="Permalink to this headline">¶</a></h2>
+<p>Returns a constant link to the train descriptor collection <code class="docutils literal"><span class="pre">trainDescCollection</span></code> .</p>
+<dl class="function">
+<dt id="const vector&lt;Mat&gt;&amp; DescriptorMatcher::getTrainDescriptors() const">
+<strong>C++:</strong><code class="descname"> </code>const vector&lt;Mat&gt;&amp; <code class="descclassname">DescriptorMatcher::</code><code class="descname">getTrainDescriptors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#const vector<Mat>& DescriptorMatcher::getTrainDescriptors() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="descriptormatcher-clear">
+<h2>DescriptorMatcher::clear<a class="headerlink" href="#descriptormatcher-clear" title="Permalink to this headline">¶</a></h2>
+<p>Clears the train descriptor collection.</p>
+<dl class="function">
+<dt id="void DescriptorMatcher::clear()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">DescriptorMatcher::</code><code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void DescriptorMatcher::clear()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="descriptormatcher-empty">
+<h2>DescriptorMatcher::empty<a class="headerlink" href="#descriptormatcher-empty" title="Permalink to this headline">¶</a></h2>
+<p>Returns true if there are no train descriptors in the collection.</p>
+<dl class="function">
+<dt id="bool DescriptorMatcher::empty() const">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">DescriptorMatcher::</code><code class="descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#bool DescriptorMatcher::empty() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="descriptormatcher-ismasksupported">
+<h2>DescriptorMatcher::isMaskSupported<a class="headerlink" href="#descriptormatcher-ismasksupported" title="Permalink to this headline">¶</a></h2>
+<p>Returns true if the descriptor matcher supports masking permissible matches.</p>
+<dl class="function">
+<dt id="bool DescriptorMatcher::isMaskSupported()">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">DescriptorMatcher::</code><code class="descname">isMaskSupported</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bool DescriptorMatcher::isMaskSupported()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="descriptormatcher-train">
+<h2>DescriptorMatcher::train<a class="headerlink" href="#descriptormatcher-train" title="Permalink to this headline">¶</a></h2>
+<p>Trains a descriptor matcher</p>
+<dl class="function">
+<dt id="void DescriptorMatcher::train()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">DescriptorMatcher::</code><code class="descname">train</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void DescriptorMatcher::train()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Trains a descriptor matcher (for example, the flann index). In all methods to match, the method <code class="docutils literal"><span class="pre">train()</span></code> is run every time before matching. Some descriptor matchers (for example, <code class="docutils literal"><span class="pre">BruteForceMatcher</span></code>) have an empty implementation of this method. Other matchers really train their inner structures (for example, <code class="docutils literal"><span class="pre">FlannBasedMatcher</span></code> trains <code class="docutils literal"><span class="pre">flann::Index</span></code> ).</p>
+</div>
+<div class="section" id="descriptormatcher-match">
+<h2>DescriptorMatcher::match<a class="headerlink" href="#descriptormatcher-match" title="Permalink to this headline">¶</a></h2>
+<p>Finds the best match for each descriptor from a query set.</p>
+<dl class="function">
+<dt id="void DescriptorMatcher::match(const Mat&amp; queryDescriptors, const Mat&amp; trainDescriptors, vector&lt;DMatch&gt;&amp; matches, const Mat&amp; mask) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">DescriptorMatcher::</code><code class="descname">match</code><span class="sig-paren">(</span>const Mat&amp; <strong>queryDescriptors</strong>, const Mat&amp; <strong>trainDescriptors</strong>, vector&lt;DMatch&gt;&amp; <strong>matches</strong>, const Mat&amp; <strong>mask</strong>=Mat() <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void DescriptorMatcher::match(const Mat& queryDescriptors, const Mat& trainDescriptors, vector<DMatch>& matches, const Mat& mask) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void DescriptorMatcher::match(const Mat&amp; queryDescriptors, vector&lt;DMatch&gt;&amp; matches, const vector&lt;Mat&gt;&amp; masks)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">DescriptorMatcher::</code><code class="descname">match</code><span class="sig-paren">(</span>const Mat&amp; <strong>queryDescriptors</strong>, vector&lt;DMatch&gt;&amp; <strong>matches</strong>, const vector&lt;Mat&gt;&amp; <strong>masks</strong>=vector&lt;Mat&gt;() <span class="sig-paren">)</span><a class="headerlink" href="#void DescriptorMatcher::match(const Mat& queryDescriptors, vector<DMatch>& matches, const vector<Mat>& masks)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>queryDescriptors</strong> &#8211; Query set of descriptors.</li>
+<li><strong>trainDescriptors</strong> &#8211; Train set of descriptors. This set is not added to the train descriptors collection stored in the class object.</li>
+<li><strong>matches</strong> &#8211; Matches. If a query descriptor is masked out in  <code class="docutils literal"><span class="pre">mask</span></code> , no match is added for this descriptor. So, <code class="docutils literal"><span class="pre">matches</span></code>  size may be smaller than the query descriptors count.</li>
+<li><strong>mask</strong> &#8211; Mask specifying permissible matches between an input query and train matrices of descriptors.</li>
+<li><strong>masks</strong> &#8211; Set of masks. Each  <code class="docutils literal"><span class="pre">masks[i]</span></code>  specifies permissible matches between the input query descriptors and stored train descriptors from the i-th image <code class="docutils literal"><span class="pre">trainDescCollection[i]</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>In the first variant of this method, the train descriptors are passed as an input argument. In the second variant of the method, train descriptors collection that was set by <code class="docutils literal"><span class="pre">DescriptorMatcher::add</span></code> is used. Optional mask (or masks) can be passed to specify which query and training descriptors can be matched. Namely, <code class="docutils literal"><span class="pre">queryDescriptors[i]</span></code> can be matched with <code class="docutils literal"><span class="pre">trainDescriptors[j]</span></code> only if <code class="docutils literal"><span class="pre">mask.at&lt;uchar&gt;(i,j)</span></code> is non-zero.</p>
+</div>
+<div class="section" id="descriptormatcher-knnmatch">
+<h2>DescriptorMatcher::knnMatch<a class="headerlink" href="#descriptormatcher-knnmatch" title="Permalink to this headline">¶</a></h2>
+<p>Finds the k best matches for each descriptor from a query set.</p>
+<dl class="function">
+<dt id="void DescriptorMatcher::knnMatch(const Mat&amp; queryDescriptors, const Mat&amp; trainDescriptors, vector&lt;vector&lt;DMatch&gt; &gt;&amp; matches, int k, const Mat&amp; mask, bool compactResult) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">DescriptorMatcher::</code><code class="descname">knnMatch</code><span class="sig-paren">(</span>const Mat&amp; <strong>queryDescriptors</strong>, const Mat&amp; <strong>trainDescriptors</strong>, vector&lt;vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, int <strong>k</strong>, const Mat&amp; <strong>mask</strong>=Mat(), bool <strong>compactResult</strong>=false <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void DescriptorMatcher::knnMatch(const Mat& queryDescriptors, const Mat& trainDescriptors, vector<vector<DMatch> >& matches, int k, const Mat& mask, bool compactResult) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void DescriptorMatcher::knnMatch(const Mat&amp; queryDescriptors, vector&lt;vector&lt;DMatch&gt; &gt;&amp; matches, int k, const vector&lt;Mat&gt;&amp; masks, bool compactResult)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">DescriptorMatcher::</code><code class="descname">knnMatch</code><span class="sig-paren">(</span>const Mat&amp; <strong>queryDescriptors</strong>, vector&lt;vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, int <strong>k</strong>, const vector&lt;Mat&gt;&amp; <strong>masks</strong>=vector&lt;Mat&gt;(), bool <strong>compactResult</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#void DescriptorMatcher::knnMatch(const Mat& queryDescriptors, vector<vector<DMatch> >& matches, int k, const vector<Mat>& masks, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>queryDescriptors</strong> &#8211; Query set of descriptors.</li>
+<li><strong>trainDescriptors</strong> &#8211; Train set of descriptors. This set is not added to the train descriptors collection stored in the class object.</li>
+<li><strong>mask</strong> &#8211; Mask specifying permissible matches between an input query and train matrices of descriptors.</li>
+<li><strong>masks</strong> &#8211; Set of masks. Each  <code class="docutils literal"><span class="pre">masks[i]</span></code>  specifies permissible matches between the input query descriptors and stored train descriptors from the i-th image <code class="docutils literal"><span class="pre">trainDescCollection[i]</span></code>.</li>
+<li><strong>matches</strong> &#8211; Matches. Each  <code class="docutils literal"><span class="pre">matches[i]</span></code>  is k or less matches for the same query descriptor.</li>
+<li><strong>k</strong> &#8211; Count of best matches found per each query descriptor or less if a query descriptor has less than k possible matches in total.</li>
+<li><strong>compactResult</strong> &#8211; Parameter used when the mask (or masks) is not empty. If  <code class="docutils literal"><span class="pre">compactResult</span></code>  is false, the  <code class="docutils literal"><span class="pre">matches</span></code>  vector has the same size as  <code class="docutils literal"><span class="pre">queryDescriptors</span></code>  rows. If  <code class="docutils literal"><span class="pre">compactResult</span></code>  is true, the  <code class="docutils literal"><span class="pre">matches</span></code>  vector does not contain matches for fully masked-out query descriptors.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>These extended variants of <a class="reference internal" href="#void DescriptorMatcher::match(const Mat&amp; queryDescriptors, const Mat&amp; trainDescriptors, vector&lt;DMatch&gt;&amp; matches, const Mat&amp; mask) const" title="void DescriptorMatcher::match(const Mat&amp; queryDescriptors, const Mat&amp; trainDescriptors, vector&lt;DMatch&gt;&amp; matches, const Mat&amp; mask) const"><code class="xref ocv ocv-func docutils literal"><span class="pre">DescriptorMatcher::match()</span></code></a> methods find several best matches for each query descriptor. The matches are returned in the distance increasing order. See <a class="reference internal" href="#void DescriptorMatcher::match(const Mat&amp; queryDescriptors, const Mat&amp; trainDescriptors, vector&lt;DMatch&gt;&amp; matches, const Mat&amp; mask) const" title="void DescriptorMatcher::match(const Mat&amp; queryDescriptors, const Mat&amp; trainDescriptors, vector&lt;DMatch&gt;&amp; matches, const Mat&amp; mask) const"><code class="xref ocv ocv-func docutils literal"><span class="pre">DescriptorMatcher::match()</span></code></a> for the details about query and train descriptors.</p>
+</div>
+<div class="section" id="descriptormatcher-radiusmatch">
+<h2>DescriptorMatcher::radiusMatch<a class="headerlink" href="#descriptormatcher-radiusmatch" title="Permalink to this headline">¶</a></h2>
+<p>For each query descriptor, finds the training descriptors not farther than the specified distance.</p>
+<dl class="function">
+<dt id="void DescriptorMatcher::radiusMatch(const Mat&amp; queryDescriptors, const Mat&amp; trainDescriptors, vector&lt;vector&lt;DMatch&gt; &gt;&amp; matches, float maxDistance, const Mat&amp; mask, bool compactResult) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">DescriptorMatcher::</code><code class="descname">radiusMatch</code><span class="sig-paren">(</span>const Mat&amp; <strong>queryDescriptors</strong>, const Mat&amp; <strong>trainDescriptors</strong>, vector&lt;vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, float <strong>maxDistance</strong>, const Mat&amp; <strong>mask</strong>=Mat(), bool <strong>compactResult</strong>=false <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void DescriptorMatcher::radiusMatch(const Mat& queryDescriptors, const Mat& trainDescriptors, vector<vector<DMatch> >& matches, float maxDistance, const Mat& mask, bool compactResult) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void DescriptorMatcher::radiusMatch(const Mat&amp; queryDescriptors, vector&lt;vector&lt;DMatch&gt; &gt;&amp; matches, float maxDistance, const vector&lt;Mat&gt;&amp; masks, bool compactResult)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">DescriptorMatcher::</code><code class="descname">radiusMatch</code><span class="sig-paren">(</span>const Mat&amp; <strong>queryDescriptors</strong>, vector&lt;vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, float <strong>maxDistance</strong>, const vector&lt;Mat&gt;&amp; <strong>masks</strong>=vector&lt;Mat&gt;(), bool <strong>compactResult</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#void DescriptorMatcher::radiusMatch(const Mat& queryDescriptors, vector<vector<DMatch> >& matches, float maxDistance, const vector<Mat>& masks, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>queryDescriptors</strong> &#8211; Query set of descriptors.</li>
+<li><strong>trainDescriptors</strong> &#8211; Train set of descriptors. This set is not added to the train descriptors collection stored in the class object.</li>
+<li><strong>mask</strong> &#8211; Mask specifying permissible matches between an input query and train matrices of descriptors.</li>
+<li><strong>masks</strong> &#8211; Set of masks. Each  <code class="docutils literal"><span class="pre">masks[i]</span></code>  specifies permissible matches between the input query descriptors and stored train descriptors from the i-th image <code class="docutils literal"><span class="pre">trainDescCollection[i]</span></code>.</li>
+<li><strong>matches</strong> &#8211; Found matches.</li>
+<li><strong>compactResult</strong> &#8211; Parameter used when the mask (or masks) is not empty. If  <code class="docutils literal"><span class="pre">compactResult</span></code>  is false, the  <code class="docutils literal"><span class="pre">matches</span></code>  vector has the same size as  <code class="docutils literal"><span class="pre">queryDescriptors</span></code>  rows. If  <code class="docutils literal"><span class="pre">compactResult</span></code>  is true, the  <code class="docutils literal"><span class="pre">matches</span></code>  vector does not contain matches for fully masked-out query descriptors.</li>
+<li><strong>maxDistance</strong> &#8211; Threshold for the distance between matched descriptors. Distance means here metric distance (e.g. Hamming distance), not the distance between coordinates (which is measured in Pixels)!</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>For each query descriptor, the methods find such training descriptors that the distance between the query descriptor and the training descriptor is equal or smaller than <code class="docutils literal"><span class="pre">maxDistance</span></code>. Found matches are returned in the distance increasing order.</p>
+</div>
+<div class="section" id="descriptormatcher-clone">
+<h2>DescriptorMatcher::clone<a class="headerlink" href="#descriptormatcher-clone" title="Permalink to this headline">¶</a></h2>
+<p>Clones the matcher.</p>
+<dl class="function">
+<dt id="Ptr&lt;DescriptorMatcher&gt; DescriptorMatcher::clone(bool emptyTrainData)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;DescriptorMatcher&gt; <code class="descclassname">DescriptorMatcher::</code><code class="descname">clone</code><span class="sig-paren">(</span>bool <strong>emptyTrainData</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#Ptr<DescriptorMatcher> DescriptorMatcher::clone(bool emptyTrainData)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>emptyTrainData</strong> &#8211; If <code class="docutils literal"><span class="pre">emptyTrainData</span></code> is false, the method creates a deep copy of the object, that is, copies both parameters and train data. If <code class="docutils literal"><span class="pre">emptyTrainData</span></code> is true, the method creates an object copy with the current parameters but with empty train data.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="descriptormatcher-create">
+<h2>DescriptorMatcher::create<a class="headerlink" href="#descriptormatcher-create" title="Permalink to this headline">¶</a></h2>
+<p>Creates a descriptor matcher of a given type with the default parameters (using default constructor).</p>
+<dl class="function">
+<dt id="Ptr&lt;DescriptorMatcher&gt; DescriptorMatcher::create(const string&amp; descriptorMatcherType)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;DescriptorMatcher&gt; <code class="descclassname">DescriptorMatcher::</code><code class="descname">create</code><span class="sig-paren">(</span>const string&amp; <strong>descriptorMatcherType</strong><span class="sig-paren">)</span><a class="headerlink" href="#Ptr<DescriptorMatcher> DescriptorMatcher::create(const string& descriptorMatcherType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>descriptorMatcherType</strong> &#8211; <p>Descriptor matcher type. Now the following matcher types are supported:</p>
+<ul>
+<li><code class="docutils literal"><span class="pre">BruteForce</span></code> (it uses <code class="docutils literal"><span class="pre">L2</span></code> )</li>
+<li><code class="docutils literal"><span class="pre">BruteForce-L1</span></code></li>
+<li><code class="docutils literal"><span class="pre">BruteForce-Hamming</span></code></li>
+<li><code class="docutils literal"><span class="pre">BruteForce-Hamming(2)</span></code></li>
+<li><code class="docutils literal"><span class="pre">FlannBased</span></code></li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="bfmatcher">
+<h2>BFMatcher<a class="headerlink" href="#bfmatcher" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="BFMatcher : public DescriptorMatcher">
+<em class="property">class </em><code class="descname">BFMatcher</code> : <em class="property">public</em> <code class="descname">DescriptorMatcher</code><a class="headerlink" href="#BFMatcher : public DescriptorMatcher" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Brute-force descriptor matcher. For each descriptor in the first set, this matcher finds the closest descriptor in the second set by trying each one. This descriptor matcher supports masking permissible matches of descriptor sets.</p>
+</div>
+<div class="section" id="bfmatcher-bfmatcher">
+<h2>BFMatcher::BFMatcher<a class="headerlink" href="#bfmatcher-bfmatcher" title="Permalink to this headline">¶</a></h2>
+<p>Brute-force matcher constructor.</p>
+<dl class="function">
+<dt id="BFMatcher::BFMatcher(int normType, bool crossCheck)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">BFMatcher::</code><code class="descname">BFMatcher</code><span class="sig-paren">(</span>int <strong>normType</strong>=NORM_L2, bool <strong>crossCheck</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#BFMatcher::BFMatcher(int normType, bool crossCheck)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>normType</strong> &#8211; One of <code class="docutils literal"><span class="pre">NORM_L1</span></code>, <code class="docutils literal"><span class="pre">NORM_L2</span></code>, <code class="docutils literal"><span class="pre">NORM_HAMMING</span></code>, <code class="docutils literal"><span class="pre">NORM_HAMMING2</span></code>. <code class="docutils literal"><span class="pre">L1</span></code> and <code class="docutils literal"><span class="pre">L2</span></code> norms are preferable choices for SIFT and SURF descriptors, <code class="docutils literal"><span class="pre">NORM_HAMMING</span></code> should be used with ORB, BRISK and BRIEF, <code class="docutils literal"><span class="pre">NORM_HAMMING2</span></code> should be used with ORB when <code class="docutils literal"><span class="pre">WTA_K==3</span></code> or <code class="docutils literal"><span class="pre">4</span></code> (see ORB::ORB constructor description).</li>
+<li><strong>crossCheck</strong> &#8211; If it is false, this is will be default BFMatcher behaviour when it finds the k nearest neighbors for each query descriptor. If <code class="docutils literal"><span class="pre">crossCheck==true</span></code>, then the <code class="docutils literal"><span class="pre">knnMatch()</span></code> method with <code class="docutils literal"><span class="pre">k=1</span></code> will only return pairs <code class="docutils literal"><span class="pre">(i,j)</span></code> such that for <code class="docutils literal"><span class="pre">i-th</span></code> query descriptor the <code class="docutils literal"><span class="pre">j-th</span></code> descriptor in the matcher&#8217;s collection is the nearest and vice versa, i.e. the <code class="docutils literal"><span class="pre">BFMatcher</span></code> will only return consistent pairs. Such technique usually produces best results with minimal number of outliers when there are enough matches. This is alternative to the ratio test, used by D. Lowe in SIFT paper.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="flannbasedmatcher">
+<h2>FlannBasedMatcher<a class="headerlink" href="#flannbasedmatcher" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="FlannBasedMatcher : public DescriptorMatcher">
+<em class="property">class </em><code class="descname">FlannBasedMatcher</code> : <em class="property">public</em> <code class="descname">DescriptorMatcher</code><a class="headerlink" href="#FlannBasedMatcher : public DescriptorMatcher" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Flann-based descriptor matcher. This matcher trains <a class="reference internal" href="../../flann/doc/flann_fast_approximate_nearest_neighbor_search.html#flann::Index_" title="class flann::Index_"><code class="xref ocv ocv-class docutils literal"><span class="pre">flann::Index_</span></code></a> on a train descriptor collection and calls its nearest search methods to find the best matches. So, this matcher may be faster when matching a large train collection than the brute force matcher. <code class="docutils literal"><span class="pre">FlannBasedMatcher</span></code> does not support masking permissible matches of descriptor sets because <code class="docutils literal"><span class="pre">flann::Index</span></code> does not support this.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">FlannBasedMatcher</span> <span class="o">:</span> <span class="k">public</span> <span class="n">DescriptorMatcher</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">FlannBasedMatcher</span><span class="p">(</span>
+      <span class="k">const</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">flann</span><span class="o">::</span><span class="n">IndexParams</span><span class="o">&gt;&amp;</span> <span class="n">indexParams</span><span class="o">=</span><span class="k">new</span> <span class="n">flann</span><span class="o">::</span><span class="n">KDTreeIndexParams</span><span class="p">(),</span>
+      <span class="k">const</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">flann</span><span class="o">::</span><span class="n">SearchParams</span><span class="o">&gt;&amp;</span> <span class="n">searchParams</span><span class="o">=</span><span class="k">new</span> <span class="n">flann</span><span class="o">::</span><span class="n">SearchParams</span><span class="p">()</span> <span class="p">);</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">add</span><span class="p">(</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;&amp;</span> <span class="n">descriptors</span> <span class="p">);</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">clear</span><span class="p">();</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">train</span><span class="p">();</span>
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">isMaskSupported</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">DescriptorMatcher</span><span class="o">&gt;</span> <span class="n">clone</span><span class="p">(</span> <span class="kt">bool</span> <span class="n">emptyTrainData</span><span class="o">=</span><span class="nb">false</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="k">protected</span><span class="o">:</span>
+    <span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Common Interfaces of Descriptor Matchers</a><ul>
+<li><a class="reference internal" href="#dmatch">DMatch</a></li>
+<li><a class="reference internal" href="#descriptormatcher">DescriptorMatcher</a></li>
+<li><a class="reference internal" href="#descriptormatcher-add">DescriptorMatcher::add</a></li>
+<li><a class="reference internal" href="#descriptormatcher-gettraindescriptors">DescriptorMatcher::getTrainDescriptors</a></li>
+<li><a class="reference internal" href="#descriptormatcher-clear">DescriptorMatcher::clear</a></li>
+<li><a class="reference internal" href="#descriptormatcher-empty">DescriptorMatcher::empty</a></li>
+<li><a class="reference internal" href="#descriptormatcher-ismasksupported">DescriptorMatcher::isMaskSupported</a></li>
+<li><a class="reference internal" href="#descriptormatcher-train">DescriptorMatcher::train</a></li>
+<li><a class="reference internal" href="#descriptormatcher-match">DescriptorMatcher::match</a></li>
+<li><a class="reference internal" href="#descriptormatcher-knnmatch">DescriptorMatcher::knnMatch</a></li>
+<li><a class="reference internal" href="#descriptormatcher-radiusmatch">DescriptorMatcher::radiusMatch</a></li>
+<li><a class="reference internal" href="#descriptormatcher-clone">DescriptorMatcher::clone</a></li>
+<li><a class="reference internal" href="#descriptormatcher-create">DescriptorMatcher::create</a></li>
+<li><a class="reference internal" href="#bfmatcher">BFMatcher</a></li>
+<li><a class="reference internal" href="#bfmatcher-bfmatcher">BFMatcher::BFMatcher</a></li>
+<li><a class="reference internal" href="#flannbasedmatcher">FlannBasedMatcher</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="common_interfaces_of_descriptor_extractors.html"
+                        title="previous chapter">Common Interfaces of Descriptor Extractors</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="common_interfaces_of_generic_descriptor_matchers.html"
+                        title="next chapter">Common Interfaces of Generic Descriptor Matchers</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/features2d/doc/common_interfaces_of_descriptor_matchers.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="common_interfaces_of_generic_descriptor_matchers.html" title="Common Interfaces of Generic Descriptor Matchers"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="common_interfaces_of_descriptor_extractors.html" title="Common Interfaces of Descriptor Extractors"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="features2d.html" >features2d. 2D Features Framework</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

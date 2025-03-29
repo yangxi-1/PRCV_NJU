@@ -1,0 +1,598 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Qt New Functions &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="highgui. High-level GUI and Media I/O" href="highgui.html" />
+    <link rel="next" title="video. Video Analysis" href="../../video/doc/video.html" />
+    <link rel="prev" title="Reading and Writing Images and Video" href="reading_and_writing_images_and_video.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../video/doc/video.html" title="video. Video Analysis"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="reading_and_writing_images_and_video.html" title="Reading and Writing Images and Video"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="highgui.html" accesskey="U">highgui. High-level GUI and Media I/O</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="qt-new-functions">
+<h1>Qt New Functions<a class="headerlink" href="#qt-new-functions" title="Permalink to this headline">¶</a></h1>
+<img alt="../../../_images/qtgui.png" src="../../../_images/qtgui.png" />
+<p>This figure explains new functionality implemented with Qt* GUI. The new GUI provides a statusbar, a toolbar, and a control panel. The control panel can have trackbars and buttonbars attached to it. If you cannot see the control panel, press Ctrl+P or right-click any Qt window and select <strong>Display properties window</strong>.</p>
+<ul class="simple">
+<li>To attach a trackbar, the window name parameter must be NULL.</li>
+<li>To attach a buttonbar, a button must be created.
+If the last bar attached to the control panel is a buttonbar, the new button is added to the right of the last button.
+If the last bar attached to the control panel is a trackbar, or the control panel is empty, a new buttonbar is created. Then, a new button is attached to it.</li>
+</ul>
+<p>See below the example used to generate the figure:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+    <span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">value2</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">cvNamedWindow</span><span class="p">(</span><span class="s">&quot;main1&quot;</span><span class="p">,</span><span class="n">CV_WINDOW_NORMAL</span><span class="p">);</span>
+    <span class="n">cvNamedWindow</span><span class="p">(</span><span class="s">&quot;main2&quot;</span><span class="p">,</span><span class="n">CV_WINDOW_AUTOSIZE</span> <span class="o">|</span> <span class="n">CV_GUI_NORMAL</span><span class="p">);</span>
+
+    <span class="n">cvCreateTrackbar</span><span class="p">(</span> <span class="s">&quot;track1&quot;</span><span class="p">,</span> <span class="s">&quot;main1&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">value</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span>  <span class="nb">NULL</span><span class="p">);</span><span class="c1">//OK tested</span>
+    <span class="kt">char</span><span class="o">*</span> <span class="n">nameb1</span> <span class="o">=</span> <span class="s">&quot;button1&quot;</span><span class="p">;</span>
+    <span class="kt">char</span><span class="o">*</span> <span class="n">nameb2</span> <span class="o">=</span> <span class="s">&quot;button2&quot;</span><span class="p">;</span>
+    <span class="n">cvCreateButton</span><span class="p">(</span><span class="n">nameb1</span><span class="p">,</span><span class="n">callbackButton</span><span class="p">,</span><span class="n">nameb1</span><span class="p">,</span><span class="n">CV_CHECKBOX</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+
+    <span class="n">cvCreateButton</span><span class="p">(</span><span class="n">nameb2</span><span class="p">,</span><span class="n">callbackButton</span><span class="p">,</span><span class="n">nameb2</span><span class="p">,</span><span class="n">CV_CHECKBOX</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">cvCreateTrackbar</span><span class="p">(</span> <span class="s">&quot;track2&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">value2</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">cvCreateButton</span><span class="p">(</span><span class="s">&quot;button5&quot;</span><span class="p">,</span><span class="n">callbackButton1</span><span class="p">,</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CV_RADIOBOX</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">cvCreateButton</span><span class="p">(</span><span class="s">&quot;button6&quot;</span><span class="p">,</span><span class="n">callbackButton2</span><span class="p">,</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CV_RADIOBOX</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+
+    <span class="n">cvSetMouseCallback</span><span class="p">(</span> <span class="s">&quot;main2&quot;</span><span class="p">,</span><span class="n">on_mouse</span><span class="p">,</span><span class="nb">NULL</span> <span class="p">);</span>
+
+    <span class="n">IplImage</span><span class="o">*</span> <span class="n">img1</span> <span class="o">=</span> <span class="n">cvLoadImage</span><span class="p">(</span><span class="s">&quot;files/flower.jpg&quot;</span><span class="p">);</span>
+    <span class="n">IplImage</span><span class="o">*</span> <span class="n">img2</span> <span class="o">=</span> <span class="n">cvCreateImage</span><span class="p">(</span><span class="n">cvGetSize</span><span class="p">(</span><span class="n">img1</span><span class="p">),</span><span class="mi">8</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+    <span class="n">CvCapture</span><span class="o">*</span> <span class="n">video</span> <span class="o">=</span> <span class="n">cvCaptureFromFile</span><span class="p">(</span><span class="s">&quot;files/hockey.avi&quot;</span><span class="p">);</span>
+    <span class="n">IplImage</span><span class="o">*</span> <span class="n">img3</span> <span class="o">=</span> <span class="n">cvCreateImage</span><span class="p">(</span><span class="n">cvGetSize</span><span class="p">(</span><span class="n">cvQueryFrame</span><span class="p">(</span><span class="n">video</span><span class="p">)),</span><span class="mi">8</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+
+    <span class="k">while</span><span class="p">(</span><span class="n">cvWaitKey</span><span class="p">(</span><span class="mi">33</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">27</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">cvAddS</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span><span class="n">cvScalarAll</span><span class="p">(</span><span class="n">value</span><span class="p">),</span><span class="n">img2</span><span class="p">);</span>
+        <span class="n">cvAddS</span><span class="p">(</span><span class="n">cvQueryFrame</span><span class="p">(</span><span class="n">video</span><span class="p">),</span><span class="n">cvScalarAll</span><span class="p">(</span><span class="n">value2</span><span class="p">),</span><span class="n">img3</span><span class="p">);</span>
+        <span class="n">cvShowImage</span><span class="p">(</span><span class="s">&quot;main1&quot;</span><span class="p">,</span><span class="n">img2</span><span class="p">);</span>
+        <span class="n">cvShowImage</span><span class="p">(</span><span class="s">&quot;main2&quot;</span><span class="p">,</span><span class="n">img3</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">cvDestroyAllWindows</span><span class="p">();</span>
+    <span class="n">cvReleaseImage</span><span class="p">(</span><span class="o">&amp;</span><span class="n">img1</span><span class="p">);</span>
+    <span class="n">cvReleaseImage</span><span class="p">(</span><span class="o">&amp;</span><span class="n">img2</span><span class="p">);</span>
+    <span class="n">cvReleaseImage</span><span class="p">(</span><span class="o">&amp;</span><span class="n">img3</span><span class="p">);</span>
+    <span class="n">cvReleaseCapture</span><span class="p">(</span><span class="o">&amp;</span><span class="n">video</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="setwindowproperty">
+<h2>setWindowProperty<a class="headerlink" href="#setwindowproperty" title="Permalink to this headline">¶</a></h2>
+<p>Changes parameters of a window dynamically.</p>
+<dl class="function">
+<dt id="void setWindowProperty(const string&amp; winname, int prop_id, double prop_value)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setWindowProperty</code><span class="sig-paren">(</span>const string&amp; <strong>winname</strong>, int <strong>prop_id</strong>, double <strong>prop_value</strong><span class="sig-paren">)</span><a class="headerlink" href="#void setWindowProperty(const string& winname, int prop_id, double prop_value)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.setWindowProperty">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">setWindowProperty</code><span class="sig-paren">(</span>winname, prop_id, prop_value<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv2.setWindowProperty" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvSetWindowProperty(const char* name, int prop_id, double prop_value)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSetWindowProperty</code><span class="sig-paren">(</span>const char* <strong>name</strong>, int <strong>prop_id</strong>, double <strong>prop_value</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvSetWindowProperty(const char* name, int prop_id, double prop_value)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> &#8211; Name of the window.</li>
+<li><strong>prop_id</strong> &#8211; <p>Window property to edit. The following operation flags are available:</p>
+<ul>
+<li><strong>CV_WND_PROP_FULLSCREEN</strong>  Change if the window is fullscreen ( <code class="docutils literal"><span class="pre">CV_WINDOW_NORMAL</span></code>  or  <code class="docutils literal"><span class="pre">CV_WINDOW_FULLSCREEN</span></code> ).</li>
+<li><strong>CV_WND_PROP_AUTOSIZE</strong>  Change if the window is resizable (<code class="docutils literal"><span class="pre">CV_WINDOW_NORMAL</span></code>  or   <code class="docutils literal"><span class="pre">CV_WINDOW_AUTOSIZE</span></code> ).</li>
+<li><strong>CV_WND_PROP_ASPECTRATIO</strong>  Change if the aspect ratio of the image is preserved  ( <code class="docutils literal"><span class="pre">CV_WINDOW_FREERATIO</span></code>  or  <code class="docutils literal"><span class="pre">CV_WINDOW_KEEPRATIO</span></code> ).</li>
+</ul>
+</li>
+<li><strong>prop_value</strong> &#8211; <p>New value of the window property. The following operation flags are available:</p>
+<ul>
+<li><strong>CV_WINDOW_NORMAL</strong>  Change the window to normal size or make the window resizable.</li>
+<li><strong>CV_WINDOW_AUTOSIZE</strong>  Constrain the size by the displayed image. The window is not resizable.</li>
+<li><strong>CV_WINDOW_FULLSCREEN</strong>  Change the window to fullscreen.</li>
+<li><strong>CV_WINDOW_FREERATIO</strong>  Make the window resizable without any ratio constraints.</li>
+<li><strong>CV_WINDOW_KEEPRATIO</strong>  Make the window resizable, but preserve the proportions of the displayed image.</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">setWindowProperty</span></code>  enables changing properties of a window.</p>
+</div>
+<div class="section" id="getwindowproperty">
+<h2>getWindowProperty<a class="headerlink" href="#getwindowproperty" title="Permalink to this headline">¶</a></h2>
+<p>Provides parameters of a window.</p>
+<dl class="function">
+<dt id="double getWindowProperty(const string&amp; winname, int prop_id)">
+<strong>C++:</strong><code class="descname"> </code>double <code class="descname">getWindowProperty</code><span class="sig-paren">(</span>const string&amp; <strong>winname</strong>, int <strong>prop_id</strong><span class="sig-paren">)</span><a class="headerlink" href="#double getWindowProperty(const string& winname, int prop_id)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.getWindowProperty">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">getWindowProperty</code><span class="sig-paren">(</span>winname, prop_id<span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.getWindowProperty" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="double cvGetWindowProperty(const char* name, int prop_id)">
+<strong>C:</strong><code class="descname"> </code>double <code class="descname">cvGetWindowProperty</code><span class="sig-paren">(</span>const char* <strong>name</strong>, int <strong>prop_id</strong><span class="sig-paren">)</span><a class="headerlink" href="#double cvGetWindowProperty(const char* name, int prop_id)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> &#8211; Name of the window.</li>
+<li><strong>prop_id</strong> &#8211; <p>Window property to retrieve. The following operation flags are available:</p>
+<ul>
+<li><strong>CV_WND_PROP_FULLSCREEN</strong>  Change if the window is fullscreen ( <code class="docutils literal"><span class="pre">CV_WINDOW_NORMAL</span></code>  or  <code class="docutils literal"><span class="pre">CV_WINDOW_FULLSCREEN</span></code> ).</li>
+<li><strong>CV_WND_PROP_AUTOSIZE</strong>  Change if the window is resizable (<code class="docutils literal"><span class="pre">CV_WINDOW_NORMAL</span></code>  or   <code class="docutils literal"><span class="pre">CV_WINDOW_AUTOSIZE</span></code> ).</li>
+<li><strong>CV_WND_PROP_ASPECTRATIO</strong>  Change if the aspect ratio of the image is preserved  (<code class="docutils literal"><span class="pre">CV_WINDOW_FREERATIO</span></code>  or  <code class="docutils literal"><span class="pre">CV_WINDOW_KEEPRATIO</span></code> ).</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>See
+<a class="reference internal" href="#void setWindowProperty(const string&amp; winname, int prop_id, double prop_value)" title="void setWindowProperty(const string&amp; winname, int prop_id, double prop_value)"><code class="xref ocv ocv-func docutils literal"><span class="pre">setWindowProperty()</span></code></a> to know the meaning of the returned values.</p>
+<p>The function <code class="docutils literal"><span class="pre">getWindowProperty</span></code>  returns properties of a window.</p>
+</div>
+<div class="section" id="fontqt">
+<h2>fontQt<a class="headerlink" href="#fontqt" title="Permalink to this headline">¶</a></h2>
+<p>Creates the font to draw a text on an image.</p>
+<dl class="function">
+<dt id="CvFont fontQt(const string&amp; nameFont, int pointSize , Scalar color , int weight , int style , int spacing)">
+<strong>C++:</strong><code class="descname"> </code>CvFont <code class="descname">fontQt</code><span class="sig-paren">(</span>const string&amp; <strong>nameFont</strong>, int <strong>pointSize</strong>=-1, Scalar <strong>color</strong>=Scalar::all(0), int <strong>weight</strong>=CV_FONT_NORMAL, int <strong>style</strong>=CV_STYLE_NORMAL, int <strong>spacing</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#CvFont fontQt(const string& nameFont, int pointSize , Scalar color , int weight , int style , int spacing)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="CvFont cvFontQt(const char* nameFont, int pointSize, CvScalar color, int weight, int style, int spacing)">
+<strong>C:</strong><code class="descname"> </code>CvFont <code class="descname">cvFontQt</code><span class="sig-paren">(</span>const char* <strong>nameFont</strong>, int <strong>pointSize</strong>=-1, CvScalar <strong>color</strong>=cvScalarAll(0), int <strong>weight</strong>=CV_FONT_NORMAL, int <strong>style</strong>=CV_STYLE_NORMAL, int <strong>spacing</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#CvFont cvFontQt(const char* nameFont, int pointSize, CvScalar color, int weight, int style, int spacing)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nameFont</strong> &#8211; Name of the font. The name should match the name of a system font (such as <em>Times</em>). If the font is not found, a default one is used.</li>
+<li><strong>pointSize</strong> &#8211; Size of the font. If not specified, equal zero or negative, the point size of the font is set to a system-dependent default value. Generally, this is 12 points.</li>
+<li><strong>color</strong> &#8211; Color of the font in BGRA where A = 255 is fully transparent. Use the macro <code class="docutils literal"><span class="pre">CV</span> <span class="pre">_</span> <span class="pre">RGB</span></code> for simplicity.</li>
+<li><strong>weight</strong> &#8211; <p>Font weight. The following operation flags are available:</p>
+<ul>
+<li><strong>CV_FONT_LIGHT</strong>  Weight of 25</li>
+<li><strong>CV_FONT_NORMAL</strong>  Weight of 50</li>
+<li><strong>CV_FONT_DEMIBOLD</strong>  Weight of 63</li>
+<li><strong>CV_FONT_BOLD</strong>  Weight of 75</li>
+<li><strong>CV_FONT_BLACK</strong>  Weight of 87</li>
+</ul>
+<p>You can also specify a positive integer for better control.</p>
+</li>
+<li><strong>style</strong> &#8211; <p>Font style. The following operation flags are available:</p>
+<ul>
+<li><strong>CV_STYLE_NORMAL</strong>  Normal font</li>
+<li><strong>CV_STYLE_ITALIC</strong>  Italic font</li>
+<li><strong>CV_STYLE_OBLIQUE</strong>  Oblique font</li>
+</ul>
+</li>
+<li><strong>spacing</strong> &#8211; Spacing between characters. It can be negative or positive.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">fontQt</span></code> creates a <code class="docutils literal"><span class="pre">CvFont</span></code> object. This <code class="docutils literal"><span class="pre">CvFont</span></code> is not compatible with <code class="docutils literal"><span class="pre">putText</span></code> .</p>
+<p>A basic usage of this function is the following:</p>
+<div class="highlight-cpp"><div class="highlight"><pre>CvFont font = fontQt(&#39;&#39;Times&#39;&#39;);
+addText( img1, ``Hello World !&#39;&#39;, Point(50,50), font);
+</pre></div>
+</div>
+</div>
+<div class="section" id="addtext">
+<h2>addText<a class="headerlink" href="#addtext" title="Permalink to this headline">¶</a></h2>
+<p>Creates the font to draw a text on an image.</p>
+<dl class="function">
+<dt id="void addText(const Mat&amp; img, const string&amp; text, Point org, CvFont font)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">addText</code><span class="sig-paren">(</span>const Mat&amp; <strong>img</strong>, const string&amp; <strong>text</strong>, Point <strong>org</strong>, CvFont <strong>font</strong><span class="sig-paren">)</span><a class="headerlink" href="#void addText(const Mat& img, const string& text, Point org, CvFont font)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvAddText(const CvArr* img, const char* text, CvPoint org, CvFont * arg2)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvAddText</code><span class="sig-paren">(</span>const CvArr* <strong>img</strong>, const char* <strong>text</strong>, CvPoint <strong>org</strong>, CvFont* <strong>arg2</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvAddText(const CvArr* img, const char* text, CvPoint org, CvFont * arg2)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img</strong> &#8211; 8-bit 3-channel image where the text should be drawn.</li>
+<li><strong>text</strong> &#8211; Text to write on an image.</li>
+<li><strong>org</strong> &#8211; Point(x,y) where the text should start on an image.</li>
+<li><strong>font</strong> &#8211; Font to use to draw a text.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">addText</span></code> draws
+<em>text</em>
+on an image
+<em>img</em>
+using a specific font
+<em>font</em>
+(see example <a class="reference internal" href="#CvFont fontQt(const string&amp; nameFont, int pointSize , Scalar color , int weight , int style , int spacing)" title="CvFont fontQt(const string&amp; nameFont, int pointSize , Scalar color , int weight , int style , int spacing)"><code class="xref ocv ocv-func docutils literal"><span class="pre">fontQt()</span></code></a> )</p>
+</div>
+<div class="section" id="displayoverlay">
+<span id="index-0"></span><h2>displayOverlay<a class="headerlink" href="#displayoverlay" title="Permalink to this headline">¶</a></h2>
+<p>Displays a  text on a window image as an overlay for a specified duration.</p>
+<dl class="function">
+<dt id="void displayOverlay(const string&amp; winname, const string&amp; text, int delayms)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">displayOverlay</code><span class="sig-paren">(</span>const string&amp; <strong>winname</strong>, const string&amp; <strong>text</strong>, int <strong>delayms</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void displayOverlay(const string& winname, const string& text, int delayms)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvDisplayOverlay(const char* name, const char* text, int delayms)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvDisplayOverlay</code><span class="sig-paren">(</span>const char* <strong>name</strong>, const char* <strong>text</strong>, int <strong>delayms</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#void cvDisplayOverlay(const char* name, const char* text, int delayms)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> &#8211; Name of the window.</li>
+<li><strong>text</strong> &#8211; Overlay text to write on a window image.</li>
+<li><strong>delayms</strong> &#8211; The period (in milliseconds), during which the overlay text is displayed. If this function is called before the previous overlay text timed out, the timer is restarted and the text is updated. If this value is zero, the text never disappears.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">displayOverlay</span></code> displays useful information/tips on top of the window for a certain amount of time <em>delayms</em>. The function does not modify the image, displayed in the window, that is, after the specified delay the original content of the window is restored.</p>
+</div>
+<div class="section" id="displaystatusbar">
+<h2>displayStatusBar<a class="headerlink" href="#displaystatusbar" title="Permalink to this headline">¶</a></h2>
+<p>Displays a text on the window statusbar during the specified period of time.</p>
+<dl class="function">
+<dt id="void displayStatusBar(const string&amp; winname, const string&amp; text, int delayms)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">displayStatusBar</code><span class="sig-paren">(</span>const string&amp; <strong>winname</strong>, const string&amp; <strong>text</strong>, int <strong>delayms</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void displayStatusBar(const string& winname, const string& text, int delayms)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvDisplayStatusBar(const char* name, const char* text, int delayms)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvDisplayStatusBar</code><span class="sig-paren">(</span>const char* <strong>name</strong>, const char* <strong>text</strong>, int <strong>delayms</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#void cvDisplayStatusBar(const char* name, const char* text, int delayms)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> &#8211; Name of the window.</li>
+<li><strong>text</strong> &#8211; Text to write on the window statusbar.</li>
+<li><strong>delayms</strong> &#8211; Duration (in milliseconds) to display the text. If this function is called before the previous text timed out, the timer is restarted and the text is updated. If this value is zero, the text never disappears.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">displayOverlay</span></code> displays useful information/tips on top of the window for a certain amount of time
+<em>delayms</em>
+. This information is displayed on the window statusbar (the window must be created with the <code class="docutils literal"><span class="pre">CV_GUI_EXPANDED</span></code> flags).</p>
+</div>
+<div class="section" id="setopengldrawcallback">
+<h2>setOpenGlDrawCallback<a class="headerlink" href="#setopengldrawcallback" title="Permalink to this headline">¶</a></h2>
+<p>Sets a callback function to be called to draw on top of displayed image.</p>
+<dl class="function">
+<dt id="void setOpenGlDrawCallback(const string&amp; winname, OpenGlDrawCallback onOpenGlDraw, void* userdata)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">setOpenGlDrawCallback</code><span class="sig-paren">(</span>const string&amp; <strong>winname</strong>, OpenGlDrawCallback <strong>onOpenGlDraw</strong>, void* <strong>userdata</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void setOpenGlDrawCallback(const string& winname, OpenGlDrawCallback onOpenGlDraw, void* userdata)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvSetOpenGlDrawCallback(const char* window_name, CvOpenGlDrawCallback callback, void* userdata)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSetOpenGlDrawCallback</code><span class="sig-paren">(</span>const char* <strong>window_name</strong>, CvOpenGlDrawCallback <strong>callback</strong>, void* <strong>userdata</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#void cvSetOpenGlDrawCallback(const char* window_name, CvOpenGlDrawCallback callback, void* userdata)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>window_name</strong> &#8211; Name of the window.</li>
+<li><strong>onOpenGlDraw</strong> &#8211; Pointer to the function to be called every frame. This function should be prototyped as  <code class="docutils literal"><span class="pre">void</span> <span class="pre">Foo(void*)</span></code> .</li>
+<li><strong>userdata</strong> &#8211; Pointer passed to the callback function.  <em>(Optional)</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">setOpenGlDrawCallback</span></code> can be used to draw 3D data on the window. See the example of callback function below:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">void</span> <span class="nf">on_opengl</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">param</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">glLoadIdentity</span><span class="p">();</span>
+
+    <span class="n">glTranslated</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">);</span>
+
+    <span class="n">glRotatef</span><span class="p">(</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+    <span class="n">glRotatef</span><span class="p">(</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+    <span class="n">glRotatef</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+
+    <span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">coords</span><span class="p">[</span><span class="mi">6</span><span class="p">][</span><span class="mi">4</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">{</span> <span class="p">{</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">}</span> <span class="p">},</span>
+        <span class="p">{</span> <span class="p">{</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span> <span class="p">}</span> <span class="p">},</span>
+        <span class="p">{</span> <span class="p">{</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span> <span class="p">}</span> <span class="p">},</span>
+        <span class="p">{</span> <span class="p">{</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">}</span> <span class="p">},</span>
+        <span class="p">{</span> <span class="p">{</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">}</span> <span class="p">},</span>
+        <span class="p">{</span> <span class="p">{</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">glColor3ub</span><span class="p">(</span> <span class="n">i</span><span class="o">*</span><span class="mi">20</span><span class="p">,</span> <span class="mi">100</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span> <span class="n">i</span><span class="o">*</span><span class="mi">42</span> <span class="p">);</span>
+                <span class="n">glBegin</span><span class="p">(</span><span class="n">GL_QUADS</span><span class="p">);</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">glVertex3d</span><span class="p">(</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">2</span><span class="p">]);</span>
+                <span class="p">}</span>
+                <span class="n">glEnd</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="savewindowparameters">
+<h2>saveWindowParameters<a class="headerlink" href="#savewindowparameters" title="Permalink to this headline">¶</a></h2>
+<p>Saves parameters of the specified window.</p>
+<dl class="function">
+<dt id="void saveWindowParameters(const string&amp; windowName)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">saveWindowParameters</code><span class="sig-paren">(</span>const string&amp; <strong>windowName</strong><span class="sig-paren">)</span><a class="headerlink" href="#void saveWindowParameters(const string& windowName)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvSaveWindowParameters(const char* name)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSaveWindowParameters</code><span class="sig-paren">(</span>const char* <strong>name</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvSaveWindowParameters(const char* name)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> &#8211; Name of the window.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">saveWindowParameters</span></code> saves size, location, flags,  trackbars value, zoom and panning location of the window
+<code class="docutils literal"><span class="pre">window_name</span></code> .</p>
+</div>
+<div class="section" id="loadwindowparameters">
+<h2>loadWindowParameters<a class="headerlink" href="#loadwindowparameters" title="Permalink to this headline">¶</a></h2>
+<p>Loads parameters of the specified window.</p>
+<dl class="function">
+<dt id="void loadWindowParameters(const string&amp; windowName)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">loadWindowParameters</code><span class="sig-paren">(</span>const string&amp; <strong>windowName</strong><span class="sig-paren">)</span><a class="headerlink" href="#void loadWindowParameters(const string& windowName)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvLoadWindowParameters(const char* name)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvLoadWindowParameters</code><span class="sig-paren">(</span>const char* <strong>name</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvLoadWindowParameters(const char* name)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> &#8211; Name of the window.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">loadWindowParameters</span></code> loads size, location, flags, trackbars value, zoom and panning location of the window
+<code class="docutils literal"><span class="pre">window_name</span></code> .</p>
+</div>
+<div class="section" id="createbutton">
+<h2>createButton<a class="headerlink" href="#createbutton" title="Permalink to this headline">¶</a></h2>
+<p>Attaches a button to the control panel.</p>
+<dl class="function">
+<dt id="int createButton(const string&amp; bar_name, ButtonCallback on_change, void* userdata, int type, bool initial_button_state)">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descname">createButton</code><span class="sig-paren">(</span>const string&amp; <strong>bar_name</strong>, ButtonCallback <strong>on_change</strong>, void* <strong>userdata</strong>=NULL, int <strong>type</strong>=CV_PUSH_BUTTON, bool <strong>initial_button_state</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#int createButton(const string& bar_name, ButtonCallback on_change, void* userdata, int type, bool initial_button_state)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="int cvCreateButton(const char* button_name, CvButtonCallback on_change, void* userdata, int button_type, int initial_button_state)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvCreateButton</code><span class="sig-paren">(</span>const char* <strong>button_name</strong>=NULL, CvButtonCallback <strong>on_change</strong>=NULL, void* <strong>userdata</strong>=NULL, int <strong>button_type</strong>=CV_PUSH_BUTTON, int <strong>initial_button_state</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#int cvCreateButton(const char* button_name, CvButtonCallback on_change, void* userdata, int button_type, int initial_button_state)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>button_name</strong> &#8211; Name of the button.</li>
+<li><strong>on_change</strong> &#8211; Pointer to the function to be called every time the button changes its state. This function should be prototyped as  <code class="docutils literal"><span class="pre">void</span> <span class="pre">Foo(int</span> <span class="pre">state,*void);</span></code> .  <em>state</em>  is the current state of the button. It could be -1 for a push button, 0 or 1 for a check/radio box button.</li>
+<li><strong>userdata</strong> &#8211; Pointer passed to the callback function.</li>
+<li><strong>button_type</strong> &#8211; <p>Optional type of the button.</p>
+<ul>
+<li><strong>CV_PUSH_BUTTON</strong>  Push button</li>
+<li><strong>CV_CHECKBOX</strong>  Checkbox button</li>
+<li><strong>CV_RADIOBOX</strong>  Radiobox button. The radiobox on the same buttonbar (same line) are exclusive, that is only one can be selected at a time.</li>
+</ul>
+</li>
+<li><strong>initial_button_state</strong> &#8211; Default state of the button. Use for checkbox and radiobox. Its value could be 0 or 1.  <em>(Optional)</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function <code class="docutils literal"><span class="pre">createButton</span></code> attaches a button to the control panel. Each button is added to a buttonbar to the right of the last button.
+A new buttonbar is created if nothing was attached to the control panel before, or if the last element attached to the control panel was a trackbar.</p>
+<p>See below various examples of the <code class="docutils literal"><span class="pre">createButton</span></code> function call:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">createButton</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">callbackButton</span><span class="p">);</span><span class="c1">//create a push button &quot;button 0&quot;, that will call callbackButton.</span>
+<span class="n">createButton</span><span class="p">(</span><span class="s">&quot;button2&quot;</span><span class="p">,</span><span class="n">callbackButton</span><span class="p">,</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CV_CHECKBOX</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">createButton</span><span class="p">(</span><span class="s">&quot;button3&quot;</span><span class="p">,</span><span class="n">callbackButton</span><span class="p">,</span><span class="o">&amp;</span><span class="n">value</span><span class="p">);</span>
+<span class="n">createButton</span><span class="p">(</span><span class="s">&quot;button5&quot;</span><span class="p">,</span><span class="n">callbackButton1</span><span class="p">,</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CV_RADIOBOX</span><span class="p">);</span>
+<span class="n">createButton</span><span class="p">(</span><span class="s">&quot;button6&quot;</span><span class="p">,</span><span class="n">callbackButton2</span><span class="p">,</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CV_PUSH_BUTTON</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Qt New Functions</a><ul>
+<li><a class="reference internal" href="#setwindowproperty">setWindowProperty</a></li>
+<li><a class="reference internal" href="#getwindowproperty">getWindowProperty</a></li>
+<li><a class="reference internal" href="#fontqt">fontQt</a></li>
+<li><a class="reference internal" href="#addtext">addText</a></li>
+<li><a class="reference internal" href="#displayoverlay">displayOverlay</a></li>
+<li><a class="reference internal" href="#displaystatusbar">displayStatusBar</a></li>
+<li><a class="reference internal" href="#setopengldrawcallback">setOpenGlDrawCallback</a></li>
+<li><a class="reference internal" href="#savewindowparameters">saveWindowParameters</a></li>
+<li><a class="reference internal" href="#loadwindowparameters">loadWindowParameters</a></li>
+<li><a class="reference internal" href="#createbutton">createButton</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="reading_and_writing_images_and_video.html"
+                        title="previous chapter">Reading and Writing Images and Video</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../video/doc/video.html"
+                        title="next chapter">video. Video Analysis</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/highgui/doc/qt_new_functions.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../video/doc/video.html" title="video. Video Analysis"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="reading_and_writing_images_and_video.html" title="Reading and Writing Images and Video"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="highgui.html" >highgui. High-level GUI and Media I/O</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

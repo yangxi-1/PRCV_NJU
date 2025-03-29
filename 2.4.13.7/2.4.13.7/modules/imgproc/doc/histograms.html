@@ -1,0 +1,842 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Histograms &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="imgproc. Image Processing" href="imgproc.html" />
+    <link rel="next" title="Structural Analysis and Shape Descriptors" href="structural_analysis_and_shape_descriptors.html" />
+    <link rel="prev" title="Miscellaneous Image Transformations" href="miscellaneous_transformations.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="structural_analysis_and_shape_descriptors.html" title="Structural Analysis and Shape Descriptors"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="miscellaneous_transformations.html" title="Miscellaneous Image Transformations"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="imgproc.html" accesskey="U">imgproc. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="histograms">
+<h1>Histograms<a class="headerlink" href="#histograms" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="calchist">
+<h2>calcHist<a class="headerlink" href="#calchist" title="Permalink to this headline">¶</a></h2>
+<p>Calculates a histogram of a set of arrays.</p>
+<dl class="function">
+<dt id="void calcHist(const Mat* images, int nimages, const int* channels, InputArray mask, OutputArray hist, int dims, const int* histSize, const float** ranges, bool uniform, bool accumulate)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">calcHist</code><span class="sig-paren">(</span>const Mat* <strong>images</strong>, int <strong>nimages</strong>, const int* <strong>channels</strong>, InputArray <strong>mask</strong>, OutputArray <strong>hist</strong>, int <strong>dims</strong>, const int* <strong>histSize</strong>, const float** <strong>ranges</strong>, bool <strong>uniform</strong>=true, bool <strong>accumulate</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#void calcHist(const Mat* images, int nimages, const int* channels, InputArray mask, OutputArray hist, int dims, const int* histSize, const float** ranges, bool uniform, bool accumulate)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void calcHist(const Mat* images, int nimages, const int* channels, InputArray mask, SparseMat&amp; hist, int dims, const int* histSize, const float** ranges, bool uniform, bool accumulate)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">calcHist</code><span class="sig-paren">(</span>const Mat* <strong>images</strong>, int <strong>nimages</strong>, const int* <strong>channels</strong>, InputArray <strong>mask</strong>, SparseMat&amp; <strong>hist</strong>, int <strong>dims</strong>, const int* <strong>histSize</strong>, const float** <strong>ranges</strong>, bool <strong>uniform</strong>=true, bool <strong>accumulate</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#void calcHist(const Mat* images, int nimages, const int* channels, InputArray mask, SparseMat& hist, int dims, const int* histSize, const float** ranges, bool uniform, bool accumulate)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.calcHist">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">calcHist</code><span class="sig-paren">(</span>images, channels, mask, histSize, ranges<span class="optional">[</span>, hist<span class="optional">[</span>, accumulate<span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; hist<a class="headerlink" href="#cv2.calcHist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvCalcHist(IplImage** image, CvHistogram* hist, int accumulate, const CvArr* mask)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvCalcHist</code><span class="sig-paren">(</span>IplImage** <strong>image</strong>, CvHistogram* <strong>hist</strong>, int <strong>accumulate</strong>=0, const CvArr* <strong>mask</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#void cvCalcHist(IplImage** image, CvHistogram* hist, int accumulate, const CvArr* mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CalcHist">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CalcHist</code><span class="sig-paren">(</span>image, hist, accumulate=0, mask=None<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.CalcHist" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>images</strong> &#8211; Source arrays. They all should have the same depth,  <code class="docutils literal"><span class="pre">CV_8U</span></code>  or  <code class="docutils literal"><span class="pre">CV_32F</span></code> , and the same size. Each of them can have an arbitrary number of channels.</li>
+<li><strong>nimages</strong> &#8211; Number of source images.</li>
+<li><strong>channels</strong> &#8211; List of the  <code class="docutils literal"><span class="pre">dims</span></code>  channels used to compute the histogram. The first array channels are numerated from 0 to  <code class="docutils literal"><span class="pre">images[0].channels()-1</span></code> , the second array channels are counted from  <code class="docutils literal"><span class="pre">images[0].channels()</span></code>  to  <code class="docutils literal"><span class="pre">images[0].channels()</span> <span class="pre">+</span> <span class="pre">images[1].channels()-1</span></code>,  and so on.</li>
+<li><strong>mask</strong> &#8211; Optional mask. If the matrix is not empty, it must be an 8-bit array of the same size as  <code class="docutils literal"><span class="pre">images[i]</span></code> . The non-zero mask elements mark the array elements counted in the histogram.</li>
+<li><strong>hist</strong> &#8211; Output histogram, which is a dense or sparse  <code class="docutils literal"><span class="pre">dims</span></code> -dimensional array.</li>
+<li><strong>dims</strong> &#8211; Histogram dimensionality that must be positive and not greater than  <code class="docutils literal"><span class="pre">CV_MAX_DIMS</span></code> (equal to 32 in the current OpenCV version).</li>
+<li><strong>histSize</strong> &#8211; Array of histogram sizes in each dimension.</li>
+<li><strong>ranges</strong> &#8211; Array of the <code class="docutils literal"><span class="pre">dims</span></code>  arrays of the histogram bin boundaries in each dimension. When the histogram is uniform ( <code class="docutils literal"><span class="pre">uniform</span></code> =true), then for each dimension  <code class="docutils literal"><span class="pre">i</span></code>  it is enough to specify the lower (inclusive) boundary  <img class="math" src="../../../_images/math/ece616f2f66514a8e4b97ddaa3e4b29ed8f960c2.png" alt="L_0"/>  of the 0-th histogram bin and the upper (exclusive) boundary  <img class="math" src="../../../_images/math/38b094dce129fa6604514ec820999aede695b335.png" alt="U_{\texttt{histSize}[i]-1}"/>  for the last histogram bin  <code class="docutils literal"><span class="pre">histSize[i]-1</span></code> . That is, in case of a uniform histogram each of  <code class="docutils literal"><span class="pre">ranges[i]</span></code>  is an array of 2 elements. When the histogram is not uniform ( <code class="docutils literal"><span class="pre">uniform=false</span></code> ), then each of  <code class="docutils literal"><span class="pre">ranges[i]</span></code>  contains  <code class="docutils literal"><span class="pre">histSize[i]+1</span></code>  elements:  <img class="math" src="../../../_images/math/4aafe0a4c6ad01a75e608e213d5086c74ffae24a.png" alt="L_0, U_0=L_1, U_1=L_2, ..., U_{\texttt{histSize[i]}-2}=L_{\texttt{histSize[i]}-1}, U_{\texttt{histSize[i]}-1}"/> . The array elements, that are not between  <img class="math" src="../../../_images/math/ece616f2f66514a8e4b97ddaa3e4b29ed8f960c2.png" alt="L_0"/>  and  <img class="math" src="../../../_images/math/bfd3f3bb827add85c2b87f8dee58dad2e396542e.png" alt="U_{\texttt{histSize[i]}-1}"/> , are not counted in the histogram.</li>
+<li><strong>uniform</strong> &#8211; Flag indicating whether the histogram is uniform or not (see above).</li>
+<li><strong>accumulate</strong> &#8211; Accumulation flag. If it is set, the histogram is not cleared in the beginning when it is allocated. This feature enables you to compute a single histogram from several sets of arrays, or to update the histogram in time.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The functions <code class="docutils literal"><span class="pre">calcHist</span></code> calculate the histogram of one or more
+arrays. The elements of a tuple used to increment
+a histogram bin are taken from the corresponding
+input arrays at the same location. The sample below shows how to compute a 2D Hue-Saturation histogram for a color image.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&lt;cv.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;highgui.h&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">hsv</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">argc</span> <span class="o">!=</span> <span class="mi">2</span> <span class="o">||</span> <span class="o">!</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="n">imread</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)).</span><span class="n">data</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+
+    <span class="n">cvtColor</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">hsv</span><span class="p">,</span> <span class="n">CV_BGR2HSV</span><span class="p">);</span>
+
+    <span class="c1">// Quantize the hue to 30 levels</span>
+    <span class="c1">// and the saturation to 32 levels</span>
+    <span class="kt">int</span> <span class="n">hbins</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">sbins</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">histSize</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="n">hbins</span><span class="p">,</span> <span class="n">sbins</span><span class="p">};</span>
+    <span class="c1">// hue varies from 0 to 179, see cvtColor</span>
+    <span class="kt">float</span> <span class="n">hranges</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">180</span> <span class="p">};</span>
+    <span class="c1">// saturation varies from 0 (black-gray-white) to</span>
+    <span class="c1">// 255 (pure spectrum color)</span>
+    <span class="kt">float</span> <span class="n">sranges</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span> <span class="p">};</span>
+    <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">ranges</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="n">hranges</span><span class="p">,</span> <span class="n">sranges</span> <span class="p">};</span>
+    <span class="n">MatND</span> <span class="n">hist</span><span class="p">;</span>
+    <span class="c1">// we compute the histogram from the 0-th and 1-st channels</span>
+    <span class="kt">int</span> <span class="n">channels</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">};</span>
+
+    <span class="n">calcHist</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">hsv</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="c1">// do not use mask</span>
+             <span class="n">hist</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">histSize</span><span class="p">,</span> <span class="n">ranges</span><span class="p">,</span>
+             <span class="nb">true</span><span class="p">,</span> <span class="c1">// the histogram is uniform</span>
+             <span class="nb">false</span> <span class="p">);</span>
+    <span class="kt">double</span> <span class="n">maxVal</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="n">minMaxLoc</span><span class="p">(</span><span class="n">hist</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">maxVal</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="kt">int</span> <span class="n">scale</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+    <span class="n">Mat</span> <span class="n">histImg</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span><span class="n">sbins</span><span class="o">*</span><span class="n">scale</span><span class="p">,</span> <span class="n">hbins</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span> <span class="n">CV_8UC3</span><span class="p">);</span>
+
+    <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">h</span> <span class="o">&lt;</span> <span class="n">hbins</span><span class="p">;</span> <span class="n">h</span><span class="o">++</span> <span class="p">)</span>
+        <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">s</span> <span class="o">&lt;</span> <span class="n">sbins</span><span class="p">;</span> <span class="n">s</span><span class="o">++</span> <span class="p">)</span>
+        <span class="p">{</span>
+            <span class="kt">float</span> <span class="n">binVal</span> <span class="o">=</span> <span class="n">hist</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+            <span class="kt">int</span> <span class="n">intensity</span> <span class="o">=</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">binVal</span><span class="o">*</span><span class="mi">255</span><span class="o">/</span><span class="n">maxVal</span><span class="p">);</span>
+            <span class="n">rectangle</span><span class="p">(</span> <span class="n">histImg</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span><span class="n">h</span><span class="o">*</span><span class="n">scale</span><span class="p">,</span> <span class="n">s</span><span class="o">*</span><span class="n">scale</span><span class="p">),</span>
+                        <span class="n">Point</span><span class="p">(</span> <span class="p">(</span><span class="n">h</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">scale</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">s</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">scale</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
+                        <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="n">intensity</span><span class="p">),</span>
+                        <span class="n">CV_FILLED</span> <span class="p">);</span>
+        <span class="p">}</span>
+
+    <span class="n">namedWindow</span><span class="p">(</span> <span class="s">&quot;Source&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">imshow</span><span class="p">(</span> <span class="s">&quot;Source&quot;</span><span class="p">,</span> <span class="n">src</span> <span class="p">);</span>
+
+    <span class="n">namedWindow</span><span class="p">(</span> <span class="s">&quot;H-S Histogram&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">imshow</span><span class="p">(</span> <span class="s">&quot;H-S Histogram&quot;</span><span class="p">,</span> <span class="n">histImg</span> <span class="p">);</span>
+    <span class="n">waitKey</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example for creating histograms of an image can be found at opencv_source_code/samples/cpp/demhist.cpp</li>
+<li>(Python) An example for creating color histograms can be found at opencv_source/samples/python2/color_histogram.py</li>
+<li>(Python) An example illustrating RGB and grayscale histogram plotting can be found at opencv_source/samples/python2/hist.py</li>
+</ul>
+</div>
+</div>
+<div class="section" id="calcbackproject">
+<h2>calcBackProject<a class="headerlink" href="#calcbackproject" title="Permalink to this headline">¶</a></h2>
+<p>Calculates the back projection of a histogram.</p>
+<dl class="function">
+<dt id="void calcBackProject(const Mat* images, int nimages, const int* channels, InputArray hist, OutputArray backProject, const float** ranges, double scale, bool uniform)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">calcBackProject</code><span class="sig-paren">(</span>const Mat* <strong>images</strong>, int <strong>nimages</strong>, const int* <strong>channels</strong>, InputArray <strong>hist</strong>, OutputArray <strong>backProject</strong>, const float** <strong>ranges</strong>, double <strong>scale</strong>=1, bool <strong>uniform</strong>=true <span class="sig-paren">)</span><a class="headerlink" href="#void calcBackProject(const Mat* images, int nimages, const int* channels, InputArray hist, OutputArray backProject, const float** ranges, double scale, bool uniform)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void calcBackProject(const Mat* images, int nimages, const int* channels, const SparseMat&amp; hist, OutputArray backProject, const float** ranges, double scale, bool uniform)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">calcBackProject</code><span class="sig-paren">(</span>const Mat* <strong>images</strong>, int <strong>nimages</strong>, const int* <strong>channels</strong>, const SparseMat&amp; <strong>hist</strong>, OutputArray <strong>backProject</strong>, const float** <strong>ranges</strong>, double <strong>scale</strong>=1, bool <strong>uniform</strong>=true <span class="sig-paren">)</span><a class="headerlink" href="#void calcBackProject(const Mat* images, int nimages, const int* channels, const SparseMat& hist, OutputArray backProject, const float** ranges, double scale, bool uniform)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.calcBackProject">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">calcBackProject</code><span class="sig-paren">(</span>images, channels, hist, ranges, scale<span class="optional">[</span>, dst<span class="optional">]</span><span class="sig-paren">)</span> &rarr; dst<a class="headerlink" href="#cv2.calcBackProject" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvCalcBackProject(IplImage** image, CvArr* backProject, const CvHistogram* hist)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvCalcBackProject</code><span class="sig-paren">(</span>IplImage** <strong>image</strong>, CvArr* <strong>backProject</strong>, const CvHistogram* <strong>hist</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvCalcBackProject(IplImage** image, CvArr* backProject, const CvHistogram* hist)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CalcBackProject">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CalcBackProject</code><span class="sig-paren">(</span>image, back_project, hist<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.CalcBackProject" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>images</strong> &#8211; Source arrays. They all should have the same depth,  <code class="docutils literal"><span class="pre">CV_8U</span></code>  or  <code class="docutils literal"><span class="pre">CV_32F</span></code> , and the same size. Each of them can have an arbitrary number of channels.</li>
+<li><strong>nimages</strong> &#8211; Number of source images.</li>
+<li><strong>channels</strong> &#8211; The list of channels used to compute the back projection. The number of channels must match the histogram dimensionality. The first array channels are numerated from 0 to  <code class="docutils literal"><span class="pre">images[0].channels()-1</span></code> , the second array channels are counted from  <code class="docutils literal"><span class="pre">images[0].channels()</span></code>  to  <code class="docutils literal"><span class="pre">images[0].channels()</span> <span class="pre">+</span> <span class="pre">images[1].channels()-1</span></code>,  and so on.</li>
+<li><strong>hist</strong> &#8211; Input histogram that can be dense or sparse.</li>
+<li><strong>backProject</strong> &#8211; Destination back projection array that is a single-channel array of the same size and depth as  <code class="docutils literal"><span class="pre">images[0]</span></code> .</li>
+<li><strong>ranges</strong> &#8211; Array of arrays of the histogram bin boundaries in each dimension. See  <a class="reference internal" href="#void calcHist(const Mat* images, int nimages, const int* channels, InputArray mask, OutputArray hist, int dims, const int* histSize, const float** ranges, bool uniform, bool accumulate)" title="void calcHist(const Mat* images, int nimages, const int* channels, InputArray mask, OutputArray hist, int dims, const int* histSize, const float** ranges, bool uniform, bool accumulate)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcHist()</span></code></a> .</li>
+<li><strong>scale</strong> &#8211; Optional scale factor for the output back projection.</li>
+<li><strong>uniform</strong> &#8211; Flag indicating whether the histogram is uniform or not (see above).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The functions <code class="docutils literal"><span class="pre">calcBackProject</span></code> calculate the back project of the histogram. That is, similarly to <code class="docutils literal"><span class="pre">calcHist</span></code> , at each location <code class="docutils literal"><span class="pre">(x,</span> <span class="pre">y)</span></code> the function collects the values from the selected channels in the input images and finds the corresponding histogram bin. But instead of incrementing it, the function reads the bin value, scales it by <code class="docutils literal"><span class="pre">scale</span></code> , and stores in <code class="docutils literal"><span class="pre">backProject(x,y)</span></code> . In terms of statistics, the function computes probability of each element value in respect with the empirical probability distribution represented by the histogram. See how, for example, you can find and track a bright-colored object in a scene:</p>
+<ol class="arabic simple">
+<li>Before tracking, show the object to the camera so that it covers almost the whole frame. Calculate a hue histogram. The histogram may have strong maximums, corresponding to the dominant colors in the object.</li>
+<li>When tracking, calculate a back projection of a hue plane of each input video frame using that pre-computed histogram. Threshold the back projection to suppress weak colors. It may also make sense to suppress pixels with non-sufficient color saturation and too dark or too bright pixels.</li>
+<li>Find connected components in the resulting picture and choose, for example, the largest component.</li>
+</ol>
+<p>This is an approximate algorithm of the
+<a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#RotatedRect CamShift(InputArray probImage, Rect&amp; window, TermCriteria criteria)" title="RotatedRect CamShift(InputArray probImage, Rect&amp; window, TermCriteria criteria)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CamShift()</span></code></a> color object tracker.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void calcHist(const Mat* images, int nimages, const int* channels, InputArray mask, OutputArray hist, int dims, const int* histSize, const float** ranges, bool uniform, bool accumulate)" title="void calcHist(const Mat* images, int nimages, const int* channels, InputArray mask, OutputArray hist, int dims, const int* histSize, const float** ranges, bool uniform, bool accumulate)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcHist()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="comparehist">
+<span id="id1"></span><h2>compareHist<a class="headerlink" href="#comparehist" title="Permalink to this headline">¶</a></h2>
+<p>Compares two histograms.</p>
+<dl class="function">
+<dt id="double compareHist(InputArray H1, InputArray H2, int method)">
+<strong>C++:</strong><code class="descname"> </code>double <code class="descname">compareHist</code><span class="sig-paren">(</span>InputArray <strong>H1</strong>, InputArray <strong>H2</strong>, int <strong>method</strong><span class="sig-paren">)</span><a class="headerlink" href="#double compareHist(InputArray H1, InputArray H2, int method)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="double compareHist(const SparseMat&amp; H1, const SparseMat&amp; H2, int method)">
+<strong>C++:</strong><code class="descname"> </code>double <code class="descname">compareHist</code><span class="sig-paren">(</span>const SparseMat&amp; <strong>H1</strong>, const SparseMat&amp; <strong>H2</strong>, int <strong>method</strong><span class="sig-paren">)</span><a class="headerlink" href="#double compareHist(const SparseMat& H1, const SparseMat& H2, int method)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.compareHist">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">compareHist</code><span class="sig-paren">(</span>H1, H2, method<span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.compareHist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="double cvCompareHist(const CvHistogram* hist1, const CvHistogram* hist2, int method)">
+<strong>C:</strong><code class="descname"> </code>double <code class="descname">cvCompareHist</code><span class="sig-paren">(</span>const CvHistogram* <strong>hist1</strong>, const CvHistogram* <strong>hist2</strong>, int <strong>method</strong><span class="sig-paren">)</span><a class="headerlink" href="#double cvCompareHist(const CvHistogram* hist1, const CvHistogram* hist2, int method)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CompareHist">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CompareHist</code><span class="sig-paren">(</span>hist1, hist2, method<span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#cv.CompareHist" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>H1</strong> &#8211; First compared histogram.</li>
+<li><strong>H2</strong> &#8211; Second compared histogram of the same size as  <code class="docutils literal"><span class="pre">H1</span></code> .</li>
+<li><strong>method</strong> &#8211; <p>Comparison method that could be one of the following:</p>
+<ul>
+<li><strong>CV_COMP_CORREL</strong>     Correlation</li>
+<li><strong>CV_COMP_CHISQR</strong>     Chi-Square</li>
+<li><strong>CV_COMP_INTERSECT</strong>     Intersection</li>
+<li><strong>CV_COMP_BHATTACHARYYA</strong>     Bhattacharyya distance</li>
+<li><strong>CV_COMP_HELLINGER</strong>     Synonym for <code class="docutils literal"><span class="pre">CV_COMP_BHATTACHARYYA</span></code></li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The functions <code class="docutils literal"><span class="pre">compareHist</span></code> compare two dense or two sparse histograms using the specified method:</p>
+<ul>
+<li><p class="first">Correlation (<code class="docutils literal"><span class="pre">method=CV_COMP_CORREL</span></code>)</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/a97f7b5144b192bd40b04c165665c9eb1f5cceef.png" alt="d(H_1,H_2) =  \frac{\sum_I (H_1(I) - \bar{H_1}) (H_2(I) - \bar{H_2})}{\sqrt{\sum_I(H_1(I) - \bar{H_1})^2 \sum_I(H_2(I) - \bar{H_2})^2}}"/></p>
+</div><p>where</p>
+<div class="math">
+<p><img src="../../../_images/math/438152c292378fc2e75dfa048289aaefe29756d2.png" alt="\bar{H_k} =  \frac{1}{N} \sum _J H_k(J)"/></p>
+</div><p>and
+<img class="math" src="../../../_images/math/b7fa5a60940a885027b1a7928d7b1d3f7431c8a2.png" alt="N"/>     is a total number of histogram bins.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Chi-Square (<code class="docutils literal"><span class="pre">method=CV_COMP_CHISQR</span></code>)</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/c82acb01d80c0ee1526bcad1d4fec46b51521981.png" alt="d(H_1,H_2) =  \sum _I  \frac{\left(H_1(I)-H_2(I)\right)^2}{H_1(I)}"/></p>
+</div></div></blockquote>
+</li>
+<li><p class="first">Intersection (<code class="docutils literal"><span class="pre">method=CV_COMP_INTERSECT</span></code>)</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/2634df3b72d53fc8247948d3a0b33c1eaa81cc4b.png" alt="d(H_1,H_2) =  \sum _I  \min (H_1(I), H_2(I))"/></p>
+</div></div></blockquote>
+</li>
+<li><p class="first">Bhattacharyya distance (<code class="docutils literal"><span class="pre">method=CV_COMP_BHATTACHARYYA</span></code> or <code class="docutils literal"><span class="pre">method=CV_COMP_HELLINGER</span></code>). In fact, OpenCV computes Hellinger distance, which is related to Bhattacharyya coefficient.</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../_images/math/2962ee11d544acbb1a5f97d00a4a8bd24a4e1e11.png" alt="d(H_1,H_2) =  \sqrt{1 - \frac{1}{\sqrt{\bar{H_1} \bar{H_2} N^2}} \sum_I \sqrt{H_1(I) \cdot H_2(I)}}"/></p>
+</div></div></blockquote>
+</li>
+</ul>
+<p>The function returns
+<img class="math" src="../../../_images/math/c5af7411b98a2d3fdde0154c0e4f5e55e3bc0c6b.png" alt="d(H_1, H_2)"/> .</p>
+<p>While the function works well with 1-, 2-, 3-dimensional dense histograms, it may not be suitable for high-dimensional sparse histograms. In such histograms,  because of aliasing and sampling problems, the coordinates of non-zero histogram bins can slightly shift. To compare such histograms or more general sparse configurations of weighted points, consider using the
+<a class="reference internal" href="#float EMD(InputArray signature1, InputArray signature2, int distType, InputArray cost, float* lowerBound, OutputArray flow)" title="float EMD(InputArray signature1, InputArray signature2, int distType, InputArray cost, float* lowerBound, OutputArray flow)"><code class="xref ocv ocv-func docutils literal"><span class="pre">EMD()</span></code></a> function.</p>
+</div>
+<div class="section" id="emd">
+<h2>EMD<a class="headerlink" href="#emd" title="Permalink to this headline">¶</a></h2>
+<p>Computes the &#8220;minimal work&#8221; distance between two weighted point configurations.</p>
+<dl class="function">
+<dt id="float EMD(InputArray signature1, InputArray signature2, int distType, InputArray cost, float* lowerBound, OutputArray flow)">
+<strong>C++:</strong><code class="descname"> </code>float <code class="descname">EMD</code><span class="sig-paren">(</span>InputArray <strong>signature1</strong>, InputArray <strong>signature2</strong>, int <strong>distType</strong>, InputArray <strong>cost</strong>=noArray(), float* <strong>lowerBound</strong>=0, OutputArray <strong>flow</strong>=noArray() <span class="sig-paren">)</span><a class="headerlink" href="#float EMD(InputArray signature1, InputArray signature2, int distType, InputArray cost, float* lowerBound, OutputArray flow)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="float cvCalcEMD2(const CvArr* signature1, const CvArr* signature2, int distance_type, CvDistanceFunction distance_func, const CvArr* cost_matrix, CvArr* flow, float* lower_bound, void* userdata)">
+<strong>C:</strong><code class="descname"> </code>float <code class="descname">cvCalcEMD2</code><span class="sig-paren">(</span>const CvArr* <strong>signature1</strong>, const CvArr* <strong>signature2</strong>, int <strong>distance_type</strong>, CvDistanceFunction <strong>distance_func</strong>=NULL, const CvArr* <strong>cost_matrix</strong>=NULL, CvArr* <strong>flow</strong>=NULL, float* <strong>lower_bound</strong>=NULL, void* <strong>userdata</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#float cvCalcEMD2(const CvArr* signature1, const CvArr* signature2, int distance_type, CvDistanceFunction distance_func, const CvArr* cost_matrix, CvArr* flow, float* lower_bound, void* userdata)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CalcEMD2">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CalcEMD2</code><span class="sig-paren">(</span>signature1, signature2, distance_type, distance_func=None, cost_matrix=None, flow=None, lower_bound=None, userdata=None<span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#cv.CalcEMD2" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>signature1</strong> &#8211; First signature, a  <img class="math" src="../../../_images/math/8d84718a652054a8de067af12651a7a5d0b2a4dd.png" alt="\texttt{size1}\times \texttt{dims}+1"/>  floating-point matrix. Each row stores the point weight followed by the point coordinates. The matrix is allowed to have a single column (weights only) if the user-defined cost matrix is used.</li>
+<li><strong>signature2</strong> &#8211; Second signature of the same format as  <code class="docutils literal"><span class="pre">signature1</span></code> , though the number of rows may be different. The total weights may be different. In this case an extra &#8220;dummy&#8221; point is added to either  <code class="docutils literal"><span class="pre">signature1</span></code>  or  <code class="docutils literal"><span class="pre">signature2</span></code> .</li>
+<li><strong>distType</strong> &#8211; Used metric.  <code class="docutils literal"><span class="pre">CV_DIST_L1,</span> <span class="pre">CV_DIST_L2</span></code> , and  <code class="docutils literal"><span class="pre">CV_DIST_C</span></code>  stand for one of the standard metrics.  <code class="docutils literal"><span class="pre">CV_DIST_USER</span></code>  means that a pre-calculated cost matrix <code class="docutils literal"><span class="pre">cost</span></code>  is used.</li>
+<li><strong>distance_func</strong> &#8211; <p>Custom distance function supported by the old interface. <code class="docutils literal"><span class="pre">CvDistanceFunction</span></code> is defined as:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">typedef</span> <span class="nf">float</span> <span class="p">(</span><span class="n">CV_CDECL</span> <span class="o">*</span> <span class="n">CvDistanceFunction</span><span class="p">)(</span> <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">userdata</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal"><span class="pre">a</span></code> and <code class="docutils literal"><span class="pre">b</span></code> are point coordinates and <code class="docutils literal"><span class="pre">userdata</span></code> is the same as the last parameter.</p>
+</li>
+<li><strong>cost</strong> &#8211; User-defined  <img class="math" src="../../../_images/math/2f2d9b8fc6463ff1167f17bbbe8d221e50f035ac.png" alt="\texttt{size1}\times \texttt{size2}"/>  cost matrix. Also, if a cost matrix is used, lower boundary  <code class="docutils literal"><span class="pre">lowerBound</span></code>  cannot be calculated because it needs a metric function.</li>
+<li><strong>lowerBound</strong> &#8211; Optional input/output parameter: lower boundary of a distance between the two signatures that is a distance between mass centers. The lower boundary may not be calculated if the user-defined cost matrix is used, the total weights of point configurations are not equal, or if the signatures consist of weights only (the signature matrices have a single column). You  <strong>must</strong>  initialize  <code class="docutils literal"><span class="pre">*lowerBound</span></code> . If the calculated distance between mass centers is greater or equal to  <code class="docutils literal"><span class="pre">*lowerBound</span></code>  (it means that the signatures are far enough), the function does not calculate EMD. In any case  <code class="docutils literal"><span class="pre">*lowerBound</span></code>  is set to the calculated distance between mass centers on return. Thus, if you want to calculate both distance between mass centers and EMD,  <code class="docutils literal"><span class="pre">*lowerBound</span></code>  should be set to 0.</li>
+<li><strong>flow</strong> &#8211; Resultant  <img class="math" src="../../../_images/math/c579a099b157349c3ef1c286251299c3e6ce0306.png" alt="\texttt{size1} \times \texttt{size2}"/>  flow matrix:  <img class="math" src="../../../_images/math/18fe53073b46de610b70fa90d26fb435ff5eaca2.png" alt="\texttt{flow}_{i,j}"/>  is a flow from  <img class="math" src="../../../_images/math/881d48e575544c8daaa1d83893dcde5f9f7562ec.png" alt="i"/>  -th point of  <code class="docutils literal"><span class="pre">signature1</span></code>  to  <img class="math" src="../../../_images/math/5f5e79faefe563a8e06dd887610959b1955fe806.png" alt="j"/> -th point of  <code class="docutils literal"><span class="pre">signature2</span></code>  .</li>
+<li><strong>userdata</strong> &#8211; Optional pointer directly passed to the custom distance function.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function computes the earth mover distance and/or a lower boundary of the distance between the two weighted point configurations. One of the applications described in <a class="reference internal" href="#rubnersept98" id="id2">[RubnerSept98]</a> is multi-dimensional histogram comparison for image retrieval. EMD is a transportation problem that is solved using some modification of a simplex algorithm, thus the complexity is exponential in the worst case, though, on average it is much faster. In the case of a real metric the lower boundary can be calculated even faster (using linear-time algorithm) and it can be used to determine roughly whether the two signatures are far enough so that they cannot relate to the same object.</p>
+</div>
+<div class="section" id="equalizehist">
+<h2>equalizeHist<a class="headerlink" href="#equalizehist" title="Permalink to this headline">¶</a></h2>
+<p>Equalizes the histogram of a grayscale image.</p>
+<dl class="function">
+<dt id="void equalizeHist(InputArray src, OutputArray dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">equalizeHist</code><span class="sig-paren">(</span>InputArray <strong>src</strong>, OutputArray <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void equalizeHist(InputArray src, OutputArray dst)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.equalizeHist">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">equalizeHist</code><span class="sig-paren">(</span>src<span class="optional">[</span>, dst<span class="optional">]</span><span class="sig-paren">)</span> &rarr; dst<a class="headerlink" href="#cv2.equalizeHist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvEqualizeHist(const CvArr* src, CvArr* dst)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvEqualizeHist</code><span class="sig-paren">(</span>const CvArr* <strong>src</strong>, CvArr* <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvEqualizeHist(const CvArr* src, CvArr* dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source 8-bit single channel image.</li>
+<li><strong>dst</strong> &#8211; Destination image of the same size and type as  <code class="docutils literal"><span class="pre">src</span></code> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function equalizes the histogram of the input image using the following algorithm:</p>
+<ol class="arabic">
+<li><p class="first">Calculate the histogram
+<img class="math" src="../../../_images/math/662c239f3e7a5d3290da0913485987263a7c1ae7.png" alt="H"/>     for <code class="docutils literal"><span class="pre">src</span></code>  .</p>
+</li>
+<li><p class="first">Normalize the histogram so that the sum of histogram bins is 255.</p>
+</li>
+<li><p class="first">Compute the integral of the histogram:</p>
+<div class="math">
+<p><img src="../../../_images/math/c16cbf978f4cdec23b6a21cc98918603290f9be4.png" alt="H'_i =  \sum _{0  \le j &lt; i} H(j)"/></p>
+</div></li>
+<li><p class="first">Transform the image using
+<img class="math" src="../../../_images/math/f8bb589a8e50b2008690bf998bd93bb212683009.png" alt="H'"/>     as a look-up table:
+<img class="math" src="../../../_images/math/010948a7f16acce12df1ea533d164f744f8b501a.png" alt="\texttt{dst}(x,y) = H'(\texttt{src}(x,y))"/></p>
+</li>
+</ol>
+<p>The algorithm normalizes the brightness and increases the contrast of the image.</p>
+</div>
+<div class="section" id="extra-histogram-functions-c-api">
+<h2>Extra Histogram Functions (C API)<a class="headerlink" href="#extra-histogram-functions-c-api" title="Permalink to this headline">¶</a></h2>
+<p>The rest of the section describes additional C functions operating on <code class="docutils literal"><span class="pre">CvHistogram</span></code>.</p>
+</div>
+<div class="section" id="calcbackprojectpatch">
+<h2>CalcBackProjectPatch<a class="headerlink" href="#calcbackprojectpatch" title="Permalink to this headline">¶</a></h2>
+<p>Locates a template within an image by using a histogram comparison.</p>
+<dl class="cfunction">
+<dt id="void cvCalcBackProjectPatch(IplImage** images, CvArr* dst, CvSize patch_size, CvHistogram* hist, int method, double factor)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvCalcBackProjectPatch</code><span class="sig-paren">(</span>IplImage** <strong>images</strong>, CvArr* <strong>dst</strong>, CvSize <strong>patch_size</strong>, CvHistogram* <strong>hist</strong>, int <strong>method</strong>, double <strong>factor</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvCalcBackProjectPatch(IplImage** images, CvArr* dst, CvSize patch_size, CvHistogram* hist, int method, double factor)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CalcBackProjectPatch">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CalcBackProjectPatch</code><span class="sig-paren">(</span>images, dst, patch_size, hist, method, factor<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.CalcBackProjectPatch" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>images</strong> &#8211; Source images (though, you may pass CvMat** as well).</li>
+<li><strong>dst</strong> &#8211; Destination image.</li>
+<li><strong>patch_size</strong> &#8211; Size of the patch slid though the source image.</li>
+<li><strong>hist</strong> &#8211; Histogram.</li>
+<li><strong>method</strong> &#8211; Comparison method passed to  <a class="reference internal" href="#double cvCompareHist(const CvHistogram* hist1, const CvHistogram* hist2, int method)" title="double cvCompareHist(const CvHistogram* hist1, const CvHistogram* hist2, int method)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CompareHist()</span></code></a>  (see the function description).</li>
+<li><strong>factor</strong> &#8211; Normalization factor for histograms that affects the normalization scale of the destination image. Pass 1 if not sure.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function calculates the back projection by comparing histograms of the source image patches with the given histogram. The function is similar to <a class="reference internal" href="object_detection.html#void matchTemplate(InputArray image, InputArray templ, OutputArray result, int method)" title="void matchTemplate(InputArray image, InputArray templ, OutputArray result, int method)"><code class="xref ocv ocv-func docutils literal"><span class="pre">matchTemplate()</span></code></a>, but instead of comparing the raster patch with all its possible positions within the search window, the function <code class="docutils literal"><span class="pre">CalcBackProjectPatch</span></code> compares histograms. See the algorithm diagram below:</p>
+<img alt="../../../_images/backprojectpatch.png" src="../../../_images/backprojectpatch.png" />
+</div>
+<div class="section" id="calcprobdensity">
+<h2>CalcProbDensity<a class="headerlink" href="#calcprobdensity" title="Permalink to this headline">¶</a></h2>
+<p>Divides one histogram by another.</p>
+<dl class="cfunction">
+<dt id="void cvCalcProbDensity(const CvHistogram* hist1, const CvHistogram* hist2, CvHistogram* dst_hist, double scale)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvCalcProbDensity</code><span class="sig-paren">(</span>const CvHistogram* <strong>hist1</strong>, const CvHistogram* <strong>hist2</strong>, CvHistogram* <strong>dst_hist</strong>, double <strong>scale</strong>=255 <span class="sig-paren">)</span><a class="headerlink" href="#void cvCalcProbDensity(const CvHistogram* hist1, const CvHistogram* hist2, CvHistogram* dst_hist, double scale)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CalcProbDensity">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CalcProbDensity</code><span class="sig-paren">(</span>hist1, hist2, dst_hist, scale=255<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.CalcProbDensity" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hist1</strong> &#8211; First histogram (the divisor).</li>
+<li><strong>hist2</strong> &#8211; Second histogram.</li>
+<li><strong>dst_hist</strong> &#8211; Destination histogram.</li>
+<li><strong>scale</strong> &#8211; Scale factor for the destination histogram.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function calculates the object probability density from two histograms as:</p>
+<div class="math">
+<p><img src="../../../_images/math/16a9e80ca647f13f8bc6682dbba350dac0b97bd9.png" alt="\texttt{disthist} (I)= \forkthree{0}{if $\texttt{hist1}(I)=0$}{\texttt{scale}}{if $\texttt{hist1}(I) \ne 0$ and $\texttt{hist2}(I) &gt; \texttt{hist1}(I)$}{\frac{\texttt{hist2}(I) \cdot \texttt{scale}}{\texttt{hist1}(I)}}{if $\texttt{hist1}(I) \ne 0$ and $\texttt{hist2}(I) \le \texttt{hist1}(I)$}"/></p>
+</div></div>
+<div class="section" id="clearhist">
+<h2>ClearHist<a class="headerlink" href="#clearhist" title="Permalink to this headline">¶</a></h2>
+<p>Clears the histogram.</p>
+<dl class="cfunction">
+<dt id="void cvClearHist(CvHistogram* hist)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvClearHist</code><span class="sig-paren">(</span>CvHistogram* <strong>hist</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvClearHist(CvHistogram* hist)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.ClearHist">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">ClearHist</code><span class="sig-paren">(</span>hist<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.ClearHist" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>hist</strong> &#8211; Histogram.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function sets all of the histogram bins to 0 in case of a dense histogram and removes all histogram bins in case of a sparse array.</p>
+</div>
+<div class="section" id="copyhist">
+<h2>CopyHist<a class="headerlink" href="#copyhist" title="Permalink to this headline">¶</a></h2>
+<p>Copies a histogram.</p>
+<dl class="cfunction">
+<dt id="void cvCopyHist(const CvHistogram* src, CvHistogram** dst)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvCopyHist</code><span class="sig-paren">(</span>const CvHistogram* <strong>src</strong>, CvHistogram** <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvCopyHist(const CvHistogram* src, CvHistogram** dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Source histogram.</li>
+<li><strong>dst</strong> &#8211; Pointer to the destination histogram.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function makes a copy of the histogram. If the second histogram pointer <code class="docutils literal"><span class="pre">*dst</span></code> is NULL, a new histogram of the same size as  <code class="docutils literal"><span class="pre">src</span></code> is created. Otherwise, both histograms must have equal types and sizes. Then the function copies the bin values of the source histogram to the destination histogram and sets the same bin value ranges as in <code class="docutils literal"><span class="pre">src</span></code>.</p>
+</div>
+<div class="section" id="createhist">
+<span id="id3"></span><h2>CreateHist<a class="headerlink" href="#createhist" title="Permalink to this headline">¶</a></h2>
+<p>Creates a histogram.</p>
+<dl class="cfunction">
+<dt id="CvHistogram* cvCreateHist(int dims, int* sizes, int type, float** ranges, int uniform)">
+<strong>C:</strong><code class="descname"> </code>CvHistogram* <code class="descname">cvCreateHist</code><span class="sig-paren">(</span>int <strong>dims</strong>, int* <strong>sizes</strong>, int <strong>type</strong>, float** <strong>ranges</strong>=NULL, int <strong>uniform</strong>=1 <span class="sig-paren">)</span><a class="headerlink" href="#CvHistogram* cvCreateHist(int dims, int* sizes, int type, float** ranges, int uniform)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.CreateHist">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">CreateHist</code><span class="sig-paren">(</span>dims, type, ranges=None, uniform=1<span class="sig-paren">)</span> &rarr; hist<a class="headerlink" href="#cv.CreateHist" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dims</strong> &#8211; Number of histogram dimensions.</li>
+<li><strong>sizes</strong> &#8211; Array of the histogram dimension sizes.</li>
+<li><strong>type</strong> &#8211; Histogram representation format.  <code class="docutils literal"><span class="pre">CV_HIST_ARRAY</span></code>  means that the histogram data is represented as a multi-dimensional dense array CvMatND.  <code class="docutils literal"><span class="pre">CV_HIST_SPARSE</span></code>  means that histogram data is represented as a multi-dimensional sparse array <code class="docutils literal"><span class="pre">CvSparseMat</span></code>.</li>
+<li><strong>ranges</strong> &#8211; Array of ranges for the histogram bins. Its meaning depends on the  <code class="docutils literal"><span class="pre">uniform</span></code>  parameter value. The ranges are used when the histogram is calculated or backprojected to determine which histogram bin corresponds to which value/tuple of values from the input image(s).</li>
+<li><strong>uniform</strong> &#8211; Uniformity flag. If not zero, the histogram has evenly
+spaced bins and for every  <img class="math" src="../../../_images/math/90e658f3d0e4273aa1999ce00325c8cce310327a.png" alt="0&lt;=i&lt;cDims"/>   <code class="docutils literal"><span class="pre">ranges[i]</span></code>
+is an array of two numbers: lower and upper boundaries for the i-th
+histogram dimension.
+The whole range [lower,upper] is then split
+into  <code class="docutils literal"><span class="pre">dims[i]</span></code>  equal parts to determine the  <code class="docutils literal"><span class="pre">i</span></code>-th  input
+tuple value ranges for every histogram bin. And if  <code class="docutils literal"><span class="pre">uniform=0</span></code> ,
+then  the <code class="docutils literal"><span class="pre">i</span></code>-th  element of the <code class="docutils literal"><span class="pre">ranges</span></code>  array contains <code class="docutils literal"><span class="pre">dims[i]+1</span></code>  elements: <img class="math" src="../../../_images/math/2c7b6f71211ef798aee15c7346320ca3560b0ee5.png" alt="\texttt{lower}_0, \texttt{upper}_0,
+\texttt{lower}_1, \texttt{upper}_1 = \texttt{lower}_2,
+...
+\texttt{upper}_{dims[i]-1}"/>
+where <img class="math" src="../../../_images/math/0cdad069edb5cc4f8b094557fb2ea38583a01cad.png" alt="\texttt{lower}_j"/>  and  <img class="math" src="../../../_images/math/fe78b6ad59f444a84da6d19e02583dc8c3032085.png" alt="\texttt{upper}_j"/>
+are lower and upper
+boundaries of  the <code class="docutils literal"><span class="pre">i</span></code>-th  input tuple value for  the <code class="docutils literal"><span class="pre">j</span></code>-th
+bin, respectively. In either case, the input values that are beyond
+the specified range for a histogram bin are not counted by <a class="reference internal" href="#void cvCalcHist(IplImage** image, CvHistogram* hist, int accumulate, const CvArr* mask)" title="void cvCalcHist(IplImage** image, CvHistogram* hist, int accumulate, const CvArr* mask)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CalcHist()</span></code></a>  and filled with 0 by <a class="reference internal" href="#void cvCalcBackProject(IplImage** image, CvArr* backProject, const CvHistogram* hist)" title="void cvCalcBackProject(IplImage** image, CvArr* backProject, const CvHistogram* hist)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CalcBackProject()</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function creates a histogram of the specified size and returns a pointer to the created histogram. If the array <code class="docutils literal"><span class="pre">ranges</span></code> is 0, the histogram bin ranges must be specified later via the function  <a class="reference internal" href="#void cvSetHistBinRanges(CvHistogram* hist, float** ranges, int uniform)" title="void cvSetHistBinRanges(CvHistogram* hist, float** ranges, int uniform)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">SetHistBinRanges()</span></code></a>. Though <a class="reference internal" href="#void cvCalcHist(IplImage** image, CvHistogram* hist, int accumulate, const CvArr* mask)" title="void cvCalcHist(IplImage** image, CvHistogram* hist, int accumulate, const CvArr* mask)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CalcHist()</span></code></a> and <a class="reference internal" href="#void cvCalcBackProject(IplImage** image, CvArr* backProject, const CvHistogram* hist)" title="void cvCalcBackProject(IplImage** image, CvArr* backProject, const CvHistogram* hist)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CalcBackProject()</span></code></a> may process 8-bit images without setting bin ranges, they assume they are equally spaced in 0 to 255 bins.</p>
+</div>
+<div class="section" id="getminmaxhistvalue">
+<h2>GetMinMaxHistValue<a class="headerlink" href="#getminmaxhistvalue" title="Permalink to this headline">¶</a></h2>
+<p>Finds the minimum and maximum histogram bins.</p>
+<dl class="cfunction">
+<dt id="void cvGetMinMaxHistValue(const CvHistogram* hist, float* min_value, float* max_value, int* min_idx, int* max_idx)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvGetMinMaxHistValue</code><span class="sig-paren">(</span>const CvHistogram* <strong>hist</strong>, float* <strong>min_value</strong>, float* <strong>max_value</strong>, int* <strong>min_idx</strong>=NULL, int* <strong>max_idx</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#void cvGetMinMaxHistValue(const CvHistogram* hist, float* min_value, float* max_value, int* min_idx, int* max_idx)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.GetMinMaxHistValue">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">GetMinMaxHistValue</code><span class="sig-paren">(</span>hist)-&gt; (min_value, max_value, min_idx, max_idx<span class="sig-paren">)</span><a class="headerlink" href="#cv.GetMinMaxHistValue" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hist</strong> &#8211; Histogram.</li>
+<li><strong>min_value</strong> &#8211; Pointer to the minimum value of the histogram.</li>
+<li><strong>max_value</strong> &#8211; Pointer to the maximum value of the histogram.</li>
+<li><strong>min_idx</strong> &#8211; Pointer to the array of coordinates for the minimum.</li>
+<li><strong>max_idx</strong> &#8211; Pointer to the array of coordinates for the maximum.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function finds the minimum and maximum histogram bins and their positions. All of output arguments are optional. Among several extremas with the same value the ones with the minimum index (in the lexicographical order) are returned. In case of several maximums or minimums, the earliest in the lexicographical order (extrema locations) is returned.</p>
+</div>
+<div class="section" id="makehistheaderforarray">
+<h2>MakeHistHeaderForArray<a class="headerlink" href="#makehistheaderforarray" title="Permalink to this headline">¶</a></h2>
+<p>Makes a histogram out of an array.</p>
+<dl class="cfunction">
+<dt id="CvHistogram* cvMakeHistHeaderForArray(int dims, int* sizes, CvHistogram* hist, float* data, float** ranges, int uniform)">
+<strong>C:</strong><code class="descname"> </code>CvHistogram* <code class="descname">cvMakeHistHeaderForArray</code><span class="sig-paren">(</span>int <strong>dims</strong>, int* <strong>sizes</strong>, CvHistogram* <strong>hist</strong>, float* <strong>data</strong>, float** <strong>ranges</strong>=NULL, int <strong>uniform</strong>=1 <span class="sig-paren">)</span><a class="headerlink" href="#CvHistogram* cvMakeHistHeaderForArray(int dims, int* sizes, CvHistogram* hist, float* data, float** ranges, int uniform)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dims</strong> &#8211; Number of the histogram dimensions.</li>
+<li><strong>sizes</strong> &#8211; Array of the histogram dimension sizes.</li>
+<li><strong>hist</strong> &#8211; Histogram header initialized by the function.</li>
+<li><strong>data</strong> &#8211; Array used to store histogram bins.</li>
+<li><strong>ranges</strong> &#8211; Histogram bin ranges. See  <a class="reference internal" href="#CvHistogram* cvCreateHist(int dims, int* sizes, int type, float** ranges, int uniform)" title="CvHistogram* cvCreateHist(int dims, int* sizes, int type, float** ranges, int uniform)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CreateHist()</span></code></a> for details.</li>
+<li><strong>uniform</strong> &#8211; Uniformity flag. See  <a class="reference internal" href="#CvHistogram* cvCreateHist(int dims, int* sizes, int type, float** ranges, int uniform)" title="CvHistogram* cvCreateHist(int dims, int* sizes, int type, float** ranges, int uniform)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CreateHist()</span></code></a> for details.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function initializes the histogram, whose header and bins are allocated by the user. <a class="reference internal" href="#void cvReleaseHist(CvHistogram** hist)" title="void cvReleaseHist(CvHistogram** hist)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">ReleaseHist()</span></code></a> does not need to be called afterwards. Only dense histograms can be initialized this way. The function returns <code class="docutils literal"><span class="pre">hist</span></code>.</p>
+</div>
+<div class="section" id="normalizehist">
+<h2>NormalizeHist<a class="headerlink" href="#normalizehist" title="Permalink to this headline">¶</a></h2>
+<p>Normalizes the histogram.</p>
+<dl class="cfunction">
+<dt id="void cvNormalizeHist(CvHistogram* hist, double factor)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvNormalizeHist</code><span class="sig-paren">(</span>CvHistogram* <strong>hist</strong>, double <strong>factor</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvNormalizeHist(CvHistogram* hist, double factor)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.NormalizeHist">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">NormalizeHist</code><span class="sig-paren">(</span>hist, factor<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.NormalizeHist" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hist</strong> &#8211; Pointer to the histogram.</li>
+<li><strong>factor</strong> &#8211; Normalization factor.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function normalizes the histogram bins by scaling them so that the sum of the bins becomes equal to  <code class="docutils literal"><span class="pre">factor</span></code>.</p>
+</div>
+<div class="section" id="releasehist">
+<h2>ReleaseHist<a class="headerlink" href="#releasehist" title="Permalink to this headline">¶</a></h2>
+<p>Releases the histogram.</p>
+<dl class="cfunction">
+<dt id="void cvReleaseHist(CvHistogram** hist)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvReleaseHist</code><span class="sig-paren">(</span>CvHistogram** <strong>hist</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvReleaseHist(CvHistogram** hist)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hist</strong> &#8211; Double pointer to the released histogram.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function releases the histogram (header and the data). The pointer to the histogram is cleared by the function. If <code class="docutils literal"><span class="pre">*hist</span></code> pointer is already <code class="docutils literal"><span class="pre">NULL</span></code>, the function does nothing.</p>
+</div>
+<div class="section" id="sethistbinranges">
+<h2>SetHistBinRanges<a class="headerlink" href="#sethistbinranges" title="Permalink to this headline">¶</a></h2>
+<p>Sets the bounds of the histogram bins.</p>
+<dl class="cfunction">
+<dt id="void cvSetHistBinRanges(CvHistogram* hist, float** ranges, int uniform)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSetHistBinRanges</code><span class="sig-paren">(</span>CvHistogram* <strong>hist</strong>, float** <strong>ranges</strong>, int <strong>uniform</strong>=1 <span class="sig-paren">)</span><a class="headerlink" href="#void cvSetHistBinRanges(CvHistogram* hist, float** ranges, int uniform)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hist</strong> &#8211; Histogram.</li>
+<li><strong>ranges</strong> &#8211; Array of bin ranges arrays. See  <a class="reference internal" href="#CvHistogram* cvCreateHist(int dims, int* sizes, int type, float** ranges, int uniform)" title="CvHistogram* cvCreateHist(int dims, int* sizes, int type, float** ranges, int uniform)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CreateHist()</span></code></a> for details.</li>
+<li><strong>uniform</strong> &#8211; Uniformity flag. See  <a class="reference internal" href="#CvHistogram* cvCreateHist(int dims, int* sizes, int type, float** ranges, int uniform)" title="CvHistogram* cvCreateHist(int dims, int* sizes, int type, float** ranges, int uniform)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CreateHist()</span></code></a> for details.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This is a standalone function for setting bin ranges in the histogram. For a more detailed description of the parameters <code class="docutils literal"><span class="pre">ranges</span></code> and <code class="docutils literal"><span class="pre">uniform</span></code>, see the <a class="reference internal" href="#void cvCalcHist(IplImage** image, CvHistogram* hist, int accumulate, const CvArr* mask)" title="void cvCalcHist(IplImage** image, CvHistogram* hist, int accumulate, const CvArr* mask)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CalcHist()</span></code></a> function that can initialize the ranges as well. Ranges for the histogram bins must be set before the histogram is calculated or the backproject of the histogram is calculated.</p>
+</div>
+<div class="section" id="threshhist">
+<h2>ThreshHist<a class="headerlink" href="#threshhist" title="Permalink to this headline">¶</a></h2>
+<p>Thresholds the histogram.</p>
+<dl class="cfunction">
+<dt id="void cvThreshHist(CvHistogram* hist, double threshold)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvThreshHist</code><span class="sig-paren">(</span>CvHistogram* <strong>hist</strong>, double <strong>threshold</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvThreshHist(CvHistogram* hist, double threshold)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.ThreshHist">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">ThreshHist</code><span class="sig-paren">(</span>hist, threshold<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.ThreshHist" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hist</strong> &#8211; Pointer to the histogram.</li>
+<li><strong>threshold</strong> &#8211; Threshold level.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function clears histogram bins that are below the specified threshold.</p>
+<table class="docutils citation" frame="void" id="rubnersept98" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[RubnerSept98]</a></td><td><ol class="first last upperalpha simple" start="25">
+<li>Rubner. C. Tomasi, L.J. Guibas. <em>The Earth Mover’s Distance as a Metric for Image Retrieval</em>. Technical Report STAN-CS-TN-98-86, Department of Computer Science, Stanford University, September 1998.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Histograms</a><ul>
+<li><a class="reference internal" href="#calchist">calcHist</a></li>
+<li><a class="reference internal" href="#calcbackproject">calcBackProject</a></li>
+<li><a class="reference internal" href="#comparehist">compareHist</a></li>
+<li><a class="reference internal" href="#emd">EMD</a></li>
+<li><a class="reference internal" href="#equalizehist">equalizeHist</a></li>
+<li><a class="reference internal" href="#extra-histogram-functions-c-api">Extra Histogram Functions (C API)</a></li>
+<li><a class="reference internal" href="#calcbackprojectpatch">CalcBackProjectPatch</a></li>
+<li><a class="reference internal" href="#calcprobdensity">CalcProbDensity</a></li>
+<li><a class="reference internal" href="#clearhist">ClearHist</a></li>
+<li><a class="reference internal" href="#copyhist">CopyHist</a></li>
+<li><a class="reference internal" href="#createhist">CreateHist</a></li>
+<li><a class="reference internal" href="#getminmaxhistvalue">GetMinMaxHistValue</a></li>
+<li><a class="reference internal" href="#makehistheaderforarray">MakeHistHeaderForArray</a></li>
+<li><a class="reference internal" href="#normalizehist">NormalizeHist</a></li>
+<li><a class="reference internal" href="#releasehist">ReleaseHist</a></li>
+<li><a class="reference internal" href="#sethistbinranges">SetHistBinRanges</a></li>
+<li><a class="reference internal" href="#threshhist">ThreshHist</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="miscellaneous_transformations.html"
+                        title="previous chapter">Miscellaneous Image Transformations</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="structural_analysis_and_shape_descriptors.html"
+                        title="next chapter">Structural Analysis and Shape Descriptors</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/imgproc/doc/histograms.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="structural_analysis_and_shape_descriptors.html" title="Structural Analysis and Shape Descriptors"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="miscellaneous_transformations.html" title="Miscellaneous Image Transformations"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="imgproc.html" >imgproc. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

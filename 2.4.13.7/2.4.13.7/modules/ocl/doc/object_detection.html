@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Object Detection &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="ocl. OpenCL-accelerated Computer Vision" href="ocl.html" />
+    <link rel="next" title="Feature Detection And Description" href="feature_detection_and_description.html" />
+    <link rel="prev" title="ml.Machine Learning" href="ml_machine_learning.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="feature_detection_and_description.html" title="Feature Detection And Description"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ml_machine_learning.html" title="ml.Machine Learning"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" accesskey="U">ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="object-detection">
+<h1>Object Detection<a class="headerlink" href="#object-detection" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ocl-oclcascadeclassifier">
+<h2>ocl::OclCascadeClassifier<a class="headerlink" href="#ocl-oclcascadeclassifier" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ocl::OclCascadeClassifier : public CascadeClassifier">
+<em class="property">class </em><code class="descclassname">ocl::</code><code class="descname">OclCascadeClassifier</code> : <em class="property">public</em> <code class="descname">CascadeClassifier</code><a class="headerlink" href="#ocl::OclCascadeClassifier : public CascadeClassifier" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Cascade classifier class used for object detection. Supports HAAR cascade classifier  in the form of cross link</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">OclCascadeClassifier</span> <span class="p">:</span> <span class="k">public</span> <span class="n">CascadeClassifier</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+        <span class="n">OclCascadeClassifier</span><span class="p">(){};</span>
+        <span class="o">~</span><span class="n">OclCascadeClassifier</span><span class="p">(){};</span>
+        <span class="n">CvSeq</span><span class="o">*</span> <span class="nf">oclHaarDetectObjects</span><span class="p">(</span><span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">gimg</span><span class="p">,</span> <span class="n">CvMemStorage</span> <span class="o">*</span><span class="n">storage</span><span class="p">,</span> <span class="kt">double</span> <span class="n">scaleFactor</span><span class="p">,</span>
+                              <span class="kt">int</span> <span class="n">minNeighbors</span><span class="p">,</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">,</span> <span class="n">CvSize</span> <span class="n">minSize</span> <span class="o">=</span> <span class="n">cvSize</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                              <span class="n">CvSize</span> <span class="n">maxSize</span> <span class="o">=</span> <span class="n">cvSize</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">(Ocl) A face detection example using cascade classifiers can be found at opencv_source_code/samples/ocl/facedetect.cpp</p>
+</div>
+</div>
+<div class="section" id="ocl-oclcascadeclassifier-oclhaardetectobjects">
+<h2>ocl::OclCascadeClassifier::oclHaarDetectObjects<a class="headerlink" href="#ocl-oclcascadeclassifier-oclhaardetectobjects" title="Permalink to this headline">¶</a></h2>
+<p>Detects objects of different sizes in the input image.</p>
+<dl class="function">
+<dt id="CvSeq* ocl::OclCascadeClassifier::oclHaarDetectObjects(oclMat &amp;gimg, CvMemStorage *storage, double scaleFactor, int minNeighbors, int flags, CvSize minSize , CvSize maxSize)">
+<strong>C++:</strong><code class="descname"> </code>CvSeq* <code class="descclassname">ocl::OclCascadeClassifier::</code><code class="descname">oclHaarDetectObjects</code><span class="sig-paren">(</span>oclMat&amp; <strong>gimg</strong>, CvMemStorage* <strong>storage</strong>, double <strong>scaleFactor</strong>, int <strong>minNeighbors</strong>, int <strong>flags</strong>, CvSize <strong>minSize</strong>=cvSize(0, 0), CvSize <strong>maxSize</strong>=cvSize(0, 0)<span class="sig-paren">)</span><a class="headerlink" href="#CvSeq* ocl::OclCascadeClassifier::oclHaarDetectObjects(oclMat &gimg, CvMemStorage *storage, double scaleFactor, int minNeighbors, int flags, CvSize minSize , CvSize maxSize)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>gimage</strong> &#8211; Matrix of type CV_8U containing an image where objects should be detected.</li>
+<li><strong>scaleFactor</strong> &#8211; Parameter specifying how much the image size is reduced at each image scale.</li>
+<li><strong>minNeighbors</strong> &#8211; Parameter specifying how many neighbors each candidate rectangle should have to retain it.</li>
+<li><strong>flags</strong> &#8211; Parameter with the same meaning for an old cascade as in the function <code class="docutils literal"><span class="pre">cvHaarDetectObjects</span></code>. It is not used for a new cascade.</li>
+<li><strong>minSize</strong> &#8211; Minimum possible object size. Objects smaller than that are ignored.</li>
+<li><strong>maxSize</strong> &#8211; Maximum possible object size. Objects larger than that are ignored.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function provides a very similar interface with that in CascadeClassifier class, except using oclMat as input image.</p>
+</div>
+<div class="section" id="ocl-matchtemplatebuf">
+<h2>ocl::MatchTemplateBuf<a class="headerlink" href="#ocl-matchtemplatebuf" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="ocl::MatchTemplateBuf">
+<em class="property">struct </em><code class="descclassname">ocl::</code><code class="descname">MatchTemplateBuf</code><a class="headerlink" href="#ocl::MatchTemplateBuf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class providing memory buffers for <a class="reference internal" href="#void ocl::matchTemplate(const oclMat&amp; image, const oclMat&amp; templ, oclMat&amp; result, int method)" title="void ocl::matchTemplate(const oclMat&amp; image, const oclMat&amp; templ, oclMat&amp; result, int method)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::matchTemplate()</span></code></a> function, plus it allows to adjust some specific parameters.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">CV_EXPORTS</span> <span class="n">MatchTemplateBuf</span>
+<span class="p">{</span>
+    <span class="n">Size</span> <span class="n">user_block_size</span><span class="p">;</span>
+    <span class="n">oclMat</span> <span class="n">imagef</span><span class="p">,</span> <span class="n">templf</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">oclMat</span><span class="o">&gt;</span> <span class="n">images</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">oclMat</span><span class="o">&gt;</span> <span class="n">image_sums</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">oclMat</span><span class="o">&gt;</span> <span class="n">image_sqsums</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>You can use field <cite>user_block_size</cite> to set specific block size for <a class="reference internal" href="#void ocl::matchTemplate(const oclMat&amp; image, const oclMat&amp; templ, oclMat&amp; result, int method)" title="void ocl::matchTemplate(const oclMat&amp; image, const oclMat&amp; templ, oclMat&amp; result, int method)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::matchTemplate()</span></code></a> function. If you leave its default value <cite>Size(0,0)</cite> then automatic estimation of block size will be used (which is optimized for speed). By varying <cite>user_block_size</cite> you can reduce memory requirements at the cost of speed.</p>
+</div>
+<div class="section" id="ocl-matchtemplate">
+<h2>ocl::matchTemplate<a class="headerlink" href="#ocl-matchtemplate" title="Permalink to this headline">¶</a></h2>
+<p>Computes a proximity map for a raster template and an image where the template is searched for.</p>
+<dl class="function">
+<dt id="void ocl::matchTemplate(const oclMat&amp; image, const oclMat&amp; templ, oclMat&amp; result, int method)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">matchTemplate</code><span class="sig-paren">(</span>const oclMat&amp; <strong>image</strong>, const oclMat&amp; <strong>templ</strong>, oclMat&amp; <strong>result</strong>, int <strong>method</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::matchTemplate(const oclMat& image, const oclMat& templ, oclMat& result, int method)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void ocl::matchTemplate(const oclMat&amp; image, const oclMat&amp; templ, oclMat&amp; result, int method, MatchTemplateBuf &amp;buf)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">matchTemplate</code><span class="sig-paren">(</span>const oclMat&amp; <strong>image</strong>, const oclMat&amp; <strong>templ</strong>, oclMat&amp; <strong>result</strong>, int <strong>method</strong>, MatchTemplateBuf&amp; <strong>buf</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::matchTemplate(const oclMat& image, const oclMat& templ, oclMat& result, int method, MatchTemplateBuf &buf)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Source image.  <code class="docutils literal"><span class="pre">CV_32F</span></code> and  <code class="docutils literal"><span class="pre">CV_8U</span></code> depth images (1..4 channels) are supported for now.</li>
+<li><strong>templ</strong> &#8211; Template image with the size and type the same as  <code class="docutils literal"><span class="pre">image</span></code> .</li>
+<li><strong>result</strong> &#8211; Map containing comparison results ( <code class="docutils literal"><span class="pre">CV_32FC1</span></code> ). If  <code class="docutils literal"><span class="pre">image</span></code> is  <em>W x H</em>  and <code class="docutils literal"><span class="pre">templ</span></code> is  <em>w x h</em>, then  <code class="docutils literal"><span class="pre">result</span></code> must be <em>W-w+1 x H-h+1</em>.</li>
+<li><strong>method</strong> &#8211; Specifies the way to compare the template with the image.</li>
+<li><strong>buf</strong> &#8211; Optional buffer to avoid extra memory allocations and to adjust some specific parameters. See <a class="reference internal" href="#ocl::MatchTemplateBuf" title="struct ocl::MatchTemplateBuf"><code class="xref ocv ocv-struct docutils literal"><span class="pre">ocl::MatchTemplateBuf</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The following methods are supported for the <code class="docutils literal"><span class="pre">CV_8U</span></code> depth images for now:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">CV_TM_SQDIFF</span></code></li>
+<li><code class="docutils literal"><span class="pre">CV_TM_SQDIFF_NORMED</span></code></li>
+<li><code class="docutils literal"><span class="pre">CV_TM_CCORR</span></code></li>
+<li><code class="docutils literal"><span class="pre">CV_TM_CCORR_NORMED</span></code></li>
+<li><code class="docutils literal"><span class="pre">CV_TM_CCOEFF</span></code></li>
+<li><code class="docutils literal"><span class="pre">CV_TM_CCOEFF_NORMED</span></code></li>
+</ul>
+<p>The following methods are supported for the <code class="docutils literal"><span class="pre">CV_32F</span></code> images for now:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">CV_TM_SQDIFF</span></code></li>
+<li><code class="docutils literal"><span class="pre">CV_TM_CCORR</span></code></li>
+</ul>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/object_detection.html#void matchTemplate(InputArray image, InputArray templ, OutputArray result, int method)" title="void matchTemplate(InputArray image, InputArray templ, OutputArray result, int method)"><code class="xref ocv ocv-func docutils literal"><span class="pre">matchTemplate()</span></code></a></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Object Detection</a><ul>
+<li><a class="reference internal" href="#ocl-oclcascadeclassifier">ocl::OclCascadeClassifier</a></li>
+<li><a class="reference internal" href="#ocl-oclcascadeclassifier-oclhaardetectobjects">ocl::OclCascadeClassifier::oclHaarDetectObjects</a></li>
+<li><a class="reference internal" href="#ocl-matchtemplatebuf">ocl::MatchTemplateBuf</a></li>
+<li><a class="reference internal" href="#ocl-matchtemplate">ocl::matchTemplate</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ml_machine_learning.html"
+                        title="previous chapter">ml.Machine Learning</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="feature_detection_and_description.html"
+                        title="next chapter">Feature Detection And Description</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/ocl/doc/object_detection.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="feature_detection_and_description.html" title="Feature Detection And Description"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ml_machine_learning.html" title="ml.Machine Learning"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" >ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

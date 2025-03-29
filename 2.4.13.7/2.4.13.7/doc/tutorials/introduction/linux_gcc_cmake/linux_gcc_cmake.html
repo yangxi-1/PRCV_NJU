@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using OpenCV with gcc and CMake &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="Introduction to OpenCV" href="../table_of_content_introduction/table_of_content_introduction.html" />
+    <link rel="next" title="Using OpenCV with Eclipse (plugin CDT)" href="../linux_eclipse/linux_eclipse.html" />
+    <link rel="prev" title="Installation in Linux" href="../linux_install/linux_install.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../linux_eclipse/linux_eclipse.html" title="Using OpenCV with Eclipse (plugin CDT)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../linux_install/linux_install.html" title="Installation in Linux"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_introduction/table_of_content_introduction.html" accesskey="U">Introduction to OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="using-opencv-with-gcc-and-cmake">
+<span id="linux-gcc-usage"></span><h1>Using OpenCV with gcc and CMake<a class="headerlink" href="#using-opencv-with-gcc-and-cmake" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We assume that you have successfully installed OpenCV in your workstation.</p>
+</div>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>The easiest way of using OpenCV in your code is to use <a class="reference external" href="http://www.cmake.org/">CMake</a>. A few advantages (taken from the Wiki):<ol class="arabic">
+<li>No need to change anything when porting between Linux and Windows</li>
+<li>Can easily be combined with other tools by CMake( i.e. Qt, ITK and VTK )</li>
+</ol>
+</li>
+<li>If you are not familiar with CMake, checkout the <a class="reference external" href="http://www.cmake.org/cmake/help/cmake_tutorial.html">tutorial</a> on its website.</li>
+</ul>
+</div>
+<div class="section" id="steps">
+<h2>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="create-a-program-using-opencv">
+<h3>Create a program using OpenCV<a class="headerlink" href="#create-a-program-using-opencv" title="Permalink to this headline">¶</a></h3>
+<p>Let&#8217;s use a simple program such as DisplayImage.cpp shown below.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;opencv2/opencv.hpp&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">argc</span> <span class="o">!=</span> <span class="mi">2</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;usage: DisplayImage.out &lt;Image_Path&gt;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">Mat</span> <span class="n">image</span><span class="p">;</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">image</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;No image data </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">namedWindow</span><span class="p">(</span><span class="s">&quot;Display Image&quot;</span><span class="p">,</span> <span class="n">WINDOW_AUTOSIZE</span> <span class="p">);</span>
+    <span class="n">imshow</span><span class="p">(</span><span class="s">&quot;Display Image&quot;</span><span class="p">,</span> <span class="n">image</span><span class="p">);</span>
+
+    <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-a-cmake-file">
+<h3>Create a CMake file<a class="headerlink" href="#create-a-cmake-file" title="Permalink to this headline">¶</a></h3>
+<p>Now you have to create your CMakeLists.txt file. It should look like this:</p>
+<div class="highlight-cmake"><div class="highlight"><pre><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">2.8</span><span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span> <span class="s">DisplayImage</span> <span class="p">)</span>
+<span class="nb">find_package</span><span class="p">(</span> <span class="s">OpenCV</span> <span class="s">REQUIRED</span> <span class="p">)</span>
+<span class="nb">add_executable</span><span class="p">(</span> <span class="s">DisplayImage</span> <span class="s">DisplayImage.cpp</span> <span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span> <span class="s">DisplayImage</span> <span class="o">${</span><span class="nv">OpenCV_LIBS</span><span class="o">}</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="generate-the-executable">
+<h3>Generate the executable<a class="headerlink" href="#generate-the-executable" title="Permalink to this headline">¶</a></h3>
+<p>This part is easy, just proceed as with any other project using CMake:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">cd</span> &lt;DisplayImage_directory&gt;
+cmake .
+make
+</pre></div>
+</div>
+</div>
+<div class="section" id="result">
+<h3>Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h3>
+<p>By now you should have an executable (called DisplayImage in this case). You just have to run it giving an image location as an argument, i.e.:</p>
+<div class="highlight-bash"><div class="highlight"><pre>./DisplayImage lena.jpg
+</pre></div>
+</div>
+<p>You should get a nice window as the one shown below:</p>
+<img alt="Display Image - Lena" class="align-center" src="../../../../_images/GCC_CMake_Example_Tutorial.jpg" />
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Using OpenCV with gcc and CMake</a><ul>
+<li><a class="reference internal" href="#steps">Steps</a><ul>
+<li><a class="reference internal" href="#create-a-program-using-opencv">Create a program using OpenCV</a></li>
+<li><a class="reference internal" href="#create-a-cmake-file">Create a CMake file</a></li>
+<li><a class="reference internal" href="#generate-the-executable">Generate the executable</a></li>
+<li><a class="reference internal" href="#result">Result</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../linux_install/linux_install.html"
+                        title="previous chapter">Installation in Linux</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../linux_eclipse/linux_eclipse.html"
+                        title="next chapter">Using OpenCV with Eclipse (plugin CDT)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/introduction/linux_gcc_cmake/linux_gcc_cmake.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../linux_eclipse/linux_eclipse.html" title="Using OpenCV with Eclipse (plugin CDT)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../linux_install/linux_install.html" title="Installation in Linux"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_introduction/table_of_content_introduction.html" >Introduction to OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

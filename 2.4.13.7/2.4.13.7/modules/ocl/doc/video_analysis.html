@@ -1,0 +1,969 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Video Analysis &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="ocl. OpenCL-accelerated Computer Vision" href="ocl.html" />
+    <link rel="next" title="Camera Calibration and 3D Reconstruction" href="camera_calibration_and_3D_reconstruction.html" />
+    <link rel="prev" title="Feature Detection And Description" href="feature_detection_and_description.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="camera_calibration_and_3D_reconstruction.html" title="Camera Calibration and 3D Reconstruction"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="feature_detection_and_description.html" title="Feature Detection And Description"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" accesskey="U">ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="video-analysis">
+<h1>Video Analysis<a class="headerlink" href="#video-analysis" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ocl-goodfeaturestotrackdetector-ocl">
+<h2>ocl::GoodFeaturesToTrackDetector_OCL<a class="headerlink" href="#ocl-goodfeaturestotrackdetector-ocl" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ocl::GoodFeaturesToTrackDetector_OCL">
+<em class="property">class </em><code class="descclassname">ocl::</code><code class="descname">GoodFeaturesToTrackDetector_OCL</code><a class="headerlink" href="#ocl::GoodFeaturesToTrackDetector_OCL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class used for strong corners detection on an image.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">GoodFeaturesToTrackDetector_OCL</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">explicit</span> <span class="n">GoodFeaturesToTrackDetector_OCL</span><span class="p">(</span><span class="kt">int</span> <span class="n">maxCorners</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="kt">double</span> <span class="n">qualityLevel</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span> <span class="kt">double</span> <span class="n">minDistance</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">blockSize</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">useHarrisDetector</span> <span class="o">=</span> <span class="nb">false</span><span class="p">,</span> <span class="kt">double</span> <span class="n">harrisK</span> <span class="o">=</span> <span class="mf">0.04</span><span class="p">);</span>
+
+    <span class="c1">//! return 1 rows matrix with CV_32FC2 type</span>
+    <span class="kt">void</span> <span class="nf">operator</span> <span class="p">()(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">image</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">corners</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">oclMat</span><span class="p">());</span>
+    <span class="c1">//! download points of type Point2f to a vector. the vector&#39;s content will be erased</span>
+    <span class="kt">void</span> <span class="nf">downloadPoints</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">points</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point2f</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">points_v</span><span class="p">);</span>
+
+    <span class="kt">int</span> <span class="n">maxCorners</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">qualityLevel</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">minDistance</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="n">blockSize</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">useHarrisDetector</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">harrisK</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="nf">releaseMemory</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">Dx_</span><span class="p">.</span><span class="n">release</span><span class="p">();</span>
+        <span class="n">Dy_</span><span class="p">.</span><span class="n">release</span><span class="p">();</span>
+        <span class="n">eig_</span><span class="p">.</span><span class="n">release</span><span class="p">();</span>
+        <span class="n">minMaxbuf_</span><span class="p">.</span><span class="n">release</span><span class="p">();</span>
+        <span class="n">tmpCorners_</span><span class="p">.</span><span class="n">release</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class finds the most prominent corners in the image.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/feature_detection.html#void goodFeaturesToTrack(InputArray image, OutputArray corners, int maxCorners, double qualityLevel, double minDistance, InputArray mask, int blockSize, bool useHarrisDetector, double k)" title="void goodFeaturesToTrack(InputArray image, OutputArray corners, int maxCorners, double qualityLevel, double minDistance, InputArray mask, int blockSize, bool useHarrisDetector, double k)"><code class="xref ocv ocv-func docutils literal"><span class="pre">goodFeaturesToTrack()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-goodfeaturestotrackdetector-ocl-goodfeaturestotrackdetector-ocl">
+<h2>ocl::GoodFeaturesToTrackDetector_OCL::GoodFeaturesToTrackDetector_OCL<a class="headerlink" href="#ocl-goodfeaturestotrackdetector-ocl-goodfeaturestotrackdetector-ocl" title="Permalink to this headline">¶</a></h2>
+<p>Constructor.</p>
+<dl class="function">
+<dt id="ocl::GoodFeaturesToTrackDetector_OCL::GoodFeaturesToTrackDetector_OCL(int maxCorners , double qualityLevel , double minDistance , int blockSize , bool useHarrisDetector , double harrisK)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ocl::GoodFeaturesToTrackDetector_OCL::</code><code class="descname">GoodFeaturesToTrackDetector_OCL</code><span class="sig-paren">(</span>int <strong>maxCorners</strong>=1000, double <strong>qualityLevel</strong>=0.01, double <strong>minDistance</strong>=0.0, int <strong>blockSize</strong>=3, bool <strong>useHarrisDetector</strong>=false, double <strong>harrisK</strong>=0.04<span class="sig-paren">)</span><a class="headerlink" href="#ocl::GoodFeaturesToTrackDetector_OCL::GoodFeaturesToTrackDetector_OCL(int maxCorners , double qualityLevel , double minDistance , int blockSize , bool useHarrisDetector , double harrisK)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>maxCorners</strong> &#8211; Maximum number of corners to return. If there are more corners than are found, the strongest of them is returned.</li>
+<li><strong>qualityLevel</strong> &#8211; Parameter characterizing the minimal accepted quality of image corners. The parameter value is multiplied by the best corner quality measure, which is the minimal eigenvalue (see  <a class="reference internal" href="image_processing.html#void ocl::cornerMinEigenVal(const oclMat &amp;src, oclMat &amp;dst, int blockSize, int ksize, int bordertype)" title="void ocl::cornerMinEigenVal(const oclMat &amp;src, oclMat &amp;dst, int blockSize, int ksize, int bordertype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::cornerMinEigenVal()</span></code></a> ) or the Harris function response (see  <a class="reference internal" href="image_processing.html#void ocl::cornerHarris(const oclMat &amp;src, oclMat &amp;dst, int blockSize, int ksize, double k, int bordertype)" title="void ocl::cornerHarris(const oclMat &amp;src, oclMat &amp;dst, int blockSize, int ksize, double k, int bordertype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::cornerHarris()</span></code></a> ). The corners with the quality measure less than the product are rejected. For example, if the best corner has the quality measure = 1500, and the  <code class="docutils literal"><span class="pre">qualityLevel=0.01</span></code> , then all the corners with the quality measure less than 15 are rejected.</li>
+<li><strong>minDistance</strong> &#8211; Minimum possible Euclidean distance between the returned corners.</li>
+<li><strong>blockSize</strong> &#8211; Size of an average block for computing a derivative covariation matrix over each pixel neighborhood. See  <a class="reference internal" href="../../imgproc/doc/feature_detection.html#void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)" title="void cornerEigenValsAndVecs(InputArray src, OutputArray dst, int blockSize, int ksize, int borderType)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cornerEigenValsAndVecs()</span></code></a> .</li>
+<li><strong>useHarrisDetector</strong> &#8211; Parameter indicating whether to use a Harris detector (see <a class="reference internal" href="image_processing.html#void ocl::cornerHarris(const oclMat &amp;src, oclMat &amp;dst, int blockSize, int ksize, double k, int bordertype)" title="void ocl::cornerHarris(const oclMat &amp;src, oclMat &amp;dst, int blockSize, int ksize, double k, int bordertype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::cornerHarris()</span></code></a>) or <a class="reference internal" href="image_processing.html#void ocl::cornerMinEigenVal(const oclMat &amp;src, oclMat &amp;dst, int blockSize, int ksize, int bordertype)" title="void ocl::cornerMinEigenVal(const oclMat &amp;src, oclMat &amp;dst, int blockSize, int ksize, int bordertype)"><code class="xref ocv ocv-func docutils literal"><span class="pre">ocl::cornerMinEigenVal()</span></code></a>.</li>
+<li><strong>harrisK</strong> &#8211; Free parameter of the Harris detector.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-goodfeaturestotrackdetector-ocl-operator">
+<h2>ocl::GoodFeaturesToTrackDetector_OCL::operator ()<a class="headerlink" href="#ocl-goodfeaturestotrackdetector-ocl-operator" title="Permalink to this headline">¶</a></h2>
+<p>Finds the most prominent corners in the image.</p>
+<dl class="function">
+<dt id="void ocl::GoodFeaturesToTrackDetector_OCL::operator ()(const oclMat&amp; image, oclMat&amp; corners, const oclMat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::GoodFeaturesToTrackDetector_OCL::</code><code class="descname">operator()</code><span class="sig-paren">(</span>const oclMat&amp; <strong>image</strong>, oclMat&amp; <strong>corners</strong>, const oclMat&amp; <strong>mask</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::GoodFeaturesToTrackDetector_OCL::operator ()(const oclMat& image, oclMat& corners, const oclMat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Input 8-bit, single-channel image.</li>
+<li><strong>corners</strong> &#8211; Output vector of detected corners (it will be one row matrix with CV_32FC2 type).</li>
+<li><strong>mask</strong> &#8211; Optional region of interest. If the image is not empty (it needs to have the type  <code class="docutils literal"><span class="pre">CV_8UC1</span></code>  and the same size as  <code class="docutils literal"><span class="pre">image</span></code> ), it  specifies the region in which the corners are detected.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../imgproc/doc/feature_detection.html#void goodFeaturesToTrack(InputArray image, OutputArray corners, int maxCorners, double qualityLevel, double minDistance, InputArray mask, int blockSize, bool useHarrisDetector, double k)" title="void goodFeaturesToTrack(InputArray image, OutputArray corners, int maxCorners, double qualityLevel, double minDistance, InputArray mask, int blockSize, bool useHarrisDetector, double k)"><code class="xref ocv ocv-func docutils literal"><span class="pre">goodFeaturesToTrack()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-goodfeaturestotrackdetector-ocl-releasememory">
+<h2>ocl::GoodFeaturesToTrackDetector_OCL::releaseMemory<a class="headerlink" href="#ocl-goodfeaturestotrackdetector-ocl-releasememory" title="Permalink to this headline">¶</a></h2>
+<p>Releases inner buffers memory.</p>
+<dl class="function">
+<dt id="void ocl::GoodFeaturesToTrackDetector_OCL::releaseMemory()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::GoodFeaturesToTrackDetector_OCL::</code><code class="descname">releaseMemory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::GoodFeaturesToTrackDetector_OCL::releaseMemory()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ocl-farnebackopticalflow">
+<h2>ocl::FarnebackOpticalFlow<a class="headerlink" href="#ocl-farnebackopticalflow" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ocl::FarnebackOpticalFlow">
+<em class="property">class </em><code class="descclassname">ocl::</code><code class="descname">FarnebackOpticalFlow</code><a class="headerlink" href="#ocl::FarnebackOpticalFlow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class computing a dense optical flow using the Gunnar Farneback&#8217;s algorithm.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">FarnebackOpticalFlow</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">FarnebackOpticalFlow</span><span class="p">();</span>
+
+    <span class="kt">int</span> <span class="n">numLevels</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">pyrScale</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">fastPyramids</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">winSize</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">numIters</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">polyN</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">polySigma</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">flags</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">operator</span> <span class="p">()(</span><span class="k">const</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">frame0</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">frame1</span><span class="p">,</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">flowx</span><span class="p">,</span> <span class="n">oclMat</span> <span class="o">&amp;</span><span class="n">flowy</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">releaseMemory</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/* hidden */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ocl-farnebackopticalflow-operator">
+<h2>ocl::FarnebackOpticalFlow::operator ()<a class="headerlink" href="#ocl-farnebackopticalflow-operator" title="Permalink to this headline">¶</a></h2>
+<p>Computes a dense optical flow using the Gunnar Farneback&#8217;s algorithm.</p>
+<dl class="function">
+<dt id="void ocl::FarnebackOpticalFlow::operator ()(const oclMat &amp;frame0, const oclMat &amp;frame1, oclMat &amp;flowx, oclMat &amp;flowy)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::FarnebackOpticalFlow::</code><code class="descname">operator()</code><span class="sig-paren">(</span>const oclMat&amp; <strong>frame0</strong>, const oclMat&amp; <strong>frame1</strong>, oclMat&amp; <strong>flowx</strong>, oclMat&amp; <strong>flowy</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::FarnebackOpticalFlow::operator ()(const oclMat &frame0, const oclMat &frame1, oclMat &flowx, oclMat &flowy)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>frame0</strong> &#8211; First 8-bit gray-scale input image</li>
+<li><strong>frame1</strong> &#8211; Second 8-bit gray-scale input image</li>
+<li><strong>flowx</strong> &#8211; Flow horizontal component</li>
+<li><strong>flowy</strong> &#8211; Flow vertical component</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#void calcOpticalFlowFarneback(InputArray prev, InputArray next, InputOutputArray flow, double pyr_scale, int levels, int winsize, int iterations, int poly_n, double poly_sigma, int flags)" title="void calcOpticalFlowFarneback(InputArray prev, InputArray next, InputOutputArray flow, double pyr_scale, int levels, int winsize, int iterations, int poly_n, double poly_sigma, int flags)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcOpticalFlowFarneback()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-farnebackopticalflow-releasememory">
+<h2>ocl::FarnebackOpticalFlow::releaseMemory<a class="headerlink" href="#ocl-farnebackopticalflow-releasememory" title="Permalink to this headline">¶</a></h2>
+<p>Releases unused auxiliary memory buffers.</p>
+<dl class="function">
+<dt id="void ocl::FarnebackOpticalFlow::releaseMemory()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::FarnebackOpticalFlow::</code><code class="descname">releaseMemory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::FarnebackOpticalFlow::releaseMemory()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ocl-pyrlkopticalflow">
+<h2>ocl::PyrLKOpticalFlow<a class="headerlink" href="#ocl-pyrlkopticalflow" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ocl::PyrLKOpticalFlow">
+<em class="property">class </em><code class="descclassname">ocl::</code><code class="descname">PyrLKOpticalFlow</code><a class="headerlink" href="#ocl::PyrLKOpticalFlow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class used for calculating an optical flow.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">PyrLKOpticalFlow</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">PyrLKOpticalFlow</span><span class="p">();</span>
+
+    <span class="kt">void</span> <span class="nf">sparse</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">prevImg</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">nextImg</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">prevPts</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">nextPts</span><span class="p">,</span>
+        <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">status</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">*</span> <span class="n">err</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">dense</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">prevImg</span><span class="p">,</span> <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">nextImg</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">u</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">*</span> <span class="n">err</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="n">Size</span> <span class="n">winSize</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">maxLevel</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">iters</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">derivLambda</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">useInitialFlow</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">minEigThreshold</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">getMinEigenVals</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">releaseMemory</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/* hidden */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class can calculate an optical flow for a sparse feature set or dense optical flow using the iterative Lucas-Kanade method with pyramids.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)" title="void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcOpticalFlowPyrLK()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-pyrlkopticalflow-sparse">
+<h2>ocl::PyrLKOpticalFlow::sparse<a class="headerlink" href="#ocl-pyrlkopticalflow-sparse" title="Permalink to this headline">¶</a></h2>
+<p>Calculate an optical flow for a sparse feature set.</p>
+<dl class="function">
+<dt id="void ocl::PyrLKOpticalFlow::sparse(const oclMat&amp; prevImg, const oclMat&amp; nextImg, const oclMat&amp; prevPts, oclMat&amp; nextPts, oclMat&amp; status, oclMat* err)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::PyrLKOpticalFlow::</code><code class="descname">sparse</code><span class="sig-paren">(</span>const oclMat&amp; <strong>prevImg</strong>, const oclMat&amp; <strong>nextImg</strong>, const oclMat&amp; <strong>prevPts</strong>, oclMat&amp; <strong>nextPts</strong>, oclMat&amp; <strong>status</strong>, oclMat* <strong>err</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::PyrLKOpticalFlow::sparse(const oclMat& prevImg, const oclMat& nextImg, const oclMat& prevPts, oclMat& nextPts, oclMat& status, oclMat* err)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>prevImg</strong> &#8211; First 8-bit input image (supports both grayscale and color images).</li>
+<li><strong>nextImg</strong> &#8211; Second input image of the same size and the same type as  <code class="docutils literal"><span class="pre">prevImg</span></code> .</li>
+<li><strong>prevPts</strong> &#8211; Vector of 2D points for which the flow needs to be found. It must be one row matrix with CV_32FC2 type.</li>
+<li><strong>nextPts</strong> &#8211; Output vector of 2D points (with single-precision floating-point coordinates) containing the calculated new positions of input features in the second image. When <code class="docutils literal"><span class="pre">useInitialFlow</span></code> is true, the vector must have the same size as in the input.</li>
+<li><strong>status</strong> &#8211; Output status vector (CV_8UC1 type). Each element of the vector is set to 1 if the flow for the corresponding features has been found. Otherwise, it is set to 0.</li>
+<li><strong>err</strong> &#8211; Output vector (CV_32FC1 type) that contains the difference between patches around the original and moved points or min eigen value if <code class="docutils literal"><span class="pre">getMinEigenVals</span></code> is checked. It can be NULL, if not needed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)" title="void calcOpticalFlowPyrLK(InputArray prevImg, InputArray nextImg, InputArray prevPts, InputOutputArray nextPts, OutputArray status, OutputArray err, Size winSize, int maxLevel, TermCriteria criteria, int flags, double minEigThreshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">calcOpticalFlowPyrLK()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-pyrlkopticalflow-dense">
+<h2>ocl::PyrLKOpticalFlow::dense<a class="headerlink" href="#ocl-pyrlkopticalflow-dense" title="Permalink to this headline">¶</a></h2>
+<p>Calculate dense optical flow.</p>
+<dl class="function">
+<dt id="void ocl::PyrLKOpticalFlow::dense(const oclMat&amp; prevImg, const oclMat&amp; nextImg, oclMat&amp; u, oclMat&amp; v, oclMat* err)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::PyrLKOpticalFlow::</code><code class="descname">dense</code><span class="sig-paren">(</span>const oclMat&amp; <strong>prevImg</strong>, const oclMat&amp; <strong>nextImg</strong>, oclMat&amp; <strong>u</strong>, oclMat&amp; <strong>v</strong>, oclMat* <strong>err</strong>=0<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::PyrLKOpticalFlow::dense(const oclMat& prevImg, const oclMat& nextImg, oclMat& u, oclMat& v, oclMat* err)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>prevImg</strong> &#8211; First 8-bit grayscale input image.</li>
+<li><strong>nextImg</strong> &#8211; Second input image of the same size and the same type as  <code class="docutils literal"><span class="pre">prevImg</span></code> .</li>
+<li><strong>u</strong> &#8211; Horizontal component of the optical flow of the same size as input images, 32-bit floating-point, single-channel</li>
+<li><strong>v</strong> &#8211; Vertical component of the optical flow of the same size as input images, 32-bit floating-point, single-channel</li>
+<li><strong>err</strong> &#8211; Output vector (CV_32FC1 type) that contains the difference between patches around the original and moved points or min eigen value if <code class="docutils literal"><span class="pre">getMinEigenVals</span></code> is checked. It can be NULL, if not needed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-pyrlkopticalflow-releasememory">
+<h2>ocl::PyrLKOpticalFlow::releaseMemory<a class="headerlink" href="#ocl-pyrlkopticalflow-releasememory" title="Permalink to this headline">¶</a></h2>
+<p>Releases inner buffers memory.</p>
+<dl class="function">
+<dt id="void ocl::PyrLKOpticalFlow::releaseMemory()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::PyrLKOpticalFlow::</code><code class="descname">releaseMemory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::PyrLKOpticalFlow::releaseMemory()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ocl-interpolateframes">
+<h2>ocl::interpolateFrames<a class="headerlink" href="#ocl-interpolateframes" title="Permalink to this headline">¶</a></h2>
+<p>Interpolates frames (images) using provided optical flow (displacement field).</p>
+<dl class="function">
+<dt id="void ocl::interpolateFrames(const oclMat&amp; frame0, const oclMat&amp; frame1, const oclMat&amp; fu, const oclMat&amp; fv, const oclMat&amp; bu, const oclMat&amp; bv, float pos, oclMat&amp; newFrame, oclMat&amp; buf)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">interpolateFrames</code><span class="sig-paren">(</span>const oclMat&amp; <strong>frame0</strong>, const oclMat&amp; <strong>frame1</strong>, const oclMat&amp; <strong>fu</strong>, const oclMat&amp; <strong>fv</strong>, const oclMat&amp; <strong>bu</strong>, const oclMat&amp; <strong>bv</strong>, float <strong>pos</strong>, oclMat&amp; <strong>newFrame</strong>, oclMat&amp; <strong>buf</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::interpolateFrames(const oclMat& frame0, const oclMat& frame1, const oclMat& fu, const oclMat& fv, const oclMat& bu, const oclMat& bv, float pos, oclMat& newFrame, oclMat& buf)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>frame0</strong> &#8211; First frame (32-bit floating point images, single channel).</li>
+<li><strong>frame1</strong> &#8211; Second frame. Must have the same type and size as <code class="docutils literal"><span class="pre">frame0</span></code> .</li>
+<li><strong>fu</strong> &#8211; Forward horizontal displacement.</li>
+<li><strong>fv</strong> &#8211; Forward vertical displacement.</li>
+<li><strong>bu</strong> &#8211; Backward horizontal displacement.</li>
+<li><strong>bv</strong> &#8211; Backward vertical displacement.</li>
+<li><strong>pos</strong> &#8211; New frame position.</li>
+<li><strong>newFrame</strong> &#8211; Output image.</li>
+<li><strong>buf</strong> &#8211; Temporary buffer, will have width x 6*height size, CV_32FC1 type and contain 6 oclMat: occlusion masks for first frame, occlusion masks for second, interpolated forward horizontal flow, interpolated forward vertical flow, interpolated backward horizontal flow, interpolated backward vertical flow.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-kalmanfilter">
+<h2>ocl::KalmanFilter<a class="headerlink" href="#ocl-kalmanfilter" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ocl::KalmanFilter">
+<em class="property">class </em><code class="descclassname">ocl::</code><code class="descname">KalmanFilter</code><a class="headerlink" href="#ocl::KalmanFilter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Kalman filter class.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">KalmanFilter</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">KalmanFilter</span><span class="p">();</span>
+    <span class="c1">//! the full constructor taking the dimensionality of the state, of the measurement and of the control vector</span>
+    <span class="n">KalmanFilter</span><span class="p">(</span><span class="kt">int</span> <span class="n">dynamParams</span><span class="p">,</span> <span class="kt">int</span> <span class="n">measureParams</span><span class="p">,</span> <span class="kt">int</span> <span class="n">controlParams</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="o">=</span><span class="n">CV_32F</span><span class="p">);</span>
+    <span class="c1">//! re-initializes Kalman filter. The previous content is destroyed.</span>
+    <span class="kt">void</span> <span class="nf">init</span><span class="p">(</span><span class="kt">int</span> <span class="n">dynamParams</span><span class="p">,</span> <span class="kt">int</span> <span class="n">measureParams</span><span class="p">,</span> <span class="kt">int</span> <span class="n">controlParams</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="o">=</span><span class="n">CV_32F</span><span class="p">);</span>
+
+    <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">predict</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">control</span><span class="o">=</span><span class="n">oclMat</span><span class="p">());</span>
+    <span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">correct</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">measurement</span><span class="p">);</span>
+
+    <span class="n">oclMat</span> <span class="n">statePre</span><span class="p">;</span> <span class="c1">//!&lt; predicted state (x&#39;(k)): x(k)=A*x(k-1)+B*u(k)</span>
+    <span class="n">oclMat</span> <span class="n">statePost</span><span class="p">;</span> <span class="c1">//!&lt; corrected state (x(k)): x(k)=x&#39;(k)+K(k)*(z(k)-H*x&#39;(k))</span>
+    <span class="n">oclMat</span> <span class="n">transitionMatrix</span><span class="p">;</span> <span class="c1">//!&lt; state transition matrix (A)</span>
+    <span class="n">oclMat</span> <span class="n">controlMatrix</span><span class="p">;</span> <span class="c1">//!&lt; control matrix (B) (not used if there is no control)</span>
+    <span class="n">oclMat</span> <span class="n">measurementMatrix</span><span class="p">;</span> <span class="c1">//!&lt; measurement matrix (H)</span>
+    <span class="n">oclMat</span> <span class="n">processNoiseCov</span><span class="p">;</span> <span class="c1">//!&lt; process noise covariance matrix (Q)</span>
+    <span class="n">oclMat</span> <span class="n">measurementNoiseCov</span><span class="p">;</span><span class="c1">//!&lt; measurement noise covariance matrix (R)</span>
+    <span class="n">oclMat</span> <span class="n">errorCovPre</span><span class="p">;</span> <span class="c1">//!&lt; priori error estimate covariance matrix (P&#39;(k)): P&#39;(k)=A*P(k-1)*At + Q)*/</span>
+    <span class="n">oclMat</span> <span class="n">gain</span><span class="p">;</span> <span class="c1">//!&lt; Kalman gain matrix (K(k)): K(k)=P&#39;(k)*Ht*inv(H*P&#39;(k)*Ht+R)</span>
+    <span class="n">oclMat</span> <span class="n">errorCovPost</span><span class="p">;</span> <span class="c1">//!&lt; posteriori error estimate covariance matrix (P(k)): P(k)=(I-K(k)*H)*P&#39;(k)</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/* hidden */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ocl-kalmanfilter-kalmanfilter">
+<h2>ocl::KalmanFilter::KalmanFilter<a class="headerlink" href="#ocl-kalmanfilter-kalmanfilter" title="Permalink to this headline">¶</a></h2>
+<p>The constructors.</p>
+<dl class="function">
+<dt id="ocl::KalmanFilter::KalmanFilter()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ocl::KalmanFilter::</code><code class="descname">KalmanFilter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ocl::KalmanFilter::KalmanFilter()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ocl::KalmanFilter::KalmanFilter(int dynamParams, int measureParams, int controlParams, int type)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ocl::KalmanFilter::</code><code class="descname">KalmanFilter</code><span class="sig-paren">(</span>int <strong>dynamParams</strong>, int <strong>measureParams</strong>, int <strong>controlParams</strong>=0, int <strong>type</strong>=CV_32F<span class="sig-paren">)</span><a class="headerlink" href="#ocl::KalmanFilter::KalmanFilter(int dynamParams, int measureParams, int controlParams, int type)" title="Permalink to this definition">¶</a></dt>
+<dd><p>The full constructor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dynamParams</strong> &#8211; Dimensionality of the state.</li>
+<li><strong>measureParams</strong> &#8211; Dimensionality of the measurement.</li>
+<li><strong>controlParams</strong> &#8211; Dimensionality of the control vector.</li>
+<li><strong>type</strong> &#8211; Type of the created matrices that should be <code class="docutils literal"><span class="pre">CV_32F</span></code> or <code class="docutils literal"><span class="pre">CV_64F</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-kalmanfilter-init">
+<h2>ocl::KalmanFilter::init<a class="headerlink" href="#ocl-kalmanfilter-init" title="Permalink to this headline">¶</a></h2>
+<p>Re-initializes Kalman filter. The previous content is destroyed.</p>
+<dl class="function">
+<dt id="void ocl::KalmanFilter::init(int dynamParams, int measureParams, int controlParams, int type)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::KalmanFilter::</code><code class="descname">init</code><span class="sig-paren">(</span>int <strong>dynamParams</strong>, int <strong>measureParams</strong>, int <strong>controlParams</strong>=0, int <strong>type</strong>=CV_32F<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::KalmanFilter::init(int dynamParams, int measureParams, int controlParams, int type)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dynamParams</strong> &#8211; Dimensionalityensionality of the state.</li>
+<li><strong>measureParams</strong> &#8211; Dimensionality of the measurement.</li>
+<li><strong>controlParams</strong> &#8211; Dimensionality of the control vector.</li>
+<li><strong>type</strong> &#8211; Type of the created matrices that should be <code class="docutils literal"><span class="pre">CV_32F</span></code> or <code class="docutils literal"><span class="pre">CV_64F</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-kalmanfilter-predict">
+<h2>ocl::KalmanFilter::predict<a class="headerlink" href="#ocl-kalmanfilter-predict" title="Permalink to this headline">¶</a></h2>
+<p>Computes a predicted state.</p>
+<dl class="function">
+<dt id="const oclMat&amp; ocl::KalmanFilter::predict(const oclMat&amp; control)">
+<strong>C++:</strong><code class="descname"> </code>const oclMat&amp; <code class="descclassname">ocl::KalmanFilter::</code><code class="descname">predict</code><span class="sig-paren">(</span>const oclMat&amp; <strong>control</strong>=oclMat()<span class="sig-paren">)</span><a class="headerlink" href="#const oclMat& ocl::KalmanFilter::predict(const oclMat& control)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>control</strong> &#8211; The optional input control</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-kalmanfilter-correct">
+<h2>ocl::KalmanFilter::correct<a class="headerlink" href="#ocl-kalmanfilter-correct" title="Permalink to this headline">¶</a></h2>
+<p>Updates the predicted state from the measurement.</p>
+<dl class="function">
+<dt id="const oclMat&amp; ocl::KalmanFilter::correct(const oclMat&amp; measurement)">
+<strong>C++:</strong><code class="descname"> </code>const oclMat&amp; <code class="descclassname">ocl::KalmanFilter::</code><code class="descname">correct</code><span class="sig-paren">(</span>const oclMat&amp; <strong>measurement</strong><span class="sig-paren">)</span><a class="headerlink" href="#const oclMat& ocl::KalmanFilter::correct(const oclMat& measurement)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>measurement</strong> &#8211; The measured system parameters</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-backgroundsubtractor">
+<h2>ocl::BackgroundSubtractor<a class="headerlink" href="#ocl-backgroundsubtractor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ocl::BackgroundSubtractor">
+<em class="property">class </em><code class="descclassname">ocl::</code><code class="descname">BackgroundSubtractor</code><a class="headerlink" href="#ocl::BackgroundSubtractor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for background/foreground segmentation.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">BackgroundSubtractor</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">//! the virtual destructor</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">BackgroundSubtractor</span><span class="p">();</span>
+    <span class="c1">//! the update operator that takes the next video frame and returns the current foreground mask as 8-bit binary image.</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">image</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">fgmask</span><span class="p">,</span> <span class="kt">float</span> <span class="n">learningRate</span><span class="p">);</span>
+
+    <span class="c1">//! computes a background image</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">getBackgroundImage</span><span class="p">(</span><span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">backgroundImage</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class is only used to define the common interface for the whole family of background/foreground segmentation algorithms.</p>
+</div>
+<div class="section" id="ocl-backgroundsubtractor-operator">
+<h2>ocl::BackgroundSubtractor::operator()<a class="headerlink" href="#ocl-backgroundsubtractor-operator" title="Permalink to this headline">¶</a></h2>
+<p>Computes a foreground mask.</p>
+<dl class="function">
+<dt id="void ocl::BackgroundSubtractor::operator()(const oclMat&amp; image, oclMat&amp; fgmask, float learningRate)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BackgroundSubtractor::</code><code class="descname">operator()</code><span class="sig-paren">(</span>const oclMat&amp; <strong>image</strong>, oclMat&amp; <strong>fgmask</strong>, float <strong>learningRate</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::BackgroundSubtractor::operator()(const oclMat& image, oclMat& fgmask, float learningRate)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>image</strong> &#8211; Next video frame.</li>
+<li><strong>fgmask</strong> &#8211; The output foreground mask as an 8-bit binary image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-backgroundsubtractor-getbackgroundimage">
+<h2>ocl::BackgroundSubtractor::getBackgroundImage<a class="headerlink" href="#ocl-backgroundsubtractor-getbackgroundimage" title="Permalink to this headline">¶</a></h2>
+<p>Computes a background image.</p>
+<dl class="function">
+<dt id="void ocl::BackgroundSubtractor::getBackgroundImage(oclMat&amp; backgroundImage) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::BackgroundSubtractor::</code><code class="descname">getBackgroundImage</code><span class="sig-paren">(</span>oclMat&amp; <strong>backgroundImage</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void ocl::BackgroundSubtractor::getBackgroundImage(oclMat& backgroundImage) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>backgroundImage</strong> &#8211; The output background image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Sometimes the background image can be very blurry, as it contain the average background statistics.</p>
+</div>
+</div>
+<div class="section" id="ocl-mog">
+<h2>ocl::MOG<a class="headerlink" href="#ocl-mog" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ocl::MOG : public ocl::BackgroundSubtractor">
+<em class="property">class </em><code class="descclassname">ocl::</code><code class="descname">MOG</code> : <em class="property">public</em> <code class="descclassname">ocl::</code><code class="descname">BackgroundSubtractor</code><a class="headerlink" href="#ocl::MOG : public ocl::BackgroundSubtractor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Gaussian Mixture-based Backbround/Foreground Segmentation Algorithm.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">MOG</span><span class="p">:</span> <span class="k">public</span> <span class="n">cv</span><span class="o">::</span><span class="n">ocl</span><span class="o">::</span><span class="n">BackgroundSubtractor</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">//! the default constructor</span>
+    <span class="n">MOG</span><span class="p">(</span><span class="kt">int</span> <span class="n">nmixtures</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+
+    <span class="c1">//! re-initiaization method</span>
+    <span class="kt">void</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">Size</span> <span class="n">frameSize</span><span class="p">,</span> <span class="kt">int</span> <span class="n">frameType</span><span class="p">);</span>
+
+    <span class="c1">//! the update operator</span>
+    <span class="kt">void</span> <span class="nf">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">frame</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">fgmask</span><span class="p">,</span> <span class="kt">float</span> <span class="n">learningRate</span> <span class="o">=</span> <span class="mf">0.f</span><span class="p">);</span>
+
+    <span class="c1">//! computes a background image which are the mean of all background gaussians</span>
+    <span class="kt">void</span> <span class="nf">getBackgroundImage</span><span class="p">(</span><span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">backgroundImage</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">//! releases all inner buffers</span>
+    <span class="kt">void</span> <span class="nf">release</span><span class="p">();</span>
+
+    <span class="kt">int</span> <span class="n">history</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">varThreshold</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">backgroundRatio</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">noiseSigma</span><span class="p">;</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/* hidden */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The class discriminates between foreground and background pixels by building and maintaining a model of the background. Any pixel which does not fit this model is then deemed to be foreground. The class implements algorithm described in <a class="reference internal" href="../../gpu/doc/video.html#mog2001" id="id1">[MOG2001]</a>.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#BackgroundSubtractorMOG : public BackgroundSubtractor" title="class BackgroundSubtractorMOG : public BackgroundSubtractor"><code class="xref ocv ocv-class docutils literal"><span class="pre">BackgroundSubtractorMOG</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-mog-mog">
+<h2>ocl::MOG::MOG<a class="headerlink" href="#ocl-mog-mog" title="Permalink to this headline">¶</a></h2>
+<p>The constructor.</p>
+<dl class="function">
+<dt id="ocl::MOG::MOG(int nmixtures)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ocl::MOG::</code><code class="descname">MOG</code><span class="sig-paren">(</span>int <strong>nmixtures</strong>=-1<span class="sig-paren">)</span><a class="headerlink" href="#ocl::MOG::MOG(int nmixtures)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nmixtures</strong> &#8211; Number of Gaussian mixtures.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Default constructor sets all parameters to default values.</p>
+</div>
+<div class="section" id="ocl-mog-operator">
+<h2>ocl::MOG::operator()<a class="headerlink" href="#ocl-mog-operator" title="Permalink to this headline">¶</a></h2>
+<p>Updates the background model and returns the foreground mask.</p>
+<dl class="function">
+<dt id="void ocl::MOG::operator()(const oclMat&amp; frame, oclMat&amp; fgmask, float learningRate)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::MOG::</code><code class="descname">operator()</code><span class="sig-paren">(</span>const oclMat&amp; <strong>frame</strong>, oclMat&amp; <strong>fgmask</strong>, float <strong>learningRate</strong>=0.f<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::MOG::operator()(const oclMat& frame, oclMat& fgmask, float learningRate)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>frame</strong> &#8211; Next video frame.</li>
+<li><strong>fgmask</strong> &#8211; The output foreground mask as an 8-bit binary image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-mog-getbackgroundimage">
+<h2>ocl::MOG::getBackgroundImage<a class="headerlink" href="#ocl-mog-getbackgroundimage" title="Permalink to this headline">¶</a></h2>
+<p>Computes a background image.</p>
+<dl class="function">
+<dt id="void ocl::MOG::getBackgroundImage(oclMat&amp; backgroundImage) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::MOG::</code><code class="descname">getBackgroundImage</code><span class="sig-paren">(</span>oclMat&amp; <strong>backgroundImage</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void ocl::MOG::getBackgroundImage(oclMat& backgroundImage) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>backgroundImage</strong> &#8211; The output background image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-mog-release">
+<h2>ocl::MOG::release<a class="headerlink" href="#ocl-mog-release" title="Permalink to this headline">¶</a></h2>
+<p>Releases all inner buffer&#8217;s memory.</p>
+<dl class="function">
+<dt id="void ocl::MOG::release()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::MOG::</code><code class="descname">release</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::MOG::release()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ocl-mog2">
+<h2>ocl::MOG2<a class="headerlink" href="#ocl-mog2" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ocl::MOG2 : public ocl::BackgroundSubtractor">
+<em class="property">class </em><code class="descclassname">ocl::</code><code class="descname">MOG2</code> : <em class="property">public</em> <code class="descclassname">ocl::</code><code class="descname">BackgroundSubtractor</code><a class="headerlink" href="#ocl::MOG2 : public ocl::BackgroundSubtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gaussian Mixture-based Background/Foreground Segmentation Algorithm.</p>
+<p>The class discriminates between foreground and background pixels by building and maintaining a model of the background. Any pixel which does not fit this model is then deemed to be foreground. The class implements algorithm described in <a class="reference internal" href="../../gpu/doc/video.html#mog2004" id="id2">[MOG2004]</a>.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">MOG2</span><span class="p">:</span> <span class="k">public</span> <span class="n">cv</span><span class="o">::</span><span class="n">ocl</span><span class="o">::</span><span class="n">BackgroundSubtractor</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">//! the default constructor</span>
+    <span class="n">MOG2</span><span class="p">(</span><span class="kt">int</span> <span class="n">nmixtures</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+
+    <span class="c1">//! re-initiaization method</span>
+    <span class="kt">void</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">Size</span> <span class="n">frameSize</span><span class="p">,</span> <span class="kt">int</span> <span class="n">frameType</span><span class="p">);</span>
+
+    <span class="c1">//! the update operator</span>
+    <span class="kt">void</span> <span class="nf">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">frame</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">fgmask</span><span class="p">,</span> <span class="kt">float</span> <span class="n">learningRate</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0f</span><span class="p">);</span>
+
+    <span class="c1">//! computes a background image which are the mean of all background gaussians</span>
+    <span class="kt">void</span> <span class="nf">getBackgroundImage</span><span class="p">(</span><span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">backgroundImage</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">//! releases all inner buffers</span>
+    <span class="kt">void</span> <span class="nf">release</span><span class="p">();</span>
+
+    <span class="kt">int</span> <span class="n">history</span><span class="p">;</span>
+
+    <span class="kt">float</span> <span class="n">varThreshold</span><span class="p">;</span>
+
+    <span class="kt">float</span> <span class="n">backgroundRatio</span><span class="p">;</span>
+
+    <span class="kt">float</span> <span class="n">varThresholdGen</span><span class="p">;</span>
+
+    <span class="kt">float</span> <span class="n">fVarInit</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">fVarMin</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">fVarMax</span><span class="p">;</span>
+
+    <span class="kt">float</span> <span class="n">fCT</span><span class="p">;</span>
+
+    <span class="kt">bool</span> <span class="n">bShadowDetection</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">nShadowDetection</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">fTau</span><span class="p">;</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/* hidden */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<dl class="member">
+<dt id="float backgroundRatio">
+float <code class="descname">backgroundRatio</code><a class="headerlink" href="#float backgroundRatio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Threshold defining whether the component is significant enough to be included into the background model. <code class="docutils literal"><span class="pre">cf=0.1</span> <span class="pre">=&gt;</span> <span class="pre">TB=0.9</span></code> is default. For <code class="docutils literal"><span class="pre">alpha=0.001</span></code>, it means that the mode should exist for approximately 105 frames before it is considered foreground.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float varThreshold">
+float <code class="descname">varThreshold</code><a class="headerlink" href="#float varThreshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Threshold for the squared Mahalanobis distance that helps decide when a sample is close to the existing components (corresponds to <code class="docutils literal"><span class="pre">Tg</span></code>). If it is not close to any component, a new component is generated. <code class="docutils literal"><span class="pre">3</span> <span class="pre">sigma</span> <span class="pre">=&gt;</span> <span class="pre">Tg=3*3=9</span></code> is default. A smaller <code class="docutils literal"><span class="pre">Tg</span></code> value generates more components. A higher <code class="docutils literal"><span class="pre">Tg</span></code> value may result in a small number of components but they can grow too large.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float fVarInit">
+float <code class="descname">fVarInit</code><a class="headerlink" href="#float fVarInit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial variance for the newly generated components. It affects the speed of adaptation. The parameter value is based on your estimate of the typical standard deviation from the images. OpenCV uses 15 as a reasonable value.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float fVarMin">
+float <code class="descname">fVarMin</code><a class="headerlink" href="#float fVarMin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameter used to further control the variance.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float fVarMax">
+float <code class="descname">fVarMax</code><a class="headerlink" href="#float fVarMax" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameter used to further control the variance.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float fCT">
+float <code class="descname">fCT</code><a class="headerlink" href="#float fCT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Complexity reduction parameter. This parameter defines the number of samples needed to accept to prove the component exists. <code class="docutils literal"><span class="pre">CT=0.05</span></code> is a default value for all the samples. By setting <code class="docutils literal"><span class="pre">CT=0</span></code> you get an algorithm very similar to the standard Stauffer&amp;Grimson algorithm.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="uchar nShadowDetection">
+uchar <code class="descname">nShadowDetection</code><a class="headerlink" href="#uchar nShadowDetection" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value for marking shadow pixels in the output foreground mask. Default value is 127.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float fTau">
+float <code class="descname">fTau</code><a class="headerlink" href="#float fTau" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shadow threshold. The shadow is detected if the pixel is a darker version of the background. <code class="docutils literal"><span class="pre">Tau</span></code> is a threshold defining how much darker the shadow can be. <code class="docutils literal"><span class="pre">Tau=</span> <span class="pre">0.5</span></code> means that if a pixel is more than twice darker then it is not shadow. See <a class="reference internal" href="../../gpu/doc/video.html#shadowdetect2003" id="id3">[ShadowDetect2003]</a>.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="bool bShadowDetection">
+bool <code class="descname">bShadowDetection</code><a class="headerlink" href="#bool bShadowDetection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameter defining whether shadow detection should be enabled.</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../video/doc/motion_analysis_and_object_tracking.html#BackgroundSubtractorMOG2 : public BackgroundSubtractor" title="class BackgroundSubtractorMOG2 : public BackgroundSubtractor"><code class="xref ocv ocv-class docutils literal"><span class="pre">BackgroundSubtractorMOG2</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ocl-mog2-mog2">
+<h2>ocl::MOG2::MOG2<a class="headerlink" href="#ocl-mog2-mog2" title="Permalink to this headline">¶</a></h2>
+<p>The constructor.</p>
+<dl class="function">
+<dt id="ocl::MOG2::MOG2(int nmixtures)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">ocl::MOG2::</code><code class="descname">MOG2</code><span class="sig-paren">(</span>int <strong>nmixtures</strong>=-1<span class="sig-paren">)</span><a class="headerlink" href="#ocl::MOG2::MOG2(int nmixtures)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nmixtures</strong> &#8211; Number of Gaussian mixtures.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Default constructor sets all parameters to default values.</p>
+</div>
+<div class="section" id="ocl-mog2-operator">
+<h2>ocl::MOG2::operator()<a class="headerlink" href="#ocl-mog2-operator" title="Permalink to this headline">¶</a></h2>
+<p>Updates the background model and returns the foreground mask.</p>
+<dl class="function">
+<dt id="void ocl::MOG2::operator()(const oclMat&amp; frame, oclMat&amp; fgmask, float learningRate)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::MOG2::</code><code class="descname">operator()</code><span class="sig-paren">(</span>const oclMat&amp; <strong>frame</strong>, oclMat&amp; <strong>fgmask</strong>, float <strong>learningRate</strong>=-1.0f<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::MOG2::operator()(const oclMat& frame, oclMat& fgmask, float learningRate)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>frame</strong> &#8211; Next video frame.</li>
+<li><strong>fgmask</strong> &#8211; The output foreground mask as an 8-bit binary image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-mog2-getbackgroundimage">
+<h2>ocl::MOG2::getBackgroundImage<a class="headerlink" href="#ocl-mog2-getbackgroundimage" title="Permalink to this headline">¶</a></h2>
+<p>Computes a background image.</p>
+<dl class="function">
+<dt id="void ocl::MOG2::getBackgroundImage(oclMat&amp; backgroundImage) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::MOG2::</code><code class="descname">getBackgroundImage</code><span class="sig-paren">(</span>oclMat&amp; <strong>backgroundImage</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void ocl::MOG2::getBackgroundImage(oclMat& backgroundImage) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>backgroundImage</strong> &#8211; The output background image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-mog2-release">
+<h2>ocl::MOG2::release<a class="headerlink" href="#ocl-mog2-release" title="Permalink to this headline">¶</a></h2>
+<p>Releases all inner buffer&#8217;s memory.</p>
+<dl class="function">
+<dt id="void ocl::MOG2::release()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::MOG2::</code><code class="descname">release</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::MOG2::release()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Video Analysis</a><ul>
+<li><a class="reference internal" href="#ocl-goodfeaturestotrackdetector-ocl">ocl::GoodFeaturesToTrackDetector_OCL</a></li>
+<li><a class="reference internal" href="#ocl-goodfeaturestotrackdetector-ocl-goodfeaturestotrackdetector-ocl">ocl::GoodFeaturesToTrackDetector_OCL::GoodFeaturesToTrackDetector_OCL</a></li>
+<li><a class="reference internal" href="#ocl-goodfeaturestotrackdetector-ocl-operator">ocl::GoodFeaturesToTrackDetector_OCL::operator ()</a></li>
+<li><a class="reference internal" href="#ocl-goodfeaturestotrackdetector-ocl-releasememory">ocl::GoodFeaturesToTrackDetector_OCL::releaseMemory</a></li>
+<li><a class="reference internal" href="#ocl-farnebackopticalflow">ocl::FarnebackOpticalFlow</a></li>
+<li><a class="reference internal" href="#ocl-farnebackopticalflow-operator">ocl::FarnebackOpticalFlow::operator ()</a></li>
+<li><a class="reference internal" href="#ocl-farnebackopticalflow-releasememory">ocl::FarnebackOpticalFlow::releaseMemory</a></li>
+<li><a class="reference internal" href="#ocl-pyrlkopticalflow">ocl::PyrLKOpticalFlow</a></li>
+<li><a class="reference internal" href="#ocl-pyrlkopticalflow-sparse">ocl::PyrLKOpticalFlow::sparse</a></li>
+<li><a class="reference internal" href="#ocl-pyrlkopticalflow-dense">ocl::PyrLKOpticalFlow::dense</a></li>
+<li><a class="reference internal" href="#ocl-pyrlkopticalflow-releasememory">ocl::PyrLKOpticalFlow::releaseMemory</a></li>
+<li><a class="reference internal" href="#ocl-interpolateframes">ocl::interpolateFrames</a></li>
+<li><a class="reference internal" href="#ocl-kalmanfilter">ocl::KalmanFilter</a></li>
+<li><a class="reference internal" href="#ocl-kalmanfilter-kalmanfilter">ocl::KalmanFilter::KalmanFilter</a></li>
+<li><a class="reference internal" href="#ocl-kalmanfilter-init">ocl::KalmanFilter::init</a></li>
+<li><a class="reference internal" href="#ocl-kalmanfilter-predict">ocl::KalmanFilter::predict</a></li>
+<li><a class="reference internal" href="#ocl-kalmanfilter-correct">ocl::KalmanFilter::correct</a></li>
+<li><a class="reference internal" href="#ocl-backgroundsubtractor">ocl::BackgroundSubtractor</a></li>
+<li><a class="reference internal" href="#ocl-backgroundsubtractor-operator">ocl::BackgroundSubtractor::operator()</a></li>
+<li><a class="reference internal" href="#ocl-backgroundsubtractor-getbackgroundimage">ocl::BackgroundSubtractor::getBackgroundImage</a></li>
+<li><a class="reference internal" href="#ocl-mog">ocl::MOG</a></li>
+<li><a class="reference internal" href="#ocl-mog-mog">ocl::MOG::MOG</a></li>
+<li><a class="reference internal" href="#ocl-mog-operator">ocl::MOG::operator()</a></li>
+<li><a class="reference internal" href="#ocl-mog-getbackgroundimage">ocl::MOG::getBackgroundImage</a></li>
+<li><a class="reference internal" href="#ocl-mog-release">ocl::MOG::release</a></li>
+<li><a class="reference internal" href="#ocl-mog2">ocl::MOG2</a></li>
+<li><a class="reference internal" href="#ocl-mog2-mog2">ocl::MOG2::MOG2</a></li>
+<li><a class="reference internal" href="#ocl-mog2-operator">ocl::MOG2::operator()</a></li>
+<li><a class="reference internal" href="#ocl-mog2-getbackgroundimage">ocl::MOG2::getBackgroundImage</a></li>
+<li><a class="reference internal" href="#ocl-mog2-release">ocl::MOG2::release</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="feature_detection_and_description.html"
+                        title="previous chapter">Feature Detection And Description</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="camera_calibration_and_3D_reconstruction.html"
+                        title="next chapter">Camera Calibration and 3D Reconstruction</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/ocl/doc/video_analysis.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="camera_calibration_and_3D_reconstruction.html" title="Camera Calibration and 3D Reconstruction"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="feature_detection_and_description.html" title="Feature Detection And Description"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" >ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Sobel Derivatives &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../../index.html" />
+    <link rel="up" title="imgproc module. Image Processing" href="../../table_of_content_imgproc/table_of_content_imgproc.html" />
+    <link rel="next" title="Laplace Operator" href="../laplace_operator/laplace_operator.html" />
+    <link rel="prev" title="Adding borders to your images" href="../copyMakeBorder/copyMakeBorder.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../laplace_operator/laplace_operator.html" title="Laplace Operator"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../copyMakeBorder/copyMakeBorder.html" title="Adding borders to your images"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" accesskey="U"><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="sobel-derivatives">
+<span id="id1"></span><h1>Sobel Derivatives<a class="headerlink" href="#sobel-derivatives" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Use the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=sobel#sobel">Sobel</a> to calculate the derivatives from an image.</li>
+<li>Use the OpenCV function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=scharr#scharr">Scharr</a> to calculate a more accurate derivative for a kernel of size <img class="math" src="../../../../../_images/math/ccee071584050c945e7b48de1ab6f075a0a84626.png" alt="3 \cdot 3"/></li>
+</ul>
+</div>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The explanation below belongs to the book <strong>Learning OpenCV</strong> by Bradski and Kaehler.</p>
+</div>
+<ol class="arabic">
+<li><p class="first">In the last two tutorials we have seen applicative examples of convolutions. One of the most important convolutions is the computation of derivatives in an image (or an approximation to them).</p>
+</li>
+<li><p class="first">Why may be important the calculus of the derivatives in an image? Let&#8217;s imagine we want to detect the <em>edges</em> present in the image. For instance:</p>
+<img alt="How intensity changes in an edge" class="align-center" src="../../../../../_images/Sobel_Derivatives_Tutorial_Theory_0.jpg" />
+<p>You can easily notice that in an <em>edge</em>, the pixel intensity <em>changes</em> in a notorious way. A good way to express <em>changes</em> is by using <em>derivatives</em>. A high change in gradient indicates a major change in the image.</p>
+</li>
+<li><p class="first">To be more graphical, let&#8217;s assume we have a 1D-image. An edge is shown by the &#8220;jump&#8221; in intensity in the plot below:</p>
+<img alt="Intensity Plot for an edge" class="align-center" src="../../../../../_images/Sobel_Derivatives_Tutorial_Theory_Intensity_Function.jpg" />
+</li>
+<li><p class="first">The edge &#8220;jump&#8221; can be seen more easily if we take the first derivative (actually, here appears as a maximum)</p>
+<img alt="First derivative of Intensity - Plot for an edge" class="align-center" src="../../../../../_images/Sobel_Derivatives_Tutorial_Theory_dIntensity_Function.jpg" />
+</li>
+<li><p class="first">So, from the explanation above, we can deduce that a method to detect edges in an image can be performed by locating pixel locations where the gradient is higher than its neighbors (or to generalize, higher than a threshold).</p>
+</li>
+<li><p class="first">More detailed explanation, please refer to <strong>Learning OpenCV</strong> by Bradski and Kaehler</p>
+</li>
+</ol>
+<div class="section" id="sobel-operator">
+<h3>Sobel Operator<a class="headerlink" href="#sobel-operator" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>The Sobel Operator is a discrete differentiation operator. It computes an approximation of the gradient of an image intensity function.</li>
+<li>The Sobel Operator combines Gaussian smoothing and differentiation.</li>
+</ol>
+<div class="section" id="formulation">
+<h4>Formulation<a class="headerlink" href="#formulation" title="Permalink to this headline">¶</a></h4>
+<p>Assuming that the image to  be operated is <img class="math" src="../../../../../_images/math/06f9f0fcaa8d96a6a23b0f7d1566fe5efaa789ad.png" alt="I"/>:</p>
+<ol class="arabic">
+<li><p class="first">We calculate two derivatives:</p>
+<ol class="loweralpha">
+<li><p class="first"><strong>Horizontal changes</strong>: This is computed by convolving <img class="math" src="../../../../../_images/math/06f9f0fcaa8d96a6a23b0f7d1566fe5efaa789ad.png" alt="I"/> with a kernel <img class="math" src="../../../../../_images/math/441ba7dfccefba73cbce4b2b2c710a8d737b14b6.png" alt="G_{x}"/> with odd size. For example for a kernel size of 3, <img class="math" src="../../../../../_images/math/441ba7dfccefba73cbce4b2b2c710a8d737b14b6.png" alt="G_{x}"/> would be computed as:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/42c8a258fd1418ea1caf81d3c5e2374b50b3abd2.png" alt="G_{x} = \begin{bmatrix}
+-1 &amp; 0 &amp; +1  \\
+-2 &amp; 0 &amp; +2  \\
+-1 &amp; 0 &amp; +1
+\end{bmatrix} * I"/></p>
+</div></li>
+<li><p class="first"><strong>Vertical changes</strong>: This is computed by convolving <img class="math" src="../../../../../_images/math/06f9f0fcaa8d96a6a23b0f7d1566fe5efaa789ad.png" alt="I"/> with a kernel <img class="math" src="../../../../../_images/math/9b0f2b3a61f85a2496a92725cc250cf0efea83bf.png" alt="G_{y}"/> with odd size. For example for a kernel size of 3, <img class="math" src="../../../../../_images/math/9b0f2b3a61f85a2496a92725cc250cf0efea83bf.png" alt="G_{y}"/> would be computed as:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/68c90e66d591588078f34bc1cd8516b76e2da730.png" alt="G_{y} = \begin{bmatrix}
+-1 &amp; -2 &amp; -1  \\
+0 &amp; 0 &amp; 0  \\
++1 &amp; +2 &amp; +1
+\end{bmatrix} * I"/></p>
+</div></li>
+</ol>
+</li>
+<li><p class="first">At each point of the image we calculate an approximation of the <em>gradient</em> in that point by combining both results above:</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../../../_images/math/142fea0dc71faf5e430d35e1d2b8ba2262e784c7.png" alt="G = \sqrt{ G_{x}^{2} + G_{y}^{2} }"/></p>
+</div></div></blockquote>
+<p>Although sometimes the following simpler equation is used:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/0fb3e1afe9bd5e73d7df44e7aadefcdbbd0682a3.png" alt="G = |G_{x}| + |G_{y}|"/></p>
+</div></li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<blockquote>
+<div><p>When the size of the kernel is <img class="math" src="../../../../../_images/math/abcc75d8b6dc5ee8559a21d41ca5e3ad7114504e.png" alt="3"/>, the Sobel kernel shown above may produce noticeable inaccuracies (after all, Sobel is only an approximation of the derivative). OpenCV addresses this inaccuracy for kernels of size 3 by using the <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=scharr#scharr">Scharr</a> function. This is as fast but more accurate than the standar Sobel function. It implements the following kernels:</p>
+<blockquote>
+<div><div class="math">
+<p><img src="../../../../../_images/math/4832911248eca1f3926dc38a57a46cdfab001542.png" alt="G_{x} = \begin{bmatrix}
+-3 &amp; 0 &amp; +3  \\
+-10 &amp; 0 &amp; +10  \\
+-3 &amp; 0 &amp; +3
+\end{bmatrix}
+
+G_{y} = \begin{bmatrix}
+-3 &amp; -10 &amp; -3  \\
+0 &amp; 0 &amp; 0  \\
++3 &amp; +10 &amp; +3
+\end{bmatrix}"/></p>
+</div></div></blockquote>
+</div></blockquote>
+<p class="last">You can check out more information of this function in the OpenCV reference (<a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=scharr#scharr">Scharr</a>). Also, in the sample code below, you will notice that above the code for <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=sobel#sobel">Sobel</a> function there is also code for the <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=scharr#scharr">Scharr</a> function commented. Uncommenting it (and obviously commenting the Sobel stuff) should give you an idea of how this function works.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><strong>What does this program do?</strong><ul>
+<li>Applies the <em>Sobel Operator</em> and generates as output an image with the detected <em>edges</em> bright on a darker background.</li>
+</ul>
+</li>
+<li>The tutorial code&#8217;s is shown lines below. You can also download it from <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/tutorial_code/ImgTrans/Sobel_Demo.cpp">here</a></li>
+</ol>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;opencv2/imgproc/imgproc.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/highgui/highgui.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="cm">/** @function main */</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+
+  <span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">src_gray</span><span class="p">;</span>
+  <span class="n">Mat</span> <span class="n">grad</span><span class="p">;</span>
+  <span class="kt">char</span><span class="o">*</span> <span class="n">window_name</span> <span class="o">=</span> <span class="s">&quot;Sobel Demo - Simple Edge Detector&quot;</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">delta</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">ddepth</span> <span class="o">=</span> <span class="n">CV_16S</span><span class="p">;</span>
+
+  <span class="kt">int</span> <span class="n">c</span><span class="p">;</span>
+
+  <span class="c1">/// Load an image</span>
+  <span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">);</span>
+
+  <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">src</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span>
+  <span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="n">GaussianBlur</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">BORDER_DEFAULT</span> <span class="p">);</span>
+
+  <span class="c1">/// Convert it to gray</span>
+  <span class="n">cvtColor</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">CV_BGR2GRAY</span> <span class="p">);</span>
+
+  <span class="c1">/// Create window</span>
+  <span class="n">namedWindow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+
+  <span class="c1">/// Generate grad_x and grad_y</span>
+  <span class="n">Mat</span> <span class="n">grad_x</span><span class="p">,</span> <span class="n">grad_y</span><span class="p">;</span>
+  <span class="n">Mat</span> <span class="n">abs_grad_x</span><span class="p">,</span> <span class="n">abs_grad_y</span><span class="p">;</span>
+
+  <span class="c1">/// Gradient X</span>
+  <span class="c1">//Scharr( src_gray, grad_x, ddepth, 1, 0, scale, delta, BORDER_DEFAULT );</span>
+  <span class="n">Sobel</span><span class="p">(</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">grad_x</span><span class="p">,</span> <span class="n">ddepth</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">BORDER_DEFAULT</span> <span class="p">);</span>
+  <span class="n">convertScaleAbs</span><span class="p">(</span> <span class="n">grad_x</span><span class="p">,</span> <span class="n">abs_grad_x</span> <span class="p">);</span>
+
+  <span class="c1">/// Gradient Y</span>
+  <span class="c1">//Scharr( src_gray, grad_y, ddepth, 0, 1, scale, delta, BORDER_DEFAULT );</span>
+  <span class="n">Sobel</span><span class="p">(</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">grad_y</span><span class="p">,</span> <span class="n">ddepth</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">BORDER_DEFAULT</span> <span class="p">);</span>
+  <span class="n">convertScaleAbs</span><span class="p">(</span> <span class="n">grad_y</span><span class="p">,</span> <span class="n">abs_grad_y</span> <span class="p">);</span>
+
+  <span class="c1">/// Total Gradient (approximate)</span>
+  <span class="n">addWeighted</span><span class="p">(</span> <span class="n">abs_grad_x</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">abs_grad_y</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">grad</span> <span class="p">);</span>
+
+  <span class="n">imshow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">grad</span> <span class="p">);</span>
+
+  <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">First we declare the variables we are going to use:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">src_gray</span><span class="p">;</span>
+<span class="n">Mat</span> <span class="n">grad</span><span class="p">;</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">window_name</span> <span class="o">=</span> <span class="s">&quot;Sobel Demo - Simple Edge Detector&quot;</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">delta</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">ddepth</span> <span class="o">=</span> <span class="n">CV_16S</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">As usual we load our source image <em>src</em>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">);</span>
+
+<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">src</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span>
+<span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">First, we apply a <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=gaussianblur#gaussianblur">GaussianBlur</a> to our image to reduce the noise ( kernel size = 3 )</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">GaussianBlur</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">BORDER_DEFAULT</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Now we convert our filtered image to grayscale:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">cvtColor</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">CV_BGR2GRAY</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Second, we calculate the &#8220;<em>derivatives</em>&#8221; in <em>x</em> and <em>y</em> directions. For this, we use the function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=sobel#sobel">Sobel</a> as shown below:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">grad_x</span><span class="p">,</span> <span class="n">grad_y</span><span class="p">;</span>
+<span class="n">Mat</span> <span class="n">abs_grad_x</span><span class="p">,</span> <span class="n">abs_grad_y</span><span class="p">;</span>
+
+<span class="c1">/// Gradient X</span>
+<span class="n">Sobel</span><span class="p">(</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">grad_x</span><span class="p">,</span> <span class="n">ddepth</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">BORDER_DEFAULT</span> <span class="p">);</span>
+<span class="c1">/// Gradient Y</span>
+<span class="n">Sobel</span><span class="p">(</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">grad_y</span><span class="p">,</span> <span class="n">ddepth</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">BORDER_DEFAULT</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>The function takes the following arguments:</p>
+<ul class="simple">
+<li><em>src_gray</em>: In our example, the input image. Here it is <em>CV_8U</em></li>
+<li><em>grad_x</em>/<em>grad_y</em>: The output image.</li>
+<li><em>ddepth</em>: The depth of the output image. We set it to <em>CV_16S</em> to avoid overflow.</li>
+<li><em>x_order</em>: The order of the derivative in <strong>x</strong> direction.</li>
+<li><em>y_order</em>: The order of the derivative in <strong>y</strong> direction.</li>
+<li><em>scale</em>, <em>delta</em> and <em>BORDER_DEFAULT</em>: We use default values.</li>
+</ul>
+<p>Notice that to calculate the gradient in <em>x</em> direction we use: <img class="math" src="../../../../../_images/math/836dc259141994bf6dd6773b6f57fccd473c5924.png" alt="x_{order}= 1"/> and <img class="math" src="../../../../../_images/math/0af6b4402e6f5bfadbd7a8edc2650b4e9733474f.png" alt="y_{order} = 0"/>. We do analogously for the <em>y</em> direction.</p>
+</li>
+<li><p class="first">We convert our partial results back to <em>CV_8U</em>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">convertScaleAbs</span><span class="p">(</span> <span class="n">grad_x</span><span class="p">,</span> <span class="n">abs_grad_x</span> <span class="p">);</span>
+<span class="n">convertScaleAbs</span><span class="p">(</span> <span class="n">grad_y</span><span class="p">,</span> <span class="n">abs_grad_y</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Finally, we try to approximate the <em>gradient</em> by adding both directional gradients (note that this is not an exact calculation at all! but it is good for our purposes).</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">addWeighted</span><span class="p">(</span> <span class="n">abs_grad_x</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">abs_grad_y</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">grad</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Finally, we show our result:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">imshow</span><span class="p">(</span> <span class="n">window_name</span><span class="p">,</span> <span class="n">grad</span> <span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Here is the output of applying our basic detector to <em>lena.jpg</em>:</p>
+<a class="reference internal image-reference" href="../../../../../_images/Sobel_Derivatives_Tutorial_Result.jpg"><img alt="Result of applying Sobel operator to lena.jpg" class="align-center" src="../../../../../_images/Sobel_Derivatives_Tutorial_Result.jpg" style="width: 300pt;" /></a>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Sobel Derivatives</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a><ul>
+<li><a class="reference internal" href="#sobel-operator">Sobel Operator</a><ul>
+<li><a class="reference internal" href="#formulation">Formulation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#results">Results</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../copyMakeBorder/copyMakeBorder.html"
+                        title="previous chapter">Adding borders to your images</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../laplace_operator/laplace_operator.html"
+                        title="next chapter">Laplace Operator</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../../_sources/doc/tutorials/imgproc/imgtrans/sobel_derivatives/sobel_derivatives.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../laplace_operator/laplace_operator.html" title="Laplace Operator"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../copyMakeBorder/copyMakeBorder.html" title="Adding borders to your images"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_imgproc/table_of_content_imgproc.html" ><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

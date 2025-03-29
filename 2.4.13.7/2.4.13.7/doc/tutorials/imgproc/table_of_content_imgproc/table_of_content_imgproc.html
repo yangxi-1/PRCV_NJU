@@ -1,0 +1,546 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>imgproc module. Image Processing &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="OpenCV Tutorials" href="../../tutorials.html" />
+    <link rel="next" title="Smoothing Images" href="../gausian_median_blur_bilateral_filter/gausian_median_blur_bilateral_filter.html" />
+    <link rel="prev" title="Interoperability with OpenCV 1" href="../../core/interoperability_with_OpenCV_1/interoperability_with_OpenCV_1.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../gausian_median_blur_bilateral_filter/gausian_median_blur_bilateral_filter.html" title="Smoothing Images"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../../core/interoperability_with_OpenCV_1/interoperability_with_OpenCV_1.html" title="Interoperability with OpenCV 1"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" accesskey="U">OpenCV Tutorials</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="imgproc-module-image-processing">
+<span id="table-of-content-imgproc"></span><h1><em>imgproc</em> module. Image Processing<a class="headerlink" href="#imgproc-module-image-processing" title="Permalink to this headline">¶</a></h1>
+<p>In this section you will learn about the image processing (manipulation) functions inside OpenCV.</p>
+<ul>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="31%" />
+<col width="69%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Smoothing_Tutorial_Cover.jpg"><img alt="ImageProcessing_1" src="../../../../_images/Smoothing_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../gausian_median_blur_bilateral_filter/gausian_median_blur_bilateral_filter.html#smoothing"><span>Smoothing Images</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Let&#8217;s take a look at some basic linear filters!</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="31%" />
+<col width="69%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Morphology_1_Tutorial_Cover1.jpg"><img alt="ImageProcessing_2" src="../../../../_images/Morphology_1_Tutorial_Cover1.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../erosion_dilatation/erosion_dilatation.html#morphology-1"><span>Eroding and Dilating</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p>Author: Ana Huamán</p>
+<p class="last">Let&#8217;s <em>change</em> the shape of objects!</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Morphology_2_Tutorial_Cover1.jpg"><img alt="Morphology_2" src="../../../../_images/Morphology_2_Tutorial_Cover1.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../opening_closing_hats/opening_closing_hats.html#morphology-2"><span>More Morphology Transformations</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Here we investigate different morphology operators</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="31%" />
+<col width="69%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Pyramids_Tutorial_Cover.jpg"><img alt="Pyramids" src="../../../../_images/Pyramids_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../pyramids/pyramids.html#pyramids"><span>Image Pyramids</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">What if I need a bigger/smaller image?</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="24%" />
+<col width="76%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Threshold_Tutorial_Cover.jpg"><img alt="Threshold" src="../../../../_images/Threshold_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../threshold/threshold.html#basic-threshold"><span>Basic Thresholding Operations</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">After so much processing, it is time to decide which pixels stay!</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="toctableopencv"><table border="1" class="first docutils">
+<colgroup>
+<col width="24%" />
+<col width="76%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Filter_2D_Tutorial_Cover.jpg"><img alt="Filter_2D" src="../../../../_images/Filter_2D_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../imgtrans/filter_2d/filter_2d.html#filter-2d"><span>Making your own linear filters!</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn to design our own filters by using OpenCV functions</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="toctableopencv"><table border="1" class="first docutils">
+<colgroup>
+<col width="31%" />
+<col width="69%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/CopyMakeBorder_Tutorial_Cover.jpg"><img alt="CopyMakeBorder" src="../../../../_images/CopyMakeBorder_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../imgtrans/copyMakeBorder/copyMakeBorder.html#copymakebordertutorial"><span>Adding borders to your images</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn how to pad our images!</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="23%" />
+<col width="77%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Sobel_Derivatives_Tutorial_Cover.jpg"><img alt="SobelDerivatives" src="../../../../_images/Sobel_Derivatives_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../imgtrans/sobel_derivatives/sobel_derivatives.html#sobel-derivatives"><span>Sobel Derivatives</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn how to calculate gradients and use them to detect edges!</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Laplace_Operator_Tutorial_Cover.jpg"><img alt="LaplaceOperator" src="../../../../_images/Laplace_Operator_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../imgtrans/laplace_operator/laplace_operator.html#laplace-operator"><span>Laplace Operator</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn about the <em>Laplace</em> operator and how to detect edges with it.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="26%" />
+<col width="74%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Canny_Detector_Tutorial_Cover.jpg"><img alt="CannyDetector" src="../../../../_images/Canny_Detector_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../imgtrans/canny_detector/canny_detector.html#canny-detector"><span>Canny Edge Detector</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn a sophisticated alternative to detect edges.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="31%" />
+<col width="69%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Hough_Lines_Tutorial_Cover.jpg"><img alt="HoughLines" src="../../../../_images/Hough_Lines_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../imgtrans/hough_lines/hough_lines.html#hough-lines"><span>Hough Line Transform</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn how to detect lines</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="31%" />
+<col width="69%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Hough_Circle_Tutorial_Cover.jpg"><img alt="HoughCircle" src="../../../../_images/Hough_Circle_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../imgtrans/hough_circle/hough_circle.html#hough-circle"><span>Hough Circle Transform</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn how to detect circles</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="30%" />
+<col width="70%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Remap_Tutorial_Cover.jpg"><img alt="Remap" src="../../../../_images/Remap_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../imgtrans/remap/remap.html#remap"><span>Remapping</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn how to manipulate pixels locations</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="26%" />
+<col width="74%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Warp_Affine_Tutorial_Cover.jpg"><img alt="WarpAffine" src="../../../../_images/Warp_Affine_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../imgtrans/warp_affine/warp_affine.html#warp-affine"><span>Affine Transformations</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn how to rotate, translate and scale our images</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="27%" />
+<col width="73%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Histogram_Equalization_Tutorial_Cover.jpg"><img alt="HistEqualization" src="../../../../_images/Histogram_Equalization_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../histograms/histogram_equalization/histogram_equalization.html#histogram-equalization"><span>Histogram Equalization</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn how to improve the contrast in our images</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Histogram_Calculation_Tutorial_Cover.jpg"><img alt="HistCalculation" src="../../../../_images/Histogram_Calculation_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../histograms/histogram_calculation/histogram_calculation.html#histogram-calculation"><span>Histogram Calculation</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn how to create and generate histograms</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="28%" />
+<col width="72%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Histogram_Comparison_Tutorial_Cover.jpg"><img alt="HistComparison" src="../../../../_images/Histogram_Comparison_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../histograms/histogram_comparison/histogram_comparison.html#histogram-comparison"><span>Histogram Comparison</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn to calculate metrics between histograms</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="23%" />
+<col width="77%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Back_Projection_Tutorial_Cover.jpg"><img alt="BackProjection" src="../../../../_images/Back_Projection_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../histograms/back_projection/back_projection.html#back-projection"><span>Back Projection</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn how to use histograms to find similar objects in images</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="30%" />
+<col width="70%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Template_Matching_Tutorial_Cover.jpg"><img alt="TemplateMatching" src="../../../../_images/Template_Matching_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../histograms/template_matching/template_matching.html#template-matching"><span>Template Matching</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn how to match templates in an image</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="26%" />
+<col width="74%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Find_Contours_Tutorial_Cover.jpg"><img alt="FindContours" src="../../../../_images/Find_Contours_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../shapedescriptors/find_contours/find_contours.html#find-contours"><span>Finding contours in your image</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn how to find contours of objects in our image</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="28%" />
+<col width="72%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Hull_Tutorial_Cover.jpg"><img alt="Hull" src="../../../../_images/Hull_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../shapedescriptors/hull/hull.html#hull"><span>Convex Hull</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn how to get hull contours and draw them!</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Bounding_Rects_Circles_Tutorial_Cover.jpg"><img alt="BRC" src="../../../../_images/Bounding_Rects_Circles_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../shapedescriptors/bounding_rects_circles/bounding_rects_circles.html#bounding-rects-circles"><span>Creating Bounding boxes and circles for contours</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn how to obtain bounding boxes and circles for our contours.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Bounding_Rotated_Ellipses_Tutorial_Cover.jpg"><img alt="BRE" src="../../../../_images/Bounding_Rotated_Ellipses_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../shapedescriptors/bounding_rotated_ellipses/bounding_rotated_ellipses.html#bounding-rotated-ellipses"><span>Creating Bounding rotated boxes and ellipses for contours</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn how to obtain rotated bounding boxes and ellipses for our contours.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Moments_Tutorial_Cover.jpg"><img alt="MU" src="../../../../_images/Moments_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../shapedescriptors/moments/moments.html#moments"><span>Image Moments</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn to calculate the moments of an image</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table border="1" class="toctableopencv docutils">
+<colgroup>
+<col width="24%" />
+<col width="76%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../../../../_images/Point_Polygon_Test_Tutorial_Cover.jpg"><img alt="PPT" src="../../../../_images/Point_Polygon_Test_Tutorial_Cover.jpg" style="width: 90pt; height: 90pt;" /></a></td>
+<td><p class="first"><strong>Title:</strong> <a class="reference internal" href="../shapedescriptors/point_polygon_test/point_polygon_test.html#point-polygon-test"><span>Point Polygon Test</span></a></p>
+<p><em>Compatibility:</em> &gt; OpenCV 2.0</p>
+<p><em>Author:</em> Ana Huamán</p>
+<p class="last">Where we learn how to calculate distances from the image to contours</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../../core/interoperability_with_OpenCV_1/interoperability_with_OpenCV_1.html"
+                        title="previous chapter">Interoperability with OpenCV 1</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../gausian_median_blur_bilateral_filter/gausian_median_blur_bilateral_filter.html"
+                        title="next chapter">Smoothing Images</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/imgproc/table_of_content_imgproc/table_of_content_imgproc.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../gausian_median_blur_bilateral_filter/gausian_median_blur_bilateral_filter.html" title="Smoothing Images"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../../core/interoperability_with_OpenCV_1/interoperability_with_OpenCV_1.html" title="Interoperability with OpenCV 1"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

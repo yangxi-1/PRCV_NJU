@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Normal Bayes Classifier &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="ml. Machine Learning" href="ml.html" />
+    <link rel="next" title="K-Nearest Neighbors" href="k_nearest_neighbors.html" />
+    <link rel="prev" title="Statistical Models" href="statistical_models.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="k_nearest_neighbors.html" title="K-Nearest Neighbors"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="statistical_models.html" title="Statistical Models"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" accesskey="U">ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="normal-bayes-classifier">
+<span id="bayes-classifier"></span><h1>Normal Bayes Classifier<a class="headerlink" href="#normal-bayes-classifier" title="Permalink to this headline">¶</a></h1>
+<p>This simple classification model assumes that feature vectors from each class are normally distributed (though, not necessarily independently distributed). So, the whole data distribution function is assumed to be a Gaussian mixture, one component per  class. Using the training data the algorithm estimates mean vectors and covariance matrices for every class, and then it uses them for prediction.</p>
+<table class="docutils citation" frame="void" id="fukunaga90" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Fukunaga90]</td><td><ol class="first last upperalpha simple" start="11">
+<li>Fukunaga. <em>Introduction to Statistical Pattern Recognition</em>. second ed., New York: Academic Press, 1990.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<div class="section" id="cvnormalbayesclassifier">
+<h2>CvNormalBayesClassifier<a class="headerlink" href="#cvnormalbayesclassifier" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="CvNormalBayesClassifier : public CvStatModel">
+<em class="property">class </em><code class="descname">CvNormalBayesClassifier</code> : <em class="property">public</em> <code class="descname">CvStatModel</code><a class="headerlink" href="#CvNormalBayesClassifier : public CvStatModel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Bayes classifier for normally distributed data.</p>
+</div>
+<div class="section" id="cvnormalbayesclassifier-cvnormalbayesclassifier">
+<h2>CvNormalBayesClassifier::CvNormalBayesClassifier<a class="headerlink" href="#cvnormalbayesclassifier-cvnormalbayesclassifier" title="Permalink to this headline">¶</a></h2>
+<p>Default and training constructors.</p>
+<dl class="function">
+<dt id="CvNormalBayesClassifier::CvNormalBayesClassifier()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">CvNormalBayesClassifier::</code><code class="descname">CvNormalBayesClassifier</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CvNormalBayesClassifier::CvNormalBayesClassifier()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="CvNormalBayesClassifier::CvNormalBayesClassifier(const Mat&amp; trainData, const Mat&amp; responses, const Mat&amp; varIdx, const Mat&amp; sampleIdx)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">CvNormalBayesClassifier::</code><code class="descname">CvNormalBayesClassifier</code><span class="sig-paren">(</span>const Mat&amp; <strong>trainData</strong>, const Mat&amp; <strong>responses</strong>, const Mat&amp; <strong>varIdx</strong>=Mat(), const Mat&amp; <strong>sampleIdx</strong>=Mat() <span class="sig-paren">)</span><a class="headerlink" href="#CvNormalBayesClassifier::CvNormalBayesClassifier(const Mat& trainData, const Mat& responses, const Mat& varIdx, const Mat& sampleIdx)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="CvNormalBayesClassifier::CvNormalBayesClassifier(const CvMat* trainData, const CvMat* responses, const CvMat* varIdx, const CvMat* sampleIdx)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">CvNormalBayesClassifier::</code><code class="descname">CvNormalBayesClassifier</code><span class="sig-paren">(</span>const CvMat* <strong>trainData</strong>, const CvMat* <strong>responses</strong>, const CvMat* <strong>varIdx</strong>=0, const CvMat* <strong>sampleIdx</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#CvNormalBayesClassifier::CvNormalBayesClassifier(const CvMat* trainData, const CvMat* responses, const CvMat* varIdx, const CvMat* sampleIdx)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.NormalBayesClassifier">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">NormalBayesClassifier</code><span class="sig-paren">(</span><span class="optional">[</span>trainData, responses<span class="optional">[</span>, varIdx<span class="optional">[</span>, sampleIdx<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; &lt;NormalBayesClassifier object&gt;<a class="headerlink" href="#cv2.NormalBayesClassifier" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The constructors follow conventions of <a class="reference internal" href="statistical_models.html#CvStatModel::CvStatModel()" title="CvStatModel::CvStatModel()"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvStatModel::CvStatModel()</span></code></a>. See <a class="reference internal" href="statistical_models.html#bool CvStatModel::train(const Mat&amp; train_data, [int tflag,] ..., const Mat&amp; responses, ..., [const Mat&amp; var_idx,] ..., [const Mat&amp; sample_idx,] ... [const Mat&amp; var_type,] ..., [const Mat&amp; missing_mask,] &lt;misc_training_alg_params&gt; ...)" title="bool CvStatModel::train(const Mat&amp; train_data, [int tflag,] ..., const Mat&amp; responses, ..., [const Mat&amp; var_idx,] ..., [const Mat&amp; sample_idx,] ... [const Mat&amp; var_type,] ..., [const Mat&amp; missing_mask,] &lt;misc_training_alg_params&gt; ...)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvStatModel::train()</span></code></a> for parameters descriptions.</p>
+</div>
+<div class="section" id="cvnormalbayesclassifier-train">
+<h2>CvNormalBayesClassifier::train<a class="headerlink" href="#cvnormalbayesclassifier-train" title="Permalink to this headline">¶</a></h2>
+<p>Trains the model.</p>
+<dl class="function">
+<dt id="bool CvNormalBayesClassifier::train(const Mat&amp; trainData, const Mat&amp; responses, const Mat&amp; varIdx , const Mat&amp; sampleIdx, bool update)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CvNormalBayesClassifier::</code><code class="descname">train</code><span class="sig-paren">(</span>const Mat&amp; <strong>trainData</strong>, const Mat&amp; <strong>responses</strong>, const Mat&amp; <strong>varIdx</strong>=Mat(), const Mat&amp; <strong>sampleIdx</strong>=Mat(), bool <strong>update</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#bool CvNormalBayesClassifier::train(const Mat& trainData, const Mat& responses, const Mat& varIdx , const Mat& sampleIdx, bool update)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bool CvNormalBayesClassifier::train(const CvMat* trainData, const CvMat* responses, const CvMat* varIdx , const CvMat* sampleIdx, bool update)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CvNormalBayesClassifier::</code><code class="descname">train</code><span class="sig-paren">(</span>const CvMat* <strong>trainData</strong>, const CvMat* <strong>responses</strong>, const CvMat* <strong>varIdx</strong>=0, const CvMat* <strong>sampleIdx</strong>=0, bool <strong>update</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#bool CvNormalBayesClassifier::train(const CvMat* trainData, const CvMat* responses, const CvMat* varIdx , const CvMat* sampleIdx, bool update)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.NormalBayesClassifier.train">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.NormalBayesClassifier.</code><code class="descname">train</code><span class="sig-paren">(</span>trainData, responses<span class="optional">[</span>, varIdx<span class="optional">[</span>, sampleIdx<span class="optional">[</span>, update<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.NormalBayesClassifier.train" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>update</strong> &#8211; Identifies whether the model should be trained from scratch (<code class="docutils literal"><span class="pre">update=false</span></code>) or should be updated using the new training data (<code class="docutils literal"><span class="pre">update=true</span></code>).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method trains the Normal Bayes classifier. It follows the conventions of the generic <a class="reference internal" href="statistical_models.html#bool CvStatModel::train(const Mat&amp; train_data, [int tflag,] ..., const Mat&amp; responses, ..., [const Mat&amp; var_idx,] ..., [const Mat&amp; sample_idx,] ... [const Mat&amp; var_type,] ..., [const Mat&amp; missing_mask,] &lt;misc_training_alg_params&gt; ...)" title="bool CvStatModel::train(const Mat&amp; train_data, [int tflag,] ..., const Mat&amp; responses, ..., [const Mat&amp; var_idx,] ..., [const Mat&amp; sample_idx,] ... [const Mat&amp; var_type,] ..., [const Mat&amp; missing_mask,] &lt;misc_training_alg_params&gt; ...)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvStatModel::train()</span></code></a> approach with the following limitations:</p>
+<ul class="simple">
+<li>Only <code class="docutils literal"><span class="pre">CV_ROW_SAMPLE</span></code> data layout is supported.</li>
+<li>Input variables are all ordered.</li>
+<li>Output variable is categorical , which means that elements of <code class="docutils literal"><span class="pre">responses</span></code> must be integer numbers, though the vector may have the <code class="docutils literal"><span class="pre">CV_32FC1</span></code> type.</li>
+<li>Missing measurements are not supported.</li>
+</ul>
+</div>
+<div class="section" id="cvnormalbayesclassifier-predict">
+<h2>CvNormalBayesClassifier::predict<a class="headerlink" href="#cvnormalbayesclassifier-predict" title="Permalink to this headline">¶</a></h2>
+<p>Predicts the response for sample(s).</p>
+<dl class="function">
+<dt id="float CvNormalBayesClassifier::predict(const Mat&amp; samples, Mat* results) const">
+<strong>C++:</strong><code class="descname"> </code>float <code class="descclassname">CvNormalBayesClassifier::</code><code class="descname">predict</code><span class="sig-paren">(</span>const Mat&amp; <strong>samples</strong>, Mat* <strong>results</strong>=0 <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#float CvNormalBayesClassifier::predict(const Mat& samples, Mat* results) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="float CvNormalBayesClassifier::predict(const CvMat* samples, CvMat* results) const">
+<strong>C++:</strong><code class="descname"> </code>float <code class="descclassname">CvNormalBayesClassifier::</code><code class="descname">predict</code><span class="sig-paren">(</span>const CvMat* <strong>samples</strong>, CvMat* <strong>results</strong>=0 <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#float CvNormalBayesClassifier::predict(const CvMat* samples, CvMat* results) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.NormalBayesClassifier.predict">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.NormalBayesClassifier.</code><code class="descname">predict</code><span class="sig-paren">(</span>samples<span class="sig-paren">)</span> &rarr; retval, results<a class="headerlink" href="#cv2.NormalBayesClassifier.predict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The method estimates the most probable classes for input vectors. Input vectors (one or more) are stored as rows of the matrix <code class="docutils literal"><span class="pre">samples</span></code>. In case of multiple input vectors, there should be one output vector <code class="docutils literal"><span class="pre">results</span></code>. The predicted class for a single input vector is returned by the method.</p>
+<p>The function is parallelized with the TBB library.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Normal Bayes Classifier</a><ul>
+<li><a class="reference internal" href="#cvnormalbayesclassifier">CvNormalBayesClassifier</a></li>
+<li><a class="reference internal" href="#cvnormalbayesclassifier-cvnormalbayesclassifier">CvNormalBayesClassifier::CvNormalBayesClassifier</a></li>
+<li><a class="reference internal" href="#cvnormalbayesclassifier-train">CvNormalBayesClassifier::train</a></li>
+<li><a class="reference internal" href="#cvnormalbayesclassifier-predict">CvNormalBayesClassifier::predict</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="statistical_models.html"
+                        title="previous chapter">Statistical Models</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="k_nearest_neighbors.html"
+                        title="next chapter">K-Nearest Neighbors</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/ml/doc/normal_bayes_classifier.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="k_nearest_neighbors.html" title="K-Nearest Neighbors"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="statistical_models.html" title="Statistical Models"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" >ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

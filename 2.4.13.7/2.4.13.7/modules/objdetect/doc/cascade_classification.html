@@ -1,0 +1,598 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Cascade Classification &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="objdetect. Object Detection" href="objdetect.html" />
+    <link rel="next" title="Latent SVM" href="latent_svm.html" />
+    <link rel="prev" title="objdetect. Object Detection" href="objdetect.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="latent_svm.html" title="Latent SVM"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="objdetect.html" title="objdetect. Object Detection"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="objdetect.html" accesskey="U">objdetect. Object Detection</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="cascade-classification">
+<h1>Cascade Classification<a class="headerlink" href="#cascade-classification" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="haar-feature-based-cascade-classifier-for-object-detection">
+<h2>Haar Feature-based Cascade Classifier for Object Detection<a class="headerlink" href="#haar-feature-based-cascade-classifier-for-object-detection" title="Permalink to this headline">¶</a></h2>
+<p>The object detector described below has been initially proposed by Paul Viola <a class="reference internal" href="#viola01" id="id1">[Viola01]</a> and improved by Rainer Lienhart <a class="reference internal" href="#lienhart02" id="id2">[Lienhart02]</a>.</p>
+<p>First, a classifier (namely a <em>cascade of boosted classifiers working with haar-like features</em>) is trained with a few hundred sample views of a particular object (i.e., a face or a car), called positive examples, that are scaled to the same size (say, 20x20), and negative examples - arbitrary images of the same size.</p>
+<p>After a classifier is trained, it can be applied to a region of interest (of the same size as used during the training) in an input image. The classifier outputs a &#8220;1&#8221; if the region is likely to show the object (i.e., face/car), and &#8220;0&#8221; otherwise. To search for the object in the whole image one can move the search window across the image and check every location using the classifier. The classifier is designed so that it can be easily &#8220;resized&#8221; in order to be able to find the objects of interest at different sizes, which is more efficient than resizing the image itself. So, to find an object of an unknown size in the image the scan procedure should be done several times at different scales.</p>
+<p>The word &#8220;cascade&#8221; in the classifier name means that the resultant classifier consists of several simpler classifiers (<em>stages</em>) that are applied subsequently to a region of interest until at some stage the candidate is rejected or all the stages are passed. The word &#8220;boosted&#8221; means that the classifiers at every stage of the cascade are complex themselves and they are built out of basic classifiers using one of four different <code class="docutils literal"><span class="pre">boosting</span></code> techniques (weighted voting). Currently Discrete Adaboost, Real Adaboost, Gentle Adaboost and Logitboost are supported. The basic classifiers are decision-tree classifiers with at least 2 leaves. Haar-like features are the input to the basic classifiers, and are calculated as described below. The current algorithm uses the following Haar-like features:</p>
+<img alt="../../../_images/haarfeatures.png" src="../../../_images/haarfeatures.png" />
+<p>The feature used in a particular classifier is specified by its shape (1a, 2b etc.), position within the region of interest and the scale (this scale is not the same as the scale used at the detection stage, though these two scales are multiplied). For example, in the case of the third line feature (2c) the response is calculated as the difference between the sum of image pixels under the rectangle covering the whole feature (including the two white stripes and the black stripe in the middle) and the sum of the image pixels under the black stripe multiplied by 3 in order to compensate for the differences in the size of areas. The sums of pixel values over a rectangular regions are calculated rapidly using integral images (see below and the <a class="reference internal" href="../../imgproc/doc/miscellaneous_transformations.html#void integral(InputArray src, OutputArray sum, int sdepth)" title="void integral(InputArray src, OutputArray sum, int sdepth)"><code class="xref ocv ocv-func docutils literal"><span class="pre">integral()</span></code></a> description).</p>
+<p>To see the object detector at work, have a look at the facedetect demo:
+<a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/dbt_face_detection.cpp">https://github.com/opencv/opencv/tree/master/samples/cpp/dbt_face_detection.cpp</a></p>
+<p>The following reference is for the detection part only. There is a separate application called  <code class="docutils literal"><span class="pre">opencv_traincascade</span></code> that can train a cascade of boosted classifiers from a set of samples.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In the new C++ interface it is also possible to use LBP (local binary pattern) features in addition to Haar-like features.</p>
+</div>
+<table class="docutils citation" frame="void" id="viola01" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[Viola01]</a></td><td>Paul Viola and Michael J. Jones. Rapid Object Detection using a Boosted Cascade of Simple Features. IEEE CVPR, 2001. The paper is available online at <a class="reference external" href="http://research.microsoft.com/en-us/um/people/viola/Pubs/Detect/violaJones_CVPR2001.pdf">http://research.microsoft.com/en-us/um/people/viola/Pubs/Detect/violaJones_CVPR2001.pdf</a></td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="lienhart02" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[Lienhart02]</a></td><td>Rainer Lienhart and Jochen Maydt. An Extended Set of Haar-like Features for Rapid Object Detection. IEEE ICIP 2002, Vol. 1, pp. 900-903, Sep. 2002. This paper, as well as the extended technical report, can be retrieved at <a class="reference external" href="http://www.multimedia-computing.de/mediawiki//images/5/52/MRL-TR-May02-revised-Dec02.pdf">http://www.multimedia-computing.de/mediawiki//images/5/52/MRL-TR-May02-revised-Dec02.pdf</a></td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="featureevaluator">
+<h2>FeatureEvaluator<a class="headerlink" href="#featureevaluator" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="FeatureEvaluator">
+<em class="property">class </em><code class="descname">FeatureEvaluator</code><a class="headerlink" href="#FeatureEvaluator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for computing feature values in cascade classifiers.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">FeatureEvaluator</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">HAAR</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">LBP</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">};</span> <span class="c1">// supported feature types</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">FeatureEvaluator</span><span class="p">();</span> <span class="c1">// destructor</span>
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">read</span><span class="p">(</span><span class="k">const</span> <span class="n">FileNode</span><span class="o">&amp;</span> <span class="n">node</span><span class="p">);</span>
+    <span class="k">virtual</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">FeatureEvaluator</span><span class="o">&gt;</span> <span class="n">clone</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="nf">getFeatureType</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">setImage</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">img</span><span class="p">,</span> <span class="n">Size</span> <span class="n">origWinSize</span><span class="p">);</span>
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">setWindow</span><span class="p">(</span><span class="n">Point</span> <span class="n">p</span><span class="p">);</span>
+
+    <span class="k">virtual</span> <span class="kt">double</span> <span class="nf">calcOrd</span><span class="p">(</span><span class="kt">int</span> <span class="n">featureIdx</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="nf">calcCat</span><span class="p">(</span><span class="kt">int</span> <span class="n">featureIdx</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="k">static</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">FeatureEvaluator</span><span class="o">&gt;</span> <span class="n">create</span><span class="p">(</span><span class="kt">int</span> <span class="n">type</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="featureevaluator-read">
+<h2>FeatureEvaluator::read<a class="headerlink" href="#featureevaluator-read" title="Permalink to this headline">¶</a></h2>
+<p>Reads parameters of features from the <code class="docutils literal"><span class="pre">FileStorage</span></code> node.</p>
+<dl class="function">
+<dt id="bool FeatureEvaluator::read(const FileNode&amp; node)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">FeatureEvaluator::</code><code class="descname">read</code><span class="sig-paren">(</span>const FileNode&amp; <strong>node</strong><span class="sig-paren">)</span><a class="headerlink" href="#bool FeatureEvaluator::read(const FileNode& node)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>node</strong> &#8211; File node from which the feature parameters are read.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="featureevaluator-clone">
+<h2>FeatureEvaluator::clone<a class="headerlink" href="#featureevaluator-clone" title="Permalink to this headline">¶</a></h2>
+<p>Returns a full copy of the feature evaluator.</p>
+<dl class="function">
+<dt id="Ptr&lt;FeatureEvaluator&gt; FeatureEvaluator::clone() const">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FeatureEvaluator&gt; <code class="descclassname">FeatureEvaluator::</code><code class="descname">clone</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#Ptr<FeatureEvaluator> FeatureEvaluator::clone() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="featureevaluator-getfeaturetype">
+<h2>FeatureEvaluator::getFeatureType<a class="headerlink" href="#featureevaluator-getfeaturetype" title="Permalink to this headline">¶</a></h2>
+<p>Returns the feature type (<code class="docutils literal"><span class="pre">HAAR</span></code> or <code class="docutils literal"><span class="pre">LBP</span></code> for now).</p>
+<dl class="function">
+<dt id="int FeatureEvaluator::getFeatureType() const">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">FeatureEvaluator::</code><code class="descname">getFeatureType</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#int FeatureEvaluator::getFeatureType() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="featureevaluator-setimage">
+<h2>FeatureEvaluator::setImage<a class="headerlink" href="#featureevaluator-setimage" title="Permalink to this headline">¶</a></h2>
+<p>Assigns an image to feature evaluator.</p>
+<dl class="function">
+<dt id="bool FeatureEvaluator::setImage(const Mat&amp; img, Size origWinSize)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">FeatureEvaluator::</code><code class="descname">setImage</code><span class="sig-paren">(</span>const Mat&amp; <strong>img</strong>, Size <strong>origWinSize</strong><span class="sig-paren">)</span><a class="headerlink" href="#bool FeatureEvaluator::setImage(const Mat& img, Size origWinSize)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img</strong> &#8211; Matrix of the type   <code class="docutils literal"><span class="pre">CV_8UC1</span></code>  containing an image where the features are computed.</li>
+<li><strong>origWinSize</strong> &#8211; Size of training images.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method assigns an image, where the features will be computed, to the feature evaluator.</p>
+</div>
+<div class="section" id="featureevaluator-setwindow">
+<h2>FeatureEvaluator::setWindow<a class="headerlink" href="#featureevaluator-setwindow" title="Permalink to this headline">¶</a></h2>
+<p>Assigns a window in the current image where the features will be computed.</p>
+<dl class="function">
+<dt id="bool FeatureEvaluator::setWindow(Point p)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">FeatureEvaluator::</code><code class="descname">setWindow</code><span class="sig-paren">(</span>Point <strong>p</strong><span class="sig-paren">)</span><a class="headerlink" href="#bool FeatureEvaluator::setWindow(Point p)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>p</strong> &#8211; Upper left point of the window where the features are computed. Size of the window is equal to the size of training images.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="featureevaluator-calcord">
+<h2>FeatureEvaluator::calcOrd<a class="headerlink" href="#featureevaluator-calcord" title="Permalink to this headline">¶</a></h2>
+<p>Computes the value of an ordered (numerical) feature.</p>
+<dl class="function">
+<dt id="double FeatureEvaluator::calcOrd(int featureIdx) const">
+<strong>C++:</strong><code class="descname"> </code>double <code class="descclassname">FeatureEvaluator::</code><code class="descname">calcOrd</code><span class="sig-paren">(</span>int <strong>featureIdx</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#double FeatureEvaluator::calcOrd(int featureIdx) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>featureIdx</strong> &#8211; Index of the feature whose value is computed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns the computed value of an ordered feature.</p>
+</div>
+<div class="section" id="featureevaluator-calccat">
+<h2>FeatureEvaluator::calcCat<a class="headerlink" href="#featureevaluator-calccat" title="Permalink to this headline">¶</a></h2>
+<p>Computes the value of a categorical feature.</p>
+<dl class="function">
+<dt id="int FeatureEvaluator::calcCat(int featureIdx) const">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">FeatureEvaluator::</code><code class="descname">calcCat</code><span class="sig-paren">(</span>int <strong>featureIdx</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#int FeatureEvaluator::calcCat(int featureIdx) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>featureIdx</strong> &#8211; Index of the feature whose value is computed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns the computed label of a categorical feature, which is the value from [0,... (number of categories - 1)].</p>
+</div>
+<div class="section" id="featureevaluator-create">
+<h2>FeatureEvaluator::create<a class="headerlink" href="#featureevaluator-create" title="Permalink to this headline">¶</a></h2>
+<p>Constructs the feature evaluator.</p>
+<dl class="function">
+<dt id="Ptr&lt;FeatureEvaluator&gt; FeatureEvaluator::create(int type)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FeatureEvaluator&gt; <code class="descclassname">FeatureEvaluator::</code><code class="descname">create</code><span class="sig-paren">(</span>int <strong>type</strong><span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FeatureEvaluator> FeatureEvaluator::create(int type)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>type</strong> &#8211; Type of features evaluated by cascade (<code class="docutils literal"><span class="pre">HAAR</span></code> or <code class="docutils literal"><span class="pre">LBP</span></code> for now).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cascadeclassifier">
+<h2>CascadeClassifier<a class="headerlink" href="#cascadeclassifier" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="CascadeClassifier">
+<em class="property">class </em><code class="descname">CascadeClassifier</code><a class="headerlink" href="#CascadeClassifier" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Cascade classifier class for object detection.</p>
+</div>
+<div class="section" id="cascadeclassifier-cascadeclassifier">
+<h2>CascadeClassifier::CascadeClassifier<a class="headerlink" href="#cascadeclassifier-cascadeclassifier" title="Permalink to this headline">¶</a></h2>
+<p>Loads a classifier from a file.</p>
+<dl class="function">
+<dt id="CascadeClassifier::CascadeClassifier(const string&amp; filename)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">CascadeClassifier::</code><code class="descname">CascadeClassifier</code><span class="sig-paren">(</span>const string&amp; <strong>filename</strong><span class="sig-paren">)</span><a class="headerlink" href="#CascadeClassifier::CascadeClassifier(const string& filename)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.CascadeClassifier">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">CascadeClassifier</code><span class="sig-paren">(</span><span class="optional">[</span>filename<span class="optional">]</span><span class="sig-paren">)</span> &rarr; &lt;CascadeClassifier object&gt;<a class="headerlink" href="#cv2.CascadeClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> &#8211; Name of the file from which the classifier is loaded.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cascadeclassifier-empty">
+<h2>CascadeClassifier::empty<a class="headerlink" href="#cascadeclassifier-empty" title="Permalink to this headline">¶</a></h2>
+<p>Checks whether the classifier has been loaded.</p>
+<dl class="function">
+<dt id="bool CascadeClassifier::empty() const">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CascadeClassifier::</code><code class="descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#bool CascadeClassifier::empty() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.CascadeClassifier.empty">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.CascadeClassifier.</code><code class="descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.CascadeClassifier.empty" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cascadeclassifier-load">
+<h2>CascadeClassifier::load<a class="headerlink" href="#cascadeclassifier-load" title="Permalink to this headline">¶</a></h2>
+<p>Loads a classifier from a file.</p>
+<dl class="function">
+<dt id="bool CascadeClassifier::load(const string&amp; filename)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CascadeClassifier::</code><code class="descname">load</code><span class="sig-paren">(</span>const string&amp; <strong>filename</strong><span class="sig-paren">)</span><a class="headerlink" href="#bool CascadeClassifier::load(const string& filename)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.CascadeClassifier.load">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.CascadeClassifier.</code><code class="descname">load</code><span class="sig-paren">(</span>filename<span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.CascadeClassifier.load" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> &#8211; Name of the file from which the classifier is loaded. The file may contain an old HAAR classifier trained by the haartraining application or a new cascade classifier trained by the traincascade application.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="cascadeclassifier-read">
+<h2>CascadeClassifier::read<a class="headerlink" href="#cascadeclassifier-read" title="Permalink to this headline">¶</a></h2>
+<p>Reads a classifier from a FileStorage node.</p>
+<dl class="function">
+<dt id="bool CascadeClassifier::read(const FileNode&amp; node)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CascadeClassifier::</code><code class="descname">read</code><span class="sig-paren">(</span>const FileNode&amp; <strong>node</strong><span class="sig-paren">)</span><a class="headerlink" href="#bool CascadeClassifier::read(const FileNode& node)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The file may contain a new cascade classifier (trained traincascade application) only.</p>
+</div>
+</div>
+<div class="section" id="cascadeclassifier-detectmultiscale">
+<h2>CascadeClassifier::detectMultiScale<a class="headerlink" href="#cascadeclassifier-detectmultiscale" title="Permalink to this headline">¶</a></h2>
+<p>Detects objects of different sizes in the input image. The detected objects are returned as a list of rectangles.</p>
+<dl class="function">
+<dt id="void CascadeClassifier::detectMultiScale(const Mat&amp; image, vector&lt;Rect&gt;&amp; objects, double scaleFactor, int minNeighbors, int flags, Size minSize, Size maxSize)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">CascadeClassifier::</code><code class="descname">detectMultiScale</code><span class="sig-paren">(</span>const Mat&amp; <strong>image</strong>, vector&lt;Rect&gt;&amp; <strong>objects</strong>, double <strong>scaleFactor</strong>=1.1, int <strong>minNeighbors</strong>=3, int <strong>flags</strong>=0, Size <strong>minSize</strong>=Size(), Size <strong>maxSize</strong>=Size()<span class="sig-paren">)</span><a class="headerlink" href="#void CascadeClassifier::detectMultiScale(const Mat& image, vector<Rect>& objects, double scaleFactor, int minNeighbors, int flags, Size minSize, Size maxSize)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.CascadeClassifier.detectMultiScale">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.CascadeClassifier.</code><code class="descname">detectMultiScale</code><span class="sig-paren">(</span>image<span class="optional">[</span>, scaleFactor<span class="optional">[</span>, minNeighbors<span class="optional">[</span>, flags<span class="optional">[</span>, minSize<span class="optional">[</span>, maxSize<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; objects<a class="headerlink" href="#cv2.CascadeClassifier.detectMultiScale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt>
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.CascadeClassifier.</code><code class="descname">detectMultiScale</code><span class="sig-paren">(</span>image, rejectLevels, levelWeights<span class="optional">[</span>, scaleFactor<span class="optional">[</span>, minNeighbors<span class="optional">[</span>, flags<span class="optional">[</span>, minSize<span class="optional">[</span>, maxSize<span class="optional">[</span>, outputRejectLevels<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; objects</dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="CvSeq* cvHaarDetectObjects(const CvArr* image, CvHaarClassifierCascade* cascade, CvMemStorage* storage, double scale_factor, int min_neighbors, int flags, CvSize min_size, CvSize max_size)">
+<strong>C:</strong><code class="descname"> </code>CvSeq* <code class="descname">cvHaarDetectObjects</code><span class="sig-paren">(</span>const CvArr* <strong>image</strong>, CvHaarClassifierCascade* <strong>cascade</strong>, CvMemStorage* <strong>storage</strong>, double <strong>scale_factor</strong>=1.1, int <strong>min_neighbors</strong>=3, int <strong>flags</strong>=0, CvSize <strong>min_size</strong>=cvSize(0,0), CvSize <strong>max_size</strong>=cvSize(0,0) <span class="sig-paren">)</span><a class="headerlink" href="#CvSeq* cvHaarDetectObjects(const CvArr* image, CvHaarClassifierCascade* cascade, CvMemStorage* storage, double scale_factor, int min_neighbors, int flags, CvSize min_size, CvSize max_size)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.HaarDetectObjects">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">HaarDetectObjects</code><span class="sig-paren">(</span>image, cascade, storage, scale_factor=1.1, min_neighbors=3, flags=0, min_size=(0, 0)<span class="sig-paren">)</span> &rarr; detectedObjects<a class="headerlink" href="#cv.HaarDetectObjects" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cascade</strong> &#8211; Haar classifier cascade (OpenCV 1.x API only). It can be loaded from XML or YAML file using <a class="reference internal" href="../../core/doc/old_xml_yaml_persistence.html#void* cvLoad(const char* filename, CvMemStorage* memstorage, const char* name, const char** real_name)" title="void* cvLoad(const char* filename, CvMemStorage* memstorage, const char* name, const char** real_name)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">Load()</span></code></a>. When the cascade is not needed anymore, release it using <code class="docutils literal"><span class="pre">cvReleaseHaarClassifierCascade(&amp;cascade)</span></code>.</li>
+<li><strong>image</strong> &#8211; Matrix of the type   <code class="docutils literal"><span class="pre">CV_8U</span></code>  containing an image where objects are detected.</li>
+<li><strong>objects</strong> &#8211; Vector of rectangles where each rectangle contains the detected object.</li>
+<li><strong>scaleFactor</strong> &#8211; Parameter specifying how much the image size is reduced at each image scale.</li>
+<li><strong>minNeighbors</strong> &#8211; Parameter specifying how many neighbors each candidate rectangle should have to retain it.</li>
+<li><strong>flags</strong> &#8211; Parameter with the same meaning for an old cascade as in the function <code class="docutils literal"><span class="pre">cvHaarDetectObjects</span></code>. It is not used for a new cascade.</li>
+<li><strong>minSize</strong> &#8211; Minimum possible object size. Objects smaller than that are ignored.</li>
+<li><strong>maxSize</strong> &#8211; Maximum possible object size. Objects larger than that are ignored.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function is parallelized with the TBB library.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>(Python) A face detection example using cascade classifiers can be found at opencv_source_code/samples/python2/facedetect.py</li>
+</ul>
+</div>
+</div>
+<div class="section" id="cascadeclassifier-setimage">
+<h2>CascadeClassifier::setImage<a class="headerlink" href="#cascadeclassifier-setimage" title="Permalink to this headline">¶</a></h2>
+<p>Sets an image for detection.</p>
+<dl class="function">
+<dt id="bool CascadeClassifier::setImage(Ptr&lt;FeatureEvaluator&gt;&amp; feval, const Mat&amp; image)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CascadeClassifier::</code><code class="descname">setImage</code><span class="sig-paren">(</span>Ptr&lt;FeatureEvaluator&gt;&amp; <strong>feval</strong>, const Mat&amp; <strong>image</strong><span class="sig-paren">)</span><a class="headerlink" href="#bool CascadeClassifier::setImage(Ptr<FeatureEvaluator>& feval, const Mat& image)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="void cvSetImagesForHaarClassifierCascade(CvHaarClassifierCascade* cascade, const CvArr* sum, const CvArr* sqsum, const CvArr* tilted_sum, double scale)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSetImagesForHaarClassifierCascade</code><span class="sig-paren">(</span>CvHaarClassifierCascade* <strong>cascade</strong>, const CvArr* <strong>sum</strong>, const CvArr* <strong>sqsum</strong>, const CvArr* <strong>tilted_sum</strong>, double <strong>scale</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvSetImagesForHaarClassifierCascade(CvHaarClassifierCascade* cascade, const CvArr* sum, const CvArr* sqsum, const CvArr* tilted_sum, double scale)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cascade</strong> &#8211; Haar classifier cascade (OpenCV 1.x API only). See <a class="reference internal" href="#void CascadeClassifier::detectMultiScale(const Mat&amp; image, vector&lt;Rect&gt;&amp; objects, double scaleFactor, int minNeighbors, int flags, Size minSize, Size maxSize)" title="void CascadeClassifier::detectMultiScale(const Mat&amp; image, vector&lt;Rect&gt;&amp; objects, double scaleFactor, int minNeighbors, int flags, Size minSize, Size maxSize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CascadeClassifier::detectMultiScale()</span></code></a> for more information.</li>
+<li><strong>feval</strong> &#8211; Pointer to the feature evaluator used for computing features.</li>
+<li><strong>image</strong> &#8211; Matrix of the type   <code class="docutils literal"><span class="pre">CV_8UC1</span></code>  containing an image where the features are computed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function is automatically called by <a class="reference internal" href="#void CascadeClassifier::detectMultiScale(const Mat&amp; image, vector&lt;Rect&gt;&amp; objects, double scaleFactor, int minNeighbors, int flags, Size minSize, Size maxSize)" title="void CascadeClassifier::detectMultiScale(const Mat&amp; image, vector&lt;Rect&gt;&amp; objects, double scaleFactor, int minNeighbors, int flags, Size minSize, Size maxSize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CascadeClassifier::detectMultiScale()</span></code></a> at every image scale. But if you want to test various locations manually using <a class="reference internal" href="#int CascadeClassifier::runAt(Ptr&lt;FeatureEvaluator&gt;&amp; feval, Point pt, double&amp; weight)" title="int CascadeClassifier::runAt(Ptr&lt;FeatureEvaluator&gt;&amp; feval, Point pt, double&amp; weight)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CascadeClassifier::runAt()</span></code></a>, you need to call the function before, so that the integral images are computed.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">in the old API you need to supply integral images (that can be obtained using <a class="reference internal" href="../../imgproc/doc/miscellaneous_transformations.html#void cvIntegral(const CvArr* image, CvArr* sum, CvArr* sqsum, CvArr* tilted_sum)" title="void cvIntegral(const CvArr* image, CvArr* sum, CvArr* sqsum, CvArr* tilted_sum)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">Integral()</span></code></a>) instead of the original image.</p>
+</div>
+</div>
+<div class="section" id="cascadeclassifier-runat">
+<h2>CascadeClassifier::runAt<a class="headerlink" href="#cascadeclassifier-runat" title="Permalink to this headline">¶</a></h2>
+<p>Runs the detector at the specified point.</p>
+<dl class="function">
+<dt id="int CascadeClassifier::runAt(Ptr&lt;FeatureEvaluator&gt;&amp; feval, Point pt, double&amp; weight)">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">CascadeClassifier::</code><code class="descname">runAt</code><span class="sig-paren">(</span>Ptr&lt;FeatureEvaluator&gt;&amp; <strong>feval</strong>, Point <strong>pt</strong>, double&amp; <strong>weight</strong><span class="sig-paren">)</span><a class="headerlink" href="#int CascadeClassifier::runAt(Ptr<FeatureEvaluator>& feval, Point pt, double& weight)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="cfunction">
+<dt id="int cvRunHaarClassifierCascade(const CvHaarClassifierCascade* cascade, CvPoint pt, int start_stage)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvRunHaarClassifierCascade</code><span class="sig-paren">(</span>const CvHaarClassifierCascade* <strong>cascade</strong>, CvPoint <strong>pt</strong>, int <strong>start_stage</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#int cvRunHaarClassifierCascade(const CvHaarClassifierCascade* cascade, CvPoint pt, int start_stage)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cascade</strong> &#8211; Haar classifier cascade (OpenCV 1.x API only). See <a class="reference internal" href="#void CascadeClassifier::detectMultiScale(const Mat&amp; image, vector&lt;Rect&gt;&amp; objects, double scaleFactor, int minNeighbors, int flags, Size minSize, Size maxSize)" title="void CascadeClassifier::detectMultiScale(const Mat&amp; image, vector&lt;Rect&gt;&amp; objects, double scaleFactor, int minNeighbors, int flags, Size minSize, Size maxSize)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CascadeClassifier::detectMultiScale()</span></code></a> for more information.</li>
+<li><strong>feval</strong> &#8211; Feature evaluator used for computing features.</li>
+<li><strong>pt</strong> &#8211; Upper left point of the window where the features are computed. Size of the window is equal to the size of training images.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns 1 if the cascade classifier detects an object in the given location.
+Otherwise, it returns negated index of the stage at which the candidate has been rejected.</p>
+<p>Use <a class="reference internal" href="#bool CascadeClassifier::setImage(Ptr&lt;FeatureEvaluator&gt;&amp; feval, const Mat&amp; image)" title="bool CascadeClassifier::setImage(Ptr&lt;FeatureEvaluator&gt;&amp; feval, const Mat&amp; image)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CascadeClassifier::setImage()</span></code></a> to set the image for the detector to work with.</p>
+</div>
+<div class="section" id="grouprectangles">
+<h2>groupRectangles<a class="headerlink" href="#grouprectangles" title="Permalink to this headline">¶</a></h2>
+<p>Groups the object candidate rectangles.</p>
+<dl class="function">
+<dt id="void groupRectangles(vector&lt;Rect&gt;&amp; rectList, int groupThreshold, double eps)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">groupRectangles</code><span class="sig-paren">(</span>vector&lt;Rect&gt;&amp; <strong>rectList</strong>, int <strong>groupThreshold</strong>, double <strong>eps</strong>=0.2<span class="sig-paren">)</span><a class="headerlink" href="#void groupRectangles(vector<Rect>& rectList, int groupThreshold, double eps)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void groupRectangles(vector&lt;Rect&gt;&amp; rectList, vector&lt;int&gt;&amp; weights, int groupThreshold, double eps)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descname">groupRectangles</code><span class="sig-paren">(</span>vector&lt;Rect&gt;&amp; <strong>rectList</strong>, vector&lt;int&gt;&amp; <strong>weights</strong>, int <strong>groupThreshold</strong>, double <strong>eps</strong>=0.2<span class="sig-paren">)</span><a class="headerlink" href="#void groupRectangles(vector<Rect>& rectList, vector<int>& weights, int groupThreshold, double eps)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.groupRectangles">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">groupRectangles</code><span class="sig-paren">(</span>rectList, groupThreshold<span class="optional">[</span>, eps<span class="optional">]</span><span class="sig-paren">)</span> &rarr; rectList, weights<a class="headerlink" href="#cv2.groupRectangles" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>rectList</strong> &#8211; Input/output vector of rectangles. Output vector includes retained and grouped rectangles. (The Python list is not modified in place.)</li>
+<li><strong>groupThreshold</strong> &#8211; Minimum possible number of rectangles minus 1. The threshold is used in a group of rectangles to retain it.</li>
+<li><strong>eps</strong> &#8211; Relative difference between sides of the rectangles to merge them into a group.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function is a wrapper for the generic function
+<a class="reference internal" href="../../core/doc/clustering.html#template&lt;typename _Tp, class _EqPredicate&gt; int partition(const vector&lt;_Tp&gt;&amp; vec, vector&lt;int&gt;&amp; labels, _EqPredicate predicate)" title="template&lt;typename _Tp, class _EqPredicate&gt; int partition(const vector&lt;_Tp&gt;&amp; vec, vector&lt;int&gt;&amp; labels, _EqPredicate predicate)"><code class="xref ocv ocv-func docutils literal"><span class="pre">partition()</span></code></a> . It clusters all the input rectangles using the rectangle equivalence criteria that combines rectangles with similar sizes and similar locations. The similarity is defined by <code class="docutils literal"><span class="pre">eps</span></code>. When <code class="docutils literal"><span class="pre">eps=0</span></code> , no clustering is done at all. If
+<img class="math" src="../../../_images/math/3d712917aac35c5db2e56c2eb6c4fe37916aaace.png" alt="\texttt{eps}\rightarrow +\inf"/> , all the rectangles are put in one cluster. Then, the small clusters containing less than or equal to <code class="docutils literal"><span class="pre">groupThreshold</span></code> rectangles are rejected. In each other cluster, the average rectangle is computed and put into the output rectangle list.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Cascade Classification</a><ul>
+<li><a class="reference internal" href="#haar-feature-based-cascade-classifier-for-object-detection">Haar Feature-based Cascade Classifier for Object Detection</a></li>
+<li><a class="reference internal" href="#featureevaluator">FeatureEvaluator</a></li>
+<li><a class="reference internal" href="#featureevaluator-read">FeatureEvaluator::read</a></li>
+<li><a class="reference internal" href="#featureevaluator-clone">FeatureEvaluator::clone</a></li>
+<li><a class="reference internal" href="#featureevaluator-getfeaturetype">FeatureEvaluator::getFeatureType</a></li>
+<li><a class="reference internal" href="#featureevaluator-setimage">FeatureEvaluator::setImage</a></li>
+<li><a class="reference internal" href="#featureevaluator-setwindow">FeatureEvaluator::setWindow</a></li>
+<li><a class="reference internal" href="#featureevaluator-calcord">FeatureEvaluator::calcOrd</a></li>
+<li><a class="reference internal" href="#featureevaluator-calccat">FeatureEvaluator::calcCat</a></li>
+<li><a class="reference internal" href="#featureevaluator-create">FeatureEvaluator::create</a></li>
+<li><a class="reference internal" href="#cascadeclassifier">CascadeClassifier</a></li>
+<li><a class="reference internal" href="#cascadeclassifier-cascadeclassifier">CascadeClassifier::CascadeClassifier</a></li>
+<li><a class="reference internal" href="#cascadeclassifier-empty">CascadeClassifier::empty</a></li>
+<li><a class="reference internal" href="#cascadeclassifier-load">CascadeClassifier::load</a></li>
+<li><a class="reference internal" href="#cascadeclassifier-read">CascadeClassifier::read</a></li>
+<li><a class="reference internal" href="#cascadeclassifier-detectmultiscale">CascadeClassifier::detectMultiScale</a></li>
+<li><a class="reference internal" href="#cascadeclassifier-setimage">CascadeClassifier::setImage</a></li>
+<li><a class="reference internal" href="#cascadeclassifier-runat">CascadeClassifier::runAt</a></li>
+<li><a class="reference internal" href="#grouprectangles">groupRectangles</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="objdetect.html"
+                        title="previous chapter">objdetect. Object Detection</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="latent_svm.html"
+                        title="next chapter">Latent SVM</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/objdetect/doc/cascade_classification.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="latent_svm.html" title="Latent SVM"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="objdetect.html" title="objdetect. Object Detection"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="objdetect.html" >objdetect. Object Detection</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

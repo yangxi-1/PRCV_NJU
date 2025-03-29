@@ -1,0 +1,337 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Data Structures &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="ocl. OpenCL-accelerated Computer Vision" href="ocl.html" />
+    <link rel="next" title="Operations on Matrics" href="operations_on_matrices.html" />
+    <link rel="prev" title="Data Structures and Utility Functions" href="structures_and_utility_functions.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="operations_on_matrices.html" title="Operations on Matrics"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="structures_and_utility_functions.html" title="Data Structures and Utility Functions"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" accesskey="U">ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="data-structures">
+<h1>Data Structures<a class="headerlink" href="#data-structures" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="ocl::oclMat">
+<em class="property">class </em><code class="descclassname">ocl::</code><code class="descname">oclMat</code><a class="headerlink" href="#ocl::oclMat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>OpenCV C++ 1-D or 2-D dense array class</p>
+<div class="highlight-python"><div class="highlight"><pre>class CV_EXPORTS oclMat
+{
+public:
+    //! default constructor
+    oclMat();
+    //! constructs oclMatrix of the specified size and type (_type is CV_8UC1, CV_64FC3, CV_32SC(12) etc.)
+    oclMat(int rows, int cols, int type);
+    oclMat(Size size, int type);
+    //! constucts oclMatrix and fills it with the specified value _s.
+    oclMat(int rows, int cols, int type, const Scalar &amp;s);
+    oclMat(Size size, int type, const Scalar &amp;s);
+    //! copy constructor
+    oclMat(const oclMat &amp;m);
+
+    //! constructor for oclMatrix headers pointing to user-allocated data
+    oclMat(int rows, int cols, int type, void *data, size_t step = Mat::AUTO_STEP);
+    oclMat(Size size, int type, void *data, size_t step = Mat::AUTO_STEP);
+
+    //! creates a matrix header for a part of the bigger matrix
+    oclMat(const oclMat &amp;m, const Range &amp;rowRange, const Range &amp;colRange);
+    oclMat(const oclMat &amp;m, const Rect &amp;roi);
+
+    //! builds oclMat from Mat. Perfom blocking upload to device.
+    explicit oclMat (const Mat &amp;m);
+
+    //! destructor - calls release()
+    ~oclMat();
+
+    //! assignment operators
+    oclMat &amp;operator = (const oclMat &amp;m);
+    //! assignment operator. Perfom blocking upload to device.
+    oclMat &amp;operator = (const Mat &amp;m);
+    oclMat &amp;operator = (const oclMatExpr&amp; expr);
+
+    //! pefroms blocking upload data to oclMat.
+    void upload(const cv::Mat &amp;m);
+
+
+    //! downloads data from device to host memory. Blocking calls.
+    operator Mat() const;
+    void download(cv::Mat &amp;m) const;
+
+    //! convert to _InputArray
+    operator _InputArray();
+
+    //! convert to _OutputArray
+    operator _OutputArray();
+
+    //! returns a new oclMatrix header for the specified row
+    oclMat row(int y) const;
+    //! returns a new oclMatrix header for the specified column
+    oclMat col(int x) const;
+    //! ... for the specified row span
+    oclMat rowRange(int startrow, int endrow) const;
+    oclMat rowRange(const Range &amp;r) const;
+    //! ... for the specified column span
+    oclMat colRange(int startcol, int endcol) const;
+    oclMat colRange(const Range &amp;r) const;
+
+    //! returns deep copy of the oclMatrix, i.e. the data is copied
+    oclMat clone() const;
+
+    //! copies those oclMatrix elements to &quot;m&quot; that are marked with non-zero mask elements.
+    // It calls m.create(this-&gt;size(), this-&gt;type()).
+    // It supports any data type
+    void copyTo( oclMat &amp;m, const oclMat &amp;mask = oclMat()) const;
+
+    //! converts oclMatrix to another datatype with optional scalng. See cvConvertScale.
+    void convertTo( oclMat &amp;m, int rtype, double alpha = 1, double beta = 0 ) const;
+
+    void assignTo( oclMat &amp;m, int type = -1 ) const;
+
+    //! sets every oclMatrix element to s
+    oclMat&amp; operator = (const Scalar &amp;s);
+    //! sets some of the oclMatrix elements to s, according to the mask
+    oclMat&amp; setTo(const Scalar &amp;s, const oclMat &amp;mask = oclMat());
+    //! creates alternative oclMatrix header for the same data, with different
+    // number of channels and/or different number of rows. see cvReshape.
+    oclMat reshape(int cn, int rows = 0) const;
+
+    //! allocates new oclMatrix data unless the oclMatrix already has specified size and type.
+    // previous data is unreferenced if needed.
+    void create(int rows, int cols, int type);
+    void create(Size size, int type);
+
+    //! allocates new oclMatrix with specified device memory type.
+    void createEx(int rows, int cols, int type, DevMemRW rw_type, DevMemType mem_type);
+    void createEx(Size size, int type, DevMemRW rw_type, DevMemType mem_type);
+
+    //! decreases reference counter;
+    // deallocate the data when reference counter reaches 0.
+    void release();
+
+    //! swaps with other smart pointer
+    void swap(oclMat &amp;mat);
+
+    //! locates oclMatrix header within a parent oclMatrix. See below
+    void locateROI( Size &amp;wholeSize, Point &amp;ofs ) const;
+    //! moves/resizes the current oclMatrix ROI inside the parent oclMatrix.
+    oclMat&amp; adjustROI( int dtop, int dbottom, int dleft, int dright );
+    //! extracts a rectangular sub-oclMatrix
+    // (this is a generalized form of row, rowRange etc.)
+    oclMat operator()( Range rowRange, Range colRange ) const;
+    oclMat operator()( const Rect &amp;roi ) const;
+
+    oclMat&amp; operator+=( const oclMat&amp; m );
+    oclMat&amp; operator-=( const oclMat&amp; m );
+    oclMat&amp; operator*=( const oclMat&amp; m );
+    oclMat&amp; operator/=( const oclMat&amp; m );
+
+    //! returns true if the oclMatrix data is continuous
+    // (i.e. when there are no gaps between successive rows).
+    // similar to CV_IS_oclMat_CONT(cvoclMat-&gt;type)
+    bool isContinuous() const;
+    //! returns element size in bytes,
+    // similar to CV_ELEM_SIZE(cvMat-&gt;type)
+    size_t elemSize() const;
+    //! returns the size of element channel in bytes.
+    size_t elemSize1() const;
+    //! returns element type, similar to CV_MAT_TYPE(cvMat-&gt;type)
+    int type() const;
+    //! returns element type, i.e. 8UC3 returns 8UC4 because in ocl
+    //! 3 channels element actually use 4 channel space
+    int ocltype() const;
+    //! returns element type, similar to CV_MAT_DEPTH(cvMat-&gt;type)
+    int depth() const;
+    //! returns element type, similar to CV_MAT_CN(cvMat-&gt;type)
+    int channels() const;
+    //! returns element type, return 4 for 3 channels element,
+    //!becuase 3 channels element actually use 4 channel space
+    int oclchannels() const;
+    //! returns step/elemSize1()
+    size_t step1() const;
+    //! returns oclMatrix size:
+    // width == number of columns, height == number of rows
+    Size size() const;
+    //! returns true if oclMatrix data is NULL
+    bool empty() const;
+
+    //! matrix transposition
+    oclMat t() const;
+
+    /*! includes several bit-fields:
+      - the magic signature
+      - continuity flag
+      - depth
+      - number of channels
+      */
+    int flags;
+    //! the number of rows and columns
+    int rows, cols;
+    //! a distance between successive rows in bytes; includes the gap if any
+    size_t step;
+    //! pointer to the data(OCL memory object)
+    uchar *data;
+
+    //! pointer to the reference counter;
+    // when oclMatrix points to user-allocated data, the pointer is NULL
+    int *refcount;
+
+    //! helper fields used in locateROI and adjustROI
+    //datastart and dataend are not used in current version
+    uchar *datastart;
+    uchar *dataend;
+
+    //! OpenCL context associated with the oclMat object.
+    Context *clCxt;
+    //add offset for handle ROI, calculated in byte
+    int offset;
+    //add wholerows and wholecols for the whole matrix, datastart and dataend are no longer used
+    int wholerows;
+    int wholecols;
+};
+</pre></div>
+</div>
+<p>Basically speaking, the <code class="docutils literal"><span class="pre">oclMat</span></code> is the mirror of <code class="docutils literal"><span class="pre">Mat</span></code> with the extension of OCL feature, the members have the same meaning and useage of <code class="docutils literal"><span class="pre">Mat</span></code> except following:</p>
+<ul>
+<li><p class="first"><code class="docutils literal"><span class="pre">datastart</span></code> and <code class="docutils literal"><span class="pre">dataend</span></code> are replaced with <code class="docutils literal"><span class="pre">wholerows</span></code> and <code class="docutils literal"><span class="pre">wholecols</span></code></p>
+</li>
+<li><p class="first">Only basic flags are supported in <code class="docutils literal"><span class="pre">oclMat</span></code> (i.e. depth number of channels)</p>
+</li>
+<li><dl class="first docutils">
+<dt>All the 3-channel matrix (i.e. RGB image) are represented by 4-channel matrix in <code class="docutils literal"><span class="pre">oclMat</span></code>. It means 3-channel image have 4-channel space with the last channel unused. We provide a transparent interface to handle the difference between OpenCV <code class="docutils literal"><span class="pre">Mat</span></code> and <code class="docutils literal"><span class="pre">oclMat</span></code>.</dt>
+<dd><p class="first last">For example: If a <code class="docutils literal"><span class="pre">oclMat</span></code> has 3 channels, <code class="docutils literal"><span class="pre">channels()</span></code> returns 3 and <code class="docutils literal"><span class="pre">oclchannels()</span></code> returns 4</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="structures_and_utility_functions.html"
+                        title="previous chapter">Data Structures and Utility Functions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="operations_on_matrices.html"
+                        title="next chapter">Operations on Matrics</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/ocl/doc/data_structures.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="operations_on_matrices.html" title="Operations on Matrics"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="structures_and_utility_functions.html" title="Data Structures and Utility Functions"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" >ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

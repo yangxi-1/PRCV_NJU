@@ -1,0 +1,563 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Decision Trees &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="ml. Machine Learning" href="ml.html" />
+    <link rel="next" title="Boosting" href="boosting.html" />
+    <link rel="prev" title="Support Vector Machines" href="support_vector_machines.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="boosting.html" title="Boosting"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="support_vector_machines.html" title="Support Vector Machines"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" accesskey="U">ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="decision-trees">
+<h1>Decision Trees<a class="headerlink" href="#decision-trees" title="Permalink to this headline">¶</a></h1>
+<p>The ML classes discussed in this section implement Classification and Regression Tree algorithms described in <a class="reference internal" href="#breiman84" id="id1">[Breiman84]</a>.</p>
+<p>The class
+<a class="reference internal" href="#CvDTree : public CvStatModel" title="class CvDTree : public CvStatModel"><code class="xref ocv ocv-class docutils literal"><span class="pre">CvDTree</span></code></a> represents a single decision tree that may be used alone or as a base class in tree ensembles (see
+<a class="reference internal" href="boosting.html#boosting"><span>Boosting</span></a> and
+<a class="reference internal" href="random_trees.html#random-trees"><span>Random Trees</span></a> ).</p>
+<p>A decision tree is a binary tree (tree where each non-leaf node has two child nodes). It can be used either for classification or for regression. For classification, each tree leaf is marked with a class label; multiple leaves may have the same label. For regression, a constant is also assigned to each tree leaf, so the approximation function is piecewise constant.</p>
+<div class="section" id="predicting-with-decision-trees">
+<h2>Predicting with Decision Trees<a class="headerlink" href="#predicting-with-decision-trees" title="Permalink to this headline">¶</a></h2>
+<p>To reach a leaf node and to obtain a response for the input feature
+vector, the prediction procedure starts with the root node. From each
+non-leaf node the procedure goes to the left (selects the left
+child node as the next observed node) or to the right based on the
+value of a certain variable whose index is stored in the observed
+node. The following variables are possible:</p>
+<ul class="simple">
+<li><strong>Ordered variables.</strong> The variable value is compared with a threshold that is also stored in the node. If the value is less than the threshold, the procedure goes to the left. Otherwise, it goes to the right. For example, if the weight is less than 1 kilogram, the procedure goes to the left, else to the right.</li>
+<li><strong>Categorical variables.</strong>  A discrete variable value is tested to see whether it belongs to a certain subset of values (also stored in the node) from a limited set of values the variable could take. If it does, the procedure goes to the left. Otherwise, it goes to the right. For example, if the color is green or red, go to the left, else to the right.</li>
+</ul>
+<p>So, in each node, a pair of entities (<code class="docutils literal"><span class="pre">variable_index</span></code> , <code class="docutils literal"><span class="pre">decision_rule</span>
+<span class="pre">(threshold/subset)</span></code> ) is used. This pair is called a <em>split</em> (split on
+the variable <code class="docutils literal"><span class="pre">variable_index</span></code> ). Once a leaf node is reached, the value
+assigned to this node is used as the output of the prediction procedure.</p>
+<p>Sometimes, certain features of the input vector are missed (for example, in the darkness it is difficult to determine the object color), and the prediction procedure may get stuck in the certain node (in the mentioned example, if the node is split by color). To avoid such situations, decision trees use so-called <em>surrogate splits</em>. That is, in addition to the best &#8220;primary&#8221; split, every tree node may also be split to one or more other variables with nearly the same results.</p>
+</div>
+<div class="section" id="training-decision-trees">
+<h2>Training Decision Trees<a class="headerlink" href="#training-decision-trees" title="Permalink to this headline">¶</a></h2>
+<p>The tree is built recursively, starting from the root node. All training data (feature vectors and responses) is used to split the root node. In each node the optimum decision rule (the best &#8220;primary&#8221; split) is found based on some criteria. In machine learning, <code class="docutils literal"><span class="pre">gini</span></code> &#8220;purity&#8221; criteria are used for classification, and sum of squared errors is used for regression. Then, if necessary, the surrogate splits are found. They resemble the results of the primary split on the training data. All the data is divided using the primary and the surrogate splits (like it is done in the prediction procedure) between the left and the right child node. Then, the procedure recursively splits both left and right nodes. At each node the recursive procedure may stop (that is, stop splitting the node further) in one of the following cases:</p>
+<ul class="simple">
+<li>Depth of the constructed tree branch has reached the specified maximum value.</li>
+<li>Number of training samples in the node is less than the specified threshold when it is not statistically representative to split the node further.</li>
+<li>All the samples in the node belong to the same class or, in case of regression, the variation is too small.</li>
+<li>The best found split does not give any noticeable improvement compared to a random choice.</li>
+</ul>
+<p>When the tree is built, it may be pruned using a cross-validation procedure, if necessary. That is, some branches of the tree that may lead to the model overfitting are cut off. Normally, this procedure is only applied to standalone decision trees. Usually tree ensembles build trees that are small enough and use their own protection schemes against overfitting.</p>
+</div>
+<div class="section" id="variable-importance">
+<h2>Variable Importance<a class="headerlink" href="#variable-importance" title="Permalink to this headline">¶</a></h2>
+<p>Besides the prediction that is an obvious use of decision trees, the tree can be also used for various data analyses. One of the key properties of the constructed decision tree algorithms is an ability to compute the importance (relative decisive power) of each variable. For example, in a spam filter that uses a set of words occurred in the message as a feature vector, the variable importance rating can be used to determine the most &#8220;spam-indicating&#8221; words and thus help keep the dictionary size reasonable.</p>
+<p>Importance of each variable is computed over all the splits on this variable in the tree, primary and surrogate ones. Thus, to compute variable importance correctly, the surrogate splits must be enabled in the training parameters, even if there is no missing data.</p>
+</div>
+<div class="section" id="cvdtreesplit">
+<h2>CvDTreeSplit<a class="headerlink" href="#cvdtreesplit" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvDTreeSplit">
+<em class="property">struct </em><code class="descname">CvDTreeSplit</code><a class="headerlink" href="#CvDTreeSplit" title="Permalink to this definition">¶</a></dt>
+<dd><p>The structure represents a possible decision tree node split. It has public members:</p>
+<dl class="member">
+<dt id="int var_idx">
+int <code class="descname">var_idx</code><a class="headerlink" href="#int var_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Index of variable on which the split is created.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int inversed">
+int <code class="descname">inversed</code><a class="headerlink" href="#int inversed" title="Permalink to this definition">¶</a></dt>
+<dd><p>If it is not null then inverse split rule is used that is left and right branches are exchanged in the rule expressions below.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="float quality">
+float <code class="descname">quality</code><a class="headerlink" href="#float quality" title="Permalink to this definition">¶</a></dt>
+<dd><p>The split quality, a positive number. It is used to choose the best primary split, then to choose and sort the surrogate splits. After the tree is constructed, it is also used to compute variable importance.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="CvDTreeSplit* next">
+CvDTreeSplit* <code class="descname">next</code><a class="headerlink" href="#CvDTreeSplit* next" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pointer to the next split in the node list of splits.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int[] subset">
+int[] <code class="descname">subset</code><a class="headerlink" href="#int[] subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bit array indicating the value subset in case of split on a categorical variable. The rule is:</p>
+<div class="highlight-python"><div class="highlight"><pre>if var_value in subset
+  then next_node &lt;- left
+  else next_node &lt;- right
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="member">
+<dt id="float ord::c">
+float <code class="descclassname">ord::</code><code class="descname">c</code><a class="headerlink" href="#float ord::c" title="Permalink to this definition">¶</a></dt>
+<dd><p>The threshold value in case of split on an ordered variable. The rule is:</p>
+<div class="highlight-python"><div class="highlight"><pre>if var_value &lt; ord.c
+  then next_node&lt;-left
+  else next_node&lt;-right
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="member">
+<dt id="int ord::split_point">
+int <code class="descclassname">ord::</code><code class="descname">split_point</code><a class="headerlink" href="#int ord::split_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used internally by the training algorithm.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="cvdtreenode">
+<h2>CvDTreeNode<a class="headerlink" href="#cvdtreenode" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvDTreeNode">
+<em class="property">struct </em><code class="descname">CvDTreeNode</code><a class="headerlink" href="#CvDTreeNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>The structure represents a node in a decision tree. It has public members:</p>
+<dl class="member">
+<dt id="int class_idx">
+int <code class="descname">class_idx</code><a class="headerlink" href="#int class_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class index normalized to 0..class_count-1 range and assigned to the node. It is used internally in classification trees and tree ensembles.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int Tn">
+int <code class="descname">Tn</code><a class="headerlink" href="#int Tn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tree index in a ordered sequence of pruned trees. The indices are used during and after the pruning procedure. The root node has the maximum value <code class="docutils literal"><span class="pre">Tn</span></code> of the whole tree, child nodes have <code class="docutils literal"><span class="pre">Tn</span></code> less than or equal to the parent&#8217;s <code class="docutils literal"><span class="pre">Tn</span></code>, and nodes with <img class="math" src="../../../_images/math/60857b9e04e3afb3150d99d86c389c4b40a26b6b.png" alt="Tn \leq CvDTree::pruned\_tree\_idx"/> are not used at prediction stage (the corresponding branches are considered as cut-off), even if they have not been physically deleted from the tree at the pruning stage.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="double value">
+double <code class="descname">value</code><a class="headerlink" href="#double value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Value at the node: a class label in case of classification or estimated function value in case of regression.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="CvDTreeNode* parent">
+CvDTreeNode* <code class="descname">parent</code><a class="headerlink" href="#CvDTreeNode* parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pointer to the parent node.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="CvDTreeNode* left">
+CvDTreeNode* <code class="descname">left</code><a class="headerlink" href="#CvDTreeNode* left" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pointer to the left child node.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="CvDTreeNode* right">
+CvDTreeNode* <code class="descname">right</code><a class="headerlink" href="#CvDTreeNode* right" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pointer to the right child node.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="CvDTreeSplit* split">
+CvDTreeSplit* <code class="descname">split</code><a class="headerlink" href="#CvDTreeSplit* split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pointer to the first (primary) split in the node list of splits.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int sample_count">
+int <code class="descname">sample_count</code><a class="headerlink" href="#int sample_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of samples that fall into the node at the training stage. It is used to resolve the difficult cases - when the variable for the primary split is missing and all the variables for other surrogate splits are missing too. In this case the sample is directed to the left if <code class="docutils literal"><span class="pre">left-&gt;sample_count</span> <span class="pre">&gt;</span> <span class="pre">right-&gt;sample_count</span></code> and to the right otherwise.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="int depth">
+int <code class="descname">depth</code><a class="headerlink" href="#int depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Depth of the node. The root node depth is 0, the child nodes depth is the parent&#8217;s depth + 1.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>Other numerous fields of <code class="docutils literal"><span class="pre">CvDTreeNode</span></code> are used internally at the training stage.</p>
+</div>
+<div class="section" id="cvdtreeparams">
+<h2>CvDTreeParams<a class="headerlink" href="#cvdtreeparams" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvDTreeParams">
+<em class="property">struct </em><code class="descname">CvDTreeParams</code><a class="headerlink" href="#CvDTreeParams" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The structure contains all the decision tree training parameters. You can initialize it by default constructor and then override any parameters directly before training, or the structure may be fully initialized using the advanced variant of the constructor.</p>
+</div>
+<div class="section" id="cvdtreeparams-cvdtreeparams">
+<h2>CvDTreeParams::CvDTreeParams<a class="headerlink" href="#cvdtreeparams-cvdtreeparams" title="Permalink to this headline">¶</a></h2>
+<p>The constructors.</p>
+<dl class="function">
+<dt id="CvDTreeParams::CvDTreeParams()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">CvDTreeParams::</code><code class="descname">CvDTreeParams</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CvDTreeParams::CvDTreeParams()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="CvDTreeParams::CvDTreeParams(int max_depth, int min_sample_count, float regression_accuracy, bool use_surrogates, int max_categories, int cv_folds, bool use_1se_rule, bool truncate_pruned_tree, const float* priors)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">CvDTreeParams::</code><code class="descname">CvDTreeParams</code><span class="sig-paren">(</span>int <strong>max_depth</strong>, int <strong>min_sample_count</strong>, float <strong>regression_accuracy</strong>, bool <strong>use_surrogates</strong>, int <strong>max_categories</strong>, int <strong>cv_folds</strong>, bool <strong>use_1se_rule</strong>, bool <strong>truncate_pruned_tree</strong>, const float* <strong>priors</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvDTreeParams::CvDTreeParams(int max_depth, int min_sample_count, float regression_accuracy, bool use_surrogates, int max_categories, int cv_folds, bool use_1se_rule, bool truncate_pruned_tree, const float* priors)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>max_depth</strong> &#8211; The maximum possible depth of the tree. That is the training algorithms attempts to split a node while its depth is less than <code class="docutils literal"><span class="pre">max_depth</span></code>. The actual depth may be smaller if the other termination criteria are met (see the outline of the training procedure in the beginning of the section), and/or if the tree is pruned.</li>
+<li><strong>min_sample_count</strong> &#8211; If the number of samples in a node is less than this parameter then the node will not be split.</li>
+<li><strong>regression_accuracy</strong> &#8211; Termination criteria for regression trees. If all absolute differences between an estimated value in a node and values of train samples in this node are less than this parameter then the node will not be split.</li>
+<li><strong>use_surrogates</strong> &#8211; If true then surrogate splits will be built. These splits allow to work with missing data and compute variable importance correctly.</li>
+<li><strong>max_categories</strong> &#8211; Cluster possible values of a categorical variable into <code class="docutils literal"><span class="pre">K</span></code> <img class="math" src="../../../_images/math/4b429a7d8c5f9462f630952b73293345b4c68be9.png" alt="\leq"/> <code class="docutils literal"><span class="pre">max_categories</span></code> clusters to find a suboptimal split. If a discrete variable, on which the training procedure tries to make a split, takes more than <code class="docutils literal"><span class="pre">max_categories</span></code> values, the precise best subset estimation may take a very long time because the algorithm is exponential. Instead, many decision trees engines (including ML) try to find sub-optimal split in this case by clustering all the samples into <code class="docutils literal"><span class="pre">max_categories</span></code> clusters that is some categories are merged together. The clustering is applied only in <code class="docutils literal"><span class="pre">n</span></code>&gt;2-class classification problems for categorical variables with <code class="docutils literal"><span class="pre">N</span> <span class="pre">&gt;</span> <span class="pre">max_categories</span></code> possible values. In case of regression and 2-class classification the optimal split can be found efficiently without employing clustering, thus the parameter is not used in these cases.</li>
+<li><strong>cv_folds</strong> &#8211; If <code class="docutils literal"><span class="pre">cv_folds</span> <span class="pre">&gt;</span> <span class="pre">1</span></code> then prune a tree with <code class="docutils literal"><span class="pre">K</span></code>-fold cross-validation where <code class="docutils literal"><span class="pre">K</span></code> is equal to <code class="docutils literal"><span class="pre">cv_folds</span></code>.</li>
+<li><strong>use_1se_rule</strong> &#8211; If true then a pruning will be harsher. This will make a tree more compact and more resistant to the training data noise but a bit less accurate.</li>
+<li><strong>truncate_pruned_tree</strong> &#8211; If true then pruned branches are physically removed from the tree. Otherwise they are retained and it is possible to get results from the original unpruned (or pruned less aggressively) tree by decreasing <code class="docutils literal"><span class="pre">CvDTree::pruned_tree_idx</span></code> parameter.</li>
+<li><strong>priors</strong> &#8211; The array of a priori class probabilities, sorted by the class label value. The parameter can be used to tune the decision tree preferences toward a certain class. For example, if you want to detect some rare anomaly occurrence, the training base will likely contain much more normal cases than anomalies, so a very good classification performance will be achieved just by considering every case as normal. To avoid this, the priors can be specified, where the anomaly probability is artificially increased (up to 0.5 or even greater), so the weight of the misclassified anomalies becomes much bigger, and the tree is adjusted properly. You can also think about this parameter as weights of prediction categories which determine relative weights that you give to misclassification. That is, if the weight of the first category is 1 and the weight of the second category is 10, then each mistake in predicting the second category is equivalent to making 10 mistakes in predicting the first category.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The default constructor initializes all the parameters with the default values tuned for the standalone classification tree:</p>
+<div class="highlight-python"><div class="highlight"><pre>CvDTreeParams() : max_categories(10), max_depth(INT_MAX), min_sample_count(10),
+    cv_folds(10), use_surrogates(true), use_1se_rule(true),
+    truncate_pruned_tree(true), regression_accuracy(0.01f), priors(0)
+{}
+</pre></div>
+</div>
+</div>
+<div class="section" id="cvdtreetraindata">
+<h2>CvDTreeTrainData<a class="headerlink" href="#cvdtreetraindata" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvDTreeTrainData">
+<em class="property">struct </em><code class="descname">CvDTreeTrainData</code><a class="headerlink" href="#CvDTreeTrainData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Decision tree training data and shared data for tree ensembles. The structure is mostly used internally for storing both standalone trees and tree ensembles efficiently. Basically, it contains the following types of information:</p>
+<ol class="arabic simple">
+<li>Training parameters, an instance of <code class="xref ocv ocv-class docutils literal"><span class="pre">CvDTreeParams</span></code>.</li>
+<li>Training data preprocessed to find the best splits more efficiently. For tree ensembles, this preprocessed data is reused by all trees. Additionally, the training data characteristics shared by all trees in the ensemble are stored here: variable types, the number of classes, a class label compression map, and so on.</li>
+<li>Buffers, memory storages for tree nodes, splits, and other elements of the constructed trees.</li>
+</ol>
+<p>There are two ways of using this structure. In simple cases (for example, a standalone tree or the ready-to-use &#8220;black box&#8221; tree ensemble from machine learning, like
+<a class="reference internal" href="random_trees.html#random-trees"><span>Random Trees</span></a> or
+<a class="reference internal" href="boosting.html#boosting"><span>Boosting</span></a> ), there is no need to care or even to know about the structure. You just construct the needed statistical model, train it, and use it. The <code class="docutils literal"><span class="pre">CvDTreeTrainData</span></code> structure is constructed and used internally. However, for custom tree algorithms or another sophisticated cases, the structure may be constructed and used explicitly. The scheme is the following:</p>
+<ol class="arabic simple">
+<li>The structure is initialized using the default constructor, followed by <code class="docutils literal"><span class="pre">set_data</span></code>, or it is built using the full form of constructor. The parameter <code class="docutils literal"><span class="pre">_shared</span></code> must be set to <code class="docutils literal"><span class="pre">true</span></code>.</li>
+<li>One or more trees are trained using this data (see the special form of the method <a class="reference internal" href="#bool CvDTree::train(const Mat&amp; trainData, int tflag, const Mat&amp; responses, const Mat&amp; varIdx, const Mat&amp; sampleIdx, const Mat&amp; varType, const Mat&amp; missingDataMask, CvDTreeParams params)" title="bool CvDTree::train(const Mat&amp; trainData, int tflag, const Mat&amp; responses, const Mat&amp; varIdx, const Mat&amp; sampleIdx, const Mat&amp; varType, const Mat&amp; missingDataMask, CvDTreeParams params)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvDTree::train()</span></code></a>).</li>
+<li>The structure is released as soon as all the trees using it are released.</li>
+</ol>
+</div>
+<div class="section" id="cvdtree">
+<h2>CvDTree<a class="headerlink" href="#cvdtree" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="CvDTree : public CvStatModel">
+<em class="property">class </em><code class="descname">CvDTree</code> : <em class="property">public</em> <code class="descname">CvStatModel</code><a class="headerlink" href="#CvDTree : public CvStatModel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The class implements a decision tree as described in the beginning of this section.</p>
+</div>
+<div class="section" id="cvdtree-train">
+<h2>CvDTree::train<a class="headerlink" href="#cvdtree-train" title="Permalink to this headline">¶</a></h2>
+<p>Trains a decision tree.</p>
+<dl class="function">
+<dt id="bool CvDTree::train(const Mat&amp; trainData, int tflag, const Mat&amp; responses, const Mat&amp; varIdx, const Mat&amp; sampleIdx, const Mat&amp; varType, const Mat&amp; missingDataMask, CvDTreeParams params)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CvDTree::</code><code class="descname">train</code><span class="sig-paren">(</span>const Mat&amp; <strong>trainData</strong>, int <strong>tflag</strong>, const Mat&amp; <strong>responses</strong>, const Mat&amp; <strong>varIdx</strong>=Mat(), const Mat&amp; <strong>sampleIdx</strong>=Mat(), const Mat&amp; <strong>varType</strong>=Mat(), const Mat&amp; <strong>missingDataMask</strong>=Mat(), CvDTreeParams <strong>params</strong>=CvDTreeParams() <span class="sig-paren">)</span><a class="headerlink" href="#bool CvDTree::train(const Mat& trainData, int tflag, const Mat& responses, const Mat& varIdx, const Mat& sampleIdx, const Mat& varType, const Mat& missingDataMask, CvDTreeParams params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bool CvDTree::train(const CvMat* trainData, int tflag, const CvMat* responses, const CvMat* varIdx, const CvMat* sampleIdx, const CvMat* varType, const CvMat* missingDataMask, CvDTreeParams params)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CvDTree::</code><code class="descname">train</code><span class="sig-paren">(</span>const CvMat* <strong>trainData</strong>, int <strong>tflag</strong>, const CvMat* <strong>responses</strong>, const CvMat* <strong>varIdx</strong>=0, const CvMat* <strong>sampleIdx</strong>=0, const CvMat* <strong>varType</strong>=0, const CvMat* <strong>missingDataMask</strong>=0, CvDTreeParams <strong>params</strong>=CvDTreeParams() <span class="sig-paren">)</span><a class="headerlink" href="#bool CvDTree::train(const CvMat* trainData, int tflag, const CvMat* responses, const CvMat* varIdx, const CvMat* sampleIdx, const CvMat* varType, const CvMat* missingDataMask, CvDTreeParams params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bool CvDTree::train(CvMLData* trainData, CvDTreeParams params)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CvDTree::</code><code class="descname">train</code><span class="sig-paren">(</span>CvMLData* <strong>trainData</strong>, CvDTreeParams <strong>params</strong>=CvDTreeParams() <span class="sig-paren">)</span><a class="headerlink" href="#bool CvDTree::train(CvMLData* trainData, CvDTreeParams params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bool CvDTree::train(CvDTreeTrainData* trainData, const CvMat* subsampleIdx)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CvDTree::</code><code class="descname">train</code><span class="sig-paren">(</span>CvDTreeTrainData* <strong>trainData</strong>, const CvMat* <strong>subsampleIdx</strong><span class="sig-paren">)</span><a class="headerlink" href="#bool CvDTree::train(CvDTreeTrainData* trainData, const CvMat* subsampleIdx)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.DTree.train">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.DTree.</code><code class="descname">train</code><span class="sig-paren">(</span>trainData, tflag, responses<span class="optional">[</span>, varIdx<span class="optional">[</span>, sampleIdx<span class="optional">[</span>, varType<span class="optional">[</span>, missingDataMask<span class="optional">[</span>, params<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.DTree.train" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>There are four <code class="docutils literal"><span class="pre">train</span></code> methods in <a class="reference internal" href="#CvDTree : public CvStatModel" title="class CvDTree : public CvStatModel"><code class="xref ocv ocv-class docutils literal"><span class="pre">CvDTree</span></code></a>:</p>
+<ul class="simple">
+<li>The <strong>first two</strong> methods follow the generic <a class="reference internal" href="statistical_models.html#bool CvStatModel::train(const Mat&amp; train_data, [int tflag,] ..., const Mat&amp; responses, ..., [const Mat&amp; var_idx,] ..., [const Mat&amp; sample_idx,] ... [const Mat&amp; var_type,] ..., [const Mat&amp; missing_mask,] &lt;misc_training_alg_params&gt; ...)" title="bool CvStatModel::train(const Mat&amp; train_data, [int tflag,] ..., const Mat&amp; responses, ..., [const Mat&amp; var_idx,] ..., [const Mat&amp; sample_idx,] ... [const Mat&amp; var_type,] ..., [const Mat&amp; missing_mask,] &lt;misc_training_alg_params&gt; ...)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvStatModel::train()</span></code></a> conventions. It is the most complete form. Both data layouts (<code class="docutils literal"><span class="pre">tflag=CV_ROW_SAMPLE</span></code> and <code class="docutils literal"><span class="pre">tflag=CV_COL_SAMPLE</span></code>) are supported, as well as sample and variable subsets, missing measurements, arbitrary combinations of input and output variable types, and so on. The last parameter contains all of the necessary training parameters (see the <code class="xref ocv ocv-class docutils literal"><span class="pre">CvDTreeParams</span></code> description).</li>
+<li>The <strong>third</strong> method uses <a class="reference internal" href="mldata.html#CvMLData" title="class CvMLData"><code class="xref ocv ocv-class docutils literal"><span class="pre">CvMLData</span></code></a> to pass training data to a decision tree.</li>
+<li>The <strong>last</strong> method <code class="docutils literal"><span class="pre">train</span></code> is mostly used for building tree ensembles. It takes the pre-constructed <code class="xref ocv ocv-class docutils literal"><span class="pre">CvDTreeTrainData</span></code> instance and an optional subset of the training set. The indices in <code class="docutils literal"><span class="pre">subsampleIdx</span></code> are counted relatively to the <code class="docutils literal"><span class="pre">_sample_idx</span></code> , passed to the <code class="docutils literal"><span class="pre">CvDTreeTrainData</span></code> constructor. For example, if <code class="docutils literal"><span class="pre">_sample_idx=[1,</span> <span class="pre">5,</span> <span class="pre">7,</span> <span class="pre">100]</span></code> , then <code class="docutils literal"><span class="pre">subsampleIdx=[0,3]</span></code> means that the samples <code class="docutils literal"><span class="pre">[1,</span> <span class="pre">100]</span></code> of the original training set are used.</li>
+</ul>
+<p>The function is parallelized with the TBB library.</p>
+</div>
+<div class="section" id="cvdtree-predict">
+<h2>CvDTree::predict<a class="headerlink" href="#cvdtree-predict" title="Permalink to this headline">¶</a></h2>
+<p>Returns the leaf node of a decision tree corresponding to the input vector.</p>
+<dl class="function">
+<dt id="CvDTreeNode* CvDTree::predict(const Mat&amp; sample, const Mat&amp; missingDataMask, bool preprocessedInput) const">
+<strong>C++:</strong><code class="descname"> </code>CvDTreeNode* <code class="descclassname">CvDTree::</code><code class="descname">predict</code><span class="sig-paren">(</span>const Mat&amp; <strong>sample</strong>, const Mat&amp; <strong>missingDataMask</strong>=Mat(), bool <strong>preprocessedInput</strong>=false <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#CvDTreeNode* CvDTree::predict(const Mat& sample, const Mat& missingDataMask, bool preprocessedInput) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="CvDTreeNode* CvDTree::predict(const CvMat* sample, const CvMat* missingDataMask, bool preprocessedInput) const">
+<strong>C++:</strong><code class="descname"> </code>CvDTreeNode* <code class="descclassname">CvDTree::</code><code class="descname">predict</code><span class="sig-paren">(</span>const CvMat* <strong>sample</strong>, const CvMat* <strong>missingDataMask</strong>=0, bool <strong>preprocessedInput</strong>=false <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#CvDTreeNode* CvDTree::predict(const CvMat* sample, const CvMat* missingDataMask, bool preprocessedInput) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.DTree.predict">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.DTree.</code><code class="descname">predict</code><span class="sig-paren">(</span>sample<span class="optional">[</span>, missingDataMask<span class="optional">[</span>, preprocessedInput<span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.DTree.predict" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sample</strong> &#8211; Sample for prediction.</li>
+<li><strong>missingDataMask</strong> &#8211; Optional input missing measurement mask.</li>
+<li><strong>preprocessedInput</strong> &#8211; This parameter is normally set to <code class="docutils literal"><span class="pre">false</span></code>, implying a regular input. If it is <code class="docutils literal"><span class="pre">true</span></code>, the method assumes that all the values of the discrete input variables have been already normalized to <img class="math" src="../../../_images/math/f55b2cb61596a4cb87a860cfc3657cdb56b9edba.png" alt="0"/> to <img class="math" src="../../../_images/math/240c3893d264ca4d0cbd90ddd631eb0b663aeda1.png" alt="num\_of\_categories_i-1"/> ranges since the decision tree uses such normalized representation internally. It is useful for faster prediction with tree ensembles. For ordered input variables, the flag is not used.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method traverses the decision tree and returns the reached leaf node as output. The prediction result, either the class label or the estimated function value, may be retrieved as the <code class="docutils literal"><span class="pre">value</span></code> field of the <code class="xref ocv ocv-class docutils literal"><span class="pre">CvDTreeNode</span></code> structure, for example: <code class="docutils literal"><span class="pre">dtree-&gt;predict(sample,mask)-&gt;value</span></code>.</p>
+</div>
+<div class="section" id="cvdtree-calc-error">
+<h2>CvDTree::calc_error<a class="headerlink" href="#cvdtree-calc-error" title="Permalink to this headline">¶</a></h2>
+<p>Returns error of the decision tree.</p>
+<dl class="function">
+<dt id="float CvDTree::calc_error(CvMLData* trainData, int type, std::vector&lt;float&gt; *resp)">
+<strong>C++:</strong><code class="descname"> </code>float <code class="descclassname">CvDTree::</code><code class="descname">calc_error</code><span class="sig-paren">(</span>CvMLData* <strong>trainData</strong>, int <strong>type</strong>, std::vector&lt;float&gt;* <strong>resp</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#float CvDTree::calc_error(CvMLData* trainData, int type, std::vector<float> *resp)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>trainData</strong> &#8211; Data for the decision tree.</li>
+<li><strong>type</strong> &#8211; <p>Type of error. Possible values are:</p>
+<ul>
+<li><strong>CV_TRAIN_ERROR</strong> Error on train samples.</li>
+<li><strong>CV_TEST_ERROR</strong> Error on test samples.</li>
+</ul>
+</li>
+<li><strong>resp</strong> &#8211; If it is not null then size of this vector will be set to the number of samples and each element will be set to result of prediction on the corresponding sample.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method calculates error of the decision tree. In case of classification it is the percentage of incorrectly classified samples and in case of regression it is the mean of squared errors on samples.</p>
+</div>
+<div class="section" id="cvdtree-getvarimportance">
+<h2>CvDTree::getVarImportance<a class="headerlink" href="#cvdtree-getvarimportance" title="Permalink to this headline">¶</a></h2>
+<p>Returns the variable importance array.</p>
+<dl class="function">
+<dt id="Mat CvDTree::getVarImportance()">
+<strong>C++:</strong><code class="descname"> </code>Mat <code class="descclassname">CvDTree::</code><code class="descname">getVarImportance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Mat CvDTree::getVarImportance()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="const CvMat* CvDTree::get_var_importance()">
+<strong>C++:</strong><code class="descname"> </code>const CvMat* <code class="descclassname">CvDTree::</code><code class="descname">get_var_importance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#const CvMat* CvDTree::get_var_importance()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.DTree.getVarImportance">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.DTree.</code><code class="descname">getVarImportance</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.DTree.getVarImportance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cvdtree-get-root">
+<h2>CvDTree::get_root<a class="headerlink" href="#cvdtree-get-root" title="Permalink to this headline">¶</a></h2>
+<p>Returns the root of the decision tree.</p>
+<dl class="function">
+<dt id="const CvDTreeNode* CvDTree::get_root() const">
+<strong>C++:</strong><code class="descname"> </code>const CvDTreeNode* <code class="descclassname">CvDTree::</code><code class="descname">get_root</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#const CvDTreeNode* CvDTree::get_root() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cvdtree-get-pruned-tree-idx">
+<h2>CvDTree::get_pruned_tree_idx<a class="headerlink" href="#cvdtree-get-pruned-tree-idx" title="Permalink to this headline">¶</a></h2>
+<p>Returns the <code class="docutils literal"><span class="pre">CvDTree::pruned_tree_idx</span></code> parameter.</p>
+<dl class="function">
+<dt id="int CvDTree::get_pruned_tree_idx() const">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">CvDTree::</code><code class="descname">get_pruned_tree_idx</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#int CvDTree::get_pruned_tree_idx() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The parameter <code class="docutils literal"><span class="pre">DTree::pruned_tree_idx</span></code> is used to prune a decision tree. See the <code class="docutils literal"><span class="pre">CvDTreeNode::Tn</span></code> parameter.</p>
+</div>
+<div class="section" id="cvdtree-get-data">
+<h2>CvDTree::get_data<a class="headerlink" href="#cvdtree-get-data" title="Permalink to this headline">¶</a></h2>
+<p>Returns used train data of the decision tree.</p>
+<dl class="function">
+<dt id="CvDTreeTrainData* CvDTree::get_data() const">
+<strong>C++:</strong><code class="descname"> </code>CvDTreeTrainData* <code class="descclassname">CvDTree::</code><code class="descname">get_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#CvDTreeTrainData* CvDTree::get_data() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Example: building a tree for classifying mushrooms.  See the <code class="docutils literal"><span class="pre">mushroom.cpp</span></code> sample that demonstrates how to build and use the
+decision tree.</p>
+<table class="docutils citation" frame="void" id="breiman84" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[Breiman84]</a></td><td>Breiman, L., Friedman, J. Olshen, R. and Stone, C. (1984), <em>Classification and Regression Trees</em>, Wadsworth.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Decision Trees</a><ul>
+<li><a class="reference internal" href="#predicting-with-decision-trees">Predicting with Decision Trees</a></li>
+<li><a class="reference internal" href="#training-decision-trees">Training Decision Trees</a></li>
+<li><a class="reference internal" href="#variable-importance">Variable Importance</a></li>
+<li><a class="reference internal" href="#cvdtreesplit">CvDTreeSplit</a></li>
+<li><a class="reference internal" href="#cvdtreenode">CvDTreeNode</a></li>
+<li><a class="reference internal" href="#cvdtreeparams">CvDTreeParams</a></li>
+<li><a class="reference internal" href="#cvdtreeparams-cvdtreeparams">CvDTreeParams::CvDTreeParams</a></li>
+<li><a class="reference internal" href="#cvdtreetraindata">CvDTreeTrainData</a></li>
+<li><a class="reference internal" href="#cvdtree">CvDTree</a></li>
+<li><a class="reference internal" href="#cvdtree-train">CvDTree::train</a></li>
+<li><a class="reference internal" href="#cvdtree-predict">CvDTree::predict</a></li>
+<li><a class="reference internal" href="#cvdtree-calc-error">CvDTree::calc_error</a></li>
+<li><a class="reference internal" href="#cvdtree-getvarimportance">CvDTree::getVarImportance</a></li>
+<li><a class="reference internal" href="#cvdtree-get-root">CvDTree::get_root</a></li>
+<li><a class="reference internal" href="#cvdtree-get-pruned-tree-idx">CvDTree::get_pruned_tree_idx</a></li>
+<li><a class="reference internal" href="#cvdtree-get-data">CvDTree::get_data</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="support_vector_machines.html"
+                        title="previous chapter">Support Vector Machines</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="boosting.html"
+                        title="next chapter">Boosting</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/ml/doc/decision_trees.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="boosting.html" title="Boosting"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="support_vector_machines.html" title="Support Vector Machines"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" >ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

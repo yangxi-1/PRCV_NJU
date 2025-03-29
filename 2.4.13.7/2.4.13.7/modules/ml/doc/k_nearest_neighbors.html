@@ -1,0 +1,398 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>K-Nearest Neighbors &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="ml. Machine Learning" href="ml.html" />
+    <link rel="next" title="Support Vector Machines" href="support_vector_machines.html" />
+    <link rel="prev" title="Normal Bayes Classifier" href="normal_bayes_classifier.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="support_vector_machines.html" title="Support Vector Machines"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="normal_bayes_classifier.html" title="Normal Bayes Classifier"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" accesskey="U">ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="k-nearest-neighbors">
+<h1>K-Nearest Neighbors<a class="headerlink" href="#k-nearest-neighbors" title="Permalink to this headline">¶</a></h1>
+<p>The algorithm caches all training samples and predicts the response for a new sample by analyzing a certain number (<strong>K</strong>) of the nearest neighbors of the sample using voting, calculating weighted sum, and so on. The method is sometimes referred to as &#8220;learning by example&#8221; because for prediction it looks for the feature vector with a known response that is closest to the given vector.</p>
+<div class="section" id="cvknearest">
+<h2>CvKNearest<a class="headerlink" href="#cvknearest" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="CvKNearest : public CvStatModel">
+<em class="property">class </em><code class="descname">CvKNearest</code> : <em class="property">public</em> <code class="descname">CvStatModel</code><a class="headerlink" href="#CvKNearest : public CvStatModel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The class implements K-Nearest Neighbors model as described in the beginning of this section.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>(Python) An example of digit recognition using KNearest can be found at opencv_source/samples/python2/digits.py</li>
+<li>(Python) An example of grid search digit recognition using KNearest can be found at opencv_source/samples/python2/digits_adjust.py</li>
+<li>(Python) An example of video digit recognition using KNearest can be found at opencv_source/samples/python2/digits_video.py</li>
+</ul>
+</div>
+</div>
+<div class="section" id="cvknearest-cvknearest">
+<h2>CvKNearest::CvKNearest<a class="headerlink" href="#cvknearest-cvknearest" title="Permalink to this headline">¶</a></h2>
+<p>Default and training constructors.</p>
+<dl class="function">
+<dt id="CvKNearest::CvKNearest()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">CvKNearest::</code><code class="descname">CvKNearest</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CvKNearest::CvKNearest()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="CvKNearest::CvKNearest(const Mat&amp; trainData, const Mat&amp; responses, const Mat&amp; sampleIdx, bool isRegression, int max_k)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">CvKNearest::</code><code class="descname">CvKNearest</code><span class="sig-paren">(</span>const Mat&amp; <strong>trainData</strong>, const Mat&amp; <strong>responses</strong>, const Mat&amp; <strong>sampleIdx</strong>=Mat(), bool <strong>isRegression</strong>=false, int <strong>max_k</strong>=32 <span class="sig-paren">)</span><a class="headerlink" href="#CvKNearest::CvKNearest(const Mat& trainData, const Mat& responses, const Mat& sampleIdx, bool isRegression, int max_k)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="CvKNearest::CvKNearest(const CvMat* trainData, const CvMat* responses, const CvMat* sampleIdx, bool isRegression, int max_k)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">CvKNearest::</code><code class="descname">CvKNearest</code><span class="sig-paren">(</span>const CvMat* <strong>trainData</strong>, const CvMat* <strong>responses</strong>, const CvMat* <strong>sampleIdx</strong>=0, bool <strong>isRegression</strong>=false, int <strong>max_k</strong>=32 <span class="sig-paren">)</span><a class="headerlink" href="#CvKNearest::CvKNearest(const CvMat* trainData, const CvMat* responses, const CvMat* sampleIdx, bool isRegression, int max_k)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>See <a class="reference internal" href="#bool CvKNearest::train(const Mat&amp; trainData, const Mat&amp; responses, const Mat&amp; sampleIdx, bool isRegression, int maxK, bool updateBase)" title="bool CvKNearest::train(const Mat&amp; trainData, const Mat&amp; responses, const Mat&amp; sampleIdx, bool isRegression, int maxK, bool updateBase)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvKNearest::train()</span></code></a> for additional parameters descriptions.</p>
+</div>
+<div class="section" id="cvknearest-train">
+<h2>CvKNearest::train<a class="headerlink" href="#cvknearest-train" title="Permalink to this headline">¶</a></h2>
+<p>Trains the model.</p>
+<dl class="function">
+<dt id="bool CvKNearest::train(const Mat&amp; trainData, const Mat&amp; responses, const Mat&amp; sampleIdx, bool isRegression, int maxK, bool updateBase)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CvKNearest::</code><code class="descname">train</code><span class="sig-paren">(</span>const Mat&amp; <strong>trainData</strong>, const Mat&amp; <strong>responses</strong>, const Mat&amp; <strong>sampleIdx</strong>=Mat(), bool <strong>isRegression</strong>=false, int <strong>maxK</strong>=32, bool <strong>updateBase</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#bool CvKNearest::train(const Mat& trainData, const Mat& responses, const Mat& sampleIdx, bool isRegression, int maxK, bool updateBase)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bool CvKNearest::train(const CvMat* trainData, const CvMat* responses, const CvMat* sampleIdx, bool is_regression, int maxK, bool updateBase)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CvKNearest::</code><code class="descname">train</code><span class="sig-paren">(</span>const CvMat* <strong>trainData</strong>, const CvMat* <strong>responses</strong>, const CvMat* <strong>sampleIdx</strong>=0, bool <strong>is_regression</strong>=false, int <strong>maxK</strong>=32, bool <strong>updateBase</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#bool CvKNearest::train(const CvMat* trainData, const CvMat* responses, const CvMat* sampleIdx, bool is_regression, int maxK, bool updateBase)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.KNearest.train">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.KNearest.</code><code class="descname">train</code><span class="sig-paren">(</span>trainData, responses<span class="optional">[</span>, sampleIdx<span class="optional">[</span>, isRegression<span class="optional">[</span>, maxK<span class="optional">[</span>, updateBase<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.KNearest.train" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>isRegression</strong> &#8211; Type of the problem: <code class="docutils literal"><span class="pre">true</span></code> for regression and <code class="docutils literal"><span class="pre">false</span></code> for classification.</li>
+<li><strong>maxK</strong> &#8211; Number of maximum neighbors that may be passed to the method <a class="reference internal" href="#float CvKNearest::find_nearest(const Mat&amp; samples, int k, Mat* results, const float** neighbors, Mat* neighborResponses, Mat* dist) const" title="float CvKNearest::find_nearest(const Mat&amp; samples, int k, Mat* results, const float** neighbors, Mat* neighborResponses, Mat* dist) const"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvKNearest::find_nearest()</span></code></a>.</li>
+<li><strong>updateBase</strong> &#8211; Specifies whether the model is trained from scratch (<code class="docutils literal"><span class="pre">update_base=false</span></code>), or it is updated using the new training data (<code class="docutils literal"><span class="pre">update_base=true</span></code>). In the latter case, the parameter <code class="docutils literal"><span class="pre">maxK</span></code> must not be larger than the original value.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method trains the K-Nearest model. It follows the conventions of the generic <a class="reference internal" href="statistical_models.html#bool CvStatModel::train(const Mat&amp; train_data, [int tflag,] ..., const Mat&amp; responses, ..., [const Mat&amp; var_idx,] ..., [const Mat&amp; sample_idx,] ... [const Mat&amp; var_type,] ..., [const Mat&amp; missing_mask,] &lt;misc_training_alg_params&gt; ...)" title="bool CvStatModel::train(const Mat&amp; train_data, [int tflag,] ..., const Mat&amp; responses, ..., [const Mat&amp; var_idx,] ..., [const Mat&amp; sample_idx,] ... [const Mat&amp; var_type,] ..., [const Mat&amp; missing_mask,] &lt;misc_training_alg_params&gt; ...)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvStatModel::train()</span></code></a> approach with the following limitations:</p>
+<ul class="simple">
+<li>Only <code class="docutils literal"><span class="pre">CV_ROW_SAMPLE</span></code> data layout is supported.</li>
+<li>Input variables are all ordered.</li>
+<li>Output variables can be either categorical ( <code class="docutils literal"><span class="pre">is_regression=false</span></code> ) or ordered ( <code class="docutils literal"><span class="pre">is_regression=true</span></code> ).</li>
+<li>Variable subsets (<code class="docutils literal"><span class="pre">var_idx</span></code>) and missing measurements are not supported.</li>
+</ul>
+</div>
+<div class="section" id="cvknearest-find-nearest">
+<h2>CvKNearest::find_nearest<a class="headerlink" href="#cvknearest-find-nearest" title="Permalink to this headline">¶</a></h2>
+<p>Finds the neighbors and predicts responses for input vectors.</p>
+<dl class="function">
+<dt id="float CvKNearest::find_nearest(const Mat&amp; samples, int k, Mat* results, const float** neighbors, Mat* neighborResponses, Mat* dist) const">
+<strong>C++:</strong><code class="descname"> </code>float <code class="descclassname">CvKNearest::</code><code class="descname">find_nearest</code><span class="sig-paren">(</span>const Mat&amp; <strong>samples</strong>, int <strong>k</strong>, Mat* <strong>results</strong>=0, const float** <strong>neighbors</strong>=0, Mat* <strong>neighborResponses</strong>=0, Mat* <strong>dist</strong>=0 <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#float CvKNearest::find_nearest(const Mat& samples, int k, Mat* results, const float** neighbors, Mat* neighborResponses, Mat* dist) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="float CvKNearest::find_nearest(const Mat&amp; samples, int k, Mat&amp; results, Mat&amp; neighborResponses, Mat&amp; dists) const">
+<strong>C++:</strong><code class="descname"> </code>float <code class="descclassname">CvKNearest::</code><code class="descname">find_nearest</code><span class="sig-paren">(</span>const Mat&amp; <strong>samples</strong>, int <strong>k</strong>, Mat&amp; <strong>results</strong>, Mat&amp; <strong>neighborResponses</strong>, Mat&amp; <strong>dists</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#float CvKNearest::find_nearest(const Mat& samples, int k, Mat& results, Mat& neighborResponses, Mat& dists) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="float CvKNearest::find_nearest(const CvMat* samples, int k, CvMat* results, const float** neighbors, CvMat* neighborResponses, CvMat* dist) const">
+<strong>C++:</strong><code class="descname"> </code>float <code class="descclassname">CvKNearest::</code><code class="descname">find_nearest</code><span class="sig-paren">(</span>const CvMat* <strong>samples</strong>, int <strong>k</strong>, CvMat* <strong>results</strong>=0, const float** <strong>neighbors</strong>=0, CvMat* <strong>neighborResponses</strong>=0, CvMat* <strong>dist</strong>=0 <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#float CvKNearest::find_nearest(const CvMat* samples, int k, CvMat* results, const float** neighbors, CvMat* neighborResponses, CvMat* dist) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.KNearest.find_nearest">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.KNearest.</code><code class="descname">find_nearest</code><span class="sig-paren">(</span>samples, k<span class="optional">[</span>, results<span class="optional">[</span>, neighborResponses<span class="optional">[</span>, dists<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; retval, results, neighborResponses, dists<a class="headerlink" href="#cv2.KNearest.find_nearest" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>samples</strong> &#8211; Input samples stored by rows. It is a single-precision floating-point matrix of <img class="math" src="../../../_images/math/99b6837febcc1972905f571e4a77b70a975171e1.png" alt="number\_of\_samples \times number\_of\_features"/> size.</li>
+<li><strong>k</strong> &#8211; Number of used nearest neighbors. It must satisfy constraint: <img class="math" src="../../../_images/math/22e7bc9ee8ea0fde0bea7ecc1a79a367cfce5e09.png" alt="k \le"/> <a class="reference internal" href="#int CvKNearest::get_max_k() const" title="int CvKNearest::get_max_k() const"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvKNearest::get_max_k()</span></code></a>.</li>
+<li><strong>results</strong> &#8211; Vector with results of prediction (regression or classification) for each input sample. It is a single-precision floating-point vector with <code class="docutils literal"><span class="pre">number_of_samples</span></code> elements.</li>
+<li><strong>neighbors</strong> &#8211; Optional output pointers to the neighbor vectors themselves. It is an array of <code class="docutils literal"><span class="pre">k*samples-&gt;rows</span></code> pointers.</li>
+<li><strong>neighborResponses</strong> &#8211; Optional output values for corresponding <code class="docutils literal"><span class="pre">neighbors</span></code>. It is a single-precision floating-point matrix of <img class="math" src="../../../_images/math/3b9dd333c26cb22fbe7393e407586aa75785e3e9.png" alt="number\_of\_samples \times k"/> size.</li>
+<li><strong>dist</strong> &#8211; Optional output distances from the input vectors to the corresponding <code class="docutils literal"><span class="pre">neighbors</span></code>. It is a single-precision floating-point matrix of <img class="math" src="../../../_images/math/3b9dd333c26cb22fbe7393e407586aa75785e3e9.png" alt="number\_of\_samples \times k"/> size.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>For each input vector (a row of the matrix <code class="docutils literal"><span class="pre">samples</span></code>), the method finds the <code class="docutils literal"><span class="pre">k</span></code> nearest neighbors.  In case of regression, the predicted result is a mean value of the particular vector&#8217;s neighbor responses. In case of classification, the class is determined by voting.</p>
+<p>For each input vector, the neighbors are sorted by their distances to the vector.</p>
+<p>In case of C++ interface you can use output pointers to empty matrices and the function will allocate memory itself.</p>
+<p>If only a single input vector is passed, all output matrices are optional and the predicted value is returned by the method.</p>
+<p>The function is parallelized with the TBB library.</p>
+</div>
+<div class="section" id="cvknearest-get-max-k">
+<h2>CvKNearest::get_max_k<a class="headerlink" href="#cvknearest-get-max-k" title="Permalink to this headline">¶</a></h2>
+<p>Returns the number of maximum neighbors that may be passed to the method <a class="reference internal" href="#float CvKNearest::find_nearest(const Mat&amp; samples, int k, Mat* results, const float** neighbors, Mat* neighborResponses, Mat* dist) const" title="float CvKNearest::find_nearest(const Mat&amp; samples, int k, Mat* results, const float** neighbors, Mat* neighborResponses, Mat* dist) const"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvKNearest::find_nearest()</span></code></a>.</p>
+<dl class="function">
+<dt id="int CvKNearest::get_max_k() const">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">CvKNearest::</code><code class="descname">get_max_k</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#int CvKNearest::get_max_k() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cvknearest-get-var-count">
+<h2>CvKNearest::get_var_count<a class="headerlink" href="#cvknearest-get-var-count" title="Permalink to this headline">¶</a></h2>
+<p>Returns the number of used features (variables count).</p>
+<dl class="function">
+<dt id="int CvKNearest::get_var_count() const">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">CvKNearest::</code><code class="descname">get_var_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#int CvKNearest::get_var_count() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cvknearest-get-sample-count">
+<h2>CvKNearest::get_sample_count<a class="headerlink" href="#cvknearest-get-sample-count" title="Permalink to this headline">¶</a></h2>
+<p>Returns the total number of train samples.</p>
+<dl class="function">
+<dt id="int CvKNearest::get_sample_count() const">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">CvKNearest::</code><code class="descname">get_sample_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#int CvKNearest::get_sample_count() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="cvknearest-is-regression">
+<h2>CvKNearest::is_regression<a class="headerlink" href="#cvknearest-is-regression" title="Permalink to this headline">¶</a></h2>
+<p>Returns type of the problem: <code class="docutils literal"><span class="pre">true</span></code> for regression and <code class="docutils literal"><span class="pre">false</span></code> for classification.</p>
+<dl class="function">
+<dt id="bool CvKNearest::is_regression() const">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CvKNearest::</code><code class="descname">is_regression</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#bool CvKNearest::is_regression() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The sample below (currently using the obsolete <code class="docutils literal"><span class="pre">CvMat</span></code> structures) demonstrates the use of the k-nearest classifier for 2D point classification:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;ml.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;highgui.h&quot;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">K</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">response</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">train_sample_count</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="n">CvRNG</span> <span class="n">rng_state</span> <span class="o">=</span> <span class="n">cvRNG</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">CvMat</span><span class="o">*</span> <span class="n">trainData</span> <span class="o">=</span> <span class="n">cvCreateMat</span><span class="p">(</span> <span class="n">train_sample_count</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">CV_32FC1</span> <span class="p">);</span>
+    <span class="n">CvMat</span><span class="o">*</span> <span class="n">trainClasses</span> <span class="o">=</span> <span class="n">cvCreateMat</span><span class="p">(</span> <span class="n">train_sample_count</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">CV_32FC1</span> <span class="p">);</span>
+    <span class="n">IplImage</span><span class="o">*</span> <span class="n">img</span> <span class="o">=</span> <span class="n">cvCreateImage</span><span class="p">(</span> <span class="n">cvSize</span><span class="p">(</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">500</span> <span class="p">),</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">3</span> <span class="p">);</span>
+    <span class="kt">float</span> <span class="n">_sample</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+    <span class="n">CvMat</span> <span class="n">sample</span> <span class="o">=</span> <span class="n">cvMat</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">CV_32FC1</span><span class="p">,</span> <span class="n">_sample</span> <span class="p">);</span>
+    <span class="n">cvZero</span><span class="p">(</span> <span class="n">img</span> <span class="p">);</span>
+
+    <span class="n">CvMat</span> <span class="n">trainData1</span><span class="p">,</span> <span class="n">trainData2</span><span class="p">,</span> <span class="n">trainClasses1</span><span class="p">,</span> <span class="n">trainClasses2</span><span class="p">;</span>
+
+    <span class="c1">// form the training samples</span>
+    <span class="n">cvGetRows</span><span class="p">(</span> <span class="n">trainData</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">trainData1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">train_sample_count</span><span class="o">/</span><span class="mi">2</span> <span class="p">);</span>
+    <span class="n">cvRandArr</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">rng_state</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">trainData1</span><span class="p">,</span> <span class="n">CV_RAND_NORMAL</span><span class="p">,</span> <span class="n">cvScalar</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">200</span><span class="p">),</span> <span class="n">cvScalar</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span> <span class="p">);</span>
+
+    <span class="n">cvGetRows</span><span class="p">(</span> <span class="n">trainData</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">trainData2</span><span class="p">,</span> <span class="n">train_sample_count</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">train_sample_count</span> <span class="p">);</span>
+    <span class="n">cvRandArr</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">rng_state</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">trainData2</span><span class="p">,</span> <span class="n">CV_RAND_NORMAL</span><span class="p">,</span> <span class="n">cvScalar</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span><span class="mi">300</span><span class="p">),</span> <span class="n">cvScalar</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span> <span class="p">);</span>
+
+    <span class="n">cvGetRows</span><span class="p">(</span> <span class="n">trainClasses</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">trainClasses1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">train_sample_count</span><span class="o">/</span><span class="mi">2</span> <span class="p">);</span>
+    <span class="n">cvSet</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">trainClasses1</span><span class="p">,</span> <span class="n">cvScalar</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">);</span>
+
+    <span class="n">cvGetRows</span><span class="p">(</span> <span class="n">trainClasses</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">trainClasses2</span><span class="p">,</span> <span class="n">train_sample_count</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">train_sample_count</span> <span class="p">);</span>
+    <span class="n">cvSet</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">trainClasses2</span><span class="p">,</span> <span class="n">cvScalar</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="p">);</span>
+
+    <span class="c1">// learn classifier</span>
+    <span class="n">CvKNearest</span> <span class="n">knn</span><span class="p">(</span> <span class="n">trainData</span><span class="p">,</span> <span class="n">trainClasses</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="n">K</span> <span class="p">);</span>
+    <span class="n">CvMat</span><span class="o">*</span> <span class="n">nearests</span> <span class="o">=</span> <span class="n">cvCreateMat</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">CV_32FC1</span><span class="p">);</span>
+
+    <span class="k">for</span><span class="p">(</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">img</span><span class="o">-&gt;</span><span class="n">height</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">img</span><span class="o">-&gt;</span><span class="n">width</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span> <span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">sample</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">fl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">j</span><span class="p">;</span>
+            <span class="n">sample</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">fl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">i</span><span class="p">;</span>
+
+            <span class="c1">// estimate the response and get the neighbors&#39; labels</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">knn</span><span class="p">.</span><span class="n">find_nearest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sample</span><span class="p">,</span><span class="n">K</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">nearests</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+
+            <span class="c1">// compute the number of neighbors representing the majority</span>
+            <span class="k">for</span><span class="p">(</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">accuracy</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">K</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span> <span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">if</span><span class="p">(</span> <span class="n">nearests</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">.</span><span class="n">fl</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">response</span><span class="p">)</span>
+                    <span class="n">accuracy</span><span class="o">++</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="c1">// highlight the pixel depending on the accuracy (or confidence)</span>
+            <span class="n">cvSet2D</span><span class="p">(</span> <span class="n">img</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">response</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span>
+                <span class="p">(</span><span class="n">accuracy</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="o">?</span> <span class="n">CV_RGB</span><span class="p">(</span><span class="mi">180</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">:</span> <span class="n">CV_RGB</span><span class="p">(</span><span class="mi">180</span><span class="p">,</span><span class="mi">120</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span> <span class="o">:</span>
+                <span class="p">(</span><span class="n">accuracy</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="o">?</span> <span class="n">CV_RGB</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">180</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">:</span> <span class="n">CV_RGB</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span><span class="mi">120</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span> <span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// display the original training samples</span>
+    <span class="k">for</span><span class="p">(</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">train_sample_count</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">CvPoint</span> <span class="n">pt</span><span class="p">;</span>
+        <span class="n">pt</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">trainData1</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">fl</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">]);</span>
+        <span class="n">pt</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">trainData1</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">fl</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">]);</span>
+        <span class="n">cvCircle</span><span class="p">(</span> <span class="n">img</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">CV_RGB</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">CV_FILLED</span> <span class="p">);</span>
+        <span class="n">pt</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">trainData2</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">fl</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">]);</span>
+        <span class="n">pt</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">cvRound</span><span class="p">(</span><span class="n">trainData2</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">fl</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">]);</span>
+        <span class="n">cvCircle</span><span class="p">(</span> <span class="n">img</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">CV_RGB</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">CV_FILLED</span> <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">cvNamedWindow</span><span class="p">(</span> <span class="s">&quot;classifier result&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">cvShowImage</span><span class="p">(</span> <span class="s">&quot;classifier result&quot;</span><span class="p">,</span> <span class="n">img</span> <span class="p">);</span>
+    <span class="n">cvWaitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+    <span class="n">cvReleaseMat</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">trainClasses</span> <span class="p">);</span>
+    <span class="n">cvReleaseMat</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">trainData</span> <span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">K-Nearest Neighbors</a><ul>
+<li><a class="reference internal" href="#cvknearest">CvKNearest</a></li>
+<li><a class="reference internal" href="#cvknearest-cvknearest">CvKNearest::CvKNearest</a></li>
+<li><a class="reference internal" href="#cvknearest-train">CvKNearest::train</a></li>
+<li><a class="reference internal" href="#cvknearest-find-nearest">CvKNearest::find_nearest</a></li>
+<li><a class="reference internal" href="#cvknearest-get-max-k">CvKNearest::get_max_k</a></li>
+<li><a class="reference internal" href="#cvknearest-get-var-count">CvKNearest::get_var_count</a></li>
+<li><a class="reference internal" href="#cvknearest-get-sample-count">CvKNearest::get_sample_count</a></li>
+<li><a class="reference internal" href="#cvknearest-is-regression">CvKNearest::is_regression</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="normal_bayes_classifier.html"
+                        title="previous chapter">Normal Bayes Classifier</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="support_vector_machines.html"
+                        title="next chapter">Support Vector Machines</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/ml/doc/k_nearest_neighbors.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="support_vector_machines.html" title="Support Vector Machines"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="normal_bayes_classifier.html" title="Normal Bayes Classifier"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" >ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

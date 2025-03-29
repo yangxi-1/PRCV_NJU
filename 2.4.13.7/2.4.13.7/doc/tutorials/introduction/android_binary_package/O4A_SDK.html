@@ -1,0 +1,448 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>OpenCV4Android SDK &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="Introduction to OpenCV" href="../table_of_content_introduction/table_of_content_introduction.html" />
+    <link rel="next" title="Android Development with OpenCV" href="dev_with_OCV_on_Android.html" />
+    <link rel="prev" title="Introduction into Android Development" href="android_dev_intro.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="dev_with_OCV_on_Android.html" title="Android Development with OpenCV"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="android_dev_intro.html" title="Introduction into Android Development"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_introduction/table_of_content_introduction.html" accesskey="U">Introduction to OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="opencv4android-sdk">
+<span id="o4a-sdk"></span><h1>OpenCV4Android SDK<a class="headerlink" href="#opencv4android-sdk" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial was designed to help you with installation and configuration of OpenCV4Android SDK.</p>
+<p>This guide was written with MS Windows 7 in mind, though it should work with GNU Linux and Apple
+Mac OS as well.</p>
+<p>This tutorial assumes you have the following software installed and configured:</p>
+<ul>
+<li><p class="first">JDK</p>
+</li>
+<li><p class="first">Android SDK and NDK</p>
+</li>
+<li><p class="first">Eclipse IDE</p>
+</li>
+<li><p class="first">ADT and CDT plugins for Eclipse</p>
+<blockquote>
+<div></div></blockquote>
+</li>
+</ul>
+<p>If you need help with anything of the above, you may refer to our <a class="reference internal" href="android_dev_intro.html#android-dev-intro"><span>Introduction into Android Development</span></a> guide.</p>
+<p>If you encounter any error after thoroughly following these steps, feel free to contact us via
+<a class="reference external" href="https://groups.google.com/group/android-opencv/">OpenCV4Android</a> discussion group or
+OpenCV <a class="reference external" href="http://answers.opencv.org">Q&amp;A forum</a>. We&#8217;ll do our best to help you out.</p>
+<div class="section" id="tegra-android-development-pack-users">
+<h2>Tegra Android Development Pack users<a class="headerlink" href="#tegra-android-development-pack-users" title="Permalink to this headline">¶</a></h2>
+<p>You may have used <a class="reference external" href="http://developer.nvidia.com/tegra-android-development-pack">Tegra Android Development Pack</a>
+(<strong>TADP</strong>) released by <strong>NVIDIA</strong> for Android development environment setup.</p>
+<p>Beside Android development tools the TADP 2.0 includes OpenCV4Android SDK, so it can be already
+installed in your system and you can skip to <a class="reference internal" href="#running-opencv-samples"><span>Running OpenCV Samples</span></a> section of this tutorial.</p>
+<p>More details regarding TADP can be found in the <a class="reference internal" href="android_dev_intro.html#android-dev-intro"><span>Introduction into Android Development</span></a> guide.</p>
+</div>
+<div class="section" id="general-info">
+<h2>General info<a class="headerlink" href="#general-info" title="Permalink to this headline">¶</a></h2>
+<p>OpenCV4Android SDK package enables development of Android applications with use of OpenCV library.</p>
+<p>The structure of package contents looks as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre>OpenCV-2.4.13-android-sdk
+|_ doc
+|_ samples
+|_ sdk
+|    |_ etc
+|    |_ java
+|    |_ native
+|          |_ 3rdparty
+|          |_ jni
+|          |_ libs
+|               |_ armeabi
+|               |_ armeabi-v7a
+|               |_ x86
+|
+|_ LICENSE
+|_ README.android
+</pre></div>
+</div>
+<ul>
+<li><p class="first"><code class="file docutils literal"><span class="pre">sdk</span></code> folder contains OpenCV API and libraries for Android:</p>
+</li>
+<li><p class="first"><code class="file docutils literal"><span class="pre">sdk/java</span></code> folder contains an Android library Eclipse project providing OpenCV Java API that
+can be imported into developer&#8217;s workspace;</p>
+</li>
+<li><p class="first"><code class="file docutils literal"><span class="pre">sdk/native</span></code> folder contains OpenCV C++ headers (for JNI code) and native Android libraries
+(*.so and *.a) for ARM-v5, ARM-v7a and x86 architectures;</p>
+</li>
+<li><p class="first"><code class="file docutils literal"><span class="pre">sdk/etc</span></code> folder contains Haar and LBP cascades distributed with OpenCV.</p>
+</li>
+<li><p class="first"><code class="file docutils literal"><span class="pre">apk</span></code> folder contains Android packages that should be installed on the target Android device
+to enable OpenCV library access via OpenCV Manager API (see details below).</p>
+<p>On production devices that have access to Google Play Market (and Internet) these packages will be
+installed from Market on the first start of an application using OpenCV Manager API.
+But devkits without Market or Internet connection require this packages to be installed manually.
+Install the <cite>Manager.apk</cite> and optional <cite>binary_pack.apk</cite> if it needed.
+See <a class="reference internal" href="../../../../platforms/android/service/doc/UseCases.html#manager-selection"><span>How to select the proper version of OpenCV Manager</span></a> for details.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Installation from Internet is the preferable way since OpenCV team may publish updated
+versions of this packages on the Market.</p>
+</div>
+</li>
+<li><p class="first"><code class="file docutils literal"><span class="pre">samples</span></code> folder contains sample applications projects and their prebuilt packages (APK).
+Import them into Eclipse workspace (like described below) and browse the code to learn possible
+ways of OpenCV use on Android.</p>
+</li>
+<li><p class="first"><code class="file docutils literal"><span class="pre">doc</span></code> folder contains various OpenCV documentation in PDF format.
+It&#8217;s also available online at <a class="reference external" href="http://docs.opencv.org">http://docs.opencv.org</a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The most recent docs (nightly build) are at <a class="reference external" href="http://docs.opencv.org/2.4">http://docs.opencv.org/2.4</a>.
+Generally, it&#8217;s more up-to-date, but can refer to not-yet-released functionality.</p>
+</div>
+</li>
+</ul>
+<p>Starting from version 2.4.3 <cite>OpenCV4Android SDK</cite> uses <cite>OpenCV Manager</cite> API for library
+initialization. <cite>OpenCV Manager</cite> is an Android service based solution providing the following
+benefits for OpenCV applications developers:</p>
+<ul>
+<li><p class="first">Compact apk-size, since all applications use the same binaries from Manager and do not store
+native libs within themselves;</p>
+</li>
+<li><p class="first">Hardware specific optimizations are automatically enabled on all supported platforms;</p>
+</li>
+<li><p class="first">Automatic updates and bug fixes;</p>
+</li>
+<li><p class="first">Trusted OpenCV library source. All packages with OpenCV are published on Google Play;</p>
+<blockquote>
+<div></div></blockquote>
+</li>
+</ul>
+<p>For additional information on OpenCV Manager see the:</p>
+<ul>
+<li><p class="first"><a class="reference external" href="https://docs.google.com/a/itseez.com/presentation/d/1EO_1kijgBg_BsjNp2ymk-aarg-0K279_1VZRcPplSuk/present#slide=id.p">Slides</a></p>
+</li>
+<li><p class="first"><a class="reference external" href="http://docs.opencv.org/android/refman.html">Reference Manual</a></p>
+<blockquote>
+<div></div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="manual-opencv4android-sdk-setup">
+<h2>Manual OpenCV4Android SDK setup<a class="headerlink" href="#manual-opencv4android-sdk-setup" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="get-the-opencv4android-sdk">
+<h3>Get the OpenCV4Android SDK<a class="headerlink" href="#get-the-opencv4android-sdk" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">Go to the <a class="reference external" href="http://sourceforge.net/projects/opencvlibrary/files/opencv-android/">OpenCV download page on SourceForge</a>
+and download the latest available version. Currently it&#8217;s <a class="reference external" href="http://sourceforge.net/projects/opencvlibrary/files/opencv-android/2.4.11/OpenCV-2.4.11-android-sdk.zip/download"><code class="file docutils literal"><span class="pre">OpenCV-2.4.11-android-sdk.zip</span></code></a>.</p>
+</li>
+<li><p class="first">Create a new folder for Android with OpenCV development. For this tutorial we have unpacked
+OpenCV SDK to the <code class="file docutils literal"><span class="pre">C:\Work\OpenCV4Android\</span></code> directory.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Better to use a path without spaces in it. Otherwise you may have problems with <strong class="command">ndk-build</strong>.</p>
+</div>
+</li>
+<li><p class="first">Unpack the SDK archive into the chosen directory.</p>
+<p>You can unpack it using any popular archiver (e.g with <a class="reference external" href="http://www.7-zip.org/">7-Zip</a>):</p>
+<img alt="Exploring OpenCV package with 7-Zip" class="align-center" src="../../../../_images/android_package_7zip.png" />
+<p>On Unix you can use the following command:</p>
+<div class="highlight-bash"><div class="highlight"><pre>unzip ~/Downloads/OpenCV-2.4.11-android-sdk.zip
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="import-opencv-library-and-samples-to-the-eclipse">
+<h3>Import OpenCV library and samples to the Eclipse<a class="headerlink" href="#import-opencv-library-and-samples-to-the-eclipse" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">Start Eclipse and choose your workspace location.</p>
+<p>We recommend to start working with OpenCV for Android from a new clean workspace. A new Eclipse
+workspace can for example be created in the folder where you have unpacked OpenCV4Android SDK package:</p>
+<blockquote>
+<div><img alt="Choosing C:\Work\android-opencv\ as workspace location" class="align-center" src="../../../../_images/eclipse_1_choose_workspace.png" />
+</div></blockquote>
+</li>
+<li><p class="first">Import OpenCV library and samples into workspace.</p>
+<p>OpenCV library is packed as a ready-for-use <a class="reference external" href="http://developer.android.com/guide/developing/projects/index.html#LibraryProjects">Android Library Project</a>.
+You can simply reference it in your projects.</p>
+<p>Each sample included into the <code class="file docutils literal"><span class="pre">OpenCV-2.4.11-android-sdk.zip</span></code> is a regular Android project that already
+references OpenCV library. Follow the steps below to import OpenCV and samples into the workspace:</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">OpenCV samples are indeed <strong>dependent</strong> on OpenCV library project so don&#8217;t forget to import it to your workspace as well.</p>
+</div>
+<ul>
+<li><p class="first">Right click on the <span class="guilabel">Package Explorer</span> window and choose <span class="guilabel">Import...</span> option
+from the context menu:</p>
+<blockquote>
+<div><img alt="Select Import... from context menu" class="align-center" src="../../../../_images/eclipse_5_import_command.png" />
+</div></blockquote>
+</li>
+<li><p class="first">In the main panel select <span class="menuselection">General ‣ Existing Projects into Workspace</span> and
+press <span class="guilabel">Next</span> button:</p>
+<blockquote>
+<div><img alt="General &gt; Existing Projects into Workspace" class="align-center" src="../../../../_images/eclipse_6_import_existing_projects.png" />
+</div></blockquote>
+</li>
+<li><p class="first">In the <span class="guilabel">Select root directory</span> field locate your OpenCV package folder. Eclipse
+should automatically locate OpenCV library and samples:</p>
+<blockquote>
+<div><img alt="Locate OpenCV library and samples" class="align-center" src="../../../../_images/eclipse_7_select_projects.png" />
+</div></blockquote>
+</li>
+<li><p class="first">Click <span class="guilabel">Finish</span> button to complete the import operation.</p>
+</li>
+</ul>
+<p>After clicking <span class="guilabel">Finish</span> button Eclipse will load all selected projects into workspace,
+and you have to wait some time while it is building OpenCV samples. Just give a minute to
+Eclipse to complete initialization.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>After the initial import, on a non-Windows (Linux and Mac OS) operating system Eclipse
+will still show build errors for applications with native C++ code. To resolve the
+issues, please do the following:</p>
+<p class="last">Open <span class="guilabel">Project Properties -&gt; C/C++ Build</span>, and replace &#8220;Build command&#8221; text
+to <code class="docutils literal"><span class="pre">&quot;${NDKROOT}/ndk-build&quot;</span></code> (remove .cmd at the end).</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>In some cases the build errors don&#8217;t disappear, then try the following actions:</p>
+<ul class="last simple">
+<li>right click on <code class="docutils literal"><span class="pre">OpenCV</span> <span class="pre">Library</span></code> project -&gt; <span class="guilabel">Android Tools -&gt; Fix Project Properties</span>,
+then menu <span class="guilabel">Project -&gt; Clean... -&gt; Clean all</span></li>
+<li>right click on the project with errors -&gt; <span class="guilabel">Properties -&gt; Android</span>, make sure the
+<code class="docutils literal"><span class="pre">Target</span></code> is selected and is <code class="docutils literal"><span class="pre">Android</span> <span class="pre">3.0</span></code> or higher</li>
+<li>check the build errors in the <span class="guilabel">Problems</span> view window and try to resolve them by yourselves</li>
+</ul>
+</div>
+<img alt="Configure CDT" class="align-center" src="../../../../_images/eclipse_cdt_cfg4.png" />
+<p>Once Eclipse completes build you will have the clean workspace without any build errors:</p>
+<blockquote>
+<div><img alt="OpenCV package imported into Eclipse" class="align-center" src="../../../../_images/eclipse_10_crystal_clean.png" />
+</div></blockquote>
+</li>
+</ol>
+</div>
+<div class="section" id="running-opencv-samples">
+<span id="id1"></span><h3>Running OpenCV Samples<a class="headerlink" href="#running-opencv-samples" title="Permalink to this headline">¶</a></h3>
+<p>At this point you should be able to build and run the samples. Keep in mind, that
+<code class="docutils literal"><span class="pre">face-detection</span></code> and <code class="docutils literal"><span class="pre">Tutorial</span> <span class="pre">2</span> <span class="pre">-</span> <span class="pre">Mixed</span> <span class="pre">Processing</span></code> include some native code and
+require Android NDK and NDK/CDT plugin for Eclipse to build working applications. If you haven&#8217;t
+installed these tools, see the corresponding section of <a class="reference internal" href="android_dev_intro.html#android-dev-intro"><span>Introduction into Android Development</span></a>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Please consider that some samples use Android Java Camera API, which is accessible
+with an AVD. But most of samples use OpenCV Native Camera which <strong>may not work</strong> with
+an emulator.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Recent <em>Android SDK tools, revision 19+</em> can run ARM v7a OS images but they available not
+for all Android versions.</p>
+</div>
+<p>Well, running samples from Eclipse is very simple:</p>
+<ul>
+<li><p class="first">Connect your device with <strong class="command">adb</strong> tool from Android SDK or create an emulator with camera support.</p>
+<ul class="simple">
+<li>See <a class="reference external" href="http://developer.android.com/guide/developing/devices/index.html">Managing Virtual Devices</a> document for help with Android Emulator.</li>
+<li>See <a class="reference external" href="http://developer.android.com/guide/developing/device.html">Using Hardware Devices</a> for help with real devices (not emulators).</li>
+</ul>
+</li>
+<li><p class="first">Select project you want to start in <span class="guilabel">Package Explorer</span> and just press <code class="kbd docutils literal"><span class="pre">Ctrl</span> <span class="pre">+</span> <span class="pre">F11</span></code>
+or select option <span class="menuselection">Run ‣ Run</span> from the main menu, or click <span class="guilabel">Run</span> button on the toolbar.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Android Emulator can take several minutes to start. So, please, be patient.</p>
+</div>
+</li>
+<li><p class="first">On the first run Eclipse will ask you about the running mode for your application:</p>
+<img alt="Run sample as Android Application" class="align-center" src="../../../../_images/eclipse_11_run_as.png" />
+</li>
+<li><p class="first">Select the <span class="guilabel">Android Application</span> option and click <span class="guilabel">OK</span> button. Eclipse will install and run the sample.</p>
+<p>Chances are that on the first launch you will not have the <a class="reference external" href="https://docs.google.com/a/itseez.com/presentation/d/1EO_1kijgBg_BsjNp2ymk-aarg-0K279_1VZRcPplSuk/present#slide=id.p">OpenCV Manager</a> package installed.
+In this case you will see the following message:</p>
+<img alt="You will see this message if you have no OpenCV Manager installed" class="align-center" src="../../../../_images/android_emulator_opencv_manager_fail.png" />
+<p>To get rid of the message you will need to install <cite>OpenCV Manager</cite> and the appropriate <cite>OpenCV binary pack</cite>.
+Simply tap <span class="menuselection">Yes</span> if you have <em>Google Play Market</em> installed on your device/emulator. It will redirect you to the corresponding page on <em>Google Play Market</em>.</p>
+<p>If you have no access to the <em>Market</em>, which is often the case with emulators - you will need to install the packages from OpenCV4Android SDK folder manually. See <a class="reference internal" href="../../../../platforms/android/service/doc/UseCases.html#manager-selection"><span>How to select the proper version of OpenCV Manager</span></a> for details.</p>
+<div class="highlight-sh"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>&lt;Android SDK path&gt;/platform-tools/adb install &lt;OpenCV4Android SDK path&gt;/apk/OpenCV_2.4.11_Manager_2.20_armv7a-neon.apk
+</pre></div>
+</td></tr></table></div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><code class="docutils literal"><span class="pre">armeabi</span></code>, <code class="docutils literal"><span class="pre">armv7a-neon</span></code>, <code class="docutils literal"><span class="pre">arm7a-neon-android8</span></code>, <code class="docutils literal"><span class="pre">mips</span></code> and <code class="docutils literal"><span class="pre">x86</span></code> stand for
+platform targets:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">armeabi</span></code> is for ARM v5 and ARM v6 architectures with Android API 8+,</li>
+<li><code class="docutils literal"><span class="pre">armv7a-neon</span></code> is for NEON-optimized ARM v7 with Android API 9+,</li>
+<li><code class="docutils literal"><span class="pre">arm7a-neon-android8</span></code> is for NEON-optimized ARM v7 with Android API 8,</li>
+<li><code class="docutils literal"><span class="pre">mips</span></code> is for MIPS architecture with Android API 9+,</li>
+<li><code class="docutils literal"><span class="pre">x86</span></code> is for Intel x86 CPUs with Android API 9+.</li>
+</ul>
+<p>If using hardware device for testing/debugging, run the following command to learn
+its CPU architecture:</p>
+<div class="highlight-sh"><div class="highlight"><pre>adb shell getprop ro.product.cpu.abi
+</pre></div>
+</div>
+<p>If you&#8217;re using an AVD emulator, go <span class="menuselection">Window &gt; AVD Manager</span> to see the
+list of availible devices. Click <span class="menuselection">Edit</span> in the context menu of the
+selected device. In the window, which then pop-ups, find the CPU field.</p>
+<p class="last">You may also see section <a class="reference internal" href="../../../../platforms/android/service/doc/UseCases.html#manager-selection"><span>How to select the proper version of OpenCV Manager</span></a> for details.</p>
+</div>
+<p>When done, you will be able to run OpenCV samples on your device/emulator seamlessly.</p>
+</li>
+<li><p class="first">Here is <code class="docutils literal"><span class="pre">Sample</span> <span class="pre">-</span> <span class="pre">image-manipulations</span></code> sample, running on top of stock camera-preview of the emulator.</p>
+<img alt="'Sample - image-manipulations' running Canny" class="align-center" src="../../../../_images/emulator_canny.png" />
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="what-s-next">
+<h2>What&#8217;s next<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h2>
+<p>Now, when you have your instance of OpenCV4Adroid SDK set up and configured,
+you may want to proceed to using OpenCV in your own application.
+You can learn how to do that in a separate <a class="reference internal" href="dev_with_OCV_on_Android.html#dev-with-ocv-on-android"><span>Android Development with OpenCV</span></a> tutorial.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">OpenCV4Android SDK</a><ul>
+<li><a class="reference internal" href="#tegra-android-development-pack-users">Tegra Android Development Pack users</a></li>
+<li><a class="reference internal" href="#general-info">General info</a></li>
+<li><a class="reference internal" href="#manual-opencv4android-sdk-setup">Manual OpenCV4Android SDK setup</a><ul>
+<li><a class="reference internal" href="#get-the-opencv4android-sdk">Get the OpenCV4Android SDK</a></li>
+<li><a class="reference internal" href="#import-opencv-library-and-samples-to-the-eclipse">Import OpenCV library and samples to the Eclipse</a></li>
+<li><a class="reference internal" href="#running-opencv-samples">Running OpenCV Samples</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#what-s-next">What&#8217;s next</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="android_dev_intro.html"
+                        title="previous chapter">Introduction into Android Development</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="dev_with_OCV_on_Android.html"
+                        title="next chapter">Android Development with OpenCV</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/introduction/android_binary_package/O4A_SDK.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="dev_with_OCV_on_Android.html" title="Android Development with OpenCV"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="android_dev_intro.html" title="Introduction into Android Development"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_introduction/table_of_content_introduction.html" >Introduction to OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

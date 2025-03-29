@@ -1,0 +1,649 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>FaceRecognizer &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="FaceRecognizer - Face Recognition with OpenCV" href="index.html" />
+    <link rel="next" title="Face Recognition with OpenCV" href="facerec_tutorial.html" />
+    <link rel="prev" title="FaceRecognizer - Face Recognition with OpenCV" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="facerec_tutorial.html" title="Face Recognition with OpenCV"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="FaceRecognizer - Face Recognition with OpenCV"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="../contrib.html" >contrib. Contributed/Experimental Stuff</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">FaceRecognizer - Face Recognition with OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="facerecognizer">
+<h1>FaceRecognizer<a class="headerlink" href="#facerecognizer" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>FaceRecognizer<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="FaceRecognizer : public Algorithm">
+<em class="property">class </em><code class="descname">FaceRecognizer</code> : <em class="property">public</em> <code class="descname">Algorithm</code><a class="headerlink" href="#FaceRecognizer : public Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>All face recognition models in OpenCV are derived from the abstract base class <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a>, which provides
+a unified access to all face recongition algorithms in OpenCV.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">FaceRecognizer</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Algorithm</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">//! virtual destructor</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">FaceRecognizer</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="c1">// Trains a FaceRecognizer.</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">train</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">src</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">labels</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// Updates a FaceRecognizer.</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">update</span><span class="p">(</span><span class="n">InputArrayOfArrays</span> <span class="n">src</span><span class="p">,</span> <span class="n">InputArray</span> <span class="n">labels</span><span class="p">);</span>
+
+    <span class="c1">// Gets a prediction from a FaceRecognizer.</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="nf">predict</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">src</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// Predicts the label and confidence for a given sample.</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">predict</span><span class="p">(</span><span class="n">InputArray</span> <span class="n">src</span><span class="p">,</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">label</span><span class="p">,</span> <span class="kt">double</span> <span class="o">&amp;</span><span class="n">confidence</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// Serializes this object to a given filename.</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">save</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">filename</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="c1">// Deserializes this object from a given filename.</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">load</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">filename</span><span class="p">);</span>
+
+    <span class="c1">// Serializes this object to a given cv::FileStorage.</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">save</span><span class="p">(</span><span class="n">FileStorage</span><span class="o">&amp;</span> <span class="n">fs</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// Deserializes this object from a given cv::FileStorage.</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">load</span><span class="p">(</span><span class="k">const</span> <span class="n">FileStorage</span><span class="o">&amp;</span> <span class="n">fs</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// Sets additional information as pairs label - info.</span>
+    <span class="kt">void</span> <span class="nf">setLabelsInfo</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">string</span><span class="o">&gt;&amp;</span> <span class="n">labelsInfo</span><span class="p">);</span>
+
+    <span class="c1">// Gets string information by label</span>
+    <span class="n">string</span> <span class="nf">getLabelInfo</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">label</span><span class="p">);</span>
+
+    <span class="c1">// Gets labels by string</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">getLabelsByString</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">str</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="section" id="description">
+<h3>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h3>
+<p>I&#8217;ll go a bit more into detail explaining <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a>, because it doesn&#8217;t look like a powerful interface at first sight. But: Every <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a> is an <a class="reference internal" href="../../../core/doc/basic_structures.html#Algorithm" title="class Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">Algorithm</span></code></a>, so you can easily get/set all model internals (if allowed by the implementation). <a class="reference internal" href="../../../core/doc/basic_structures.html#Algorithm" title="class Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">Algorithm</span></code></a> is a relatively new OpenCV concept, which is available since the 2.4 release. I suggest you take a look at its description.</p>
+<p><a class="reference internal" href="../../../core/doc/basic_structures.html#Algorithm" title="class Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">Algorithm</span></code></a> provides the following features for all derived classes:</p>
+<ul class="simple">
+<li>So called “virtual constructor”. That is, each Algorithm derivative is registered at program start and you can get the list of registered algorithms and create instance of a particular algorithm by its name (see <a class="reference internal" href="../../../core/doc/basic_structures.html#template&lt;typename _Tp&gt; Ptr&lt;_Tp&gt; Algorithm::create(const string&amp; name)" title="template&lt;typename _Tp&gt; Ptr&lt;_Tp&gt; Algorithm::create(const string&amp; name)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Algorithm::create()</span></code></a>). If you plan to add your own algorithms, it is good practice to add a unique prefix to your algorithms to distinguish them from other algorithms.</li>
+<li>Setting/Retrieving algorithm parameters by name. If you used video capturing functionality from OpenCV highgui module, you are probably familar with <a class="reference internal" href="../../../highgui/doc/reading_and_writing_images_and_video.html#int cvSetCaptureProperty(CvCapture* capture, int property_id, double value)" title="int cvSetCaptureProperty(CvCapture* capture, int property_id, double value)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">cvSetCaptureProperty()</span></code></a>, <a class="reference internal" href="../../../highgui/doc/reading_and_writing_images_and_video.html#double cvGetCaptureProperty(CvCapture* capture, int property_id)" title="double cvGetCaptureProperty(CvCapture* capture, int property_id)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">cvGetCaptureProperty()</span></code></a>, <a class="reference internal" href="../../../highgui/doc/reading_and_writing_images_and_video.html#bool VideoCapture::set(int propId, double value)" title="bool VideoCapture::set(int propId, double value)"><code class="xref ocv ocv-func docutils literal"><span class="pre">VideoCapture::set()</span></code></a> and <a class="reference internal" href="../../../highgui/doc/reading_and_writing_images_and_video.html#double VideoCapture::get(int propId)" title="double VideoCapture::get(int propId)"><code class="xref ocv ocv-func docutils literal"><span class="pre">VideoCapture::get()</span></code></a>. <a class="reference internal" href="../../../core/doc/basic_structures.html#Algorithm" title="class Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">Algorithm</span></code></a> provides similar method where instead of integer id&#8217;s you specify the parameter names as text strings. See <a class="reference internal" href="../../../core/doc/basic_structures.html#void Algorithm::set(const string&amp; name, int value)" title="void Algorithm::set(const string&amp; name, int value)"><code class="xref ocv ocv-func docutils literal"><span class="pre">Algorithm::set()</span></code></a> and <a class="reference internal" href="../../../core/doc/basic_structures.html#template&lt;typename _Tp&gt; typename ParamType&lt;_Tp&gt;::member_type Algorithm::get(const string&amp; name) const" title="template&lt;typename _Tp&gt; typename ParamType&lt;_Tp&gt;::member_type Algorithm::get(const string&amp; name) const"><code class="xref ocv ocv-func docutils literal"><span class="pre">Algorithm::get()</span></code></a> for details.</li>
+<li>Reading and writing parameters from/to XML or YAML files. Every Algorithm derivative can store all its parameters and then read them back. There is no need to re-implement it each time.</li>
+</ul>
+<p>Moreover every <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a> supports the:</p>
+<ul class="simple">
+<li><strong>Training</strong> of a <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a> with <a class="reference internal" href="#void FaceRecognizer::train(InputArrayOfArrays src, InputArray labels) = 0" title="void FaceRecognizer::train(InputArrayOfArrays src, InputArray labels) = 0"><code class="xref ocv ocv-func docutils literal"><span class="pre">FaceRecognizer::train()</span></code></a> on a given set of images (your face database!).</li>
+<li><strong>Prediction</strong> of a given sample image, that means a face. The image is given as a <a class="reference internal" href="../../../core/doc/basic_structures.html#Mat" title="class Mat"><code class="xref ocv ocv-class docutils literal"><span class="pre">Mat</span></code></a>.</li>
+<li><strong>Loading/Saving</strong> the model state from/to a given XML or YAML.</li>
+<li><strong>Setting/Getting labels info</strong>, that is storaged as a string. String labels info is useful for keeping names of the recognized people.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When using the FaceRecognizer interface in combination with Python, please stick to Python 2. Some underlying scripts like create_csv will not work in other versions, like Python 3.</p>
+</div>
+</div>
+<div class="section" id="setting-the-thresholds">
+<h3>Setting the Thresholds<a class="headerlink" href="#setting-the-thresholds" title="Permalink to this headline">¶</a></h3>
+<p>Sometimes you run into the situation, when you want to apply a threshold on the prediction. A common scenario in face recognition is to tell, whether a face belongs to the training dataset or if it is unknown. You might wonder, why there&#8217;s no public API in <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a> to set the threshold for the prediction, but rest assured: It&#8217;s supported. It just means there&#8217;s no generic way in an abstract class to provide an interface for setting/getting the thresholds of <em>every possible</em> <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a> algorithm. The appropriate place to set the thresholds is in the constructor of the specific <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a> and since every <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a> is a <a class="reference internal" href="../../../core/doc/basic_structures.html#Algorithm" title="class Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">Algorithm</span></code></a> (see above), you can get/set the thresholds at runtime!</p>
+<p>Here is an example of setting a threshold for the Eigenfaces method, when creating the model:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// Let&#39;s say we want to keep 10 Eigenfaces and have a threshold value of 10.0</span>
+<span class="kt">int</span> <span class="n">num_components</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">threshold</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">;</span>
+<span class="c1">// Then if you want to have a cv::FaceRecognizer with a confidence threshold,</span>
+<span class="c1">// create the concrete implementation with the appropiate parameters:</span>
+<span class="n">Ptr</span><span class="o">&lt;</span><span class="n">FaceRecognizer</span><span class="o">&gt;</span> <span class="n">model</span> <span class="o">=</span> <span class="n">createEigenFaceRecognizer</span><span class="p">(</span><span class="n">num_components</span><span class="p">,</span> <span class="n">threshold</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Sometimes it&#8217;s impossible to train the model, just to experiment with threshold values. Thanks to <a class="reference internal" href="../../../core/doc/basic_structures.html#Algorithm" title="class Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">Algorithm</span></code></a> it&#8217;s possible to set internal model thresholds during runtime. Let&#8217;s see how we would set/get the prediction for the Eigenface model, we&#8217;ve created above:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// The following line reads the threshold from the Eigenfaces model:</span>
+<span class="kt">double</span> <span class="n">current_threshold</span> <span class="o">=</span> <span class="n">model</span><span class="o">-&gt;</span><span class="n">getDouble</span><span class="p">(</span><span class="s">&quot;threshold&quot;</span><span class="p">);</span>
+<span class="c1">// And this line sets the threshold to 0.0:</span>
+<span class="n">model</span><span class="o">-&gt;</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;threshold&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>If you&#8217;ve set the threshold to <code class="docutils literal"><span class="pre">0.0</span></code> as we did above, then:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">//</span>
+<span class="n">Mat</span> <span class="n">img</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&quot;person1/3.jpg&quot;</span><span class="p">,</span> <span class="n">CV_LOAD_IMAGE_GRAYSCALE</span><span class="p">);</span>
+<span class="c1">// Get a prediction from the model. Note: We&#39;ve set a threshold of 0.0 above,</span>
+<span class="c1">// since the distance is almost always larger than 0.0, you&#39;ll get -1 as</span>
+<span class="c1">// label, which indicates, this face is unknown</span>
+<span class="kt">int</span> <span class="n">predicted_label</span> <span class="o">=</span> <span class="n">model</span><span class="o">-&gt;</span><span class="n">predict</span><span class="p">(</span><span class="n">img</span><span class="p">);</span>
+<span class="c1">// ...</span>
+</pre></div>
+</div>
+<p>is going to yield <code class="docutils literal"><span class="pre">-1</span></code> as predicted label, which states this face is unknown.</p>
+</div>
+<div class="section" id="getting-the-name-of-a-facerecognizer">
+<h3>Getting the name of a FaceRecognizer<a class="headerlink" href="#getting-the-name-of-a-facerecognizer" title="Permalink to this headline">¶</a></h3>
+<p>Since every <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a> is a <a class="reference internal" href="../../../core/doc/basic_structures.html#Algorithm" title="class Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">Algorithm</span></code></a>, you can use <a class="reference internal" href="../../../core/doc/basic_structures.html#string Algorithm::name() const" title="string Algorithm::name() const"><code class="xref ocv ocv-func docutils literal"><span class="pre">Algorithm::name()</span></code></a> to get the name of a <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a>:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// Create a FaceRecognizer:</span>
+<span class="n">Ptr</span><span class="o">&lt;</span><span class="n">FaceRecognizer</span><span class="o">&gt;</span> <span class="n">model</span> <span class="o">=</span> <span class="n">createEigenFaceRecognizer</span><span class="p">();</span>
+<span class="c1">// And here&#39;s how to get its name:</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span> <span class="o">=</span> <span class="n">model</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="facerecognizer-train">
+<h2>FaceRecognizer::train<a class="headerlink" href="#facerecognizer-train" title="Permalink to this headline">¶</a></h2>
+<p>Trains a FaceRecognizer with given data and associated labels.</p>
+<dl class="function">
+<dt id="void FaceRecognizer::train(InputArrayOfArrays src, InputArray labels) = 0">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">FaceRecognizer::</code><code class="descname">train</code><span class="sig-paren">(</span>InputArrayOfArrays <strong>src</strong>, InputArray <strong>labels</strong><span class="sig-paren">)</span><code class="descclassname"> = 0</code><a class="headerlink" href="#void FaceRecognizer::train(InputArrayOfArrays src, InputArray labels) = 0" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; The training images, that means the faces you want to learn. The data has to be given as a <code class="docutils literal"><span class="pre">vector&lt;Mat&gt;</span></code>.</li>
+<li><strong>labels</strong> &#8211; The labels corresponding to the images have to be given either as a <code class="docutils literal"><span class="pre">vector&lt;int&gt;</span></code> or a</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The following source code snippet shows you how to learn a Fisherfaces model on a given set of images. The images are read with <a class="reference internal" href="../../../highgui/doc/reading_and_writing_images_and_video.html#Mat imread(const string&amp; filename, int flags)" title="Mat imread(const string&amp; filename, int flags)"><code class="xref ocv ocv-func docutils literal"><span class="pre">imread()</span></code></a> and pushed into a <code class="docutils literal"><span class="pre">std::vector&lt;Mat&gt;</span></code>. The labels of each image are stored within a <code class="docutils literal"><span class="pre">std::vector&lt;int&gt;</span></code> (you could also use a <a class="reference internal" href="../../../core/doc/basic_structures.html#Mat" title="class Mat"><code class="xref ocv ocv-class docutils literal"><span class="pre">Mat</span></code></a> of type <cite>CV_32SC1</cite>). Think of the label as the subject (the person) this image belongs to, so same subjects (persons) should have the same label. For the available <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a> you don&#8217;t have to pay any attention to the order of the labels, just make sure same persons have the same label:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// holds images and labels</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;</span> <span class="n">images</span><span class="p">;</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">labels</span><span class="p">;</span>
+<span class="c1">// images for first person</span>
+<span class="n">images</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">imread</span><span class="p">(</span><span class="s">&quot;person0/0.jpg&quot;</span><span class="p">,</span> <span class="n">CV_LOAD_IMAGE_GRAYSCALE</span><span class="p">));</span> <span class="n">labels</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">images</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">imread</span><span class="p">(</span><span class="s">&quot;person0/1.jpg&quot;</span><span class="p">,</span> <span class="n">CV_LOAD_IMAGE_GRAYSCALE</span><span class="p">));</span> <span class="n">labels</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">images</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">imread</span><span class="p">(</span><span class="s">&quot;person0/2.jpg&quot;</span><span class="p">,</span> <span class="n">CV_LOAD_IMAGE_GRAYSCALE</span><span class="p">));</span> <span class="n">labels</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="c1">// images for second person</span>
+<span class="n">images</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">imread</span><span class="p">(</span><span class="s">&quot;person1/0.jpg&quot;</span><span class="p">,</span> <span class="n">CV_LOAD_IMAGE_GRAYSCALE</span><span class="p">));</span> <span class="n">labels</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">images</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">imread</span><span class="p">(</span><span class="s">&quot;person1/1.jpg&quot;</span><span class="p">,</span> <span class="n">CV_LOAD_IMAGE_GRAYSCALE</span><span class="p">));</span> <span class="n">labels</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">images</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">imread</span><span class="p">(</span><span class="s">&quot;person1/2.jpg&quot;</span><span class="p">,</span> <span class="n">CV_LOAD_IMAGE_GRAYSCALE</span><span class="p">));</span> <span class="n">labels</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Now that you have read some images, we can create a new <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a>. In this example I&#8217;ll create a Fisherfaces model and decide to keep all of the possible Fisherfaces:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// Create a new Fisherfaces model and retain all available Fisherfaces,</span>
+<span class="c1">// this is the most common usage of this specific FaceRecognizer:</span>
+<span class="c1">//</span>
+<span class="n">Ptr</span><span class="o">&lt;</span><span class="n">FaceRecognizer</span><span class="o">&gt;</span> <span class="n">model</span> <span class="o">=</span>  <span class="n">createFisherFaceRecognizer</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>And finally train it on the given dataset (the face images and labels):</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// This is the common interface to train all of the available cv::FaceRecognizer</span>
+<span class="c1">// implementations:</span>
+<span class="c1">//</span>
+<span class="n">model</span><span class="o">-&gt;</span><span class="n">train</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">labels</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="facerecognizer-update">
+<h2>FaceRecognizer::update<a class="headerlink" href="#facerecognizer-update" title="Permalink to this headline">¶</a></h2>
+<p>Updates a FaceRecognizer with given data and associated labels.</p>
+<dl class="function">
+<dt id="void FaceRecognizer::update(InputArrayOfArrays src, InputArray labels)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">FaceRecognizer::</code><code class="descname">update</code><span class="sig-paren">(</span>InputArrayOfArrays <strong>src</strong>, InputArray <strong>labels</strong><span class="sig-paren">)</span><a class="headerlink" href="#void FaceRecognizer::update(InputArrayOfArrays src, InputArray labels)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; The training images, that means the faces you want to learn. The data has to be given as a <code class="docutils literal"><span class="pre">vector&lt;Mat&gt;</span></code>.</li>
+<li><strong>labels</strong> &#8211; The labels corresponding to the images have to be given either as a <code class="docutils literal"><span class="pre">vector&lt;int&gt;</span></code> or a</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This method updates a (probably trained) <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a>, but only if the algorithm supports it. The Local Binary Patterns Histograms (LBPH) recognizer (see <a class="reference internal" href="#Ptr&lt;FaceRecognizer&gt; createLBPHFaceRecognizer(int radius, int neighbors, int grid_x, int grid_y, double threshold)" title="Ptr&lt;FaceRecognizer&gt; createLBPHFaceRecognizer(int radius, int neighbors, int grid_x, int grid_y, double threshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createLBPHFaceRecognizer()</span></code></a>) can be updated. For the Eigenfaces and Fisherfaces method, this is algorithmically not possible and you have to re-estimate the model with <a class="reference internal" href="#void FaceRecognizer::train(InputArrayOfArrays src, InputArray labels) = 0" title="void FaceRecognizer::train(InputArrayOfArrays src, InputArray labels) = 0"><code class="xref ocv ocv-func docutils literal"><span class="pre">FaceRecognizer::train()</span></code></a>. In any case, a call to train empties the existing model and learns a new model, while update does not delete any model data.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// Create a new LBPH model (it can be updated) and use the default parameters,</span>
+<span class="c1">// this is the most common usage of this specific FaceRecognizer:</span>
+<span class="c1">//</span>
+<span class="n">Ptr</span><span class="o">&lt;</span><span class="n">FaceRecognizer</span><span class="o">&gt;</span> <span class="n">model</span> <span class="o">=</span>  <span class="n">createLBPHFaceRecognizer</span><span class="p">();</span>
+<span class="c1">// This is the common interface to train all of the available cv::FaceRecognizer</span>
+<span class="c1">// implementations:</span>
+<span class="c1">//</span>
+<span class="n">model</span><span class="o">-&gt;</span><span class="n">train</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">labels</span><span class="p">);</span>
+<span class="c1">// Some containers to hold new image:</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;</span> <span class="n">newImages</span><span class="p">;</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">newLabels</span><span class="p">;</span>
+<span class="c1">// You should add some images to the containers:</span>
+<span class="c1">//</span>
+<span class="c1">// ...</span>
+<span class="c1">//</span>
+<span class="c1">// Now updating the model is as easy as calling:</span>
+<span class="n">model</span><span class="o">-&gt;</span><span class="n">update</span><span class="p">(</span><span class="n">newImages</span><span class="p">,</span><span class="n">newLabels</span><span class="p">);</span>
+<span class="c1">// This will preserve the old model data and extend the existing model</span>
+<span class="c1">// with the new features extracted from newImages!</span>
+</pre></div>
+</div>
+<p>Calling update on an Eigenfaces model (see <a class="reference internal" href="#Ptr&lt;FaceRecognizer&gt; createEigenFaceRecognizer(int num_components , double threshold)" title="Ptr&lt;FaceRecognizer&gt; createEigenFaceRecognizer(int num_components , double threshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createEigenFaceRecognizer()</span></code></a>), which doesn&#8217;t support updating, will throw an error similar to:</p>
+<div class="highlight-none"><div class="highlight"><pre>OpenCV Error: The function/feature is not implemented (This FaceRecognizer (FaceRecognizer.Eigenfaces) does not support updating, you have to use FaceRecognizer::train to update it.) in update, file /home/philipp/git/opencv/modules/contrib/src/facerec.cpp, line 305
+terminate called after throwing an instance of &#39;cv::Exception&#39;
+</pre></div>
+</div>
+<p>Please note: The <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a> does not store your training images, because this would be very memory intense and it&#8217;s not the responsibility of te <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a> to do so. The caller is responsible for maintaining the dataset, he want to work with.</p>
+</div>
+<div class="section" id="facerecognizer-predict">
+<h2>FaceRecognizer::predict<a class="headerlink" href="#facerecognizer-predict" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="int FaceRecognizer::predict(InputArray src) const = 0">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">FaceRecognizer::</code><code class="descname">predict</code><span class="sig-paren">(</span>InputArray <strong>src</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><code class="descclassname"> = 0</code><a class="headerlink" href="#int FaceRecognizer::predict(InputArray src) const = 0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void FaceRecognizer::predict(InputArray src, int &amp; label, double &amp; confidence) const = 0">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">FaceRecognizer::</code><code class="descname">predict</code><span class="sig-paren">(</span>InputArray <strong>src</strong>, int&amp; <strong>label</strong>, double&amp; <strong>confidence</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><code class="descclassname"> = 0</code><a class="headerlink" href="#void FaceRecognizer::predict(InputArray src, int & label, double & confidence) const = 0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predicts a label and associated confidence (e.g. distance) for a given input image.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Sample image to get a prediction from.</li>
+<li><strong>label</strong> &#8211; The predicted label for the given image.</li>
+<li><strong>confidence</strong> &#8211; Associated confidence (e.g. distance) for the predicted label.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The suffix <code class="docutils literal"><span class="pre">const</span></code> means that prediction does not affect the internal model
+state, so the method can be safely called from within different threads.</p>
+<p>The following example shows how to get a prediction from a trained model:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+<span class="c1">// Do your initialization here (create the cv::FaceRecognizer model) ...</span>
+<span class="c1">// ...</span>
+<span class="c1">// Read in a sample image:</span>
+<span class="n">Mat</span> <span class="n">img</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&quot;person1/3.jpg&quot;</span><span class="p">,</span> <span class="n">CV_LOAD_IMAGE_GRAYSCALE</span><span class="p">);</span>
+<span class="c1">// And get a prediction from the cv::FaceRecognizer:</span>
+<span class="kt">int</span> <span class="n">predicted</span> <span class="o">=</span> <span class="n">model</span><span class="o">-&gt;</span><span class="n">predict</span><span class="p">(</span><span class="n">img</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Or to get a prediction and the associated confidence (e.g. distance):</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+<span class="c1">// Do your initialization here (create the cv::FaceRecognizer model) ...</span>
+<span class="c1">// ...</span>
+<span class="n">Mat</span> <span class="n">img</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&quot;person1/3.jpg&quot;</span><span class="p">,</span> <span class="n">CV_LOAD_IMAGE_GRAYSCALE</span><span class="p">);</span>
+<span class="c1">// Some variables for the predicted label and associated confidence (e.g. distance):</span>
+<span class="kt">int</span> <span class="n">predicted_label</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">predicted_confidence</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+<span class="c1">// Get the prediction and associated confidence from the model</span>
+<span class="n">model</span><span class="o">-&gt;</span><span class="n">predict</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">predicted_label</span><span class="p">,</span> <span class="n">predicted_confidence</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="facerecognizer-save">
+<h2>FaceRecognizer::save<a class="headerlink" href="#facerecognizer-save" title="Permalink to this headline">¶</a></h2>
+<p>Saves a <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a> and its model state.</p>
+<dl class="function">
+<dt id="void FaceRecognizer::save(const string&amp; filename) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">FaceRecognizer::</code><code class="descname">save</code><span class="sig-paren">(</span>const string&amp; <strong>filename</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void FaceRecognizer::save(const string& filename) const" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves this model to a given filename, either as XML or YAML.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; The filename to store this <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a> to (either XML/YAML).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="void FaceRecognizer::save(FileStorage&amp; fs) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">FaceRecognizer::</code><code class="descname">save</code><span class="sig-paren">(</span>FileStorage&amp; <strong>fs</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void FaceRecognizer::save(FileStorage& fs) const" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves this model to a given <a class="reference internal" href="../../../core/doc/xml_yaml_persistence.html#FileStorage" title="class FileStorage"><code class="xref ocv ocv-class docutils literal"><span class="pre">FileStorage</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; The <a class="reference internal" href="../../../core/doc/xml_yaml_persistence.html#FileStorage" title="class FileStorage"><code class="xref ocv ocv-class docutils literal"><span class="pre">FileStorage</span></code></a> to store this <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a> to.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Every <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a> overwrites <code class="docutils literal"><span class="pre">FaceRecognizer::save(FileStorage&amp;</span> <span class="pre">fs)</span></code>
+to save the internal model state. <code class="docutils literal"><span class="pre">FaceRecognizer::save(const</span> <span class="pre">string&amp;</span> <span class="pre">filename)</span></code> saves
+the state of a model to the given filename.</p>
+<p>The suffix <code class="docutils literal"><span class="pre">const</span></code> means that prediction does not affect the internal model
+state, so the method can be safely called from within different threads.</p>
+</div>
+<div class="section" id="facerecognizer-load">
+<h2>FaceRecognizer::load<a class="headerlink" href="#facerecognizer-load" title="Permalink to this headline">¶</a></h2>
+<p>Loads a <a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a> and its model state.</p>
+<dl class="function">
+<dt id="void FaceRecognizer::load(const string&amp; filename)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">FaceRecognizer::</code><code class="descname">load</code><span class="sig-paren">(</span>const string&amp; <strong>filename</strong><span class="sig-paren">)</span><a class="headerlink" href="#void FaceRecognizer::load(const string& filename)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void FaceRecognizer::load(const FileStorage&amp; fs) = 0">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">FaceRecognizer::</code><code class="descname">load</code><span class="sig-paren">(</span>const FileStorage&amp; <strong>fs</strong><span class="sig-paren">)</span><code class="descclassname"> = 0</code><a class="headerlink" href="#void FaceRecognizer::load(const FileStorage& fs) = 0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Loads a persisted model and state from a given XML or YAML file . Every
+<a class="reference internal" href="#FaceRecognizer : public Algorithm" title="class FaceRecognizer : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">FaceRecognizer</span></code></a> has to overwrite <code class="docutils literal"><span class="pre">FaceRecognizer::load(FileStorage&amp;</span> <span class="pre">fs)</span></code>
+to enable loading the model state. <code class="docutils literal"><span class="pre">FaceRecognizer::load(FileStorage&amp;</span> <span class="pre">fs)</span></code> in
+turn gets called by <code class="docutils literal"><span class="pre">FaceRecognizer::load(const</span> <span class="pre">string&amp;</span> <span class="pre">filename)</span></code>, to ease
+saving a model.</p>
+</div>
+<div class="section" id="facerecognizer-setlabelsinfo">
+<h2>FaceRecognizer::setLabelsInfo<a class="headerlink" href="#facerecognizer-setlabelsinfo" title="Permalink to this headline">¶</a></h2>
+<p>Sets string information about labels into the model.
+.. ocv:function:: void FaceRecognizer::setLabelsInfo(const std::map&lt;int, string&gt;&amp; labelsInfo)</p>
+<p>Information about the label loads as a pair &#8220;label id - string info&#8221;.</p>
+</div>
+<div class="section" id="facerecognizer-getlabelinfo">
+<h2>FaceRecognizer::getLabelInfo<a class="headerlink" href="#facerecognizer-getlabelinfo" title="Permalink to this headline">¶</a></h2>
+<p>Gets string information by label.
+.. ocv:function:: string FaceRecognizer::getLabelInfo(const int &amp;label)</p>
+<p>If an unknown label id is provided or there is no label information assosiated with the specified label id the method returns an empty string.</p>
+</div>
+<div class="section" id="facerecognizer-getlabelsbystring">
+<h2>FaceRecognizer::getLabelsByString<a class="headerlink" href="#facerecognizer-getlabelsbystring" title="Permalink to this headline">¶</a></h2>
+<p>Gets vector of labels by string.</p>
+<dl class="function">
+<dt id="vector&lt;int&gt; FaceRecognizer::getLabelsByString(const string&amp; str)">
+<strong>C++:</strong><code class="descname"> </code>vector&lt;int&gt; <code class="descclassname">FaceRecognizer::</code><code class="descname">getLabelsByString</code><span class="sig-paren">(</span>const string&amp; <strong>str</strong><span class="sig-paren">)</span><a class="headerlink" href="#vector<int> FaceRecognizer::getLabelsByString(const string& str)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The function searches for the labels containing the specified substring in the associated string info.</p>
+</div>
+<div class="section" id="createeigenfacerecognizer">
+<h2>createEigenFaceRecognizer<a class="headerlink" href="#createeigenfacerecognizer" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="Ptr&lt;FaceRecognizer&gt; createEigenFaceRecognizer(int num_components , double threshold)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FaceRecognizer&gt; <code class="descname">createEigenFaceRecognizer</code><span class="sig-paren">(</span>int <strong>num_components</strong>=0, double <strong>threshold</strong>=DBL_MAX<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FaceRecognizer> createEigenFaceRecognizer(int num_components , double threshold)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>num_components</strong> &#8211; The number of components (read: Eigenfaces) kept for this Prinicpal Component Analysis. As a hint: There&#8217;s no rule how many components (read: Eigenfaces) should be kept for good reconstruction capabilities. It is based on your input data, so experiment with the number. Keeping 80 components should almost always be sufficient.</li>
+<li><strong>threshold</strong> &#8211; The threshold applied in the prediciton.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="section" id="notes">
+<h3>Notes:<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Training and prediction must be done on grayscale images, use <a class="reference internal" href="../../../imgproc/doc/miscellaneous_transformations.html#void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)" title="void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cvtColor()</span></code></a> to convert between the color spaces.</li>
+<li><strong>THE EIGENFACES METHOD MAKES THE ASSUMPTION, THAT THE TRAINING AND TEST IMAGES ARE OF EQUAL SIZE.</strong> (caps-lock, because I got so many mails asking for this). You have to make sure your input data has the correct shape, else a meaningful exception is thrown. Use <a class="reference internal" href="../../../imgproc/doc/geometric_transformations.html#void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)" title="void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)"><code class="xref ocv ocv-func docutils literal"><span class="pre">resize()</span></code></a> to resize the images.</li>
+<li>This model does not support updating.</li>
+</ul>
+</div>
+<div class="section" id="model-internal-data">
+<h3>Model internal data:<a class="headerlink" href="#model-internal-data" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">num_components</span></code> see <a class="reference internal" href="#Ptr&lt;FaceRecognizer&gt; createEigenFaceRecognizer(int num_components , double threshold)" title="Ptr&lt;FaceRecognizer&gt; createEigenFaceRecognizer(int num_components , double threshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createEigenFaceRecognizer()</span></code></a>.</li>
+<li><code class="docutils literal"><span class="pre">threshold</span></code> see <a class="reference internal" href="#Ptr&lt;FaceRecognizer&gt; createEigenFaceRecognizer(int num_components , double threshold)" title="Ptr&lt;FaceRecognizer&gt; createEigenFaceRecognizer(int num_components , double threshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createEigenFaceRecognizer()</span></code></a>.</li>
+<li><code class="docutils literal"><span class="pre">eigenvalues</span></code> The eigenvalues for this Principal Component Analysis (ordered descending).</li>
+<li><code class="docutils literal"><span class="pre">eigenvectors</span></code> The eigenvectors for this Principal Component Analysis (ordered by their eigenvalue).</li>
+<li><code class="docutils literal"><span class="pre">mean</span></code> The sample mean calculated from the training data.</li>
+<li><code class="docutils literal"><span class="pre">projections</span></code> The projections of the training data.</li>
+<li><code class="docutils literal"><span class="pre">labels</span></code> The threshold applied in the prediction. If the distance to the nearest neighbor is larger than the threshold, this method returns -1.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="createfisherfacerecognizer">
+<h2>createFisherFaceRecognizer<a class="headerlink" href="#createfisherfacerecognizer" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="Ptr&lt;FaceRecognizer&gt; createFisherFaceRecognizer(int num_components , double threshold)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FaceRecognizer&gt; <code class="descname">createFisherFaceRecognizer</code><span class="sig-paren">(</span>int <strong>num_components</strong>=0, double <strong>threshold</strong>=DBL_MAX<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FaceRecognizer> createFisherFaceRecognizer(int num_components , double threshold)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>num_components</strong> &#8211; The number of components (read: Fisherfaces) kept for this Linear Discriminant Analysis with the Fisherfaces criterion. It&#8217;s useful to keep all components, that means the number of your classes <code class="docutils literal"><span class="pre">c</span></code> (read: subjects, persons you want to recognize). If you leave this at the default (<code class="docutils literal"><span class="pre">0</span></code>) or set it to a value  less-equal <code class="docutils literal"><span class="pre">0</span></code> or greater <code class="docutils literal"><span class="pre">(c-1)</span></code>, it will be set to the correct number <code class="docutils literal"><span class="pre">(c-1)</span></code> automatically.</li>
+<li><strong>threshold</strong> &#8211; The threshold applied in the prediction. If the distance to the nearest neighbor is larger than the threshold, this method returns -1.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="section" id="id2">
+<h3>Notes:<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Training and prediction must be done on grayscale images, use <a class="reference internal" href="../../../imgproc/doc/miscellaneous_transformations.html#void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)" title="void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cvtColor()</span></code></a> to convert between the color spaces.</li>
+<li><strong>THE FISHERFACES METHOD MAKES THE ASSUMPTION, THAT THE TRAINING AND TEST IMAGES ARE OF EQUAL SIZE.</strong> (caps-lock, because I got so many mails asking for this). You have to make sure your input data has the correct shape, else a meaningful exception is thrown. Use <a class="reference internal" href="../../../imgproc/doc/geometric_transformations.html#void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)" title="void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)"><code class="xref ocv ocv-func docutils literal"><span class="pre">resize()</span></code></a> to resize the images.</li>
+<li>This model does not support updating.</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h3>Model internal data:<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">num_components</span></code> see <a class="reference internal" href="#Ptr&lt;FaceRecognizer&gt; createFisherFaceRecognizer(int num_components , double threshold)" title="Ptr&lt;FaceRecognizer&gt; createFisherFaceRecognizer(int num_components , double threshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createFisherFaceRecognizer()</span></code></a>.</li>
+<li><code class="docutils literal"><span class="pre">threshold</span></code> see <a class="reference internal" href="#Ptr&lt;FaceRecognizer&gt; createFisherFaceRecognizer(int num_components , double threshold)" title="Ptr&lt;FaceRecognizer&gt; createFisherFaceRecognizer(int num_components , double threshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createFisherFaceRecognizer()</span></code></a>.</li>
+<li><code class="docutils literal"><span class="pre">eigenvalues</span></code> The eigenvalues for this Linear Discriminant Analysis (ordered descending).</li>
+<li><code class="docutils literal"><span class="pre">eigenvectors</span></code> The eigenvectors for this Linear Discriminant Analysis (ordered by their eigenvalue).</li>
+<li><code class="docutils literal"><span class="pre">mean</span></code> The sample mean calculated from the training data.</li>
+<li><code class="docutils literal"><span class="pre">projections</span></code> The projections of the training data.</li>
+<li><code class="docutils literal"><span class="pre">labels</span></code> The labels corresponding to the projections.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="createlbphfacerecognizer">
+<h2>createLBPHFaceRecognizer<a class="headerlink" href="#createlbphfacerecognizer" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="Ptr&lt;FaceRecognizer&gt; createLBPHFaceRecognizer(int radius, int neighbors, int grid_x, int grid_y, double threshold)">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;FaceRecognizer&gt; <code class="descname">createLBPHFaceRecognizer</code><span class="sig-paren">(</span>int <strong>radius</strong>=1, int <strong>neighbors</strong>=8, int <strong>grid_x</strong>=8, int <strong>grid_y</strong>=8, double <strong>threshold</strong>=DBL_MAX<span class="sig-paren">)</span><a class="headerlink" href="#Ptr<FaceRecognizer> createLBPHFaceRecognizer(int radius, int neighbors, int grid_x, int grid_y, double threshold)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>radius</strong> &#8211; The radius used for building the Circular Local Binary Pattern. The greater the radius, the</li>
+<li><strong>neighbors</strong> &#8211; The number of sample points to build a Circular Local Binary Pattern from. An appropriate value is to use `` 8`` sample points. Keep in mind: the more sample points you include, the higher the computational cost.</li>
+<li><strong>grid_x</strong> &#8211; The number of cells in the horizontal direction, <code class="docutils literal"><span class="pre">8</span></code> is a common value used in publications. The more cells, the finer the grid, the higher the dimensionality of the resulting feature vector.</li>
+<li><strong>grid_y</strong> &#8211; The number of cells in the vertical direction, <code class="docutils literal"><span class="pre">8</span></code> is a common value used in publications. The more cells, the finer the grid, the higher the dimensionality of the resulting feature vector.</li>
+<li><strong>threshold</strong> &#8211; The threshold applied in the prediction. If the distance to the nearest neighbor is larger than the threshold, this method returns -1.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="section" id="id4">
+<h3>Notes:<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>The Circular Local Binary Patterns (used in training and prediction) expect the data given as grayscale images, use <a class="reference internal" href="../../../imgproc/doc/miscellaneous_transformations.html#void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)" title="void cvtColor(InputArray src, OutputArray dst, int code, int dstCn)"><code class="xref ocv ocv-func docutils literal"><span class="pre">cvtColor()</span></code></a> to convert between the color spaces.</li>
+<li>This model supports updating.</li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h3>Model internal data:<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">radius</span></code> see <a class="reference internal" href="#Ptr&lt;FaceRecognizer&gt; createLBPHFaceRecognizer(int radius, int neighbors, int grid_x, int grid_y, double threshold)" title="Ptr&lt;FaceRecognizer&gt; createLBPHFaceRecognizer(int radius, int neighbors, int grid_x, int grid_y, double threshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createLBPHFaceRecognizer()</span></code></a>.</li>
+<li><code class="docutils literal"><span class="pre">neighbors</span></code> see <a class="reference internal" href="#Ptr&lt;FaceRecognizer&gt; createLBPHFaceRecognizer(int radius, int neighbors, int grid_x, int grid_y, double threshold)" title="Ptr&lt;FaceRecognizer&gt; createLBPHFaceRecognizer(int radius, int neighbors, int grid_x, int grid_y, double threshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createLBPHFaceRecognizer()</span></code></a>.</li>
+<li><code class="docutils literal"><span class="pre">grid_x</span></code> see <a class="reference internal" href="#Ptr&lt;FaceRecognizer&gt; createLBPHFaceRecognizer(int radius, int neighbors, int grid_x, int grid_y, double threshold)" title="Ptr&lt;FaceRecognizer&gt; createLBPHFaceRecognizer(int radius, int neighbors, int grid_x, int grid_y, double threshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createLBPHFaceRecognizer()</span></code></a>.</li>
+<li><code class="docutils literal"><span class="pre">grid_y</span></code> see <a class="reference internal" href="#Ptr&lt;FaceRecognizer&gt; createLBPHFaceRecognizer(int radius, int neighbors, int grid_x, int grid_y, double threshold)" title="Ptr&lt;FaceRecognizer&gt; createLBPHFaceRecognizer(int radius, int neighbors, int grid_x, int grid_y, double threshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createLBPHFaceRecognizer()</span></code></a>.</li>
+<li><code class="docutils literal"><span class="pre">threshold</span></code> see <a class="reference internal" href="#Ptr&lt;FaceRecognizer&gt; createLBPHFaceRecognizer(int radius, int neighbors, int grid_x, int grid_y, double threshold)" title="Ptr&lt;FaceRecognizer&gt; createLBPHFaceRecognizer(int radius, int neighbors, int grid_x, int grid_y, double threshold)"><code class="xref ocv ocv-func docutils literal"><span class="pre">createLBPHFaceRecognizer()</span></code></a>.</li>
+<li><code class="docutils literal"><span class="pre">histograms</span></code> Local Binary Patterns Histograms calculated from the given training data (empty if none was given).</li>
+<li><code class="docutils literal"><span class="pre">labels</span></code> Labels corresponding to the calculated Local Binary Patterns Histograms.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">FaceRecognizer</a><ul>
+<li><a class="reference internal" href="#id1">FaceRecognizer</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#setting-the-thresholds">Setting the Thresholds</a></li>
+<li><a class="reference internal" href="#getting-the-name-of-a-facerecognizer">Getting the name of a FaceRecognizer</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#facerecognizer-train">FaceRecognizer::train</a></li>
+<li><a class="reference internal" href="#facerecognizer-update">FaceRecognizer::update</a></li>
+<li><a class="reference internal" href="#facerecognizer-predict">FaceRecognizer::predict</a></li>
+<li><a class="reference internal" href="#facerecognizer-save">FaceRecognizer::save</a></li>
+<li><a class="reference internal" href="#facerecognizer-load">FaceRecognizer::load</a></li>
+<li><a class="reference internal" href="#facerecognizer-setlabelsinfo">FaceRecognizer::setLabelsInfo</a></li>
+<li><a class="reference internal" href="#facerecognizer-getlabelinfo">FaceRecognizer::getLabelInfo</a></li>
+<li><a class="reference internal" href="#facerecognizer-getlabelsbystring">FaceRecognizer::getLabelsByString</a></li>
+<li><a class="reference internal" href="#createeigenfacerecognizer">createEigenFaceRecognizer</a><ul>
+<li><a class="reference internal" href="#notes">Notes:</a></li>
+<li><a class="reference internal" href="#model-internal-data">Model internal data:</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#createfisherfacerecognizer">createFisherFaceRecognizer</a><ul>
+<li><a class="reference internal" href="#id2">Notes:</a></li>
+<li><a class="reference internal" href="#id3">Model internal data:</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#createlbphfacerecognizer">createLBPHFaceRecognizer</a><ul>
+<li><a class="reference internal" href="#id4">Notes:</a></li>
+<li><a class="reference internal" href="#id5">Model internal data:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">FaceRecognizer - Face Recognition with OpenCV</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="facerec_tutorial.html"
+                        title="next chapter">Face Recognition with OpenCV</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/modules/contrib/doc/facerec/facerec_api.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="facerec_tutorial.html" title="Face Recognition with OpenCV"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="FaceRecognizer - Face Recognition with OpenCV"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="../contrib.html" >contrib. Contributed/Experimental Stuff</a> &raquo;</li>
+          <li><a href="index.html" >FaceRecognizer - Face Recognition with OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

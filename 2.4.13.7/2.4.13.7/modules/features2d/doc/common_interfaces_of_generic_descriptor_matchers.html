@@ -1,0 +1,488 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Common Interfaces of Generic Descriptor Matchers &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="features2d. 2D Features Framework" href="features2d.html" />
+    <link rel="next" title="Drawing Function of Keypoints and Matches" href="drawing_function_of_keypoints_and_matches.html" />
+    <link rel="prev" title="Common Interfaces of Descriptor Matchers" href="common_interfaces_of_descriptor_matchers.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="drawing_function_of_keypoints_and_matches.html" title="Drawing Function of Keypoints and Matches"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="common_interfaces_of_descriptor_matchers.html" title="Common Interfaces of Descriptor Matchers"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="features2d.html" accesskey="U">features2d. 2D Features Framework</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="common-interfaces-of-generic-descriptor-matchers">
+<h1>Common Interfaces of Generic Descriptor Matchers<a class="headerlink" href="#common-interfaces-of-generic-descriptor-matchers" title="Permalink to this headline">¶</a></h1>
+<p>Matchers of keypoint descriptors in OpenCV have wrappers with a common interface that enables you to easily switch
+between different algorithms solving the same problem. This section is devoted to matching descriptors
+that cannot be represented as vectors in a multidimensional space. <code class="docutils literal"><span class="pre">GenericDescriptorMatcher</span></code> is a more generic interface for descriptors. It does not make any assumptions about descriptor representation.
+Every descriptor with the
+<a class="reference internal" href="common_interfaces_of_descriptor_extractors.html#DescriptorExtractor : public Algorithm" title="class DescriptorExtractor : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">DescriptorExtractor</span></code></a> interface has a wrapper with the <code class="docutils literal"><span class="pre">GenericDescriptorMatcher</span></code> interface (see
+<a class="reference internal" href="#VectorDescriptorMatcher : public GenericDescriptorMatcher" title="class VectorDescriptorMatcher : public GenericDescriptorMatcher"><code class="xref ocv ocv-class docutils literal"><span class="pre">VectorDescriptorMatcher</span></code></a> ).
+There are descriptors such as the One-way descriptor and Ferns that have the <code class="docutils literal"><span class="pre">GenericDescriptorMatcher</span></code> interface implemented but do not support <code class="docutils literal"><span class="pre">DescriptorExtractor</span></code>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>An example explaining keypoint description can be found at opencv_source_code/samples/cpp/descriptor_extractor_matcher.cpp</li>
+<li>An example on descriptor matching evaluation can be found at opencv_source_code/samples/cpp/detector_descriptor_matcher_evaluation.cpp</li>
+<li>An example on one to many image matching can be found at opencv_source_code/samples/cpp/matching_to_many_images.cpp</li>
+</ul>
+</div>
+<div class="section" id="genericdescriptormatcher">
+<h2>GenericDescriptorMatcher<a class="headerlink" href="#genericdescriptormatcher" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="GenericDescriptorMatcher">
+<em class="property">class </em><code class="descname">GenericDescriptorMatcher</code><a class="headerlink" href="#GenericDescriptorMatcher" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Abstract interface for extracting and matching a keypoint descriptor. There are also <a class="reference internal" href="common_interfaces_of_descriptor_extractors.html#DescriptorExtractor : public Algorithm" title="class DescriptorExtractor : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">DescriptorExtractor</span></code></a> and <a class="reference internal" href="common_interfaces_of_descriptor_matchers.html#DescriptorMatcher : public Algorithm" title="class DescriptorMatcher : public Algorithm"><code class="xref ocv ocv-class docutils literal"><span class="pre">DescriptorMatcher</span></code></a> for these purposes but their interfaces are intended for descriptors represented as vectors in a multidimensional space. <code class="docutils literal"><span class="pre">GenericDescriptorMatcher</span></code> is a more generic interface for descriptors. <code class="docutils literal"><span class="pre">DescriptorMatcher</span></code> and <code class="docutils literal"><span class="pre">GenericDescriptorMatcher</span></code> have two groups of match methods: for matching keypoints of an image with another image or with an image set.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">GenericDescriptorMatcher</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">GenericDescriptorMatcher</span><span class="p">();</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">GenericDescriptorMatcher</span><span class="p">();</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">add</span><span class="p">(</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;&amp;</span> <span class="n">images</span><span class="p">,</span>
+                      <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">keypoints</span> <span class="p">);</span>
+
+    <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;&amp;</span> <span class="n">getTrainImages</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">getTrainKeypoints</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">clear</span><span class="p">();</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">train</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">isMaskSupported</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="nf">classify</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">queryImage</span><span class="p">,</span>
+                   <span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">queryKeypoints</span><span class="p">,</span>
+                   <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainImage</span><span class="p">,</span>
+                   <span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">trainKeypoints</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="nf">classify</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">queryImage</span><span class="p">,</span>
+                   <span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">queryKeypoints</span> <span class="p">);</span>
+
+    <span class="cm">/*</span>
+<span class="cm">     * Group of methods to match keypoints from an image pair.</span>
+<span class="cm">     */</span>
+    <span class="kt">void</span> <span class="nf">match</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">queryImage</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">queryKeypoints</span><span class="p">,</span>
+                <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainImage</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">trainKeypoints</span><span class="p">,</span>
+                <span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">mask</span><span class="o">=</span><span class="n">Mat</span><span class="p">()</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="nf">knnMatch</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">queryImage</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">queryKeypoints</span><span class="p">,</span>
+                   <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainImage</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">trainKeypoints</span><span class="p">,</span>
+                   <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">,</span>
+                   <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">mask</span><span class="o">=</span><span class="n">Mat</span><span class="p">(),</span> <span class="kt">bool</span> <span class="n">compactResult</span><span class="o">=</span><span class="nb">false</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="nf">radiusMatch</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">queryImage</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">queryKeypoints</span><span class="p">,</span>
+                      <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainImage</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">trainKeypoints</span><span class="p">,</span>
+                      <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">float</span> <span class="n">maxDistance</span><span class="p">,</span>
+                      <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">mask</span><span class="o">=</span><span class="n">Mat</span><span class="p">(),</span> <span class="kt">bool</span> <span class="n">compactResult</span><span class="o">=</span><span class="nb">false</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="cm">/*</span>
+<span class="cm">     * Group of methods to match keypoints from one image to an image set.</span>
+<span class="cm">     */</span>
+    <span class="kt">void</span> <span class="nf">match</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">queryImage</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">queryKeypoints</span><span class="p">,</span>
+                <span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;&amp;</span> <span class="n">masks</span><span class="o">=</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;</span><span class="p">()</span> <span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">knnMatch</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">queryImage</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">queryKeypoints</span><span class="p">,</span>
+                   <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">,</span>
+                   <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;&amp;</span> <span class="n">masks</span><span class="o">=</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;</span><span class="p">(),</span> <span class="kt">bool</span> <span class="n">compactResult</span><span class="o">=</span><span class="nb">false</span> <span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">radiusMatch</span><span class="p">(</span> <span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">queryImage</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;&amp;</span> <span class="n">queryKeypoints</span><span class="p">,</span>
+                      <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">matches</span><span class="p">,</span> <span class="kt">float</span> <span class="n">maxDistance</span><span class="p">,</span>
+                      <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;&amp;</span> <span class="n">masks</span><span class="o">=</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;</span><span class="p">(),</span> <span class="kt">bool</span> <span class="n">compactResult</span><span class="o">=</span><span class="nb">false</span> <span class="p">);</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">read</span><span class="p">(</span> <span class="k">const</span> <span class="n">FileNode</span><span class="o">&amp;</span> <span class="p">);</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">write</span><span class="p">(</span> <span class="n">FileStorage</span><span class="o">&amp;</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">GenericDescriptorMatcher</span><span class="o">&gt;</span> <span class="n">clone</span><span class="p">(</span> <span class="kt">bool</span> <span class="n">emptyTrainData</span><span class="o">=</span><span class="nb">false</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="k">protected</span><span class="o">:</span>
+    <span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="genericdescriptormatcher-add">
+<h2>GenericDescriptorMatcher::add<a class="headerlink" href="#genericdescriptormatcher-add" title="Permalink to this headline">¶</a></h2>
+<p>Adds images and their keypoints to the training collection stored in the class instance.</p>
+<dl class="function">
+<dt id="void GenericDescriptorMatcher::add(const vector&lt;Mat&gt;&amp; images, vector&lt;vector&lt;KeyPoint&gt; &gt;&amp; keypoints)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">GenericDescriptorMatcher::</code><code class="descname">add</code><span class="sig-paren">(</span>const vector&lt;Mat&gt;&amp; <strong>images</strong>, vector&lt;vector&lt;KeyPoint&gt;&gt;&amp; <strong>keypoints</strong><span class="sig-paren">)</span><a class="headerlink" href="#void GenericDescriptorMatcher::add(const vector<Mat>& images, vector<vector<KeyPoint> >& keypoints)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>images</strong> &#8211; Image collection.</li>
+<li><strong>keypoints</strong> &#8211; Point collection. It is assumed that <code class="docutils literal"><span class="pre">keypoints[i]</span></code>  are keypoints detected in the image  <code class="docutils literal"><span class="pre">images[i]</span></code> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="genericdescriptormatcher-gettrainimages">
+<h2>GenericDescriptorMatcher::getTrainImages<a class="headerlink" href="#genericdescriptormatcher-gettrainimages" title="Permalink to this headline">¶</a></h2>
+<p>Returns a train image collection.</p>
+<dl class="function">
+<dt id="const vector&lt;Mat&gt;&amp; GenericDescriptorMatcher::getTrainImages() const">
+<strong>C++:</strong><code class="descname"> </code>const vector&lt;Mat&gt;&amp; <code class="descclassname">GenericDescriptorMatcher::</code><code class="descname">getTrainImages</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#const vector<Mat>& GenericDescriptorMatcher::getTrainImages() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="genericdescriptormatcher-gettrainkeypoints">
+<h2>GenericDescriptorMatcher::getTrainKeypoints<a class="headerlink" href="#genericdescriptormatcher-gettrainkeypoints" title="Permalink to this headline">¶</a></h2>
+<p>Returns a train keypoints collection.</p>
+<dl class="function">
+<dt id="const vector&lt;vector&lt;KeyPoint&gt; &gt;&amp; GenericDescriptorMatcher::getTrainKeypoints() const">
+<strong>C++:</strong><code class="descname"> </code>const vector&lt;vector&lt;KeyPoint&gt;&gt;&amp; <code class="descclassname">GenericDescriptorMatcher::</code><code class="descname">getTrainKeypoints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#const vector<vector<KeyPoint> >& GenericDescriptorMatcher::getTrainKeypoints() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="genericdescriptormatcher-clear">
+<h2>GenericDescriptorMatcher::clear<a class="headerlink" href="#genericdescriptormatcher-clear" title="Permalink to this headline">¶</a></h2>
+<p>Clears a train collection (images and keypoints).</p>
+<dl class="function">
+<dt id="void GenericDescriptorMatcher::clear()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">GenericDescriptorMatcher::</code><code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void GenericDescriptorMatcher::clear()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="genericdescriptormatcher-train">
+<h2>GenericDescriptorMatcher::train<a class="headerlink" href="#genericdescriptormatcher-train" title="Permalink to this headline">¶</a></h2>
+<p>Trains descriptor matcher</p>
+<dl class="function">
+<dt id="void GenericDescriptorMatcher::train()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">GenericDescriptorMatcher::</code><code class="descname">train</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void GenericDescriptorMatcher::train()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Prepares descriptor matcher, for example, creates a tree-based structure, to extract descriptors or to optimize descriptors matching.</p>
+</div>
+<div class="section" id="genericdescriptormatcher-ismasksupported">
+<h2>GenericDescriptorMatcher::isMaskSupported<a class="headerlink" href="#genericdescriptormatcher-ismasksupported" title="Permalink to this headline">¶</a></h2>
+<p>Returns <code class="docutils literal"><span class="pre">true</span></code> if a generic descriptor matcher supports masking permissible matches.</p>
+<dl class="function">
+<dt id="bool GenericDescriptorMatcher::isMaskSupported()">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">GenericDescriptorMatcher::</code><code class="descname">isMaskSupported</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bool GenericDescriptorMatcher::isMaskSupported()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="genericdescriptormatcher-classify">
+<h2>GenericDescriptorMatcher::classify<a class="headerlink" href="#genericdescriptormatcher-classify" title="Permalink to this headline">¶</a></h2>
+<p>Classifies keypoints from a query set.</p>
+<dl class="function">
+<dt id="void GenericDescriptorMatcher::classify(const Mat&amp; queryImage, vector&lt;KeyPoint&gt;&amp; queryKeypoints, const Mat&amp; trainImage, vector&lt;KeyPoint&gt;&amp; trainKeypoints) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">GenericDescriptorMatcher::</code><code class="descname">classify</code><span class="sig-paren">(</span>const Mat&amp; <strong>queryImage</strong>, vector&lt;KeyPoint&gt;&amp; <strong>queryKeypoints</strong>, const Mat&amp; <strong>trainImage</strong>, vector&lt;KeyPoint&gt;&amp; <strong>trainKeypoints</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void GenericDescriptorMatcher::classify(const Mat& queryImage, vector<KeyPoint>& queryKeypoints, const Mat& trainImage, vector<KeyPoint>& trainKeypoints) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void GenericDescriptorMatcher::classify(const Mat&amp; queryImage, vector&lt;KeyPoint&gt;&amp; queryKeypoints)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">GenericDescriptorMatcher::</code><code class="descname">classify</code><span class="sig-paren">(</span>const Mat&amp; <strong>queryImage</strong>, vector&lt;KeyPoint&gt;&amp; <strong>queryKeypoints</strong><span class="sig-paren">)</span><a class="headerlink" href="#void GenericDescriptorMatcher::classify(const Mat& queryImage, vector<KeyPoint>& queryKeypoints)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>queryImage</strong> &#8211; Query image.</li>
+<li><strong>queryKeypoints</strong> &#8211; Keypoints from a query image.</li>
+<li><strong>trainImage</strong> &#8211; Train image.</li>
+<li><strong>trainKeypoints</strong> &#8211; Keypoints from a train image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method classifies each keypoint from a query set. The first variant of the method takes a train image and its keypoints as an input argument. The second variant uses the internally stored training collection that can be built using the <code class="docutils literal"><span class="pre">GenericDescriptorMatcher::add</span></code> method.</p>
+<p>The methods do the following:</p>
+<ol class="arabic simple">
+<li>Call the <code class="docutils literal"><span class="pre">GenericDescriptorMatcher::match</span></code> method to find correspondence between the query set and the training set.</li>
+<li>Set the <code class="docutils literal"><span class="pre">class_id</span></code> field of each keypoint from the query set to <code class="docutils literal"><span class="pre">class_id</span></code> of the corresponding keypoint from the training set.</li>
+</ol>
+</div>
+<div class="section" id="genericdescriptormatcher-match">
+<h2>GenericDescriptorMatcher::match<a class="headerlink" href="#genericdescriptormatcher-match" title="Permalink to this headline">¶</a></h2>
+<p>Finds the best match in the training set for each keypoint from the query set.</p>
+<dl class="function">
+<dt id="void GenericDescriptorMatcher::match(const Mat&amp; queryImage, vector&lt;KeyPoint&gt;&amp; queryKeypoints, const Mat&amp; trainImage, vector&lt;KeyPoint&gt;&amp; trainKeypoints, vector&lt;DMatch&gt;&amp; matches, const Mat&amp; mask) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">GenericDescriptorMatcher::</code><code class="descname">match</code><span class="sig-paren">(</span>const Mat&amp; <strong>queryImage</strong>, vector&lt;KeyPoint&gt;&amp; <strong>queryKeypoints</strong>, const Mat&amp; <strong>trainImage</strong>, vector&lt;KeyPoint&gt;&amp; <strong>trainKeypoints</strong>, vector&lt;DMatch&gt;&amp; <strong>matches</strong>, const Mat&amp; <strong>mask</strong>=Mat() <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void GenericDescriptorMatcher::match(const Mat& queryImage, vector<KeyPoint>& queryKeypoints, const Mat& trainImage, vector<KeyPoint>& trainKeypoints, vector<DMatch>& matches, const Mat& mask) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void GenericDescriptorMatcher::match(const Mat&amp; queryImage, vector&lt;KeyPoint&gt;&amp; queryKeypoints, vector&lt;DMatch&gt;&amp; matches, const vector&lt;Mat&gt;&amp; masks)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">GenericDescriptorMatcher::</code><code class="descname">match</code><span class="sig-paren">(</span>const Mat&amp; <strong>queryImage</strong>, vector&lt;KeyPoint&gt;&amp; <strong>queryKeypoints</strong>, vector&lt;DMatch&gt;&amp; <strong>matches</strong>, const vector&lt;Mat&gt;&amp; <strong>masks</strong>=vector&lt;Mat&gt;() <span class="sig-paren">)</span><a class="headerlink" href="#void GenericDescriptorMatcher::match(const Mat& queryImage, vector<KeyPoint>& queryKeypoints, vector<DMatch>& matches, const vector<Mat>& masks)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>queryImage</strong> &#8211; Query image.</li>
+<li><strong>queryKeypoints</strong> &#8211; Keypoints detected in  <code class="docutils literal"><span class="pre">queryImage</span></code> .</li>
+<li><strong>trainImage</strong> &#8211; Train image. It is not added to a train image collection  stored in the class object.</li>
+<li><strong>trainKeypoints</strong> &#8211; Keypoints detected in  <code class="docutils literal"><span class="pre">trainImage</span></code> . They are not added to a train points collection stored in the class object.</li>
+<li><strong>matches</strong> &#8211; Matches. If a query descriptor (keypoint) is masked out in  <code class="docutils literal"><span class="pre">mask</span></code> ,  match is added for this descriptor. So,  <code class="docutils literal"><span class="pre">matches</span></code>  size may be smaller than the query keypoints count.</li>
+<li><strong>mask</strong> &#8211; Mask specifying permissible matches between an input query and train keypoints.</li>
+<li><strong>masks</strong> &#8211; Set of masks. Each  <code class="docutils literal"><span class="pre">masks[i]</span></code>  specifies permissible matches between input query keypoints and stored train keypoints from the i-th image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The methods find the best match for each query keypoint. In the first variant of the method, a train image and its keypoints are the input arguments. In the second variant, query keypoints are matched to the internally stored training collection that can be built using the <code class="docutils literal"><span class="pre">GenericDescriptorMatcher::add</span></code> method.     Optional mask (or masks) can be passed to specify which query and training descriptors can be matched. Namely, <code class="docutils literal"><span class="pre">queryKeypoints[i]</span></code> can be matched with <code class="docutils literal"><span class="pre">trainKeypoints[j]</span></code> only if <code class="docutils literal"><span class="pre">mask.at&lt;uchar&gt;(i,j)</span></code> is non-zero.</p>
+</div>
+<div class="section" id="genericdescriptormatcher-knnmatch">
+<h2>GenericDescriptorMatcher::knnMatch<a class="headerlink" href="#genericdescriptormatcher-knnmatch" title="Permalink to this headline">¶</a></h2>
+<p>Finds the <code class="docutils literal"><span class="pre">k</span></code> best matches for each query keypoint.</p>
+<dl class="function">
+<dt id="void GenericDescriptorMatcher::knnMatch(const Mat&amp; queryImage, vector&lt;KeyPoint&gt;&amp; queryKeypoints, const Mat&amp; trainImage, vector&lt;KeyPoint&gt;&amp; trainKeypoints, vector&lt;vector&lt;DMatch&gt; &gt;&amp; matches, int k, const Mat&amp; mask, bool compactResult) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">GenericDescriptorMatcher::</code><code class="descname">knnMatch</code><span class="sig-paren">(</span>const Mat&amp; <strong>queryImage</strong>, vector&lt;KeyPoint&gt;&amp; <strong>queryKeypoints</strong>, const Mat&amp; <strong>trainImage</strong>, vector&lt;KeyPoint&gt;&amp; <strong>trainKeypoints</strong>, vector&lt;vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, int <strong>k</strong>, const Mat&amp; <strong>mask</strong>=Mat(), bool <strong>compactResult</strong>=false <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void GenericDescriptorMatcher::knnMatch(const Mat& queryImage, vector<KeyPoint>& queryKeypoints, const Mat& trainImage, vector<KeyPoint>& trainKeypoints, vector<vector<DMatch> >& matches, int k, const Mat& mask, bool compactResult) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void GenericDescriptorMatcher::knnMatch(const Mat&amp; queryImage, vector&lt;KeyPoint&gt;&amp; queryKeypoints, vector&lt;vector&lt;DMatch&gt; &gt;&amp; matches, int k, const vector&lt;Mat&gt;&amp; masks, bool compactResult)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">GenericDescriptorMatcher::</code><code class="descname">knnMatch</code><span class="sig-paren">(</span>const Mat&amp; <strong>queryImage</strong>, vector&lt;KeyPoint&gt;&amp; <strong>queryKeypoints</strong>, vector&lt;vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, int <strong>k</strong>, const vector&lt;Mat&gt;&amp; <strong>masks</strong>=vector&lt;Mat&gt;(), bool <strong>compactResult</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#void GenericDescriptorMatcher::knnMatch(const Mat& queryImage, vector<KeyPoint>& queryKeypoints, vector<vector<DMatch> >& matches, int k, const vector<Mat>& masks, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The methods are extended variants of <code class="docutils literal"><span class="pre">GenericDescriptorMatch::match</span></code>. The parameters are similar, and the semantics is similar to <code class="docutils literal"><span class="pre">DescriptorMatcher::knnMatch</span></code>. But this class does not require explicitly computed keypoint descriptors.</p>
+</div>
+<div class="section" id="genericdescriptormatcher-radiusmatch">
+<h2>GenericDescriptorMatcher::radiusMatch<a class="headerlink" href="#genericdescriptormatcher-radiusmatch" title="Permalink to this headline">¶</a></h2>
+<p>For each query keypoint, finds the training keypoints not farther than the specified distance.</p>
+<dl class="function">
+<dt id="void GenericDescriptorMatcher::radiusMatch(const Mat&amp; queryImage, vector&lt;KeyPoint&gt;&amp; queryKeypoints, const Mat&amp; trainImage, vector&lt;KeyPoint&gt;&amp; trainKeypoints, vector&lt;vector&lt;DMatch&gt; &gt;&amp; matches, float maxDistance, const Mat&amp; mask, bool compactResult) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">GenericDescriptorMatcher::</code><code class="descname">radiusMatch</code><span class="sig-paren">(</span>const Mat&amp; <strong>queryImage</strong>, vector&lt;KeyPoint&gt;&amp; <strong>queryKeypoints</strong>, const Mat&amp; <strong>trainImage</strong>, vector&lt;KeyPoint&gt;&amp; <strong>trainKeypoints</strong>, vector&lt;vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, float <strong>maxDistance</strong>, const Mat&amp; <strong>mask</strong>=Mat(), bool <strong>compactResult</strong>=false <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void GenericDescriptorMatcher::radiusMatch(const Mat& queryImage, vector<KeyPoint>& queryKeypoints, const Mat& trainImage, vector<KeyPoint>& trainKeypoints, vector<vector<DMatch> >& matches, float maxDistance, const Mat& mask, bool compactResult) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void GenericDescriptorMatcher::radiusMatch(const Mat&amp; queryImage, vector&lt;KeyPoint&gt;&amp; queryKeypoints, vector&lt;vector&lt;DMatch&gt; &gt;&amp; matches, float maxDistance, const vector&lt;Mat&gt;&amp; masks, bool compactResult)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">GenericDescriptorMatcher::</code><code class="descname">radiusMatch</code><span class="sig-paren">(</span>const Mat&amp; <strong>queryImage</strong>, vector&lt;KeyPoint&gt;&amp; <strong>queryKeypoints</strong>, vector&lt;vector&lt;DMatch&gt;&gt;&amp; <strong>matches</strong>, float <strong>maxDistance</strong>, const vector&lt;Mat&gt;&amp; <strong>masks</strong>=vector&lt;Mat&gt;(), bool <strong>compactResult</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#void GenericDescriptorMatcher::radiusMatch(const Mat& queryImage, vector<KeyPoint>& queryKeypoints, vector<vector<DMatch> >& matches, float maxDistance, const vector<Mat>& masks, bool compactResult)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The methods are similar to <code class="docutils literal"><span class="pre">DescriptorMatcher::radius</span></code>. But this class does not require explicitly computed keypoint descriptors.</p>
+</div>
+<div class="section" id="genericdescriptormatcher-read">
+<h2>GenericDescriptorMatcher::read<a class="headerlink" href="#genericdescriptormatcher-read" title="Permalink to this headline">¶</a></h2>
+<p>Reads a matcher object from a file node.</p>
+<dl class="function">
+<dt id="void GenericDescriptorMatcher::read(const FileNode&amp; fn)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">GenericDescriptorMatcher::</code><code class="descname">read</code><span class="sig-paren">(</span>const FileNode&amp; <strong>fn</strong><span class="sig-paren">)</span><a class="headerlink" href="#void GenericDescriptorMatcher::read(const FileNode& fn)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="genericdescriptormatcher-write">
+<h2>GenericDescriptorMatcher::write<a class="headerlink" href="#genericdescriptormatcher-write" title="Permalink to this headline">¶</a></h2>
+<p>Writes a match object to a file storage.</p>
+<dl class="function">
+<dt id="void GenericDescriptorMatcher::write(FileStorage&amp; fs) const">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">GenericDescriptorMatcher::</code><code class="descname">write</code><span class="sig-paren">(</span>FileStorage&amp; <strong>fs</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#void GenericDescriptorMatcher::write(FileStorage& fs) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="genericdescriptormatcher-clone">
+<h2>GenericDescriptorMatcher::clone<a class="headerlink" href="#genericdescriptormatcher-clone" title="Permalink to this headline">¶</a></h2>
+<p>Clones the matcher.</p>
+<dl class="function">
+<dt id="Ptr&lt;GenericDescriptorMatcher&gt; GenericDescriptorMatcher::clone(bool emptyTrainData) const">
+<strong>C++:</strong><code class="descname"> </code>Ptr&lt;GenericDescriptorMatcher&gt; <code class="descclassname">GenericDescriptorMatcher::</code><code class="descname">clone</code><span class="sig-paren">(</span>bool <strong>emptyTrainData</strong>=false <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#Ptr<GenericDescriptorMatcher> GenericDescriptorMatcher::clone(bool emptyTrainData) const" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>emptyTrainData</strong> &#8211; If <code class="docutils literal"><span class="pre">emptyTrainData</span></code> is false, the method creates a deep copy of the object, that is, copies
+both parameters and train data. If <code class="docutils literal"><span class="pre">emptyTrainData</span></code> is true, the method creates an object copy with the current parameters
+but with empty train data.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="vectordescriptormatcher">
+<h2>VectorDescriptorMatcher<a class="headerlink" href="#vectordescriptormatcher" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="VectorDescriptorMatcher : public GenericDescriptorMatcher">
+<em class="property">class </em><code class="descname">VectorDescriptorMatcher</code> : <em class="property">public</em> <code class="descname">GenericDescriptorMatcher</code><a class="headerlink" href="#VectorDescriptorMatcher : public GenericDescriptorMatcher" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class used for matching descriptors that can be described as vectors in a finite-dimensional space.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">VectorDescriptorMatcher</span> <span class="p">:</span> <span class="k">public</span> <span class="n">GenericDescriptorMatcher</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">VectorDescriptorMatcher</span><span class="p">(</span> <span class="k">const</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">DescriptorExtractor</span><span class="o">&gt;&amp;</span> <span class="n">extractor</span><span class="p">,</span> <span class="k">const</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">DescriptorMatcher</span><span class="o">&gt;&amp;</span> <span class="n">matcher</span> <span class="p">);</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">VectorDescriptorMatcher</span><span class="p">();</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">add</span><span class="p">(</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;&amp;</span> <span class="n">imgCollection</span><span class="p">,</span>
+                      <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">pointCollection</span> <span class="p">);</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">clear</span><span class="p">();</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">train</span><span class="p">();</span>
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">isMaskSupported</span><span class="p">();</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">read</span><span class="p">(</span> <span class="k">const</span> <span class="n">FileNode</span><span class="o">&amp;</span> <span class="n">fn</span> <span class="p">);</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">write</span><span class="p">(</span> <span class="n">FileStorage</span><span class="o">&amp;</span> <span class="n">fs</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">GenericDescriptorMatcher</span><span class="o">&gt;</span> <span class="n">clone</span><span class="p">(</span> <span class="kt">bool</span> <span class="n">emptyTrainData</span><span class="o">=</span><span class="nb">false</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+<span class="k">protected</span><span class="o">:</span>
+    <span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">VectorDescriptorMatcher</span> <span class="nf">matcher</span><span class="p">(</span> <span class="k">new</span> <span class="n">SurfDescriptorExtractor</span><span class="p">,</span>
+                                 <span class="k">new</span> <span class="n">BruteForceMatcher</span><span class="o">&lt;</span><span class="n">L2</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Common Interfaces of Generic Descriptor Matchers</a><ul>
+<li><a class="reference internal" href="#genericdescriptormatcher">GenericDescriptorMatcher</a></li>
+<li><a class="reference internal" href="#genericdescriptormatcher-add">GenericDescriptorMatcher::add</a></li>
+<li><a class="reference internal" href="#genericdescriptormatcher-gettrainimages">GenericDescriptorMatcher::getTrainImages</a></li>
+<li><a class="reference internal" href="#genericdescriptormatcher-gettrainkeypoints">GenericDescriptorMatcher::getTrainKeypoints</a></li>
+<li><a class="reference internal" href="#genericdescriptormatcher-clear">GenericDescriptorMatcher::clear</a></li>
+<li><a class="reference internal" href="#genericdescriptormatcher-train">GenericDescriptorMatcher::train</a></li>
+<li><a class="reference internal" href="#genericdescriptormatcher-ismasksupported">GenericDescriptorMatcher::isMaskSupported</a></li>
+<li><a class="reference internal" href="#genericdescriptormatcher-classify">GenericDescriptorMatcher::classify</a></li>
+<li><a class="reference internal" href="#genericdescriptormatcher-match">GenericDescriptorMatcher::match</a></li>
+<li><a class="reference internal" href="#genericdescriptormatcher-knnmatch">GenericDescriptorMatcher::knnMatch</a></li>
+<li><a class="reference internal" href="#genericdescriptormatcher-radiusmatch">GenericDescriptorMatcher::radiusMatch</a></li>
+<li><a class="reference internal" href="#genericdescriptormatcher-read">GenericDescriptorMatcher::read</a></li>
+<li><a class="reference internal" href="#genericdescriptormatcher-write">GenericDescriptorMatcher::write</a></li>
+<li><a class="reference internal" href="#genericdescriptormatcher-clone">GenericDescriptorMatcher::clone</a></li>
+<li><a class="reference internal" href="#vectordescriptormatcher">VectorDescriptorMatcher</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="common_interfaces_of_descriptor_matchers.html"
+                        title="previous chapter">Common Interfaces of Descriptor Matchers</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="drawing_function_of_keypoints_and_matches.html"
+                        title="next chapter">Drawing Function of Keypoints and Matches</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/features2d/doc/common_interfaces_of_generic_descriptor_matchers.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="drawing_function_of_keypoints_and_matches.html" title="Drawing Function of Keypoints and Matches"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="common_interfaces_of_descriptor_matchers.html" title="Common Interfaces of Descriptor Matchers"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="features2d.html" >features2d. 2D Features Framework</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

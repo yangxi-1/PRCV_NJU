@@ -1,0 +1,1424 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>XML/YAML Persistence (C API) &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="core. The Core Functionality" href="core.html" />
+    <link rel="next" title="Clustering" href="clustering.html" />
+    <link rel="prev" title="XML/YAML Persistence" href="xml_yaml_persistence.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="clustering.html" title="Clustering"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="xml_yaml_persistence.html" title="XML/YAML Persistence"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="core.html" accesskey="U">core. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="xml-yaml-persistence-c-api">
+<h1>XML/YAML Persistence (C API)<a class="headerlink" href="#xml-yaml-persistence-c-api" title="Permalink to this headline">¶</a></h1>
+<p>The section describes the OpenCV 1.x API for reading and writing data structures to/from XML or YAML files. It is now recommended to use the new C++ interface for reading and writing data.</p>
+<div class="section" id="cvfilestorage">
+<h2>CvFileStorage<a class="headerlink" href="#cvfilestorage" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvFileStorage">
+<em class="property">struct </em><code class="descname">CvFileStorage</code><a class="headerlink" href="#CvFileStorage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The structure <code class="docutils literal"><span class="pre">CvFileStorage</span></code> is a &#8220;black box&#8221; representation of the file storage associated with a file on disk. Several functions that are described below take <code class="docutils literal"><span class="pre">CvFileStorage*</span></code> as inputs and allow the user to save or to load hierarchical collections that consist of scalar values, standard CXCore objects (such as matrices, sequences, graphs), and user-defined objects.</p>
+<p>OpenCV can read and write data in XML (<a class="reference external" href="http://www.w3c.org/XML">http://www.w3c.org/XML</a>) or YAML
+(<a class="reference external" href="http://www.yaml.org">http://www.yaml.org</a>) formats. Below is an example of 3x3 floating-point identity matrix <code class="docutils literal"><span class="pre">A</span></code>, stored in XML and YAML files using CXCore functions:</p>
+<p>XML:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="o">&lt;?</span><span class="n">xml</span> <span class="n">version</span><span class="o">=</span><span class="s">&quot;1.0&quot;</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">opencv_storage</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">A</span> <span class="n">type_id</span><span class="o">=</span><span class="s">&quot;opencv-matrix&quot;</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">rows</span><span class="o">&gt;</span><span class="mi">3</span><span class="o">&lt;/</span><span class="n">rows</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">cols</span><span class="o">&gt;</span><span class="mi">3</span><span class="o">&lt;/</span><span class="n">cols</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">dt</span><span class="o">&gt;</span><span class="n">f</span><span class="o">&lt;/</span><span class="n">dt</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">data</span><span class="o">&gt;</span><span class="mf">1.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">1.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">1.</span><span class="o">&lt;/</span><span class="n">data</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">A</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">opencv_storage</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>YAML:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="o">%</span><span class="nl">YAML</span><span class="p">:</span><span class="mf">1.0</span>
+<span class="nl">A</span><span class="p">:</span> <span class="o">!!</span><span class="n">opencv</span><span class="o">-</span><span class="n">matrix</span>
+  <span class="nl">rows</span><span class="p">:</span> <span class="mi">3</span>
+  <span class="nl">cols</span><span class="p">:</span> <span class="mi">3</span>
+  <span class="nl">dt</span><span class="p">:</span> <span class="n">f</span>
+  <span class="nl">data</span><span class="p">:</span> <span class="p">[</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>As it can be seen from the examples, XML uses nested tags to represent
+hierarchy, while YAML uses indentation for that purpose (similar
+to the Python programming language).</p>
+<p>The same functions can read and write data in both formats;
+the particular format is determined by the extension of the opened file, &#8221;.xml&#8221; for XML files and &#8221;.yml&#8221; or &#8221;.yaml&#8221; for YAML.</p>
+</div>
+<div class="section" id="cvfilenode">
+<h2>CvFileNode<a class="headerlink" href="#cvfilenode" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvFileNode">
+<em class="property">struct </em><code class="descname">CvFileNode</code><a class="headerlink" href="#CvFileNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>File storage node. When XML/YAML file is read, it is first parsed and stored in the memory as a hierarchical collection of nodes. Each node can be a &#8220;leaf&#8221;, that is, contain a single number or a string, or be a collection of other nodes. Collections are also referenced to as &#8220;structures&#8221; in the data writing functions. There can be named collections (mappings), where each element has a name and is accessed by a name, and ordered collections (sequences), where elements do not have names, but rather accessed by index.</p>
+<dl class="member">
+<dt id="int tag">
+int <code class="descname">tag</code><a class="headerlink" href="#int tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>type of the file node:</p>
+<blockquote>
+<div><ul class="simple">
+<li>CV_NODE_NONE - empty node</li>
+<li>CV_NODE_INT - an integer</li>
+<li>CV_NODE_REAL - a floating-point number</li>
+<li>CV_NODE_STR - text string</li>
+<li>CV_NODE_SEQ - a sequence</li>
+<li>CV_NODE_MAP - a mapping</li>
+</ul>
+</div></blockquote>
+<p>type of the node can be retrieved using <code class="docutils literal"><span class="pre">CV_NODE_TYPE(node-&gt;tag)</span></code> macro.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="CvTypeInfo* info">
+CvTypeInfo* <code class="descname">info</code><a class="headerlink" href="#CvTypeInfo* info" title="Permalink to this definition">¶</a></dt>
+<dd><p>optional pointer to the user type information. If you look at the matrix representation in XML and YAML, shown above, you may notice <code class="docutils literal"><span class="pre">type_id=&quot;opencv-matrix&quot;</span></code> or <code class="docutils literal"><span class="pre">!!opencv-matrix</span></code> strings. They are used to specify that the certain element of a file is a representation of a data structure of certain type  (&#8220;opencv-matrix&#8221; corresponds to <a class="reference internal" href="old_basic_structures.html#CvMat" title="struct CvMat"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvMat</span></code></a>). When a file is parsed, such type identifiers are passed to <a class="reference internal" href="#CvTypeInfo* cvFindType(const char* type_name)" title="CvTypeInfo* cvFindType(const char* type_name)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">FindType()</span></code></a> to find type information and the pointer to it is stored in the file node. See <a class="reference internal" href="#CvTypeInfo" title="struct CvTypeInfo"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvTypeInfo</span></code></a> for more details.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="union data">
+union <code class="descname">data</code><a class="headerlink" href="#union data" title="Permalink to this definition">¶</a></dt>
+<dd><p>the node data, declared as:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">union</span>
+<span class="p">{</span>
+    <span class="kt">double</span> <span class="n">f</span><span class="p">;</span> <span class="cm">/* scalar floating-point number */</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>    <span class="cm">/* scalar integer number */</span>
+    <span class="n">CvString</span> <span class="n">str</span><span class="p">;</span> <span class="cm">/* text string */</span>
+    <span class="n">CvSeq</span><span class="o">*</span> <span class="n">seq</span><span class="p">;</span> <span class="cm">/* sequence (ordered collection of file nodes) */</span>
+    <span class="k">struct</span> <span class="n">CvMap</span><span class="o">*</span> <span class="n">map</span><span class="p">;</span> <span class="cm">/* map (collection of named file nodes) */</span>
+<span class="p">}</span> <span class="n">data</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Primitive nodes are read using <a class="reference internal" href="#int cvReadInt(const CvFileNode* node, int default_value)" title="int cvReadInt(const CvFileNode* node, int default_value)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">ReadInt()</span></code></a>, <a class="reference internal" href="#double cvReadReal(const CvFileNode* node, double default_value)" title="double cvReadReal(const CvFileNode* node, double default_value)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">ReadReal()</span></code></a> and <a class="reference internal" href="#const char* cvReadString(const CvFileNode* node, const char* default_value)" title="const char* cvReadString(const CvFileNode* node, const char* default_value)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">ReadString()</span></code></a>. Sequences are read by iterating through <code class="docutils literal"><span class="pre">node-&gt;data.seq</span></code> (see &#8220;Dynamic Data Structures&#8221; section). Mappings are read using <a class="reference internal" href="#CvFileNode* cvGetFileNodeByName(const CvFileStorage* fs, const CvFileNode* map, const char* name)" title="CvFileNode* cvGetFileNodeByName(const CvFileStorage* fs, const CvFileNode* map, const char* name)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GetFileNodeByName()</span></code></a>. Nodes with the specified type (so that <code class="docutils literal"><span class="pre">node-&gt;info</span> <span class="pre">!=</span> <span class="pre">NULL</span></code>) can be read using <a class="reference internal" href="#void* cvRead(CvFileStorage* fs, CvFileNode* node, CvAttrList* attributes)" title="void* cvRead(CvFileStorage* fs, CvFileNode* node, CvAttrList* attributes)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">Read()</span></code></a>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="cvattrlist">
+<h2>CvAttrList<a class="headerlink" href="#cvattrlist" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvAttrList">
+<em class="property">struct </em><code class="descname">CvAttrList</code><a class="headerlink" href="#CvAttrList" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>List of attributes.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">typedef</span> <span class="k">struct</span> <span class="n">CvAttrList</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">char</span><span class="o">**</span> <span class="n">attr</span><span class="p">;</span> <span class="cm">/* NULL-terminated array of (attribute_name,attribute_value) pairs */</span>
+    <span class="k">struct</span> <span class="n">CvAttrList</span><span class="o">*</span> <span class="n">next</span><span class="p">;</span> <span class="cm">/* pointer to next chunk of the attributes list */</span>
+<span class="p">}</span>
+<span class="n">CvAttrList</span><span class="p">;</span>
+
+<span class="cm">/* initializes CvAttrList structure */</span>
+<span class="kr">inline</span> <span class="n">CvAttrList</span> <span class="nf">cvAttrList</span><span class="p">(</span> <span class="k">const</span> <span class="kt">char</span><span class="o">**</span> <span class="n">attr</span><span class="o">=</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">CvAttrList</span><span class="o">*</span> <span class="n">next</span><span class="o">=</span><span class="nb">NULL</span> <span class="p">);</span>
+
+<span class="cm">/* returns attribute value or 0 (NULL) if there is no such attribute */</span>
+<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="nf">cvAttrValue</span><span class="p">(</span> <span class="k">const</span> <span class="n">CvAttrList</span><span class="o">*</span> <span class="n">attr</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">attr_name</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>In the current implementation, attributes are used to pass extra parameters when writing user objects (see
+<a class="reference internal" href="#void cvWrite(CvFileStorage* fs, const char* name, const void* ptr, CvAttrList attributes)" title="void cvWrite(CvFileStorage* fs, const char* name, const void* ptr, CvAttrList attributes)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">Write()</span></code></a>). XML attributes inside tags are not supported, aside from the object type specification (<code class="docutils literal"><span class="pre">type_id</span></code> attribute).</p>
+</div>
+<div class="section" id="cvtypeinfo">
+<h2>CvTypeInfo<a class="headerlink" href="#cvtypeinfo" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvTypeInfo">
+<em class="property">struct </em><code class="descname">CvTypeInfo</code><a class="headerlink" href="#CvTypeInfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Type information.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">typedef</span> <span class="nf">int</span> <span class="p">(</span><span class="n">CV_CDECL</span> <span class="o">*</span><span class="n">CvIsInstanceFunc</span><span class="p">)(</span> <span class="k">const</span> <span class="kt">void</span><span class="o">*</span> <span class="n">structPtr</span> <span class="p">);</span>
+<span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="n">CV_CDECL</span> <span class="o">*</span><span class="n">CvReleaseFunc</span><span class="p">)(</span> <span class="kt">void</span><span class="o">**</span> <span class="n">structDblPtr</span> <span class="p">);</span>
+<span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="p">(</span><span class="n">CV_CDECL</span> <span class="o">*</span><span class="n">CvReadFunc</span><span class="p">)(</span> <span class="n">CvFileStorage</span><span class="o">*</span> <span class="n">storage</span><span class="p">,</span> <span class="n">CvFileNode</span><span class="o">*</span> <span class="n">node</span> <span class="p">);</span>
+<span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="n">CV_CDECL</span> <span class="o">*</span><span class="n">CvWriteFunc</span><span class="p">)(</span> <span class="n">CvFileStorage</span><span class="o">*</span> <span class="n">storage</span><span class="p">,</span>
+                                      <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name</span><span class="p">,</span>
+                                      <span class="k">const</span> <span class="kt">void</span><span class="o">*</span> <span class="n">structPtr</span><span class="p">,</span>
+                                      <span class="n">CvAttrList</span> <span class="n">attributes</span> <span class="p">);</span>
+<span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="p">(</span><span class="n">CV_CDECL</span> <span class="o">*</span><span class="n">CvCloneFunc</span><span class="p">)(</span> <span class="k">const</span> <span class="kt">void</span><span class="o">*</span> <span class="n">structPtr</span> <span class="p">);</span>
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">CvTypeInfo</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">flags</span><span class="p">;</span> <span class="cm">/* not used */</span>
+    <span class="kt">int</span> <span class="n">header_size</span><span class="p">;</span> <span class="cm">/* sizeof(CvTypeInfo) */</span>
+    <span class="k">struct</span> <span class="n">CvTypeInfo</span><span class="o">*</span> <span class="n">prev</span><span class="p">;</span> <span class="cm">/* previous registered type in the list */</span>
+    <span class="k">struct</span> <span class="n">CvTypeInfo</span><span class="o">*</span> <span class="n">next</span><span class="p">;</span> <span class="cm">/* next registered type in the list */</span>
+    <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">type_name</span><span class="p">;</span> <span class="cm">/* type name, written to file storage */</span>
+
+    <span class="cm">/* methods */</span>
+    <span class="n">CvIsInstanceFunc</span> <span class="n">is_instance</span><span class="p">;</span> <span class="cm">/* checks if the passed object belongs to the type */</span>
+    <span class="n">CvReleaseFunc</span> <span class="n">release</span><span class="p">;</span> <span class="cm">/* releases object (memory etc.) */</span>
+    <span class="n">CvReadFunc</span> <span class="n">read</span><span class="p">;</span> <span class="cm">/* reads object from file storage */</span>
+    <span class="n">CvWriteFunc</span> <span class="n">write</span><span class="p">;</span> <span class="cm">/* writes object to file storage */</span>
+    <span class="n">CvCloneFunc</span> <span class="n">clone</span><span class="p">;</span> <span class="cm">/* creates a copy of the object */</span>
+<span class="p">}</span>
+<span class="n">CvTypeInfo</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The structure contains information about one of the standard or user-defined types. Instances of the type may or may not contain a pointer to the corresponding  <a class="reference internal" href="#CvTypeInfo" title="struct CvTypeInfo"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvTypeInfo</span></code></a> structure. In any case, there is a way to find the type info structure for a given object using the  <a class="reference internal" href="#CvTypeInfo* cvTypeOf(const void* struct_ptr)" title="CvTypeInfo* cvTypeOf(const void* struct_ptr)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">TypeOf()</span></code></a> function. Alternatively, type info can be found by type name using <a class="reference internal" href="#CvTypeInfo* cvFindType(const char* type_name)" title="CvTypeInfo* cvFindType(const char* type_name)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">FindType()</span></code></a>, which is used when an object is read from file storage. The user can register a new type with <a class="reference internal" href="#void cvRegisterType(const CvTypeInfo* info)" title="void cvRegisterType(const CvTypeInfo* info)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">RegisterType()</span></code></a>
+that adds the type information structure into the beginning of the type list. Thus, it is possible to create specialized types from generic standard types and override the basic methods.</p>
+</div>
+<div class="section" id="clone">
+<h2>Clone<a class="headerlink" href="#clone" title="Permalink to this headline">¶</a></h2>
+<p>Makes a clone of an object.</p>
+<dl class="cfunction">
+<dt id="void* cvClone(const void* struct_ptr)">
+<strong>C:</strong><code class="descname"> </code>void* <code class="descname">cvClone</code><span class="sig-paren">(</span>const void* <strong>struct_ptr</strong><span class="sig-paren">)</span><a class="headerlink" href="#void* cvClone(const void* struct_ptr)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>struct_ptr</strong> &#8211; The object to clone</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function finds the type of a given object and calls <code class="docutils literal"><span class="pre">clone</span></code> with the passed object. Of course, if you know the object type, for example, <code class="docutils literal"><span class="pre">struct_ptr</span></code> is <code class="docutils literal"><span class="pre">CvMat*</span></code>, it is faster to call the specific function, like <a class="reference internal" href="old_basic_structures.html#CvMat* cvCloneMat(const CvMat* mat)" title="CvMat* cvCloneMat(const CvMat* mat)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">CloneMat()</span></code></a>.</p>
+</div>
+<div class="section" id="endwritestruct">
+<h2>EndWriteStruct<a class="headerlink" href="#endwritestruct" title="Permalink to this headline">¶</a></h2>
+<p>Finishes writing to a file node collection.</p>
+<dl class="cfunction">
+<dt id="void cvEndWriteStruct(CvFileStorage* fs)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvEndWriteStruct</code><span class="sig-paren">(</span>CvFileStorage* <strong>fs</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvEndWriteStruct(CvFileStorage* fs)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#void cvStartWriteStruct(CvFileStorage* fs, const char* name, int struct_flags, const char* type_name, CvAttrList attributes)" title="void cvStartWriteStruct(CvFileStorage* fs, const char* name, int struct_flags, const char* type_name, CvAttrList attributes)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">StartWriteStruct()</span></code></a>.</p>
+</div>
+</div>
+<div class="section" id="findtype">
+<h2>FindType<a class="headerlink" href="#findtype" title="Permalink to this headline">¶</a></h2>
+<p>Finds a type by its name.</p>
+<dl class="cfunction">
+<dt id="CvTypeInfo* cvFindType(const char* type_name)">
+<strong>C:</strong><code class="descname"> </code>CvTypeInfo* <code class="descname">cvFindType</code><span class="sig-paren">(</span>const char* <strong>type_name</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvTypeInfo* cvFindType(const char* type_name)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>type_name</strong> &#8211; Type name</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function finds a registered type by its name. It returns NULL if there is no type with the specified name.</p>
+</div>
+<div class="section" id="firsttype">
+<h2>FirstType<a class="headerlink" href="#firsttype" title="Permalink to this headline">¶</a></h2>
+<p>Returns the beginning of a type list.</p>
+<dl class="cfunction">
+<dt id="CvTypeInfo* cvFirstType(void)">
+<strong>C:</strong><code class="descname"> </code>CvTypeInfo* <code class="descname">cvFirstType</code><span class="sig-paren">(</span>void <strong>None</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvTypeInfo* cvFirstType(void)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The function returns the first type in the list of registered types. Navigation through the list can be done via the <code class="docutils literal"><span class="pre">prev</span></code> and  <code class="docutils literal"><span class="pre">next</span></code> fields of the  <a class="reference internal" href="#CvTypeInfo" title="struct CvTypeInfo"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvTypeInfo</span></code></a> structure.</p>
+</div>
+<div class="section" id="getfilenode">
+<h2>GetFileNode<a class="headerlink" href="#getfilenode" title="Permalink to this headline">¶</a></h2>
+<p>Finds a node in a map or file storage.</p>
+<dl class="cfunction">
+<dt id="CvFileNode* cvGetFileNode(CvFileStorage* fs, CvFileNode* map, const CvStringHashNode* key, int create_missing)">
+<strong>C:</strong><code class="descname"> </code>CvFileNode* <code class="descname">cvGetFileNode</code><span class="sig-paren">(</span>CvFileStorage* <strong>fs</strong>, CvFileNode* <strong>map</strong>, const CvStringHashNode* <strong>key</strong>, int <strong>create_missing</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#CvFileNode* cvGetFileNode(CvFileStorage* fs, CvFileNode* map, const CvStringHashNode* key, int create_missing)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+<li><strong>map</strong> &#8211; The parent map. If it is NULL, the function searches a top-level node. If both  <code class="docutils literal"><span class="pre">map</span></code>  and  <code class="docutils literal"><span class="pre">key</span></code>  are NULLs, the function returns the root file node - a map that contains top-level nodes.</li>
+<li><strong>key</strong> &#8211; Unique pointer to the node name, retrieved with  <a class="reference internal" href="#CvStringHashNode* cvGetHashedKey(CvFileStorage* fs, const char* name, int len, int create_missing)" title="CvStringHashNode* cvGetHashedKey(CvFileStorage* fs, const char* name, int len, int create_missing)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GetHashedKey()</span></code></a></li>
+<li><strong>create_missing</strong> &#8211; Flag that specifies whether an absent node should be added to the map</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function finds a file node. It is a faster version of  <a class="reference internal" href="#CvFileNode* cvGetFileNodeByName(const CvFileStorage* fs, const CvFileNode* map, const char* name)" title="CvFileNode* cvGetFileNodeByName(const CvFileStorage* fs, const CvFileNode* map, const char* name)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GetFileNodeByName()</span></code></a>
+(see <a class="reference internal" href="#CvStringHashNode* cvGetHashedKey(CvFileStorage* fs, const char* name, int len, int create_missing)" title="CvStringHashNode* cvGetHashedKey(CvFileStorage* fs, const char* name, int len, int create_missing)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GetHashedKey()</span></code></a> discussion). Also, the function can insert a new node, if it is not in the map yet.</p>
+</div>
+<div class="section" id="getfilenodebyname">
+<h2>GetFileNodeByName<a class="headerlink" href="#getfilenodebyname" title="Permalink to this headline">¶</a></h2>
+<p>Finds a node in a map or file storage.</p>
+<dl class="cfunction">
+<dt id="CvFileNode* cvGetFileNodeByName(const CvFileStorage* fs, const CvFileNode* map, const char* name)">
+<strong>C:</strong><code class="descname"> </code>CvFileNode* <code class="descname">cvGetFileNodeByName</code><span class="sig-paren">(</span>const CvFileStorage* <strong>fs</strong>, const CvFileNode* <strong>map</strong>, const char* <strong>name</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvFileNode* cvGetFileNodeByName(const CvFileStorage* fs, const CvFileNode* map, const char* name)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+<li><strong>map</strong> &#8211; The parent map. If it is NULL, the function searches in all the top-level nodes (streams), starting with the first one.</li>
+<li><strong>name</strong> &#8211; The file node name</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function finds a file node by <code class="docutils literal"><span class="pre">name</span></code>. The node is searched either in <code class="docutils literal"><span class="pre">map</span></code> or, if the pointer is NULL, among the top-level file storage nodes. Using this function for maps and  <a class="reference internal" href="dynamic_structures.html#schar* cvGetSeqElem(const CvSeq* seq, int index)" title="schar* cvGetSeqElem(const CvSeq* seq, int index)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GetSeqElem()</span></code></a>
+(or sequence reader) for sequences, it is possible to navigate through the file storage. To speed up multiple queries for a certain key (e.g., in the case of an array of structures) one may use a combination of  <a class="reference internal" href="#CvStringHashNode* cvGetHashedKey(CvFileStorage* fs, const char* name, int len, int create_missing)" title="CvStringHashNode* cvGetHashedKey(CvFileStorage* fs, const char* name, int len, int create_missing)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GetHashedKey()</span></code></a> and <a class="reference internal" href="#CvFileNode* cvGetFileNode(CvFileStorage* fs, CvFileNode* map, const CvStringHashNode* key, int create_missing)" title="CvFileNode* cvGetFileNode(CvFileStorage* fs, CvFileNode* map, const CvStringHashNode* key, int create_missing)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GetFileNode()</span></code></a>.</p>
+</div>
+<div class="section" id="getfilenodename">
+<h2>GetFileNodeName<a class="headerlink" href="#getfilenodename" title="Permalink to this headline">¶</a></h2>
+<p>Returns the name of a file node.</p>
+<dl class="cfunction">
+<dt id="const char* cvGetFileNodeName(const CvFileNode* node)">
+<strong>C:</strong><code class="descname"> </code>const char* <code class="descname">cvGetFileNodeName</code><span class="sig-paren">(</span>const CvFileNode* <strong>node</strong><span class="sig-paren">)</span><a class="headerlink" href="#const char* cvGetFileNodeName(const CvFileNode* node)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>node</strong> &#8211; File node</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns the name of a file node or NULL, if the file node does not have a name or if  <code class="docutils literal"><span class="pre">node</span></code> is  <code class="docutils literal"><span class="pre">NULL</span></code>.</p>
+</div>
+<div class="section" id="gethashedkey">
+<h2>GetHashedKey<a class="headerlink" href="#gethashedkey" title="Permalink to this headline">¶</a></h2>
+<p>Returns a unique pointer for a given name.</p>
+<dl class="cfunction">
+<dt id="CvStringHashNode* cvGetHashedKey(CvFileStorage* fs, const char* name, int len, int create_missing)">
+<strong>C:</strong><code class="descname"> </code>CvStringHashNode* <code class="descname">cvGetHashedKey</code><span class="sig-paren">(</span>CvFileStorage* <strong>fs</strong>, const char* <strong>name</strong>, int <strong>len</strong>=-1, int <strong>create_missing</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#CvStringHashNode* cvGetHashedKey(CvFileStorage* fs, const char* name, int len, int create_missing)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+<li><strong>name</strong> &#8211; Literal node name</li>
+<li><strong>len</strong> &#8211; Length of the name (if it is known apriori), or -1 if it needs to be calculated</li>
+<li><strong>create_missing</strong> &#8211; Flag that specifies, whether an absent key should be added into the hash table</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns a unique pointer for each particular file node name. This pointer can be then passed to the <a class="reference internal" href="#CvFileNode* cvGetFileNode(CvFileStorage* fs, CvFileNode* map, const CvStringHashNode* key, int create_missing)" title="CvFileNode* cvGetFileNode(CvFileStorage* fs, CvFileNode* map, const CvStringHashNode* key, int create_missing)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GetFileNode()</span></code></a> function that is faster than  <a class="reference internal" href="#CvFileNode* cvGetFileNodeByName(const CvFileStorage* fs, const CvFileNode* map, const char* name)" title="CvFileNode* cvGetFileNodeByName(const CvFileStorage* fs, const CvFileNode* map, const char* name)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GetFileNodeByName()</span></code></a>
+because it compares text strings by comparing pointers rather than the strings&#8217; content.</p>
+<p>Consider the following example where an array of points is encoded as a sequence of 2-entry maps:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="nl">points</span><span class="p">:</span>
+  <span class="o">-</span> <span class="p">{</span> <span class="nl">x</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nl">y</span><span class="p">:</span> <span class="mi">10</span> <span class="p">}</span>
+  <span class="o">-</span> <span class="p">{</span> <span class="nl">x</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="nl">y</span><span class="p">:</span> <span class="mi">20</span> <span class="p">}</span>
+  <span class="o">-</span> <span class="p">{</span> <span class="nl">x</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="nl">y</span><span class="p">:</span> <span class="mi">30</span> <span class="p">}</span>
+  <span class="cp"># ...</span>
+</pre></div>
+</div>
+<p>Then, it is possible to get hashed &#8220;x&#8221; and &#8220;y&#8221; pointers to speed up decoding of the points.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;cxcore.h&quot;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">CvFileStorage</span><span class="o">*</span> <span class="n">fs</span> <span class="o">=</span> <span class="n">cvOpenFileStorage</span><span class="p">(</span> <span class="s">&quot;points.yml&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">CV_STORAGE_READ</span> <span class="p">);</span>
+    <span class="n">CvStringHashNode</span><span class="o">*</span> <span class="n">x_key</span> <span class="o">=</span> <span class="n">cvGetHashedNode</span><span class="p">(</span> <span class="n">fs</span><span class="p">,</span> <span class="s">&quot;x&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">CvStringHashNode</span><span class="o">*</span> <span class="n">y_key</span> <span class="o">=</span> <span class="n">cvGetHashedNode</span><span class="p">(</span> <span class="n">fs</span><span class="p">,</span> <span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">CvFileNode</span><span class="o">*</span> <span class="n">points</span> <span class="o">=</span> <span class="n">cvGetFileNodeByName</span><span class="p">(</span> <span class="n">fs</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&quot;points&quot;</span> <span class="p">);</span>
+
+    <span class="k">if</span><span class="p">(</span> <span class="n">CV_NODE_IS_SEQ</span><span class="p">(</span><span class="n">points</span><span class="o">-&gt;</span><span class="n">tag</span><span class="p">)</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">CvSeq</span><span class="o">*</span> <span class="n">seq</span> <span class="o">=</span> <span class="n">points</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">.</span><span class="n">seq</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">total</span> <span class="o">=</span> <span class="n">seq</span><span class="o">-&gt;</span><span class="n">total</span><span class="p">;</span>
+        <span class="n">CvSeqReader</span> <span class="n">reader</span><span class="p">;</span>
+        <span class="n">cvStartReadSeq</span><span class="p">(</span> <span class="n">seq</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">reader</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+        <span class="k">for</span><span class="p">(</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">total</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">CvFileNode</span><span class="o">*</span> <span class="n">pt</span> <span class="o">=</span> <span class="p">(</span><span class="n">CvFileNode</span><span class="o">*</span><span class="p">)</span><span class="n">reader</span><span class="p">.</span><span class="n">ptr</span><span class="p">;</span>
+<span class="cp">#if 1 </span><span class="cm">/* faster variant */</span><span class="cp"></span>
+            <span class="n">CvFileNode</span><span class="o">*</span> <span class="n">xnode</span> <span class="o">=</span> <span class="n">cvGetFileNode</span><span class="p">(</span> <span class="n">fs</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">x_key</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+            <span class="n">CvFileNode</span><span class="o">*</span> <span class="n">ynode</span> <span class="o">=</span> <span class="n">cvGetFileNode</span><span class="p">(</span> <span class="n">fs</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">y_key</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+            <span class="n">assert</span><span class="p">(</span> <span class="n">xnode</span> <span class="o">&amp;&amp;</span> <span class="n">CV_NODE_IS_INT</span><span class="p">(</span><span class="n">xnode</span><span class="o">-&gt;</span><span class="n">tag</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+                    <span class="n">ynode</span> <span class="o">&amp;&amp;</span> <span class="n">CV_NODE_IS_INT</span><span class="p">(</span><span class="n">ynode</span><span class="o">-&gt;</span><span class="n">tag</span><span class="p">));</span>
+            <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">xnode</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">.</span><span class="n">i</span><span class="p">;</span> <span class="c1">// or x = cvReadInt( xnode, 0 );</span>
+            <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">ynode</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">.</span><span class="n">i</span><span class="p">;</span> <span class="c1">// or y = cvReadInt( ynode, 0 );</span>
+<span class="cp">#elif 1 </span><span class="cm">/* slower variant; does not use x_key &amp; y_key */</span><span class="cp"></span>
+            <span class="n">CvFileNode</span><span class="o">*</span> <span class="n">xnode</span> <span class="o">=</span> <span class="n">cvGetFileNodeByName</span><span class="p">(</span> <span class="n">fs</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="s">&quot;x&quot;</span> <span class="p">);</span>
+            <span class="n">CvFileNode</span><span class="o">*</span> <span class="n">ynode</span> <span class="o">=</span> <span class="n">cvGetFileNodeByName</span><span class="p">(</span> <span class="n">fs</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="s">&quot;y&quot;</span> <span class="p">);</span>
+            <span class="n">assert</span><span class="p">(</span> <span class="n">xnode</span> <span class="o">&amp;&amp;</span> <span class="n">CV_NODE_IS_INT</span><span class="p">(</span><span class="n">xnode</span><span class="o">-&gt;</span><span class="n">tag</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+                    <span class="n">ynode</span> <span class="o">&amp;&amp;</span> <span class="n">CV_NODE_IS_INT</span><span class="p">(</span><span class="n">ynode</span><span class="o">-&gt;</span><span class="n">tag</span><span class="p">));</span>
+            <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">xnode</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">.</span><span class="n">i</span><span class="p">;</span> <span class="c1">// or x = cvReadInt( xnode, 0 );</span>
+            <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">ynode</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">.</span><span class="n">i</span><span class="p">;</span> <span class="c1">// or y = cvReadInt( ynode, 0 );</span>
+<span class="cp">#else </span><span class="cm">/* the slowest yet the easiest to use variant */</span><span class="cp"></span>
+            <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">cvReadIntByName</span><span class="p">(</span> <span class="n">fs</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="s">&quot;x&quot;</span><span class="p">,</span> <span class="mi">0</span> <span class="cm">/* default value */</span> <span class="p">);</span>
+            <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">cvReadIntByName</span><span class="p">(</span> <span class="n">fs</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="mi">0</span> <span class="cm">/* default value */</span> <span class="p">);</span>
+<span class="cp">#endif</span>
+            <span class="n">CV_NEXT_SEQ_ELEM</span><span class="p">(</span> <span class="n">seq</span><span class="o">-&gt;</span><span class="n">elem_size</span><span class="p">,</span> <span class="n">reader</span> <span class="p">);</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">cvReleaseFileStorage</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">fs</span> <span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Please note that whatever method of accessing a map you are using, it is
+still much slower than using plain sequences; for example, in the above
+example, it is more efficient to encode the points as pairs of integers
+in a single numeric sequence.</p>
+</div>
+<div class="section" id="getrootfilenode">
+<h2>GetRootFileNode<a class="headerlink" href="#getrootfilenode" title="Permalink to this headline">¶</a></h2>
+<p>Retrieves one of the top-level nodes of the file storage.</p>
+<dl class="cfunction">
+<dt id="CvFileNode* cvGetRootFileNode(const CvFileStorage* fs, int stream_index)">
+<strong>C:</strong><code class="descname"> </code>CvFileNode* <code class="descname">cvGetRootFileNode</code><span class="sig-paren">(</span>const CvFileStorage* <strong>fs</strong>, int <strong>stream_index</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#CvFileNode* cvGetRootFileNode(const CvFileStorage* fs, int stream_index)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+<li><strong>stream_index</strong> &#8211; Zero-based index of the stream. See  <a class="reference internal" href="#void cvStartNextStream(CvFileStorage* fs)" title="void cvStartNextStream(CvFileStorage* fs)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">StartNextStream()</span></code></a> . In most cases, there is only one stream in the file; however, there can be several.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns one of the top-level file nodes. The top-level nodes do not have a name, they correspond to the streams that are stored one after another in the file storage. If the index is out of range, the function returns a NULL pointer, so all the top-level nodes can be iterated by subsequent calls to the function with <code class="docutils literal"><span class="pre">stream_index=0,1,...</span></code>, until the NULL pointer is returned. This function
+can be used as a base for recursive traversal of the file storage.</p>
+</div>
+<div class="section" id="load">
+<h2>Load<a class="headerlink" href="#load" title="Permalink to this headline">¶</a></h2>
+<p>Loads an object from a file.</p>
+<dl class="cfunction">
+<dt id="void* cvLoad(const char* filename, CvMemStorage* memstorage, const char* name, const char** real_name)">
+<strong>C:</strong><code class="descname"> </code>void* <code class="descname">cvLoad</code><span class="sig-paren">(</span>const char* <strong>filename</strong>, CvMemStorage* <strong>memstorage</strong>=NULL, const char* <strong>name</strong>=NULL, const char** <strong>real_name</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#void* cvLoad(const char* filename, CvMemStorage* memstorage, const char* name, const char** real_name)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Load">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Load</code><span class="sig-paren">(</span>filename, storage=None, name=None<span class="sig-paren">)</span> &rarr; generic<a class="headerlink" href="#cv.Load" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; File name</li>
+<li><strong>memstorage</strong> &#8211; Memory storage for dynamic structures, such as  <a class="reference internal" href="dynamic_structures.html#CvSeq" title="struct CvSeq"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvSeq</span></code></a>  or  <a class="reference internal" href="dynamic_structures.html#CvGraph" title="struct CvGraph"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvGraph</span></code></a>  . It is not used for matrices or images.</li>
+<li><strong>name</strong> &#8211; Optional object name. If it is NULL, the first top-level object in the storage will be loaded.</li>
+<li><strong>real_name</strong> &#8211; Optional output parameter that will contain the name of the loaded object (useful if  <code class="docutils literal"><span class="pre">name=NULL</span></code> )</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function loads an object from a file. It basically reads the specified file, find the first top-level node and calls <a class="reference internal" href="#void* cvRead(CvFileStorage* fs, CvFileNode* node, CvAttrList* attributes)" title="void* cvRead(CvFileStorage* fs, CvFileNode* node, CvAttrList* attributes)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">Read()</span></code></a> for that node. If the file node does not have type information or the type information can not be found by the type name, the function returns NULL. After the object is loaded, the file storage is closed and all the temporary buffers are deleted. Thus, to load a dynamic structure, such as a sequence, contour, or graph, one should pass a valid memory storage destination to the function.</p>
+</div>
+<div class="section" id="openfilestorage">
+<h2>OpenFileStorage<a class="headerlink" href="#openfilestorage" title="Permalink to this headline">¶</a></h2>
+<p>Opens file storage for reading or writing data.</p>
+<dl class="cfunction">
+<dt id="CvFileStorage* cvOpenFileStorage(const char* filename, CvMemStorage* memstorage, int flags, const char* encoding)">
+<strong>C:</strong><code class="descname"> </code>CvFileStorage* <code class="descname">cvOpenFileStorage</code><span class="sig-paren">(</span>const char* <strong>filename</strong>, CvMemStorage* <strong>memstorage</strong>, int <strong>flags</strong>, const char* <strong>encoding</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#CvFileStorage* cvOpenFileStorage(const char* filename, CvMemStorage* memstorage, int flags, const char* encoding)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; Name of the file associated with the storage</li>
+<li><strong>memstorage</strong> &#8211; Memory storage used for temporary data and for
+storing dynamic structures, such as  <a class="reference internal" href="dynamic_structures.html#CvSeq" title="struct CvSeq"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvSeq</span></code></a>  or  <a class="reference internal" href="dynamic_structures.html#CvGraph" title="struct CvGraph"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvGraph</span></code></a> .
+If it is NULL, a temporary memory storage is created and used.</li>
+<li><strong>flags</strong> &#8211; <p>Can be one of the following:</p>
+<ul>
+<li><strong>CV_STORAGE_READ</strong> the storage is open for reading</li>
+<li><strong>CV_STORAGE_WRITE</strong> the storage is open for writing</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function opens file storage for reading or writing data. In the latter case, a new file is created or an existing file is rewritten. The type of the read or written file is determined by the filename extension:  <code class="docutils literal"><span class="pre">.xml</span></code> for  <code class="docutils literal"><span class="pre">XML</span></code> and  <code class="docutils literal"><span class="pre">.yml</span></code> or  <code class="docutils literal"><span class="pre">.yaml</span></code> for  <code class="docutils literal"><span class="pre">YAML</span></code>. The function returns a pointer to the <a class="reference internal" href="#CvFileStorage" title="struct CvFileStorage"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvFileStorage</span></code></a> structure. If the file cannot be opened then the function returns <code class="docutils literal"><span class="pre">NULL</span></code>.</p>
+</div>
+<div class="section" id="read">
+<h2>Read<a class="headerlink" href="#read" title="Permalink to this headline">¶</a></h2>
+<p>Decodes an object and returns a pointer to it.</p>
+<dl class="cfunction">
+<dt id="void* cvRead(CvFileStorage* fs, CvFileNode* node, CvAttrList* attributes)">
+<strong>C:</strong><code class="descname"> </code>void* <code class="descname">cvRead</code><span class="sig-paren">(</span>CvFileStorage* <strong>fs</strong>, CvFileNode* <strong>node</strong>, CvAttrList* <strong>attributes</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#void* cvRead(CvFileStorage* fs, CvFileNode* node, CvAttrList* attributes)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+<li><strong>node</strong> &#8211; The root object node</li>
+<li><strong>attributes</strong> &#8211; Unused parameter</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function decodes a user object (creates an object in a native representation from the file storage subtree) and returns it. The object to be decoded must be an instance of a registered type that supports the <code class="docutils literal"><span class="pre">read</span></code> method (see <a class="reference internal" href="#CvTypeInfo" title="struct CvTypeInfo"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvTypeInfo</span></code></a>). The type of the object is determined by the type name that is encoded in the file. If the object is a dynamic structure, it is created either in memory storage and passed to <a class="reference internal" href="#CvFileStorage* cvOpenFileStorage(const char* filename, CvMemStorage* memstorage, int flags, const char* encoding)" title="CvFileStorage* cvOpenFileStorage(const char* filename, CvMemStorage* memstorage, int flags, const char* encoding)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">OpenFileStorage()</span></code></a> or, if a NULL pointer was passed, in temporary
+memory storage, which is released when <a class="reference internal" href="#void cvReleaseFileStorage(CvFileStorage** fs)" title="void cvReleaseFileStorage(CvFileStorage** fs)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">ReleaseFileStorage()</span></code></a> is called. Otherwise, if the object is not a dynamic structure, it is created in a heap and should be released with a specialized function or by using the generic <a class="reference internal" href="#void cvRelease(void** struct_ptr)" title="void cvRelease(void** struct_ptr)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">Release()</span></code></a>.</p>
+</div>
+<div class="section" id="readbyname">
+<h2>ReadByName<a class="headerlink" href="#readbyname" title="Permalink to this headline">¶</a></h2>
+<p>Finds an object by name and decodes it.</p>
+<dl class="cfunction">
+<dt id="void* cvReadByName(CvFileStorage* fs, const CvFileNode* map, const char* name, CvAttrList* attributes)">
+<strong>C:</strong><code class="descname"> </code>void* <code class="descname">cvReadByName</code><span class="sig-paren">(</span>CvFileStorage* <strong>fs</strong>, const CvFileNode* <strong>map</strong>, const char* <strong>name</strong>, CvAttrList* <strong>attributes</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#void* cvReadByName(CvFileStorage* fs, const CvFileNode* map, const char* name, CvAttrList* attributes)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+<li><strong>map</strong> &#8211; The parent map. If it is NULL, the function searches a top-level node.</li>
+<li><strong>name</strong> &#8211; The node name</li>
+<li><strong>attributes</strong> &#8211; Unused parameter</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function is a simple superposition of <a class="reference internal" href="#CvFileNode* cvGetFileNodeByName(const CvFileStorage* fs, const CvFileNode* map, const char* name)" title="CvFileNode* cvGetFileNodeByName(const CvFileStorage* fs, const CvFileNode* map, const char* name)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GetFileNodeByName()</span></code></a> and  <a class="reference internal" href="#void* cvRead(CvFileStorage* fs, CvFileNode* node, CvAttrList* attributes)" title="void* cvRead(CvFileStorage* fs, CvFileNode* node, CvAttrList* attributes)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">Read()</span></code></a>.</p>
+</div>
+<div class="section" id="readint">
+<h2>ReadInt<a class="headerlink" href="#readint" title="Permalink to this headline">¶</a></h2>
+<p>Retrieves an integer value from a file node.</p>
+<dl class="cfunction">
+<dt id="int cvReadInt(const CvFileNode* node, int default_value)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvReadInt</code><span class="sig-paren">(</span>const CvFileNode* <strong>node</strong>, int <strong>default_value</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#int cvReadInt(const CvFileNode* node, int default_value)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>node</strong> &#8211; File node</li>
+<li><strong>default_value</strong> &#8211; The value that is returned if  <code class="docutils literal"><span class="pre">node</span></code>  is NULL</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns an integer that is represented by the file node. If the file node is NULL, the
+<code class="docutils literal"><span class="pre">default_value</span></code> is returned (thus, it is convenient to call the function right after <a class="reference internal" href="#CvFileNode* cvGetFileNode(CvFileStorage* fs, CvFileNode* map, const CvStringHashNode* key, int create_missing)" title="CvFileNode* cvGetFileNode(CvFileStorage* fs, CvFileNode* map, const CvStringHashNode* key, int create_missing)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GetFileNode()</span></code></a> without checking for a NULL pointer). If the file node has type  <code class="docutils literal"><span class="pre">CV_NODE_INT</span></code>, then  <code class="docutils literal"><span class="pre">node-&gt;data.i</span></code> is returned. If the file node has type  <code class="docutils literal"><span class="pre">CV_NODE_REAL</span></code>, then  <code class="docutils literal"><span class="pre">node-&gt;data.f</span></code>
+is converted to an integer and returned. Otherwise the error is reported.</p>
+</div>
+<div class="section" id="readintbyname">
+<h2>ReadIntByName<a class="headerlink" href="#readintbyname" title="Permalink to this headline">¶</a></h2>
+<p>Finds a file node and returns its value.</p>
+<dl class="cfunction">
+<dt id="int cvReadIntByName(const CvFileStorage* fs, const CvFileNode* map, const char* name, int default_value)">
+<strong>C:</strong><code class="descname"> </code>int <code class="descname">cvReadIntByName</code><span class="sig-paren">(</span>const CvFileStorage* <strong>fs</strong>, const CvFileNode* <strong>map</strong>, const char* <strong>name</strong>, int <strong>default_value</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#int cvReadIntByName(const CvFileStorage* fs, const CvFileNode* map, const char* name, int default_value)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+<li><strong>map</strong> &#8211; The parent map. If it is NULL, the function searches a top-level node.</li>
+<li><strong>name</strong> &#8211; The node name</li>
+<li><strong>default_value</strong> &#8211; The value that is returned if the file node is not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function is a simple superposition of  <a class="reference internal" href="#CvFileNode* cvGetFileNodeByName(const CvFileStorage* fs, const CvFileNode* map, const char* name)" title="CvFileNode* cvGetFileNodeByName(const CvFileStorage* fs, const CvFileNode* map, const char* name)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GetFileNodeByName()</span></code></a> and  <a class="reference internal" href="#int cvReadInt(const CvFileNode* node, int default_value)" title="int cvReadInt(const CvFileNode* node, int default_value)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">ReadInt()</span></code></a>.</p>
+</div>
+<div class="section" id="readrawdata">
+<h2>ReadRawData<a class="headerlink" href="#readrawdata" title="Permalink to this headline">¶</a></h2>
+<p>Reads multiple numbers.</p>
+<dl class="cfunction">
+<dt id="void cvReadRawData(const CvFileStorage* fs, const CvFileNode* src, void* dst, const char* dt)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvReadRawData</code><span class="sig-paren">(</span>const CvFileStorage* <strong>fs</strong>, const CvFileNode* <strong>src</strong>, void* <strong>dst</strong>, const char* <strong>dt</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvReadRawData(const CvFileStorage* fs, const CvFileNode* src, void* dst, const char* dt)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+<li><strong>src</strong> &#8211; The file node (a sequence) to read numbers from</li>
+<li><strong>dst</strong> &#8211; Pointer to the destination array</li>
+<li><strong>dt</strong> &#8211; Specification of each array element. It has the same format as in  <a class="reference internal" href="#void cvWriteRawData(CvFileStorage* fs, const void* src, int len, const char* dt)" title="void cvWriteRawData(CvFileStorage* fs, const void* src, int len, const char* dt)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">WriteRawData()</span></code></a> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function reads elements from a file node that represents a sequence of scalars.</p>
+</div>
+<div class="section" id="readrawdataslice">
+<h2>ReadRawDataSlice<a class="headerlink" href="#readrawdataslice" title="Permalink to this headline">¶</a></h2>
+<p>Initializes file node sequence reader.</p>
+<dl class="cfunction">
+<dt id="void cvReadRawDataSlice(const CvFileStorage* fs, CvSeqReader* reader, int count, void* dst, const char* dt)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvReadRawDataSlice</code><span class="sig-paren">(</span>const CvFileStorage* <strong>fs</strong>, CvSeqReader* <strong>reader</strong>, int <strong>count</strong>, void* <strong>dst</strong>, const char* <strong>dt</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvReadRawDataSlice(const CvFileStorage* fs, CvSeqReader* reader, int count, void* dst, const char* dt)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+<li><strong>reader</strong> &#8211; The sequence reader. Initialize it with  <a class="reference internal" href="#void cvStartReadRawData(const CvFileStorage* fs, const CvFileNode* src, CvSeqReader* reader)" title="void cvStartReadRawData(const CvFileStorage* fs, const CvFileNode* src, CvSeqReader* reader)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">StartReadRawData()</span></code></a> .</li>
+<li><strong>count</strong> &#8211; The number of elements to read</li>
+<li><strong>dst</strong> &#8211; Pointer to the destination array</li>
+<li><strong>dt</strong> &#8211; Specification of each array element. It has the same format as in  <a class="reference internal" href="#void cvWriteRawData(CvFileStorage* fs, const void* src, int len, const char* dt)" title="void cvWriteRawData(CvFileStorage* fs, const void* src, int len, const char* dt)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">WriteRawData()</span></code></a> .</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function reads one or more elements from the file node, representing a sequence, to a user-specified array. The total number of read sequence elements is a product of <code class="docutils literal"><span class="pre">total</span></code>
+and the number of components in each array element. For example, if <code class="docutils literal"><span class="pre">dt=2if</span></code>, the function will read <code class="docutils literal"><span class="pre">total*3</span></code> sequence elements. As with any sequence, some parts of the file node sequence can be skipped or read repeatedly by repositioning the reader using <a class="reference internal" href="dynamic_structures.html#void cvSetSeqReaderPos(CvSeqReader* reader, int index, int is_relative)" title="void cvSetSeqReaderPos(CvSeqReader* reader, int index, int is_relative)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">SetSeqReaderPos()</span></code></a>.</p>
+</div>
+<div class="section" id="readreal">
+<h2>ReadReal<a class="headerlink" href="#readreal" title="Permalink to this headline">¶</a></h2>
+<p>Retrieves a floating-point value from a file node.</p>
+<dl class="cfunction">
+<dt id="double cvReadReal(const CvFileNode* node, double default_value)">
+<strong>C:</strong><code class="descname"> </code>double <code class="descname">cvReadReal</code><span class="sig-paren">(</span>const CvFileNode* <strong>node</strong>, double <strong>default_value</strong>=0. <span class="sig-paren">)</span><a class="headerlink" href="#double cvReadReal(const CvFileNode* node, double default_value)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>node</strong> &#8211; File node</li>
+<li><strong>default_value</strong> &#8211; The value that is returned if  <code class="docutils literal"><span class="pre">node</span></code>  is NULL</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns a floating-point value
+that is represented by the file node. If the file node is NULL, the
+<code class="docutils literal"><span class="pre">default_value</span></code>
+is returned (thus, it is convenient to call
+the function right after
+<a class="reference internal" href="#CvFileNode* cvGetFileNode(CvFileStorage* fs, CvFileNode* map, const CvStringHashNode* key, int create_missing)" title="CvFileNode* cvGetFileNode(CvFileStorage* fs, CvFileNode* map, const CvStringHashNode* key, int create_missing)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GetFileNode()</span></code></a>
+without checking for a NULL
+pointer). If the file node has type
+<code class="docutils literal"><span class="pre">CV_NODE_REAL</span></code>
+,
+then
+<code class="docutils literal"><span class="pre">node-&gt;data.f</span></code>
+is returned. If the file node has type
+<code class="docutils literal"><span class="pre">CV_NODE_INT</span></code>
+, then
+<code class="docutils literal"><span class="pre">node-:math:`&gt;`data.f</span></code>
+is converted to floating-point
+and returned. Otherwise the result is not determined.</p>
+</div>
+<div class="section" id="readrealbyname">
+<h2>ReadRealByName<a class="headerlink" href="#readrealbyname" title="Permalink to this headline">¶</a></h2>
+<p>Finds a file node and returns its value.</p>
+<dl class="cfunction">
+<dt id="double cvReadRealByName(const CvFileStorage* fs, const CvFileNode* map, const char* name, double default_value)">
+<strong>C:</strong><code class="descname"> </code>double <code class="descname">cvReadRealByName</code><span class="sig-paren">(</span>const CvFileStorage* <strong>fs</strong>, const CvFileNode* <strong>map</strong>, const char* <strong>name</strong>, double <strong>default_value</strong>=0. <span class="sig-paren">)</span><a class="headerlink" href="#double cvReadRealByName(const CvFileStorage* fs, const CvFileNode* map, const char* name, double default_value)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+<li><strong>map</strong> &#8211; The parent map. If it is NULL, the function searches a top-level node.</li>
+<li><strong>name</strong> &#8211; The node name</li>
+<li><strong>default_value</strong> &#8211; The value that is returned if the file node is not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function is a simple superposition of
+<a class="reference internal" href="#CvFileNode* cvGetFileNodeByName(const CvFileStorage* fs, const CvFileNode* map, const char* name)" title="CvFileNode* cvGetFileNodeByName(const CvFileStorage* fs, const CvFileNode* map, const char* name)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GetFileNodeByName()</span></code></a>
+and
+<a class="reference internal" href="#double cvReadReal(const CvFileNode* node, double default_value)" title="double cvReadReal(const CvFileNode* node, double default_value)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">ReadReal()</span></code></a>
+.</p>
+</div>
+<div class="section" id="readstring">
+<h2>ReadString<a class="headerlink" href="#readstring" title="Permalink to this headline">¶</a></h2>
+<p>Retrieves a text string from a file node.</p>
+<dl class="cfunction">
+<dt id="const char* cvReadString(const CvFileNode* node, const char* default_value)">
+<strong>C:</strong><code class="descname"> </code>const char* <code class="descname">cvReadString</code><span class="sig-paren">(</span>const CvFileNode* <strong>node</strong>, const char* <strong>default_value</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#const char* cvReadString(const CvFileNode* node, const char* default_value)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>node</strong> &#8211; File node</li>
+<li><strong>default_value</strong> &#8211; The value that is returned if  <code class="docutils literal"><span class="pre">node</span></code>  is NULL</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function returns a text string that is represented
+by the file node. If the file node is NULL, the
+<code class="docutils literal"><span class="pre">default_value</span></code>
+is returned (thus, it is convenient to call the function right after
+<a class="reference internal" href="#CvFileNode* cvGetFileNode(CvFileStorage* fs, CvFileNode* map, const CvStringHashNode* key, int create_missing)" title="CvFileNode* cvGetFileNode(CvFileStorage* fs, CvFileNode* map, const CvStringHashNode* key, int create_missing)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GetFileNode()</span></code></a>
+without checking for a NULL pointer). If
+the file node has type
+<code class="docutils literal"><span class="pre">CV_NODE_STR</span></code>
+, then
+<code class="docutils literal"><span class="pre">node-:math:`&gt;`data.str.ptr</span></code>
+is returned. Otherwise the result is not determined.</p>
+</div>
+<div class="section" id="readstringbyname">
+<h2>ReadStringByName<a class="headerlink" href="#readstringbyname" title="Permalink to this headline">¶</a></h2>
+<p>Finds a file node by its name and returns its value.</p>
+<dl class="cfunction">
+<dt id="const char* cvReadStringByName(const CvFileStorage* fs, const CvFileNode* map, const char* name, const char* default_value)">
+<strong>C:</strong><code class="descname"> </code>const char* <code class="descname">cvReadStringByName</code><span class="sig-paren">(</span>const CvFileStorage* <strong>fs</strong>, const CvFileNode* <strong>map</strong>, const char* <strong>name</strong>, const char* <strong>default_value</strong>=NULL <span class="sig-paren">)</span><a class="headerlink" href="#const char* cvReadStringByName(const CvFileStorage* fs, const CvFileNode* map, const char* name, const char* default_value)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+<li><strong>map</strong> &#8211; The parent map. If it is NULL, the function searches a top-level node.</li>
+<li><strong>name</strong> &#8211; The node name</li>
+<li><strong>default_value</strong> &#8211; The value that is returned if the file node is not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function is a simple superposition of
+<a class="reference internal" href="#CvFileNode* cvGetFileNodeByName(const CvFileStorage* fs, const CvFileNode* map, const char* name)" title="CvFileNode* cvGetFileNodeByName(const CvFileStorage* fs, const CvFileNode* map, const char* name)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">GetFileNodeByName()</span></code></a>
+and
+<a class="reference internal" href="#const char* cvReadString(const CvFileNode* node, const char* default_value)" title="const char* cvReadString(const CvFileNode* node, const char* default_value)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">ReadString()</span></code></a>
+.</p>
+</div>
+<div class="section" id="registertype">
+<h2>RegisterType<a class="headerlink" href="#registertype" title="Permalink to this headline">¶</a></h2>
+<p>Registers a new type.</p>
+<dl class="cfunction">
+<dt id="void cvRegisterType(const CvTypeInfo* info)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvRegisterType</code><span class="sig-paren">(</span>const CvTypeInfo* <strong>info</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvRegisterType(const CvTypeInfo* info)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>info</strong> &#8211; Type info structure</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function registers a new type, which is
+described by
+<code class="docutils literal"><span class="pre">info</span></code>
+. The function creates a copy of the structure,
+so the user should delete it after calling the function.</p>
+</div>
+<div class="section" id="release">
+<h2>Release<a class="headerlink" href="#release" title="Permalink to this headline">¶</a></h2>
+<p>Releases an object.</p>
+<dl class="cfunction">
+<dt id="void cvRelease(void** struct_ptr)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvRelease</code><span class="sig-paren">(</span>void** <strong>struct_ptr</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvRelease(void** struct_ptr)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>struct_ptr</strong> &#8211; Double pointer to the object</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function finds the type of a given object and calls
+<code class="docutils literal"><span class="pre">release</span></code>
+with the double pointer.</p>
+</div>
+<div class="section" id="releasefilestorage">
+<h2>ReleaseFileStorage<a class="headerlink" href="#releasefilestorage" title="Permalink to this headline">¶</a></h2>
+<p>Releases file storage.</p>
+<dl class="cfunction">
+<dt id="void cvReleaseFileStorage(CvFileStorage** fs)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvReleaseFileStorage</code><span class="sig-paren">(</span>CvFileStorage** <strong>fs</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvReleaseFileStorage(CvFileStorage** fs)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; Double pointer to the released file storage</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function closes the file associated with the storage and releases all the temporary structures. It must be called after all I/O operations with the storage are finished.</p>
+</div>
+<div class="section" id="save">
+<h2>Save<a class="headerlink" href="#save" title="Permalink to this headline">¶</a></h2>
+<p>Saves an object to a file.</p>
+<dl class="cfunction">
+<dt id="void cvSave(const char* filename, const void* struct_ptr, const char* name, const char* comment, CvAttrList attributes)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvSave</code><span class="sig-paren">(</span>const char* <strong>filename</strong>, const void* <strong>struct_ptr</strong>, const char* <strong>name</strong>=NULL, const char* <strong>comment</strong>=NULL, CvAttrList <strong>attributes</strong>=cvAttrList() <span class="sig-paren">)</span><a class="headerlink" href="#void cvSave(const char* filename, const void* struct_ptr, const char* name, const char* comment, CvAttrList attributes)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyoldfunction">
+<dt id="cv.Save">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv.</code><code class="descname">Save</code><span class="sig-paren">(</span>filename, structPtr, name=None, comment=None<span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#cv.Save" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; File name</li>
+<li><strong>struct_ptr</strong> &#8211; Object to save</li>
+<li><strong>name</strong> &#8211; Optional object name. If it is NULL, the name will be formed from  <code class="docutils literal"><span class="pre">filename</span></code> .</li>
+<li><strong>comment</strong> &#8211; Optional comment to put in the beginning of the file</li>
+<li><strong>attributes</strong> &#8211; Optional attributes passed to  <a class="reference internal" href="#void cvWrite(CvFileStorage* fs, const char* name, const void* ptr, CvAttrList attributes)" title="void cvWrite(CvFileStorage* fs, const char* name, const void* ptr, CvAttrList attributes)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">Write()</span></code></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function saves an object to a file. It provides a simple interface to
+<a class="reference internal" href="#void cvWrite(CvFileStorage* fs, const char* name, const void* ptr, CvAttrList attributes)" title="void cvWrite(CvFileStorage* fs, const char* name, const void* ptr, CvAttrList attributes)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">Write()</span></code></a>
+.</p>
+</div>
+<div class="section" id="startnextstream">
+<h2>StartNextStream<a class="headerlink" href="#startnextstream" title="Permalink to this headline">¶</a></h2>
+<p>Starts the next stream.</p>
+<dl class="cfunction">
+<dt id="void cvStartNextStream(CvFileStorage* fs)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvStartNextStream</code><span class="sig-paren">(</span>CvFileStorage* <strong>fs</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvStartNextStream(CvFileStorage* fs)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function finishes the currently written stream and starts the next stream. In the case of XML the file with multiple streams looks like this:</p>
+<div class="highlight-c"><div class="highlight"><pre>&lt;opencv_storage&gt;
+&lt;!-- stream #1 data --&gt;
+&lt;/opencv_storage&gt;
+&lt;opencv_storage&gt;
+&lt;!-- stream #2 data --&gt;
+&lt;/opencv_storage&gt;
+...
+</pre></div>
+</div>
+<p>The YAML file will look like this:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="o">%</span><span class="nl">YAML</span><span class="p">:</span><span class="mf">1.0</span>
+<span class="cp"># stream #1 data</span>
+<span class="p">...</span>
+<span class="o">---</span>
+<span class="cp"># stream #2 data</span>
+</pre></div>
+</div>
+<p>This is useful for concatenating files or for resuming the writing process.</p>
+</div>
+<div class="section" id="startreadrawdata">
+<h2>StartReadRawData<a class="headerlink" href="#startreadrawdata" title="Permalink to this headline">¶</a></h2>
+<p>Initializes the file node sequence reader.</p>
+<dl class="cfunction">
+<dt id="void cvStartReadRawData(const CvFileStorage* fs, const CvFileNode* src, CvSeqReader* reader)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvStartReadRawData</code><span class="sig-paren">(</span>const CvFileStorage* <strong>fs</strong>, const CvFileNode* <strong>src</strong>, CvSeqReader* <strong>reader</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvStartReadRawData(const CvFileStorage* fs, const CvFileNode* src, CvSeqReader* reader)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+<li><strong>src</strong> &#8211; The file node (a sequence) to read numbers from</li>
+<li><strong>reader</strong> &#8211; Pointer to the sequence reader</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function initializes the sequence reader to read data from a file node. The initialized reader can be then passed to <a class="reference internal" href="#void cvReadRawDataSlice(const CvFileStorage* fs, CvSeqReader* reader, int count, void* dst, const char* dt)" title="void cvReadRawDataSlice(const CvFileStorage* fs, CvSeqReader* reader, int count, void* dst, const char* dt)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">ReadRawDataSlice()</span></code></a>.</p>
+</div>
+<div class="section" id="startwritestruct">
+<h2>StartWriteStruct<a class="headerlink" href="#startwritestruct" title="Permalink to this headline">¶</a></h2>
+<p>Starts writing a new structure.</p>
+<dl class="cfunction">
+<dt id="void cvStartWriteStruct(CvFileStorage* fs, const char* name, int struct_flags, const char* type_name, CvAttrList attributes)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvStartWriteStruct</code><span class="sig-paren">(</span>CvFileStorage* <strong>fs</strong>, const char* <strong>name</strong>, int <strong>struct_flags</strong>, const char* <strong>type_name</strong>=NULL, CvAttrList <strong>attributes</strong>=cvAttrList() <span class="sig-paren">)</span><a class="headerlink" href="#void cvStartWriteStruct(CvFileStorage* fs, const char* name, int struct_flags, const char* type_name, CvAttrList attributes)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+<li><strong>name</strong> &#8211; Name of the written structure. The structure can be accessed by this name when the storage is read.</li>
+<li><strong>struct_flags</strong> &#8211; <p>A combination one of the following values:</p>
+<blockquote>
+<div><ul>
+<li><strong>CV_NODE_SEQ</strong> the written structure is a sequence (see discussion of  <a class="reference internal" href="#CvFileStorage" title="struct CvFileStorage"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvFileStorage</span></code></a> ), that is, its elements do not have a name.</li>
+<li><strong>CV_NODE_MAP</strong> the written structure is a map (see discussion of  <a class="reference internal" href="#CvFileStorage" title="struct CvFileStorage"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvFileStorage</span></code></a> ), that is, all its elements have names.</li>
+</ul>
+</div></blockquote>
+<p>One and only one of the two above flags must be specified</p>
+<blockquote>
+<div><ul>
+<li><strong>CV_NODE_FLOW</strong> the optional flag that makes sense only for YAML streams. It means that the structure is written as a flow (not as a block), which is more compact. It is recommended to use this flag for structures or arrays whose elements are all scalars.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><strong>type_name</strong> &#8211; Optional parameter - the object type name. In
+case of XML it is written as a  <code class="docutils literal"><span class="pre">type_id</span></code>  attribute of the
+structure opening tag. In the case of YAML it is written after a colon
+following the structure name (see the example in  <a class="reference internal" href="#CvFileStorage" title="struct CvFileStorage"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvFileStorage</span></code></a>
+description). Mainly it is used with user objects. When the storage
+is read, the encoded type name is used to determine the object type
+(see  <a class="reference internal" href="#CvTypeInfo" title="struct CvTypeInfo"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvTypeInfo</span></code></a>  and  <a class="reference internal" href="#CvTypeInfo* cvFindType(const char* type_name)" title="CvTypeInfo* cvFindType(const char* type_name)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">FindType()</span></code></a> ).</li>
+<li><strong>attributes</strong> &#8211; This parameter is not used in the current implementation</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function starts writing a compound structure (collection) that can be a sequence or a map. After all the structure fields, which can be scalars or structures, are written, <a class="reference internal" href="#void cvEndWriteStruct(CvFileStorage* fs)" title="void cvEndWriteStruct(CvFileStorage* fs)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">EndWriteStruct()</span></code></a> should be called. The function can be used to group some objects or to implement the <code class="docutils literal"><span class="pre">write</span></code> function for a some user object (see <a class="reference internal" href="#CvTypeInfo" title="struct CvTypeInfo"><code class="xref ocv ocv-struct docutils literal"><span class="pre">CvTypeInfo</span></code></a>).</p>
+</div>
+<div class="section" id="typeof">
+<h2>TypeOf<a class="headerlink" href="#typeof" title="Permalink to this headline">¶</a></h2>
+<p>Returns the type of an object.</p>
+<dl class="cfunction">
+<dt id="CvTypeInfo* cvTypeOf(const void* struct_ptr)">
+<strong>C:</strong><code class="descname"> </code>CvTypeInfo* <code class="descname">cvTypeOf</code><span class="sig-paren">(</span>const void* <strong>struct_ptr</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvTypeInfo* cvTypeOf(const void* struct_ptr)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>struct_ptr</strong> &#8211; The object pointer</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function finds the type of a given object. It iterates through the list of registered types and calls the  <code class="docutils literal"><span class="pre">is_instance</span></code> function/method for every type info structure with that object until one of them returns non-zero or until the whole list has been traversed. In the latter case, the function returns NULL.</p>
+</div>
+<div class="section" id="unregistertype">
+<h2>UnregisterType<a class="headerlink" href="#unregistertype" title="Permalink to this headline">¶</a></h2>
+<p>Unregisters the type.</p>
+<dl class="cfunction">
+<dt id="void cvUnregisterType(const char* type_name)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvUnregisterType</code><span class="sig-paren">(</span>const char* <strong>type_name</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvUnregisterType(const char* type_name)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>type_name</strong> &#8211; Name of an unregistered type</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function unregisters a type with a specified name. If the name is unknown, it is possible to locate the type info by an instance of the type using <a class="reference internal" href="#CvTypeInfo* cvTypeOf(const void* struct_ptr)" title="CvTypeInfo* cvTypeOf(const void* struct_ptr)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">TypeOf()</span></code></a> or by iterating the type list, starting from  <a class="reference internal" href="#CvTypeInfo* cvFirstType(void)" title="CvTypeInfo* cvFirstType(void)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">FirstType()</span></code></a>, and then calling <code class="docutils literal"><span class="pre">cvUnregisterType(info-&gt;typeName)</span></code>.</p>
+</div>
+<div class="section" id="write">
+<h2>Write<a class="headerlink" href="#write" title="Permalink to this headline">¶</a></h2>
+<p>Writes an object to file storage.</p>
+<dl class="cfunction">
+<dt id="void cvWrite(CvFileStorage* fs, const char* name, const void* ptr, CvAttrList attributes)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvWrite</code><span class="sig-paren">(</span>CvFileStorage* <strong>fs</strong>, const char* <strong>name</strong>, const void* <strong>ptr</strong>, CvAttrList <strong>attributes</strong>=cvAttrList() <span class="sig-paren">)</span><a class="headerlink" href="#void cvWrite(CvFileStorage* fs, const char* name, const void* ptr, CvAttrList attributes)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+<li><strong>name</strong> &#8211; Name of the written object. Should be NULL if and only if the parent structure is a sequence.</li>
+<li><strong>ptr</strong> &#8211; Pointer to the object</li>
+<li><strong>attributes</strong> &#8211; The attributes of the object. They are specific for each particular type (see the discussion below).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function writes an object to file storage. First, the appropriate type info is found using <a class="reference internal" href="#CvTypeInfo* cvTypeOf(const void* struct_ptr)" title="CvTypeInfo* cvTypeOf(const void* struct_ptr)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">TypeOf()</span></code></a>. Then, the <code class="docutils literal"><span class="pre">write</span></code> method associated with the type info is called.</p>
+<p>Attributes are used to customize the writing procedure. The standard types support the following attributes (all the <code class="docutils literal"><span class="pre">dt</span></code> attributes have the same format as in <a class="reference internal" href="#void cvWriteRawData(CvFileStorage* fs, const void* src, int len, const char* dt)" title="void cvWriteRawData(CvFileStorage* fs, const void* src, int len, const char* dt)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">WriteRawData()</span></code></a>):</p>
+<ol class="arabic">
+<li><p class="first">CvSeq</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>header_dt</strong> description of user fields of the sequence header that follow CvSeq, or CvChain (if the sequence is a Freeman chain) or CvContour (if the sequence is a contour or point sequence)</li>
+<li><strong>dt</strong> description of the sequence elements.</li>
+<li><strong>recursive</strong> if the attribute is present and is not equal to &#8220;0&#8221; or &#8220;false&#8221;, the whole tree of sequences (contours) is stored.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">CvGraph</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>header_dt</strong> description of user fields of the graph header that follows CvGraph;</li>
+<li><strong>vertex_dt</strong> description of user fields of graph vertices</li>
+<li><strong>edge_dt</strong> description of user fields of graph edges (note that the edge weight is always written, so there is no need to specify it explicitly)</li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+<p>Below is the code that creates the YAML file shown in the
+<code class="docutils literal"><span class="pre">CvFileStorage</span></code>
+description:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;cxcore.h&quot;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">CvMat</span><span class="o">*</span> <span class="n">mat</span> <span class="o">=</span> <span class="n">cvCreateMat</span><span class="p">(</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">CV_32F</span> <span class="p">);</span>
+    <span class="n">CvFileStorage</span><span class="o">*</span> <span class="n">fs</span> <span class="o">=</span> <span class="n">cvOpenFileStorage</span><span class="p">(</span> <span class="s">&quot;example.yml&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">CV_STORAGE_WRITE</span> <span class="p">);</span>
+
+    <span class="n">cvSetIdentity</span><span class="p">(</span> <span class="n">mat</span> <span class="p">);</span>
+    <span class="n">cvWrite</span><span class="p">(</span> <span class="n">fs</span><span class="p">,</span> <span class="s">&quot;A&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="p">,</span> <span class="n">cvAttrList</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="p">);</span>
+
+    <span class="n">cvReleaseFileStorage</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">fs</span> <span class="p">);</span>
+    <span class="n">cvReleaseMat</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">mat</span> <span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="writecomment">
+<h2>WriteComment<a class="headerlink" href="#writecomment" title="Permalink to this headline">¶</a></h2>
+<p>Writes a comment.</p>
+<dl class="cfunction">
+<dt id="void cvWriteComment(CvFileStorage* fs, const char* comment, int eol_comment)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvWriteComment</code><span class="sig-paren">(</span>CvFileStorage* <strong>fs</strong>, const char* <strong>comment</strong>, int <strong>eol_comment</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvWriteComment(CvFileStorage* fs, const char* comment, int eol_comment)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+<li><strong>comment</strong> &#8211; The written comment, single-line or multi-line</li>
+<li><strong>eol_comment</strong> &#8211; If non-zero, the function tries to put the comment at the end of current line. If the flag is zero, if the comment is multi-line, or if it does not fit at the end of the current line, the comment starts  a new line.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function writes a comment into file storage. The comments are skipped when the storage is read.</p>
+</div>
+<div class="section" id="writefilenode">
+<h2>WriteFileNode<a class="headerlink" href="#writefilenode" title="Permalink to this headline">¶</a></h2>
+<p>Writes a file node to another file storage.</p>
+<dl class="cfunction">
+<dt id="void cvWriteFileNode(CvFileStorage* fs, const char* new_node_name, const CvFileNode* node, int embed)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvWriteFileNode</code><span class="sig-paren">(</span>CvFileStorage* <strong>fs</strong>, const char* <strong>new_node_name</strong>, const CvFileNode* <strong>node</strong>, int <strong>embed</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvWriteFileNode(CvFileStorage* fs, const char* new_node_name, const CvFileNode* node, int embed)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; Destination file storage</li>
+<li><strong>new_node_name</strong> &#8211; New name of the file node in the destination file storage. To keep the existing name, use  <a class="reference internal" href="#const char* cvGetFileNodeName(const CvFileNode* node)" title="const char* cvGetFileNodeName(const CvFileNode* node)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">cvGetFileNodeName()</span></code></a></li>
+<li><strong>node</strong> &#8211; The written node</li>
+<li><strong>embed</strong> &#8211; If the written node is a collection and this parameter is not zero, no extra level of hierarchy is created. Instead, all the elements of  <code class="docutils literal"><span class="pre">node</span></code>  are written into the currently written structure. Of course, map elements can only be embedded into another map, and sequence elements can only be embedded into another sequence.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function writes a copy of a file node to file storage. Possible applications of the function are merging several file storages into one and conversion between XML and YAML formats.</p>
+</div>
+<div class="section" id="writeint">
+<h2>WriteInt<a class="headerlink" href="#writeint" title="Permalink to this headline">¶</a></h2>
+<p>Writes an integer value.</p>
+<dl class="cfunction">
+<dt id="void cvWriteInt(CvFileStorage* fs, const char* name, int value)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvWriteInt</code><span class="sig-paren">(</span>CvFileStorage* <strong>fs</strong>, const char* <strong>name</strong>, int <strong>value</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvWriteInt(CvFileStorage* fs, const char* name, int value)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+<li><strong>name</strong> &#8211; Name of the written value. Should be NULL if and only if the parent structure is a sequence.</li>
+<li><strong>value</strong> &#8211; The written value</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function writes a single integer value (with or without a name) to the file storage.</p>
+</div>
+<div class="section" id="writerawdata">
+<h2>WriteRawData<a class="headerlink" href="#writerawdata" title="Permalink to this headline">¶</a></h2>
+<p>Writes multiple numbers.</p>
+<dl class="cfunction">
+<dt id="void cvWriteRawData(CvFileStorage* fs, const void* src, int len, const char* dt)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvWriteRawData</code><span class="sig-paren">(</span>CvFileStorage* <strong>fs</strong>, const void* <strong>src</strong>, int <strong>len</strong>, const char* <strong>dt</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvWriteRawData(CvFileStorage* fs, const void* src, int len, const char* dt)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+<li><strong>src</strong> &#8211; Pointer to the written array</li>
+<li><strong>len</strong> &#8211; Number of the array elements to write</li>
+<li><strong>dt</strong> &#8211; <p>Specification of each array element that has the following format  <code class="docutils literal"><span class="pre">([count]{'u'|'c'|'w'|'s'|'i'|'f'|'d'})...</span></code>
+where the characters correspond to fundamental C types:</p>
+<blockquote>
+<div><ul>
+<li><strong>u</strong> 8-bit unsigned number</li>
+<li><strong>c</strong> 8-bit signed number</li>
+<li><strong>w</strong> 16-bit unsigned number</li>
+<li><strong>s</strong> 16-bit signed number</li>
+<li><strong>i</strong> 32-bit signed number</li>
+<li><strong>f</strong> single precision floating-point number</li>
+<li><strong>d</strong> double precision floating-point number</li>
+<li><dl class="first docutils">
+<dt><strong>r</strong> pointer, 32 lower bits of which are written as a signed integer. The type can be used to store structures with links between the elements. <code class="docutils literal"><span class="pre">count</span></code>  is the optional counter of values of a given type. For</dt>
+<dd>example,  <code class="docutils literal"><span class="pre">2if</span></code>  means that each array element is a structure
+of 2 integers, followed by a single-precision floating-point number. The
+equivalent notations of the above specification are &#8216; <code class="docutils literal"><span class="pre">iif</span></code> &#8216;,
+&#8216; <code class="docutils literal"><span class="pre">2i1f</span></code> &#8216; and so forth. Other examples:  <code class="docutils literal"><span class="pre">u</span></code>  means that the
+array consists of bytes, and  <code class="docutils literal"><span class="pre">2d</span></code>  means the array consists of pairs
+of doubles.</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function writes an array, whose elements consist
+of single or multiple numbers. The function call can be replaced with
+a loop containing a few
+<a class="reference internal" href="#void cvWriteInt(CvFileStorage* fs, const char* name, int value)" title="void cvWriteInt(CvFileStorage* fs, const char* name, int value)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">WriteInt()</span></code></a>
+and
+<a class="reference internal" href="#void cvWriteReal(CvFileStorage* fs, const char* name, double value)" title="void cvWriteReal(CvFileStorage* fs, const char* name, double value)"><code class="xref ocv ocv-cfunc docutils literal"><span class="pre">WriteReal()</span></code></a>
+calls, but
+a single call is more efficient. Note that because none of the elements
+have a name, they should be written to a sequence rather than a map.</p>
+</div>
+<div class="section" id="writereal">
+<h2>WriteReal<a class="headerlink" href="#writereal" title="Permalink to this headline">¶</a></h2>
+<p>Writes a floating-point value.</p>
+<dl class="cfunction">
+<dt id="void cvWriteReal(CvFileStorage* fs, const char* name, double value)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvWriteReal</code><span class="sig-paren">(</span>CvFileStorage* <strong>fs</strong>, const char* <strong>name</strong>, double <strong>value</strong><span class="sig-paren">)</span><a class="headerlink" href="#void cvWriteReal(CvFileStorage* fs, const char* name, double value)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+<li><strong>name</strong> &#8211; Name of the written value. Should be NULL if and only if the parent structure is a sequence.</li>
+<li><strong>value</strong> &#8211; The written value</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function writes a single floating-point value (with or without a name) to file storage. Special values are encoded as follows: NaN (Not A Number) as .NaN, infinity as +.Inf or -.Inf.</p>
+<p>The following example shows how to use the low-level writing functions to store custom structures, such as termination criteria, without registering a new type.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="kt">void</span> <span class="nf">write_termcriteria</span><span class="p">(</span> <span class="n">CvFileStorage</span><span class="o">*</span> <span class="n">fs</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">struct_name</span><span class="p">,</span>
+                         <span class="n">CvTermCriteria</span><span class="o">*</span> <span class="n">termcrit</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">cvStartWriteStruct</span><span class="p">(</span> <span class="n">fs</span><span class="p">,</span> <span class="n">struct_name</span><span class="p">,</span> <span class="n">CV_NODE_MAP</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">cvAttrList</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">));</span>
+    <span class="n">cvWriteComment</span><span class="p">(</span> <span class="n">fs</span><span class="p">,</span> <span class="s">&quot;termination criteria&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span> <span class="c1">// just a description</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">termcrit</span><span class="o">-&gt;</span><span class="n">type</span> <span class="o">&amp;</span> <span class="n">CV_TERMCRIT_ITER</span> <span class="p">)</span>
+        <span class="n">cvWriteInteger</span><span class="p">(</span> <span class="n">fs</span><span class="p">,</span> <span class="s">&quot;max_iterations&quot;</span><span class="p">,</span> <span class="n">termcrit</span><span class="o">-&gt;</span><span class="n">max_iter</span> <span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">termcrit</span><span class="o">-&gt;</span><span class="n">type</span> <span class="o">&amp;</span> <span class="n">CV_TERMCRIT_EPS</span> <span class="p">)</span>
+        <span class="n">cvWriteReal</span><span class="p">(</span> <span class="n">fs</span><span class="p">,</span> <span class="s">&quot;accuracy&quot;</span><span class="p">,</span> <span class="n">termcrit</span><span class="o">-&gt;</span><span class="n">epsilon</span> <span class="p">);</span>
+    <span class="n">cvEndWriteStruct</span><span class="p">(</span> <span class="n">fs</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="writestring">
+<h2>WriteString<a class="headerlink" href="#writestring" title="Permalink to this headline">¶</a></h2>
+<p>Writes a text string.</p>
+<dl class="cfunction">
+<dt id="void cvWriteString(CvFileStorage* fs, const char* name, const char* str, int quote)">
+<strong>C:</strong><code class="descname"> </code>void <code class="descname">cvWriteString</code><span class="sig-paren">(</span>CvFileStorage* <strong>fs</strong>, const char* <strong>name</strong>, const char* <strong>str</strong>, int <strong>quote</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void cvWriteString(CvFileStorage* fs, const char* name, const char* str, int quote)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fs</strong> &#8211; File storage</li>
+<li><strong>name</strong> &#8211; Name of the written string . Should be NULL if and only if the parent structure is a sequence.</li>
+<li><strong>str</strong> &#8211; The written text string</li>
+<li><strong>quote</strong> &#8211; If non-zero, the written string is put in quotes, regardless of whether they are required. Otherwise, if the flag is zero, quotes are used only when they are required (e.g. when the string starts with a digit or contains spaces).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function writes a text string to file storage.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">XML/YAML Persistence (C API)</a><ul>
+<li><a class="reference internal" href="#cvfilestorage">CvFileStorage</a></li>
+<li><a class="reference internal" href="#cvfilenode">CvFileNode</a></li>
+<li><a class="reference internal" href="#cvattrlist">CvAttrList</a></li>
+<li><a class="reference internal" href="#cvtypeinfo">CvTypeInfo</a></li>
+<li><a class="reference internal" href="#clone">Clone</a></li>
+<li><a class="reference internal" href="#endwritestruct">EndWriteStruct</a></li>
+<li><a class="reference internal" href="#findtype">FindType</a></li>
+<li><a class="reference internal" href="#firsttype">FirstType</a></li>
+<li><a class="reference internal" href="#getfilenode">GetFileNode</a></li>
+<li><a class="reference internal" href="#getfilenodebyname">GetFileNodeByName</a></li>
+<li><a class="reference internal" href="#getfilenodename">GetFileNodeName</a></li>
+<li><a class="reference internal" href="#gethashedkey">GetHashedKey</a></li>
+<li><a class="reference internal" href="#getrootfilenode">GetRootFileNode</a></li>
+<li><a class="reference internal" href="#load">Load</a></li>
+<li><a class="reference internal" href="#openfilestorage">OpenFileStorage</a></li>
+<li><a class="reference internal" href="#read">Read</a></li>
+<li><a class="reference internal" href="#readbyname">ReadByName</a></li>
+<li><a class="reference internal" href="#readint">ReadInt</a></li>
+<li><a class="reference internal" href="#readintbyname">ReadIntByName</a></li>
+<li><a class="reference internal" href="#readrawdata">ReadRawData</a></li>
+<li><a class="reference internal" href="#readrawdataslice">ReadRawDataSlice</a></li>
+<li><a class="reference internal" href="#readreal">ReadReal</a></li>
+<li><a class="reference internal" href="#readrealbyname">ReadRealByName</a></li>
+<li><a class="reference internal" href="#readstring">ReadString</a></li>
+<li><a class="reference internal" href="#readstringbyname">ReadStringByName</a></li>
+<li><a class="reference internal" href="#registertype">RegisterType</a></li>
+<li><a class="reference internal" href="#release">Release</a></li>
+<li><a class="reference internal" href="#releasefilestorage">ReleaseFileStorage</a></li>
+<li><a class="reference internal" href="#save">Save</a></li>
+<li><a class="reference internal" href="#startnextstream">StartNextStream</a></li>
+<li><a class="reference internal" href="#startreadrawdata">StartReadRawData</a></li>
+<li><a class="reference internal" href="#startwritestruct">StartWriteStruct</a></li>
+<li><a class="reference internal" href="#typeof">TypeOf</a></li>
+<li><a class="reference internal" href="#unregistertype">UnregisterType</a></li>
+<li><a class="reference internal" href="#write">Write</a></li>
+<li><a class="reference internal" href="#writecomment">WriteComment</a></li>
+<li><a class="reference internal" href="#writefilenode">WriteFileNode</a></li>
+<li><a class="reference internal" href="#writeint">WriteInt</a></li>
+<li><a class="reference internal" href="#writerawdata">WriteRawData</a></li>
+<li><a class="reference internal" href="#writereal">WriteReal</a></li>
+<li><a class="reference internal" href="#writestring">WriteString</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="xml_yaml_persistence.html"
+                        title="previous chapter">XML/YAML Persistence</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="clustering.html"
+                        title="next chapter">Clustering</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/core/doc/old_xml_yaml_persistence.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="clustering.html" title="Clustering"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="xml_yaml_persistence.html" title="XML/YAML Persistence"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="core.html" >core. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Feature Description &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="feature2d module. 2D Features framework" href="../table_of_content_features2d/table_of_content_features2d.html" />
+    <link rel="next" title="Harris corner detector" href="../trackingmotion/harris_detector/harris_detector.html" />
+    <link rel="prev" title="feature2d module. 2D Features framework" href="../table_of_content_features2d/table_of_content_features2d.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../trackingmotion/harris_detector/harris_detector.html" title="Harris corner detector"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../table_of_content_features2d/table_of_content_features2d.html" title="feature2d module. 2D Features framework"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_features2d/table_of_content_features2d.html" accesskey="U"><em>feature2d</em> module. 2D Features framework</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="feature-description">
+<span id="id1"></span><h1>Feature Description<a class="headerlink" href="#feature-description" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Use the <a class="reference external" href="http://docs.opencv.org/modules/features2d/doc/common_interfaces_of_descriptor_extractors.html?highlight=descriptorextractor#descriptorextractor">DescriptorExtractor</a> interface in order to find the feature vector correspondent to the keypoints. Specifically:<ul>
+<li>Use <a class="reference external" href="http://docs.opencv.org/modules/features2d/doc/common_interfaces_of_descriptor_extractors.html?highlight=surfdescriptorextractor#surfdescriptorextractor">SurfDescriptorExtractor</a> and its function <a class="reference external" href="http://docs.opencv.org/modules/features2d/doc/common_interfaces_of_descriptor_extractors.html?highlight=descriptorextractor#descriptorextractor">compute</a> to perform the required calculations.</li>
+<li>Use a <a class="reference external" href="http://docs.opencv.org/modules/features2d/doc/common_interfaces_of_descriptor_matchers.html?highlight=bruteforcematcher#bruteforcematcher">BFMatcher</a> to match the features vector</li>
+<li>Use the function <a class="reference external" href="http://docs.opencv.org/modules/features2d/doc/drawing_function_of_keypoints_and_matches.html?highlight=drawmatches#drawmatches">drawMatches</a> to draw the detected matches.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial code&#8217;s is shown lines below. You can also download it from <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/tutorial_code/features2D/SURF_descriptor.cpp">here</a></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/core/core.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/features2d/features2d.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/highgui/highgui.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/nonfree/features2d.hpp&quot;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">readme</span><span class="p">();</span>
+
+<span class="cm">/** @function main */</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">if</span><span class="p">(</span> <span class="n">argc</span> <span class="o">!=</span> <span class="mi">3</span> <span class="p">)</span>
+   <span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="n">Mat</span> <span class="n">img_1</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">CV_LOAD_IMAGE_GRAYSCALE</span> <span class="p">);</span>
+  <span class="n">Mat</span> <span class="n">img_2</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">CV_LOAD_IMAGE_GRAYSCALE</span> <span class="p">);</span>
+
+  <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">img_1</span><span class="p">.</span><span class="n">data</span> <span class="o">||</span> <span class="o">!</span><span class="n">img_2</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span>
+   <span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="c1">//-- Step 1: Detect the keypoints using SURF Detector</span>
+  <span class="kt">int</span> <span class="n">minHessian</span> <span class="o">=</span> <span class="mi">400</span><span class="p">;</span>
+
+  <span class="n">SurfFeatureDetector</span> <span class="n">detector</span><span class="p">(</span> <span class="n">minHessian</span> <span class="p">);</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;</span> <span class="n">keypoints_1</span><span class="p">,</span> <span class="n">keypoints_2</span><span class="p">;</span>
+
+  <span class="n">detector</span><span class="p">.</span><span class="n">detect</span><span class="p">(</span> <span class="n">img_1</span><span class="p">,</span> <span class="n">keypoints_1</span> <span class="p">);</span>
+  <span class="n">detector</span><span class="p">.</span><span class="n">detect</span><span class="p">(</span> <span class="n">img_2</span><span class="p">,</span> <span class="n">keypoints_2</span> <span class="p">);</span>
+
+  <span class="c1">//-- Step 2: Calculate descriptors (feature vectors)</span>
+  <span class="n">SurfDescriptorExtractor</span> <span class="n">extractor</span><span class="p">;</span>
+
+  <span class="n">Mat</span> <span class="n">descriptors_1</span><span class="p">,</span> <span class="n">descriptors_2</span><span class="p">;</span>
+
+  <span class="n">extractor</span><span class="p">.</span><span class="n">compute</span><span class="p">(</span> <span class="n">img_1</span><span class="p">,</span> <span class="n">keypoints_1</span><span class="p">,</span> <span class="n">descriptors_1</span> <span class="p">);</span>
+  <span class="n">extractor</span><span class="p">.</span><span class="n">compute</span><span class="p">(</span> <span class="n">img_2</span><span class="p">,</span> <span class="n">keypoints_2</span><span class="p">,</span> <span class="n">descriptors_2</span> <span class="p">);</span>
+
+  <span class="c1">//-- Step 3: Matching descriptor vectors with a brute force matcher</span>
+  <span class="n">BFMatcher</span> <span class="n">matcher</span><span class="p">(</span><span class="n">NORM_L2</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">DMatch</span> <span class="o">&gt;</span> <span class="n">matches</span><span class="p">;</span>
+  <span class="n">matcher</span><span class="p">.</span><span class="n">match</span><span class="p">(</span> <span class="n">descriptors_1</span><span class="p">,</span> <span class="n">descriptors_2</span><span class="p">,</span> <span class="n">matches</span> <span class="p">);</span>
+
+  <span class="c1">//-- Draw matches</span>
+  <span class="n">Mat</span> <span class="n">img_matches</span><span class="p">;</span>
+  <span class="n">drawMatches</span><span class="p">(</span> <span class="n">img_1</span><span class="p">,</span> <span class="n">keypoints_1</span><span class="p">,</span> <span class="n">img_2</span><span class="p">,</span> <span class="n">keypoints_2</span><span class="p">,</span> <span class="n">matches</span><span class="p">,</span> <span class="n">img_matches</span> <span class="p">);</span>
+
+  <span class="c1">//-- Show detected matches</span>
+  <span class="n">imshow</span><span class="p">(</span><span class="s">&quot;Matches&quot;</span><span class="p">,</span> <span class="n">img_matches</span> <span class="p">);</span>
+
+  <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+
+ <span class="cm">/** @function readme */</span>
+ <span class="kt">void</span> <span class="nf">readme</span><span class="p">()</span>
+ <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; Usage: ./SURF_descriptor &lt;img1&gt; &lt;img2&gt;&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="result">
+<h2>Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Here is the result after applying the BruteForce matcher between the two original images:</p>
+<a class="reference internal image-reference" href="../../../../_images/Feature_Description_BruteForce_Result.jpg"><img alt="../../../../_images/Feature_Description_BruteForce_Result.jpg" class="align-center" src="../../../../_images/Feature_Description_BruteForce_Result.jpg" style="height: 200pt;" /></a>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Feature Description</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a></li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#result">Result</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../table_of_content_features2d/table_of_content_features2d.html"
+                        title="previous chapter"><em>feature2d</em> module. 2D Features framework</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../trackingmotion/harris_detector/harris_detector.html"
+                        title="next chapter">Harris corner detector</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/features2d/feature_description/feature_description.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../trackingmotion/harris_detector/harris_detector.html" title="Harris corner detector"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../table_of_content_features2d/table_of_content_features2d.html" title="feature2d module. 2D Features framework"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_features2d/table_of_content_features2d.html" ><em>feature2d</em> module. 2D Features framework</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

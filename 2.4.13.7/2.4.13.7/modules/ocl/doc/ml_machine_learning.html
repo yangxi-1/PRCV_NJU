@@ -1,0 +1,295 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ml.Machine Learning &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="ocl. OpenCL-accelerated Computer Vision" href="ocl.html" />
+    <link rel="next" title="Object Detection" href="object_detection.html" />
+    <link rel="prev" title="Image Processing" href="image_processing.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="object_detection.html" title="Object Detection"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="image_processing.html" title="Image Processing"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" accesskey="U">ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ml-machine-learning">
+<h1>ml.Machine Learning<a class="headerlink" href="#ml-machine-learning" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ocl-knearestneighbour">
+<h2>ocl::KNearestNeighbour<a class="headerlink" href="#ocl-knearestneighbour" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ocl::KNearestNeighbour : public ocl::CvKNearest">
+<em class="property">class </em><code class="descclassname">ocl::</code><code class="descname">KNearestNeighbour</code> : <em class="property">public</em> <code class="descclassname">ocl::</code><code class="descname">CvKNearest</code><a class="headerlink" href="#ocl::KNearestNeighbour : public ocl::CvKNearest" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The class implements K-Nearest Neighbors model as described in the beginning of this section.</p>
+</div>
+<div class="section" id="id1">
+<h2>ocl::KNearestNeighbour<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Computes the weighted sum of two arrays.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">KNearestNeighbour</span><span class="p">:</span> <span class="k">public</span> <span class="n">CvKNearest</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">KNearestNeighbour</span><span class="p">();</span>
+    <span class="o">~</span><span class="n">KNearestNeighbour</span><span class="p">();</span>
+
+    <span class="kt">bool</span> <span class="nf">train</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">trainData</span><span class="p">,</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">labels</span><span class="p">,</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">sampleIdx</span> <span class="o">=</span> <span class="n">Mat</span><span class="p">().</span><span class="n">setTo</span><span class="p">(</span><span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span>
+        <span class="kt">bool</span> <span class="n">isRegression</span> <span class="o">=</span> <span class="nb">false</span><span class="p">,</span> <span class="kt">int</span> <span class="n">max_k</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">updateBase</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">clear</span><span class="p">();</span>
+
+    <span class="kt">void</span> <span class="nf">find_nearest</span><span class="p">(</span><span class="k">const</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">samples</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">,</span> <span class="n">oclMat</span><span class="o">&amp;</span> <span class="n">lables</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/* hidden */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ocl-knearestneighbour-train">
+<h2>ocl::KNearestNeighbour::train<a class="headerlink" href="#ocl-knearestneighbour-train" title="Permalink to this headline">¶</a></h2>
+<p>Trains the model.</p>
+<dl class="function">
+<dt id="bool ocl::KNearestNeighbour::train(const Mat&amp; trainData, Mat&amp; labels, Mat&amp; sampleIdx)), bool isRegression , int max_k , bool updateBase)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">ocl::KNearestNeighbour::</code><code class="descname">train</code><span class="sig-paren">(</span>const Mat&amp; <strong>trainData</strong>, Mat&amp; <strong>labels</strong>, Mat&amp; <strong>sampleIdx</strong>=Mat().setTo(Scalar::all(0)), bool <strong>isRegression</strong>=false, int <strong>max_k</strong>=32, bool <strong>updateBase</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#bool ocl::KNearestNeighbour::train(const Mat& trainData, Mat& labels, Mat& sampleIdx)), bool isRegression , int max_k , bool updateBase)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>isRegression</strong> &#8211; Type of the problem: <code class="docutils literal"><span class="pre">true</span></code> for regression and <code class="docutils literal"><span class="pre">false</span></code> for classification.</li>
+<li><strong>maxK</strong> &#8211; Number of maximum neighbors that may be passed to the method <a class="reference internal" href="../../ml/doc/k_nearest_neighbors.html#float CvKNearest::find_nearest(const Mat&amp; samples, int k, Mat* results, const float** neighbors, Mat* neighborResponses, Mat* dist) const" title="float CvKNearest::find_nearest(const Mat&amp; samples, int k, Mat* results, const float** neighbors, Mat* neighborResponses, Mat* dist) const"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvKNearest::find_nearest()</span></code></a>.</li>
+<li><strong>updateBase</strong> &#8211; Specifies whether the model is trained from scratch (<code class="docutils literal"><span class="pre">update_base=false</span></code>), or it is updated using the new training data (<code class="docutils literal"><span class="pre">update_base=true</span></code>). In the latter case, the parameter <code class="docutils literal"><span class="pre">maxK</span></code> must not be larger than the original value.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method trains the K-Nearest model. It follows the conventions of the generic <a class="reference internal" href="../../ml/doc/statistical_models.html#bool CvStatModel::train(const Mat&amp; train_data, [int tflag,] ..., const Mat&amp; responses, ..., [const Mat&amp; var_idx,] ..., [const Mat&amp; sample_idx,] ... [const Mat&amp; var_type,] ..., [const Mat&amp; missing_mask,] &lt;misc_training_alg_params&gt; ...)" title="bool CvStatModel::train(const Mat&amp; train_data, [int tflag,] ..., const Mat&amp; responses, ..., [const Mat&amp; var_idx,] ..., [const Mat&amp; sample_idx,] ... [const Mat&amp; var_type,] ..., [const Mat&amp; missing_mask,] &lt;misc_training_alg_params&gt; ...)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvStatModel::train()</span></code></a> approach with the following limitations:</p>
+<ul class="simple">
+<li>Only <code class="docutils literal"><span class="pre">CV_ROW_SAMPLE</span></code> data layout is supported.</li>
+<li>Input variables are all ordered.</li>
+<li>Output variables can be either categorical ( <code class="docutils literal"><span class="pre">is_regression=false</span></code> ) or ordered ( <code class="docutils literal"><span class="pre">is_regression=true</span></code> ).</li>
+<li>Variable subsets (<code class="docutils literal"><span class="pre">var_idx</span></code>) and missing measurements are not supported.</li>
+</ul>
+</div>
+<div class="section" id="ocl-knearestneighbour-find-nearest">
+<h2>ocl::KNearestNeighbour::find_nearest<a class="headerlink" href="#ocl-knearestneighbour-find-nearest" title="Permalink to this headline">¶</a></h2>
+<p>Finds the neighbors and predicts responses for input vectors.</p>
+<dl class="function">
+<dt id="void ocl::KNearestNeighbour::find_nearest(const oclMat&amp; samples, int k, oclMat&amp; lables)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::KNearestNeighbour::</code><code class="descname">find_nearest</code><span class="sig-paren">(</span>const oclMat&amp; <strong>samples</strong>, int <strong>k</strong>, oclMat&amp; <strong>lables</strong><span class="sig-paren">)</span><a class="headerlink" href="#void ocl::KNearestNeighbour::find_nearest(const oclMat& samples, int k, oclMat& lables)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>samples</strong> &#8211; Input samples stored by rows. It is a single-precision floating-point matrix of <img class="math" src="../../../_images/math/99b6837febcc1972905f571e4a77b70a975171e1.png" alt="number\_of\_samples \times number\_of\_features"/> size.</li>
+<li><strong>k</strong> &#8211; Number of used nearest neighbors. It must satisfy constraint: <img class="math" src="../../../_images/math/22e7bc9ee8ea0fde0bea7ecc1a79a367cfce5e09.png" alt="k \le"/> <a class="reference internal" href="../../ml/doc/k_nearest_neighbors.html#int CvKNearest::get_max_k() const" title="int CvKNearest::get_max_k() const"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvKNearest::get_max_k()</span></code></a>.</li>
+<li><strong>labels</strong> &#8211; Vector with results of prediction (regression or classification) for each input sample. It is a single-precision floating-point vector with <code class="docutils literal"><span class="pre">number_of_samples</span></code> elements.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-kmeans">
+<h2>ocl::kmeans<a class="headerlink" href="#ocl-kmeans" title="Permalink to this headline">¶</a></h2>
+<p>Finds centers of clusters and groups input samples around the clusters.</p>
+<dl class="function">
+<dt id="double ocl::kmeans(const oclMat &amp;src, int K, oclMat &amp;bestLabels, TermCriteria criteria, int attemps, int flags, oclMat &amp;centers)">
+<strong>C++:</strong><code class="descname"> </code>double <code class="descclassname">ocl::</code><code class="descname">kmeans</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, int <strong>K</strong>, oclMat&amp; <strong>bestLabels</strong>, TermCriteria <strong>criteria</strong>, int <strong>attemps</strong>, int <strong>flags</strong>, oclMat&amp; <strong>centers</strong><span class="sig-paren">)</span><a class="headerlink" href="#double ocl::kmeans(const oclMat &src, int K, oclMat &bestLabels, TermCriteria criteria, int attemps, int flags, oclMat &centers)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Floating-point matrix of input samples, one row per sample.</li>
+<li><strong>K</strong> &#8211; Number of clusters to split the set by.</li>
+<li><strong>bestLabels</strong> &#8211; Input/output integer array that stores the cluster indices for every sample.</li>
+<li><strong>criteria</strong> &#8211; The algorithm termination criteria, that is, the maximum number of iterations and/or the desired accuracy. The accuracy is specified as <code class="docutils literal"><span class="pre">criteria.epsilon</span></code>. As soon as each of the cluster centers moves by less than <code class="docutils literal"><span class="pre">criteria.epsilon</span></code> on some iteration, the algorithm stops.</li>
+<li><strong>attempts</strong> &#8211; Flag to specify the number of times the algorithm is executed using different initial labellings. The algorithm returns the labels that yield the best compactness (see the last function parameter).</li>
+<li><strong>flags</strong> &#8211; <p>Flag that can take the following values:</p>
+<ul>
+<li><strong>KMEANS_RANDOM_CENTERS</strong> Select random initial centers in each attempt.</li>
+<li><strong>KMEANS_PP_CENTERS</strong> Use <code class="docutils literal"><span class="pre">kmeans++</span></code> center initialization by Arthur and Vassilvitskii [Arthur2007].</li>
+<li><strong>KMEANS_USE_INITIAL_LABELS</strong> During the first (and possibly the only) attempt, use the user-supplied labels instead of computing them from the initial centers. For the second and further attempts, use the random or semi-random centers. Use one of  <code class="docutils literal"><span class="pre">KMEANS_*_CENTERS</span></code>  flag to specify the exact method.</li>
+</ul>
+</li>
+<li><strong>centers</strong> &#8211; Output matrix of the cluster centers, one row per each cluster center.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="ocl-distancetocenters">
+<h2>ocl::distanceToCenters<a class="headerlink" href="#ocl-distancetocenters" title="Permalink to this headline">¶</a></h2>
+<p>For each samples in <code class="docutils literal"><span class="pre">source</span></code>, find its closest neighour in <code class="docutils literal"><span class="pre">centers</span></code>.</p>
+<dl class="function">
+<dt id="void ocl::distanceToCenters(const oclMat &amp;src, const oclMat &amp;centers, Mat &amp;dists, Mat &amp;labels, int distType)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">ocl::</code><code class="descname">distanceToCenters</code><span class="sig-paren">(</span>const oclMat&amp; <strong>src</strong>, const oclMat&amp; <strong>centers</strong>, Mat&amp; <strong>dists</strong>, Mat&amp; <strong>labels</strong>, int <strong>distType</strong>=NORM_L2SQR<span class="sig-paren">)</span><a class="headerlink" href="#void ocl::distanceToCenters(const oclMat &src, const oclMat &centers, Mat &dists, Mat &labels, int distType)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Floating-point matrix of input samples. One row per sample.</li>
+<li><strong>centers</strong> &#8211; Floating-point matrix of center candidates. One row per center.</li>
+<li><strong>distType</strong> &#8211; Distance metric to calculate distances. Supports <code class="docutils literal"><span class="pre">NORM_L1</span></code> and <code class="docutils literal"><span class="pre">NORM_L2SQR</span></code>.</li>
+<li><strong>dists</strong> &#8211; The output distances calculated from each sample to the best matched center.</li>
+<li><strong>labels</strong> &#8211; The output index of best matched center for each row of sample.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method is a utility function which maybe used for multiple clustering algorithms such as K-means.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ml.Machine Learning</a><ul>
+<li><a class="reference internal" href="#ocl-knearestneighbour">ocl::KNearestNeighbour</a></li>
+<li><a class="reference internal" href="#id1">ocl::KNearestNeighbour</a></li>
+<li><a class="reference internal" href="#ocl-knearestneighbour-train">ocl::KNearestNeighbour::train</a></li>
+<li><a class="reference internal" href="#ocl-knearestneighbour-find-nearest">ocl::KNearestNeighbour::find_nearest</a></li>
+<li><a class="reference internal" href="#ocl-kmeans">ocl::kmeans</a></li>
+<li><a class="reference internal" href="#ocl-distancetocenters">ocl::distanceToCenters</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="image_processing.html"
+                        title="previous chapter">Image Processing</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="object_detection.html"
+                        title="next chapter">Object Detection</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/ocl/doc/ml_machine_learning.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="object_detection.html" title="Object Detection"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="image_processing.html" title="Image Processing"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ocl.html" >ocl. OpenCL-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

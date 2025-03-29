@@ -1,0 +1,435 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Eroding and Dilating &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="imgproc module. Image Processing" href="../table_of_content_imgproc/table_of_content_imgproc.html" />
+    <link rel="next" title="More Morphology Transformations" href="../opening_closing_hats/opening_closing_hats.html" />
+    <link rel="prev" title="Smoothing Images" href="../gausian_median_blur_bilateral_filter/gausian_median_blur_bilateral_filter.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../opening_closing_hats/opening_closing_hats.html" title="More Morphology Transformations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../gausian_median_blur_bilateral_filter/gausian_median_blur_bilateral_filter.html" title="Smoothing Images"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_imgproc/table_of_content_imgproc.html" accesskey="U"><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="eroding-and-dilating">
+<span id="morphology-1"></span><h1>Eroding and Dilating<a class="headerlink" href="#eroding-and-dilating" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<ul class="simple">
+<li>Apply two very common morphology operators: Dilation and Erosion. For this purpose, you will use the following OpenCV functions:<ul>
+<li><a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=erode#erode">erode</a></li>
+<li><a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=dilate#dilate">dilate</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="cool-theory">
+<h2>Cool Theory<a class="headerlink" href="#cool-theory" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The explanation below belongs to the book <strong>Learning OpenCV</strong> by Bradski and Kaehler.</p>
+</div>
+<div class="section" id="morphological-operations">
+<h3>Morphological Operations<a class="headerlink" href="#morphological-operations" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">In short: A set of operations that process images based on shapes. Morphological operations apply a <em>structuring element</em> to an input image and generate an output image.</p>
+</li>
+<li><p class="first">The most basic morphological operations are two: Erosion and Dilation. They have a wide array of uses, i.e. :</p>
+<ul class="simple">
+<li>Removing noise</li>
+<li>Isolation of individual elements and joining disparate elements in an image.</li>
+<li>Finding of intensity bumps or holes in an image</li>
+</ul>
+</li>
+<li><p class="first">We will explain dilation and erosion briefly, using the following image as an example:</p>
+<img alt="Original image" class="align-center" src="../../../../_images/Morphology_1_Tutorial_Theory_Original_Image.png" />
+</li>
+</ul>
+<div class="section" id="dilation">
+<h4>Dilation<a class="headerlink" href="#dilation" title="Permalink to this headline">¶</a></h4>
+<ul>
+<li><p class="first">This operations consists of convoluting an image <img class="math" src="../../../../_images/math/a4a22711db10ba4f6c1c70ad5f01fcc7f29a10ba.png" alt="A"/> with some kernel (<img class="math" src="../../../../_images/math/a899bd9a55bd983bd0cd87dd2d1328f9eb72286b.png" alt="B"/>), which can have any shape or size, usually a square or circle.</p>
+</li>
+<li><p class="first">The kernel <img class="math" src="../../../../_images/math/a899bd9a55bd983bd0cd87dd2d1328f9eb72286b.png" alt="B"/> has a defined <em>anchor point</em>, usually being the center of the kernel.</p>
+</li>
+<li><p class="first">As the kernel <img class="math" src="../../../../_images/math/a899bd9a55bd983bd0cd87dd2d1328f9eb72286b.png" alt="B"/> is scanned over the image, we compute the maximal pixel value overlapped by <img class="math" src="../../../../_images/math/a899bd9a55bd983bd0cd87dd2d1328f9eb72286b.png" alt="B"/> and replace the image pixel in the anchor point position with that maximal value. As you can deduce, this maximizing operation causes bright regions within an image to &#8220;grow&#8221; (therefore the name <em>dilation</em>). Take as an example the image above. Applying dilation we can get:</p>
+<img alt="Dilation result - Theory example" class="align-center" src="../../../../_images/Morphology_1_Tutorial_Theory_Dilation.png" />
+</li>
+</ul>
+<p>The background (bright) dilates around the black regions of the letter.</p>
+<p>To better grasp the idea and avoid possible confusion, in this another example we have inverted the original image such as the object in white is now the letter. We have performed two dilatations with a rectangular structuring element of size <img class="math" src="../../../../_images/math/7b8ff03bd71198b2a14a238a8912b6460ea90af7.png" alt="3x3"/>.</p>
+<blockquote>
+<div><img alt="Left image: original image inverted, right image: resulting dilatation" class="align-center" src="../../../../_images/Morphology_1_Tutorial_Theory_Dilatation_2.png" />
+</div></blockquote>
+<p>The dilatation makes the object in white bigger.</p>
+</div>
+<div class="section" id="erosion">
+<h4>Erosion<a class="headerlink" href="#erosion" title="Permalink to this headline">¶</a></h4>
+<ul>
+<li><p class="first">This operation is the sister of dilation. What this does is to compute a local minimum over the area of the kernel.</p>
+</li>
+<li><p class="first">As the kernel <img class="math" src="../../../../_images/math/a899bd9a55bd983bd0cd87dd2d1328f9eb72286b.png" alt="B"/> is scanned over the image, we compute the minimal pixel value overlapped by <img class="math" src="../../../../_images/math/a899bd9a55bd983bd0cd87dd2d1328f9eb72286b.png" alt="B"/> and replace the image pixel under the anchor point with that minimal value.</p>
+</li>
+<li><p class="first">Analagously to the example for dilation, we can apply the erosion operator to the original image (shown above). You can see in the result below that the bright areas of the image (the background, apparently), get thinner, whereas the dark zones (the &#8220;writing&#8221;( gets bigger.</p>
+<img alt="Erosion result - Theory example" class="align-center" src="../../../../_images/Morphology_1_Tutorial_Theory_Erosion.png" />
+</li>
+</ul>
+<p>In the same manner, the corresponding image resulting of the erosion operation on the inverted original image (two erosions with a rectangular structuring element of size <img class="math" src="../../../../_images/math/7b8ff03bd71198b2a14a238a8912b6460ea90af7.png" alt="3x3"/>.</p>
+<blockquote>
+<div><img alt="Left image: original image inverted, right image: resulting erosion" class="align-center" src="../../../../_images/Morphology_1_Tutorial_Theory_Erosion_2.png" />
+</div></blockquote>
+<p>The erosion makes the object in white smaller.</p>
+</div>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial code&#8217;s is shown lines below. You can also download it from <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/tutorial_code/ImgProc/Morphology_1.cpp">here</a></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;opencv2/imgproc/imgproc.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/highgui/highgui.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;highgui.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="c1">/// Global variables</span>
+<span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">erosion_dst</span><span class="p">,</span> <span class="n">dilation_dst</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="n">erosion_elem</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">erosion_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">dilation_elem</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">dilation_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="k">const</span> <span class="n">max_elem</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="kt">int</span> <span class="k">const</span> <span class="n">max_kernel_size</span> <span class="o">=</span> <span class="mi">21</span><span class="p">;</span>
+
+<span class="cm">/** Function Headers */</span>
+<span class="kt">void</span> <span class="nf">Erosion</span><span class="p">(</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="p">);</span>
+<span class="kt">void</span> <span class="nf">Dilation</span><span class="p">(</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="p">);</span>
+
+<span class="cm">/** @function main */</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">/// Load an image</span>
+  <span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">);</span>
+
+  <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">src</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span>
+  <span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="c1">/// Create windows</span>
+  <span class="n">namedWindow</span><span class="p">(</span> <span class="s">&quot;Erosion Demo&quot;</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+  <span class="n">namedWindow</span><span class="p">(</span> <span class="s">&quot;Dilation Demo&quot;</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+  <span class="n">cvMoveWindow</span><span class="p">(</span> <span class="s">&quot;Dilation Demo&quot;</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+
+  <span class="c1">/// Create Erosion Trackbar</span>
+  <span class="n">createTrackbar</span><span class="p">(</span> <span class="s">&quot;Element:</span><span class="se">\n</span><span class="s"> 0: Rect </span><span class="se">\n</span><span class="s"> 1: Cross </span><span class="se">\n</span><span class="s"> 2: Ellipse&quot;</span><span class="p">,</span> <span class="s">&quot;Erosion Demo&quot;</span><span class="p">,</span>
+                  <span class="o">&amp;</span><span class="n">erosion_elem</span><span class="p">,</span> <span class="n">max_elem</span><span class="p">,</span>
+                  <span class="n">Erosion</span> <span class="p">);</span>
+
+  <span class="n">createTrackbar</span><span class="p">(</span> <span class="s">&quot;Kernel size:</span><span class="se">\n</span><span class="s"> 2n +1&quot;</span><span class="p">,</span> <span class="s">&quot;Erosion Demo&quot;</span><span class="p">,</span>
+                  <span class="o">&amp;</span><span class="n">erosion_size</span><span class="p">,</span> <span class="n">max_kernel_size</span><span class="p">,</span>
+                  <span class="n">Erosion</span> <span class="p">);</span>
+
+  <span class="c1">/// Create Dilation Trackbar</span>
+  <span class="n">createTrackbar</span><span class="p">(</span> <span class="s">&quot;Element:</span><span class="se">\n</span><span class="s"> 0: Rect </span><span class="se">\n</span><span class="s"> 1: Cross </span><span class="se">\n</span><span class="s"> 2: Ellipse&quot;</span><span class="p">,</span> <span class="s">&quot;Dilation Demo&quot;</span><span class="p">,</span>
+                  <span class="o">&amp;</span><span class="n">dilation_elem</span><span class="p">,</span> <span class="n">max_elem</span><span class="p">,</span>
+                  <span class="n">Dilation</span> <span class="p">);</span>
+
+  <span class="n">createTrackbar</span><span class="p">(</span> <span class="s">&quot;Kernel size:</span><span class="se">\n</span><span class="s"> 2n +1&quot;</span><span class="p">,</span> <span class="s">&quot;Dilation Demo&quot;</span><span class="p">,</span>
+                  <span class="o">&amp;</span><span class="n">dilation_size</span><span class="p">,</span> <span class="n">max_kernel_size</span><span class="p">,</span>
+                  <span class="n">Dilation</span> <span class="p">);</span>
+
+  <span class="c1">/// Default start</span>
+  <span class="n">Erosion</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+  <span class="n">Dilation</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+
+  <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/**  @function Erosion  */</span>
+<span class="kt">void</span> <span class="nf">Erosion</span><span class="p">(</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="kt">int</span> <span class="n">erosion_type</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span> <span class="n">erosion_elem</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">){</span> <span class="n">erosion_type</span> <span class="o">=</span> <span class="n">MORPH_RECT</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">erosion_elem</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">){</span> <span class="n">erosion_type</span> <span class="o">=</span> <span class="n">MORPH_CROSS</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">erosion_elem</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span> <span class="n">erosion_type</span> <span class="o">=</span> <span class="n">MORPH_ELLIPSE</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="n">Mat</span> <span class="n">element</span> <span class="o">=</span> <span class="n">getStructuringElement</span><span class="p">(</span> <span class="n">erosion_type</span><span class="p">,</span>
+                                       <span class="n">Size</span><span class="p">(</span> <span class="mi">2</span><span class="o">*</span><span class="n">erosion_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">erosion_size</span><span class="o">+</span><span class="mi">1</span> <span class="p">),</span>
+                                       <span class="n">Point</span><span class="p">(</span> <span class="n">erosion_size</span><span class="p">,</span> <span class="n">erosion_size</span> <span class="p">)</span> <span class="p">);</span>
+
+  <span class="c1">/// Apply the erosion operation</span>
+  <span class="n">erode</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">erosion_dst</span><span class="p">,</span> <span class="n">element</span> <span class="p">);</span>
+  <span class="n">imshow</span><span class="p">(</span> <span class="s">&quot;Erosion Demo&quot;</span><span class="p">,</span> <span class="n">erosion_dst</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/** @function Dilation */</span>
+<span class="kt">void</span> <span class="nf">Dilation</span><span class="p">(</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="kt">int</span> <span class="n">dilation_type</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span> <span class="n">dilation_elem</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">){</span> <span class="n">dilation_type</span> <span class="o">=</span> <span class="n">MORPH_RECT</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">dilation_elem</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">){</span> <span class="n">dilation_type</span> <span class="o">=</span> <span class="n">MORPH_CROSS</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">dilation_elem</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span> <span class="n">dilation_type</span> <span class="o">=</span> <span class="n">MORPH_ELLIPSE</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="n">Mat</span> <span class="n">element</span> <span class="o">=</span> <span class="n">getStructuringElement</span><span class="p">(</span> <span class="n">dilation_type</span><span class="p">,</span>
+                                       <span class="n">Size</span><span class="p">(</span> <span class="mi">2</span><span class="o">*</span><span class="n">dilation_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">dilation_size</span><span class="o">+</span><span class="mi">1</span> <span class="p">),</span>
+                                       <span class="n">Point</span><span class="p">(</span> <span class="n">dilation_size</span><span class="p">,</span> <span class="n">dilation_size</span> <span class="p">)</span> <span class="p">);</span>
+  <span class="c1">/// Apply the dilation operation</span>
+  <span class="n">dilate</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">dilation_dst</span><span class="p">,</span> <span class="n">element</span> <span class="p">);</span>
+  <span class="n">imshow</span><span class="p">(</span> <span class="s">&quot;Dilation Demo&quot;</span><span class="p">,</span> <span class="n">dilation_dst</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Most of the stuff shown is known by you (if you have any doubt, please refer to the tutorials in previous sections). Let&#8217;s check the general structure of the program:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Load an image (can be BGR or grayscale)</li>
+<li>Create two windows (one for dilation output, the other for erosion)</li>
+<li>Create a set of 02 Trackbars for each operation:<ul>
+<li>The first trackbar &#8220;Element&#8221; returns either <strong>erosion_elem</strong> or <strong>dilation_elem</strong></li>
+<li>The second trackbar &#8220;Kernel size&#8221; return <strong>erosion_size</strong> or <strong>dilation_size</strong> for the corresponding operation.</li>
+</ul>
+</li>
+<li>Every time we move any slider, the user&#8217;s function <strong>Erosion</strong> or <strong>Dilation</strong> will be called and it will update the output image based on the current trackbar values.</li>
+</ul>
+</div>
+<p>Let&#8217;s analyze these two functions:</p>
+</li>
+<li><p class="first"><strong>erosion:</strong></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cm">/**  @function Erosion  */</span>
+<span class="kt">void</span> <span class="nf">Erosion</span><span class="p">(</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="kt">int</span> <span class="n">erosion_type</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span> <span class="n">erosion_elem</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">){</span> <span class="n">erosion_type</span> <span class="o">=</span> <span class="n">MORPH_RECT</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">erosion_elem</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">){</span> <span class="n">erosion_type</span> <span class="o">=</span> <span class="n">MORPH_CROSS</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">erosion_elem</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span> <span class="n">erosion_type</span> <span class="o">=</span> <span class="n">MORPH_ELLIPSE</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="n">Mat</span> <span class="n">element</span> <span class="o">=</span> <span class="n">getStructuringElement</span><span class="p">(</span> <span class="n">erosion_type</span><span class="p">,</span>
+                                       <span class="n">Size</span><span class="p">(</span> <span class="mi">2</span><span class="o">*</span><span class="n">erosion_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">erosion_size</span><span class="o">+</span><span class="mi">1</span> <span class="p">),</span>
+                                       <span class="n">Point</span><span class="p">(</span> <span class="n">erosion_size</span><span class="p">,</span> <span class="n">erosion_size</span> <span class="p">)</span> <span class="p">);</span>
+  <span class="c1">/// Apply the erosion operation</span>
+  <span class="n">erode</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">erosion_dst</span><span class="p">,</span> <span class="n">element</span> <span class="p">);</span>
+  <span class="n">imshow</span><span class="p">(</span> <span class="s">&quot;Erosion Demo&quot;</span><span class="p">,</span> <span class="n">erosion_dst</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul>
+<li><p class="first">The function that performs the <em>erosion</em> operation is <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=erode#erode">erode</a>. As we can see, it receives three arguments:</p>
+<ul>
+<li><p class="first"><em>src</em>: The source image</p>
+</li>
+<li><p class="first"><em>erosion_dst</em>: The output image</p>
+</li>
+<li><p class="first"><em>element</em>: This is the kernel we will use to perform the operation. If we do not specify, the default is a simple <img class="math" src="../../../../_images/math/7b8ff03bd71198b2a14a238a8912b6460ea90af7.png" alt="3x3"/> matrix. Otherwise, we can specify its shape. For this, we need to use the function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/filtering.html?highlight=getstructuringelement#getstructuringelement">getStructuringElement</a>:</p>
+<blockquote>
+<div><div class="highlight-cpp"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">element</span> <span class="o">=</span> <span class="n">getStructuringElement</span><span class="p">(</span> <span class="n">erosion_type</span><span class="p">,</span>
+                                     <span class="n">Size</span><span class="p">(</span> <span class="mi">2</span><span class="o">*</span><span class="n">erosion_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">erosion_size</span><span class="o">+</span><span class="mi">1</span> <span class="p">),</span>
+                                     <span class="n">Point</span><span class="p">(</span> <span class="n">erosion_size</span><span class="p">,</span> <span class="n">erosion_size</span> <span class="p">)</span> <span class="p">);</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>We can choose any of three shapes for our kernel:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Rectangular box: MORPH_RECT</li>
+<li>Cross:  MORPH_CROSS</li>
+<li>Ellipse: MORPH_ELLIPSE</li>
+</ul>
+</div>
+<p>Then, we just have to specify the size of our kernel and the <em>anchor point</em>. If not specified, it is assumed to be in the center.</p>
+</li>
+</ul>
+</li>
+<li><p class="first">That is all. We are ready to perform the erosion of our image.</p>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Additionally, there is another parameter that allows you to perform multiple erosions (iterations) at once. We are not using it in this simple tutorial, though. You can check out the Reference for more details.</p>
+</div>
+</li>
+<li><p class="first"><strong>dilation:</strong></p>
+</li>
+</ol>
+<p>The code is below. As you can see, it is completely similar to the snippet of code for <strong>erosion</strong>. Here we also have the option of defining our kernel, its anchor point and the size of the operator to be used.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cm">/** @function Dilation */</span>
+<span class="kt">void</span> <span class="nf">Dilation</span><span class="p">(</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="kt">int</span> <span class="n">dilation_type</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span> <span class="n">dilation_elem</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">){</span> <span class="n">dilation_type</span> <span class="o">=</span> <span class="n">MORPH_RECT</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">dilation_elem</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">){</span> <span class="n">dilation_type</span> <span class="o">=</span> <span class="n">MORPH_CROSS</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">dilation_elem</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span> <span class="n">dilation_type</span> <span class="o">=</span> <span class="n">MORPH_ELLIPSE</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="n">Mat</span> <span class="n">element</span> <span class="o">=</span> <span class="n">getStructuringElement</span><span class="p">(</span> <span class="n">dilation_type</span><span class="p">,</span>
+                                       <span class="n">Size</span><span class="p">(</span> <span class="mi">2</span><span class="o">*</span><span class="n">dilation_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">dilation_size</span><span class="o">+</span><span class="mi">1</span> <span class="p">),</span>
+                                       <span class="n">Point</span><span class="p">(</span> <span class="n">dilation_size</span><span class="p">,</span> <span class="n">dilation_size</span> <span class="p">)</span> <span class="p">);</span>
+  <span class="c1">/// Apply the dilation operation</span>
+  <span class="n">dilate</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">dilation_dst</span><span class="p">,</span> <span class="n">element</span> <span class="p">);</span>
+  <span class="n">imshow</span><span class="p">(</span> <span class="s">&quot;Dilation Demo&quot;</span><span class="p">,</span> <span class="n">dilation_dst</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Compile the code above and execute it with an image as argument. For instance, using this image:</p>
+<img alt="Original image" class="align-center" src="../../../../_images/Morphology_1_Tutorial_Original_Image.jpg" />
+<p>We get the results below. Varying the indices in the Trackbars give different output images, naturally. Try them out! You can even try to add a third Trackbar to control the number of iterations.</p>
+<img alt="Dilation and Erosion application" class="align-center" src="../../../../_images/Morphology_1_Tutorial_Cover.jpg" />
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Eroding and Dilating</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#cool-theory">Cool Theory</a><ul>
+<li><a class="reference internal" href="#morphological-operations">Morphological Operations</a><ul>
+<li><a class="reference internal" href="#dilation">Dilation</a></li>
+<li><a class="reference internal" href="#erosion">Erosion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#results">Results</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../gausian_median_blur_bilateral_filter/gausian_median_blur_bilateral_filter.html"
+                        title="previous chapter">Smoothing Images</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../opening_closing_hats/opening_closing_hats.html"
+                        title="next chapter">More Morphology Transformations</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/imgproc/erosion_dilatation/erosion_dilatation.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../opening_closing_hats/opening_closing_hats.html" title="More Morphology Transformations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../gausian_median_blur_bilateral_filter/gausian_median_blur_bilateral_filter.html" title="Smoothing Images"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_imgproc/table_of_content_imgproc.html" ><em>imgproc</em> module. Image Processing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,580 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction to Java Development &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="Introduction to OpenCV" href="../table_of_content_introduction/table_of_content_introduction.html" />
+    <link rel="next" title="Using OpenCV Java with Eclipse" href="../java_eclipse/java_eclipse.html" />
+    <link rel="prev" title="Image Watch: viewing in-memory images in the Visual Studio debugger" href="../windows_visual_studio_image_watch/windows_visual_studio_image_watch.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../java_eclipse/java_eclipse.html" title="Using OpenCV Java with Eclipse"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../windows_visual_studio_image_watch/windows_visual_studio_image_watch.html" title="Image Watch: viewing in-memory images in the Visual Studio debugger"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_introduction/table_of_content_introduction.html" accesskey="U">Introduction to OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="introduction-to-java-development">
+<span id="java-dev-intro"></span><h1>Introduction to Java Development<a class="headerlink" href="#introduction-to-java-development" title="Permalink to this headline">¶</a></h1>
+<p>As of OpenCV 2.4.4, OpenCV supports desktop Java development using nearly the same interface as for
+Android development. This guide will help you to create your first Java (or Scala) application using OpenCV.
+We will use either <a class="reference external" href="http://ant.apache.org/">Apache Ant</a> or <a class="reference external" href="http://www.scala-sbt.org/">Simple Build Tool (SBT)</a> to build the application.</p>
+<p>If you want to use Eclipse head to <a class="reference internal" href="../java_eclipse/java_eclipse.html#java-eclipse"><span>Using OpenCV Java with Eclipse</span></a>. For further reading after this guide, look at the <a class="reference internal" href="../android_binary_package/android_dev_intro.html#android-dev-intro"><span>Introduction into Android Development</span></a> tutorials.</p>
+<div class="section" id="what-we-ll-do-in-this-guide">
+<h2>What we&#8217;ll do in this guide<a class="headerlink" href="#what-we-ll-do-in-this-guide" title="Permalink to this headline">¶</a></h2>
+<p>In this guide, we will:</p>
+<ul class="simple">
+<li>Get OpenCV with desktop Java support</li>
+<li>Create an <code class="docutils literal"><span class="pre">Ant</span></code> or <code class="docutils literal"><span class="pre">SBT</span></code> project</li>
+<li>Write a simple OpenCV application in Java or Scala</li>
+</ul>
+<p>The same process was used to create the samples in the <code class="file docutils literal"><span class="pre">samples/java</span></code> folder of the OpenCV repository,
+so consult those files if you get lost.</p>
+</div>
+<div class="section" id="get-proper-opencv">
+<h2>Get proper OpenCV<a class="headerlink" href="#get-proper-opencv" title="Permalink to this headline">¶</a></h2>
+<p>Starting from version 2.4.4 OpenCV includes desktop Java bindings.</p>
+<div class="section" id="download">
+<h3>Download<a class="headerlink" href="#download" title="Permalink to this headline">¶</a></h3>
+<p>The most simple way to get it is downloading the appropriate package of <strong>version 2.4.4 or higher</strong> from the
+<a class="reference external" href="http://sourceforge.net/projects/opencvlibrary/files/">OpenCV SourceForge repository</a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Windows users can find the prebuilt files needed for Java development in
+the <code class="file docutils literal"><span class="pre">opencv/build/java/</span></code> folder inside the package.
+For other OSes it&#8217;s required to build OpenCV from sources.</p>
+</div>
+<p>Another option to get OpenCV sources is to clone <a class="reference external" href="https://github.com/opencv/opencv/">OpenCV git repository</a>.
+In order to build OpenCV with Java bindings you need <abbr title="Java Development Kit">JDK</abbr>
+(we recommend <a class="reference external" href="http://www.oracle.com/technetwork/java/javase/downloads/">Oracle/Sun JDK 6 or 7</a>),
+<a class="reference external" href="http://ant.apache.org/">Apache Ant</a> and <cite>Python</cite> v2.6 or higher to be installed.</p>
+</div>
+<div class="section" id="build">
+<h3>Build<a class="headerlink" href="#build" title="Permalink to this headline">¶</a></h3>
+<p>Let&#8217;s build OpenCV:</p>
+<div class="highlight-bash"><div class="highlight"><pre>git clone git://github.com/opencv/opencv.git
+<span class="nb">cd</span> opencv
+git checkout 2.4
+mkdir build
+<span class="nb">cd</span> build
+</pre></div>
+</div>
+<p>Generate a Makefile or a MS Visual Studio* solution, or whatever you use for
+building executables in your system:</p>
+<div class="highlight-bash"><div class="highlight"><pre>cmake -DBUILD_SHARED_LIBS<span class="o">=</span>OFF ..
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-bat"><div class="highlight"><pre>cmake -DBUILD_SHARED_LIBS=OFF -G <span class="s2">&quot;Visual Studio 10&quot;</span> ..
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When OpenCV is built as a set of <strong>static</strong> libraries (<code class="docutils literal"><span class="pre">-DBUILD_SHARED_LIBS=OFF</span></code> option)
+the Java bindings dynamic library is all-sufficient,
+i.e. doesn&#8217;t depend on other OpenCV libs, but includes all the OpenCV code inside.</p>
+</div>
+<p>Examine the output of CMake and ensure <code class="docutils literal"><span class="pre">java</span></code> is one of the modules &#8220;To be built&#8221;.
+If not, it&#8217;s likely you&#8217;re missing a dependency. You should troubleshoot by looking
+through the CMake output for any Java-related tools that aren&#8217;t found and installing them.</p>
+<img alt="CMake output" class="align-center" src="../../../../_images/cmake_output.png" />
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>If <code class="docutils literal"><span class="pre">CMake</span></code> can&#8217;t find Java in your system set the <code class="docutils literal"><span class="pre">JAVA_HOME</span></code>
+environment variable with the path to installed JDK
+before running it. E.g.:</p>
+<div class="last highlight-bash"><div class="highlight"><pre><span class="nb">export</span> <span class="nv">JAVA_HOME</span><span class="o">=</span>/usr/lib/jvm/java-6-oracle
+cmake -DBUILD_SHARED_LIBS<span class="o">=</span>OFF ..
+</pre></div>
+</div>
+</div>
+<p>Now start the build:</p>
+<div class="highlight-bash"><div class="highlight"><pre>make -j8
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-bat"><div class="highlight"><pre>msbuild /m OpenCV.sln /t:Build /p:Configuration=Release /v:m
+</pre></div>
+</div>
+<p>Besides all this will create a <code class="docutils literal"><span class="pre">jar</span></code> containing the Java interface (<code class="file docutils literal"><span class="pre">bin/opencv-244.jar</span></code>)
+and a native dynamic library containing Java bindings and all the OpenCV stuff
+(<code class="file docutils literal"><span class="pre">lib/libopencv_java244.so</span></code> or <code class="file docutils literal"><span class="pre">bin/Release/opencv_java244.dll</span></code> respectively).
+We&#8217;ll use these files later.</p>
+</div>
+</div>
+<div class="section" id="java-sample-with-ant">
+<h2>Java sample with Ant<a class="headerlink" href="#java-sample-with-ant" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The described sample is provided with OpenCV library in the <code class="file docutils literal"><span class="pre">opencv/samples/java/ant</span></code> folder.</p>
+</div>
+<ul>
+<li><p class="first">Create a folder where you&#8217;ll develop this sample application.</p>
+</li>
+<li><p class="first">In this folder create the <code class="file docutils literal"><span class="pre">build.xml</span></code> file with the following content using any text editor:</p>
+<div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49</pre></div></td><td class="code"><div class="highlight"><pre>   <span class="nt">&lt;project</span> <span class="na">name=</span><span class="s">&quot;SimpleSample&quot;</span> <span class="na">basedir=</span><span class="s">&quot;.&quot;</span> <span class="na">default=</span><span class="s">&quot;rebuild-run&quot;</span><span class="nt">&gt;</span>
+
+       <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;src.dir&quot;</span>     <span class="na">value=</span><span class="s">&quot;src&quot;</span><span class="nt">/&gt;</span>
+
+       <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;lib.dir&quot;</span>     <span class="na">value=</span><span class="s">&quot;${ocvJarDir}&quot;</span><span class="nt">/&gt;</span>
+       <span class="nt">&lt;path</span> <span class="na">id=</span><span class="s">&quot;classpath&quot;</span><span class="nt">&gt;</span>
+           <span class="nt">&lt;fileset</span> <span class="na">dir=</span><span class="s">&quot;${lib.dir}&quot;</span> <span class="na">includes=</span><span class="s">&quot;**/*.jar&quot;</span><span class="nt">/&gt;</span>
+       <span class="nt">&lt;/path&gt;</span>
+
+       <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;build.dir&quot;</span>   <span class="na">value=</span><span class="s">&quot;build&quot;</span><span class="nt">/&gt;</span>
+       <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;classes.dir&quot;</span> <span class="na">value=</span><span class="s">&quot;${build.dir}/classes&quot;</span><span class="nt">/&gt;</span>
+       <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jar.dir&quot;</span>     <span class="na">value=</span><span class="s">&quot;${build.dir}/jar&quot;</span><span class="nt">/&gt;</span>
+
+       <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;main-class&quot;</span>  <span class="na">value=</span><span class="s">&quot;${ant.project.name}&quot;</span><span class="nt">/&gt;</span>
+
+
+       <span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;clean&quot;</span><span class="nt">&gt;</span>
+           <span class="nt">&lt;delete</span> <span class="na">dir=</span><span class="s">&quot;${build.dir}&quot;</span><span class="nt">/&gt;</span>
+       <span class="nt">&lt;/target&gt;</span>
+
+       <span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;compile&quot;</span><span class="nt">&gt;</span>
+           <span class="nt">&lt;mkdir</span> <span class="na">dir=</span><span class="s">&quot;${classes.dir}&quot;</span><span class="nt">/&gt;</span>
+           <span class="nt">&lt;javac</span> <span class="na">includeantruntime=</span><span class="s">&quot;false&quot;</span> <span class="na">srcdir=</span><span class="s">&quot;${src.dir}&quot;</span> <span class="na">destdir=</span><span class="s">&quot;${classes.dir}&quot;</span> <span class="na">classpathref=</span><span class="s">&quot;classpath&quot;</span><span class="nt">/&gt;</span>
+       <span class="nt">&lt;/target&gt;</span>
+
+       <span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;jar&quot;</span> <span class="na">depends=</span><span class="s">&quot;compile&quot;</span><span class="nt">&gt;</span>
+           <span class="nt">&lt;mkdir</span> <span class="na">dir=</span><span class="s">&quot;${jar.dir}&quot;</span><span class="nt">/&gt;</span>
+           <span class="nt">&lt;jar</span> <span class="na">destfile=</span><span class="s">&quot;${jar.dir}/${ant.project.name}.jar&quot;</span> <span class="na">basedir=</span><span class="s">&quot;${classes.dir}&quot;</span><span class="nt">&gt;</span>
+               <span class="nt">&lt;manifest&gt;</span>
+                   <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;Main-Class&quot;</span> <span class="na">value=</span><span class="s">&quot;${main-class}&quot;</span><span class="nt">/&gt;</span>
+               <span class="nt">&lt;/manifest&gt;</span>
+           <span class="nt">&lt;/jar&gt;</span>
+       <span class="nt">&lt;/target&gt;</span>
+
+       <span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;run&quot;</span> <span class="na">depends=</span><span class="s">&quot;jar&quot;</span><span class="nt">&gt;</span>
+           <span class="nt">&lt;java</span> <span class="na">fork=</span><span class="s">&quot;true&quot;</span> <span class="na">classname=</span><span class="s">&quot;${main-class}&quot;</span><span class="nt">&gt;</span>
+               <span class="nt">&lt;sysproperty</span> <span class="na">key=</span><span class="s">&quot;java.library.path&quot;</span> <span class="na">path=</span><span class="s">&quot;${ocvLibDir}&quot;</span><span class="nt">/&gt;</span>
+               <span class="nt">&lt;classpath&gt;</span>
+                   <span class="nt">&lt;path</span> <span class="na">refid=</span><span class="s">&quot;classpath&quot;</span><span class="nt">/&gt;</span>
+                   <span class="nt">&lt;path</span> <span class="na">location=</span><span class="s">&quot;${jar.dir}/${ant.project.name}.jar&quot;</span><span class="nt">/&gt;</span>
+               <span class="nt">&lt;/classpath&gt;</span>
+           <span class="nt">&lt;/java&gt;</span>
+       <span class="nt">&lt;/target&gt;</span>
+
+       <span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;rebuild&quot;</span> <span class="na">depends=</span><span class="s">&quot;clean,jar&quot;</span><span class="nt">/&gt;</span>
+
+       <span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;rebuild-run&quot;</span> <span class="na">depends=</span><span class="s">&quot;clean,run&quot;</span><span class="nt">/&gt;</span>
+
+   <span class="nt">&lt;/project&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>This XML file can be reused for building other Java applications.
+It describes a common folder structure in the lines 3 - 12 and common targets
+for compiling and running the application.</p>
+<p class="last">When reusing this XML don&#8217;t forget to modify the project name in the line 1,
+that is also the name of the <cite>main</cite> class (line 14).
+The paths to OpenCV <cite>jar</cite> and <cite>jni lib</cite> are expected as parameters
+(<code class="docutils literal"><span class="pre">&quot;${ocvJarDir}&quot;</span></code> in line 5 and <code class="docutils literal"><span class="pre">&quot;${ocvLibDir}&quot;</span></code> in line 37), but
+you can hardcode these paths for your convenience.
+See <a class="reference external" href="http://ant.apache.org/manual/">Ant documentation</a> for detailed description
+of its build file format.</p>
+</div>
+</li>
+<li><p class="first">Create an <code class="file docutils literal"><span class="pre">src</span></code> folder next to the <code class="file docutils literal"><span class="pre">build.xml</span></code> file and a <code class="file docutils literal"><span class="pre">SimpleSample.java</span></code> file in it.</p>
+</li>
+<li><dl class="first docutils">
+<dt>Put the following Java code into the <code class="file docutils literal"><span class="pre">SimpleSample.java</span></code> file:</dt>
+<dd><div class="first last highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">org.opencv.core.Core</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.opencv.core.Mat</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.opencv.core.CvType</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.opencv.core.Scalar</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">SimpleSample</span> <span class="o">{</span>
+
+  <span class="kd">static</span><span class="o">{</span> <span class="n">System</span><span class="o">.</span><span class="na">loadLibrary</span><span class="o">(</span><span class="n">Core</span><span class="o">.</span><span class="na">NATIVE_LIBRARY_NAME</span><span class="o">);</span> <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Welcome to OpenCV &quot;</span> <span class="o">+</span> <span class="n">Core</span><span class="o">.</span><span class="na">VERSION</span><span class="o">);</span>
+    <span class="n">Mat</span> <span class="n">m</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mat</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="n">CvType</span><span class="o">.</span><span class="na">CV_8UC1</span><span class="o">,</span> <span class="k">new</span> <span class="n">Scalar</span><span class="o">(</span><span class="mi">0</span><span class="o">));</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;OpenCV Mat: &quot;</span> <span class="o">+</span> <span class="n">m</span><span class="o">);</span>
+    <span class="n">Mat</span> <span class="n">mr1</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">row</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+    <span class="n">mr1</span><span class="o">.</span><span class="na">setTo</span><span class="o">(</span><span class="k">new</span> <span class="n">Scalar</span><span class="o">(</span><span class="mi">1</span><span class="o">));</span>
+    <span class="n">Mat</span> <span class="n">mc5</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">col</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
+    <span class="n">mc5</span><span class="o">.</span><span class="na">setTo</span><span class="o">(</span><span class="k">new</span> <span class="n">Scalar</span><span class="o">(</span><span class="mi">5</span><span class="o">));</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;OpenCV Mat data:\n&quot;</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="na">dump</span><span class="o">());</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Run the following command in console in the folder containing <code class="file docutils literal"><span class="pre">build.xml</span></code>:</dt>
+<dd><div class="first highlight-bash"><div class="highlight"><pre>ant -DocvJarDir<span class="o">=</span>path/to/dir/containing/opencv-244.jar -DocvLibDir<span class="o">=</span>path/to/dir/containing/opencv_java244/native/library
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-bat"><div class="highlight"><pre>ant -DocvJarDir=X:\opencv-2.4.4\bin -DocvLibDir=X:\opencv-2.4.4\bin\Release
+</pre></div>
+</div>
+<p>The command should initiate [re]building and running the sample.
+You should see on the screen something like this:</p>
+<img alt="run app with Ant" class="last align-center" src="../../../../_images/ant_output.png" />
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="sbt-project-for-java-and-scala">
+<h2>SBT project for Java and Scala<a class="headerlink" href="#sbt-project-for-java-and-scala" title="Permalink to this headline">¶</a></h2>
+<p>Now we&#8217;ll create a simple Java application using SBT. This serves as a brief introduction to
+those unfamiliar with this build tool. We&#8217;re using SBT because it is particularly easy and powerful.</p>
+<p>First, download and install <a class="reference external" href="http://www.scala-sbt.org/">SBT</a> using the instructions on its <a class="reference external" href="http://www.scala-sbt.org/">web site</a>.</p>
+<p>Next, navigate to a new directory where you&#8217;d like the application source to live (outside <code class="file docutils literal"><span class="pre">opencv</span></code> dir).
+Let&#8217;s call it &#8220;JavaSample&#8221; and create a directory for it:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">cd</span> &lt;somewhere outside opencv&gt;
+mkdir JavaSample
+</pre></div>
+</div>
+<p>Now we will create the necessary folders and an SBT project:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">cd</span> JavaSample
+mkdir -p src/main/java <span class="c1"># This is where SBT expects to find Java sources</span>
+mkdir project <span class="c1"># This is where the build definitions live</span>
+</pre></div>
+</div>
+<p>Now open <code class="file docutils literal"><span class="pre">project/build.scala</span></code> in your favorite editor and paste the following.
+It defines your project:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">sbt._</span>
+<span class="k">import</span> <span class="nn">Keys._</span>
+
+<span class="k">object</span> <span class="nc">JavaSampleBuild</span> <span class="k">extends</span> <span class="nc">Build</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">scalaSettings</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span>
+    <span class="n">scalaVersion</span> <span class="o">:=</span> <span class="s">&quot;2.10.0&quot;</span><span class="o">,</span>
+    <span class="n">scalacOptions</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
+      <span class="s">&quot;-optimize&quot;</span><span class="o">,</span>
+      <span class="s">&quot;-unchecked&quot;</span><span class="o">,</span>
+      <span class="s">&quot;-deprecation&quot;</span>
+    <span class="o">)</span>
+  <span class="o">)</span>
+
+  <span class="k">def</span> <span class="n">buildSettings</span> <span class="k">=</span>
+    <span class="nc">Project</span><span class="o">.</span><span class="n">defaultSettings</span> <span class="o">++</span>
+    <span class="n">scalaSettings</span>
+
+  <span class="k">lazy</span> <span class="k">val</span> <span class="n">root</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">val</span> <span class="n">settings</span> <span class="k">=</span> <span class="n">buildSettings</span> <span class="o">++</span> <span class="nc">Seq</span><span class="o">(</span><span class="n">name</span> <span class="o">:=</span> <span class="s">&quot;JavaSample&quot;</span><span class="o">)</span>
+    <span class="nc">Project</span><span class="o">(</span><span class="n">id</span> <span class="k">=</span> <span class="s">&quot;JavaSample&quot;</span><span class="o">,</span> <span class="n">base</span> <span class="k">=</span> <span class="n">file</span><span class="o">(</span><span class="s">&quot;.&quot;</span><span class="o">),</span> <span class="n">settings</span> <span class="k">=</span> <span class="n">settings</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Now edit <code class="file docutils literal"><span class="pre">project/plugins.sbt</span></code> and paste the following.
+This will enable auto-generation of an Eclipse project:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">addSbtPlugin</span><span class="o">(</span><span class="s">&quot;com.typesafe.sbteclipse&quot;</span> <span class="o">%</span> <span class="s">&quot;sbteclipse-plugin&quot;</span> <span class="o">%</span> <span class="s">&quot;2.1.0&quot;</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Now run <code class="docutils literal"><span class="pre">sbt</span></code> from the <code class="file docutils literal"><span class="pre">JavaSample</span></code> root and from within SBT run <code class="docutils literal"><span class="pre">eclipse</span></code> to generate an eclipse project:</p>
+<div class="highlight-bash"><div class="highlight"><pre>sbt <span class="c1"># Starts the sbt console</span>
+&gt; eclipse <span class="c1"># Running &quot;eclipse&quot; from within the sbt console</span>
+</pre></div>
+</div>
+<p>You should see something like this:</p>
+<img alt="SBT output" class="align-center" src="../../../../_images/sbt_eclipse.png" />
+<p>You can now import the SBT project to Eclipse using <span class="guilabel">Import ... -&gt; Existing projects into workspace</span>.
+Whether you actually do this is optional for the guide;
+we&#8217;ll be using SBT to build the project, so if you choose to use Eclipse it will just serve as a text editor.</p>
+<p>To test that everything is working, create a simple &#8220;Hello OpenCV&#8221; application.
+Do this by creating a file <code class="file docutils literal"><span class="pre">src/main/java/HelloOpenCV.java</span></code> with the following contents:</p>
+<div class="highlight-java"><div class="highlight"><pre> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloOpenCV</span> <span class="o">{</span>
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Hello, OpenCV&quot;</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Now execute <code class="docutils literal"><span class="pre">run</span></code> from the sbt console, or more concisely, run <code class="docutils literal"><span class="pre">sbt</span> <span class="pre">run</span></code> from the command line:</p>
+<div class="highlight-bash"><div class="highlight"><pre>sbt run
+</pre></div>
+</div>
+<p>You should see something like this:</p>
+<img alt="SBT run" class="align-center" src="../../../../_images/sbt_run.png" />
+<div class="section" id="running-sbt-samples">
+<h3>Running SBT samples<a class="headerlink" href="#running-sbt-samples" title="Permalink to this headline">¶</a></h3>
+<p>Now we&#8217;ll create a simple face detection application using OpenCV.</p>
+<p>First, create a <code class="file docutils literal"><span class="pre">lib/</span></code> folder and copy the OpenCV jar into it.
+By default, SBT adds jars in the lib folder to the Java library search path.
+You can optionally rerun <code class="docutils literal"><span class="pre">sbt</span> <span class="pre">eclipse</span></code> to update your Eclipse project.</p>
+<div class="highlight-bash"><div class="highlight"><pre>mkdir lib
+cp &lt;opencv_dir&gt;/build/bin/opencv_&lt;version&gt;.jar lib/
+sbt eclipse
+</pre></div>
+</div>
+<p>Next, create the directory <code class="file docutils literal"><span class="pre">src/main/resources</span></code> and download this Lena image into it:</p>
+<img alt="Lena" class="align-center" src="../../../../_images/lena1.png" />
+<p>Make sure it&#8217;s called <code class="file docutils literal"><span class="pre">&quot;lena.png&quot;</span></code>.
+Items in the resources directory are available to the Java application at runtime.</p>
+<p>Next, copy <code class="file docutils literal"><span class="pre">lbpcascade_frontalface.xml</span></code> from <code class="file docutils literal"><span class="pre">opencv/data/lbpcascades/</span></code> into the <code class="file docutils literal"><span class="pre">resources</span></code>
+directory:</p>
+<div class="highlight-bash"><div class="highlight"><pre>cp &lt;opencv_dir&gt;/data/lbpcascades/lbpcascade_frontalface.xml src/main/resources/
+</pre></div>
+</div>
+<p>Now modify src/main/java/HelloOpenCV.java so it contains the following Java code:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">org.opencv.core.Core</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.opencv.core.Mat</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.opencv.core.MatOfRect</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.opencv.core.Point</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.opencv.core.Rect</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.opencv.core.Scalar</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.opencv.highgui.Highgui</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.opencv.objdetect.CascadeClassifier</span><span class="o">;</span>
+
+<span class="c1">//</span>
+<span class="c1">// Detects faces in an image, draws boxes around them, and writes the results</span>
+<span class="c1">// to &quot;faceDetection.png&quot;.</span>
+<span class="c1">//</span>
+<span class="kd">class</span> <span class="nc">DetectFaceDemo</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;\nRunning DetectFaceDemo&quot;</span><span class="o">);</span>
+
+    <span class="c1">// Create a face detector from the cascade file in the resources</span>
+    <span class="c1">// directory.</span>
+    <span class="n">CascadeClassifier</span> <span class="n">faceDetector</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CascadeClassifier</span><span class="o">(</span><span class="n">getClass</span><span class="o">().</span><span class="na">getResource</span><span class="o">(</span><span class="s">&quot;/lbpcascade_frontalface.xml&quot;</span><span class="o">).</span><span class="na">getPath</span><span class="o">());</span>
+    <span class="n">Mat</span> <span class="n">image</span> <span class="o">=</span> <span class="n">Highgui</span><span class="o">.</span><span class="na">imread</span><span class="o">(</span><span class="n">getClass</span><span class="o">().</span><span class="na">getResource</span><span class="o">(</span><span class="s">&quot;/lena.png&quot;</span><span class="o">).</span><span class="na">getPath</span><span class="o">());</span>
+
+    <span class="c1">// Detect faces in the image.</span>
+    <span class="c1">// MatOfRect is a special container class for Rect.</span>
+    <span class="n">MatOfRect</span> <span class="n">faceDetections</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MatOfRect</span><span class="o">();</span>
+    <span class="n">faceDetector</span><span class="o">.</span><span class="na">detectMultiScale</span><span class="o">(</span><span class="n">image</span><span class="o">,</span> <span class="n">faceDetections</span><span class="o">);</span>
+
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Detected %s faces&quot;</span><span class="o">,</span> <span class="n">faceDetections</span><span class="o">.</span><span class="na">toArray</span><span class="o">().</span><span class="na">length</span><span class="o">));</span>
+
+    <span class="c1">// Draw a bounding box around each face.</span>
+    <span class="k">for</span> <span class="o">(</span><span class="n">Rect</span> <span class="n">rect</span> <span class="o">:</span> <span class="n">faceDetections</span><span class="o">.</span><span class="na">toArray</span><span class="o">())</span> <span class="o">{</span>
+        <span class="n">Core</span><span class="o">.</span><span class="na">rectangle</span><span class="o">(</span><span class="n">image</span><span class="o">,</span> <span class="k">new</span> <span class="n">Point</span><span class="o">(</span><span class="n">rect</span><span class="o">.</span><span class="na">x</span><span class="o">,</span> <span class="n">rect</span><span class="o">.</span><span class="na">y</span><span class="o">),</span> <span class="k">new</span> <span class="n">Point</span><span class="o">(</span><span class="n">rect</span><span class="o">.</span><span class="na">x</span> <span class="o">+</span> <span class="n">rect</span><span class="o">.</span><span class="na">width</span><span class="o">,</span> <span class="n">rect</span><span class="o">.</span><span class="na">y</span> <span class="o">+</span> <span class="n">rect</span><span class="o">.</span><span class="na">height</span><span class="o">),</span> <span class="k">new</span> <span class="n">Scalar</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">255</span><span class="o">,</span> <span class="mi">0</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="c1">// Save the visualized detection.</span>
+    <span class="n">String</span> <span class="n">filename</span> <span class="o">=</span> <span class="s">&quot;faceDetection.png&quot;</span><span class="o">;</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Writing %s&quot;</span><span class="o">,</span> <span class="n">filename</span><span class="o">));</span>
+    <span class="n">Highgui</span><span class="o">.</span><span class="na">imwrite</span><span class="o">(</span><span class="n">filename</span><span class="o">,</span> <span class="n">image</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloOpenCV</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Hello, OpenCV&quot;</span><span class="o">);</span>
+
+    <span class="c1">// Load the native library.</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">loadLibrary</span><span class="o">(</span><span class="n">Core</span><span class="o">.</span><span class="na">NATIVE_LIBRARY_NAME</span><span class="o">);</span>
+    <span class="k">new</span> <span class="n">DetectFaceDemo</span><span class="o">().</span><span class="na">run</span><span class="o">();</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Note the call to <code class="docutils literal"><span class="pre">System.loadLibrary(Core.NATIVE_LIBRARY_NAME)</span></code>.
+This command must be executed exactly once per Java process prior to using any native OpenCV methods.
+If you don&#8217;t call it, you will get <code class="docutils literal"><span class="pre">UnsatisfiedLink</span> <span class="pre">errors</span></code>.
+You will also get errors if you try to load OpenCV when it has already been loaded.</p>
+<p>Now run the face detection app using <code class="docutils literal"><span class="pre">sbt</span> <span class="pre">run</span></code>:</p>
+<div class="highlight-bash"><div class="highlight"><pre>sbt run
+</pre></div>
+</div>
+<p>You should see something like this:</p>
+<img alt="SBT run" class="align-center" src="../../../../_images/sbt_run_face.png" />
+<p>It should also write the following image to <code class="file docutils literal"><span class="pre">faceDetection.png</span></code>:</p>
+<img alt="Detected face" class="align-center" src="../../../../_images/faceDetection.png" />
+<p>You&#8217;re done!
+Now you have a sample Java application working with OpenCV, so you can start the work on your own.
+We wish you good luck and many years of joyful life!</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction to Java Development</a><ul>
+<li><a class="reference internal" href="#what-we-ll-do-in-this-guide">What we&#8217;ll do in this guide</a></li>
+<li><a class="reference internal" href="#get-proper-opencv">Get proper OpenCV</a><ul>
+<li><a class="reference internal" href="#download">Download</a></li>
+<li><a class="reference internal" href="#build">Build</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#java-sample-with-ant">Java sample with Ant</a></li>
+<li><a class="reference internal" href="#sbt-project-for-java-and-scala">SBT project for Java and Scala</a><ul>
+<li><a class="reference internal" href="#running-sbt-samples">Running SBT samples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../windows_visual_studio_image_watch/windows_visual_studio_image_watch.html"
+                        title="previous chapter">Image Watch: viewing in-memory images in the Visual Studio debugger</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../java_eclipse/java_eclipse.html"
+                        title="next chapter">Using OpenCV Java with Eclipse</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/introduction/desktop_java/java_dev_intro.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../java_eclipse/java_eclipse.html" title="Using OpenCV Java with Eclipse"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../windows_visual_studio_image_watch/windows_visual_studio_image_watch.html" title="Image Watch: viewing in-memory images in the Visual Studio debugger"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_introduction/table_of_content_introduction.html" >Introduction to OpenCV</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

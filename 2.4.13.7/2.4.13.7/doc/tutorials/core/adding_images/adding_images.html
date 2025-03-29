@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Adding (blending) two images using OpenCV &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="core module. The Core Functionality" href="../table_of_content_core/table_of_content_core.html" />
+    <link rel="next" title="Changing the contrast and brightness of an image!" href="../basic_linear_transform/basic_linear_transform.html" />
+    <link rel="prev" title="Mask operations on matrices" href="../mat-mask-operations/mat-mask-operations.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../basic_linear_transform/basic_linear_transform.html" title="Changing the contrast and brightness of an image!"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../mat-mask-operations/mat-mask-operations.html" title="Mask operations on matrices"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_core/table_of_content_core.html" accesskey="U"><em>core</em> module. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="adding-blending-two-images-using-opencv">
+<span id="adding-images"></span><h1>Adding (blending) two images using OpenCV<a class="headerlink" href="#adding-blending-two-images-using-opencv" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>what is <em>linear blending</em> and why it is useful;</li>
+<li>how to add two images using <a class="reference external" href="http://docs.opencv.org/modules/core/doc/operations_on_arrays.html?highlight=addweighted#addweighted">addWeighted</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The explanation below belongs to the book <a class="reference external" href="http://szeliski.org/Book/">Computer Vision: Algorithms and Applications</a>  by Richard Szeliski</p>
+</div>
+<p>From our previous tutorial, we know already a bit of <em>Pixel operators</em>. An interesting dyadic (two-input) operator is the <em>linear blend operator</em>:</p>
+<div class="math">
+<p><img src="../../../../_images/math/df576a6ff28b7f5a4c17446104ad4433c31f627c.png" alt="g(x) = (1 - \alpha)f_{0}(x) + \alpha f_{1}(x)"/></p>
+</div><p>By varying <img class="math" src="../../../../_images/math/69777408db155ee0fca9cc9dee60a269df6d1f96.png" alt="\alpha"/> from <img class="math" src="../../../../_images/math/e4600f3f0e742ad87ba4ca563e13f25c5637ce44.png" alt="0 \rightarrow 1"/> this operator can be used to perform a temporal <em>cross-dissolve</em> between two images or videos, as seen in slide shows and film productions (cool, eh?)</p>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<p>As usual, after the not-so-lengthy explanation, let&#8217;s go to the code:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&lt;cv.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;highgui.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+ <span class="kt">double</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">;</span> <span class="kt">double</span> <span class="n">beta</span><span class="p">;</span> <span class="kt">double</span> <span class="n">input</span><span class="p">;</span>
+
+ <span class="n">Mat</span> <span class="n">src1</span><span class="p">,</span> <span class="n">src2</span><span class="p">,</span> <span class="n">dst</span><span class="p">;</span>
+
+ <span class="c1">/// Ask the user enter alpha</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot; Simple Linear Blender &quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;-----------------------&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;* Enter alpha [0-1]: &quot;</span><span class="p">;</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">input</span><span class="p">;</span>
+
+ <span class="c1">/// We use the alpha provided by the user if it is between 0 and 1</span>
+ <span class="k">if</span><span class="p">(</span> <span class="n">input</span> <span class="o">&gt;=</span> <span class="mf">0.0</span> <span class="o">&amp;&amp;</span> <span class="n">input</span> <span class="o">&lt;=</span> <span class="mf">1.0</span> <span class="p">)</span>
+   <span class="p">{</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">input</span><span class="p">;</span> <span class="p">}</span>
+
+ <span class="c1">/// Read image ( same size, same type )</span>
+ <span class="n">src1</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&quot;../../images/LinuxLogo.jpg&quot;</span><span class="p">);</span>
+ <span class="n">src2</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&quot;../../images/WindowsLogo.jpg&quot;</span><span class="p">);</span>
+
+ <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">src1</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span> <span class="p">{</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Error loading src1 </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+ <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">src2</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span> <span class="p">{</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Error loading src2 </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+
+ <span class="c1">/// Create Windows</span>
+ <span class="n">namedWindow</span><span class="p">(</span><span class="s">&quot;Linear Blend&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+
+ <span class="n">beta</span> <span class="o">=</span> <span class="p">(</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span> <span class="p">);</span>
+ <span class="n">addWeighted</span><span class="p">(</span> <span class="n">src1</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">src2</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">dst</span><span class="p">);</span>
+
+ <span class="n">imshow</span><span class="p">(</span> <span class="s">&quot;Linear Blend&quot;</span><span class="p">,</span> <span class="n">dst</span> <span class="p">);</span>
+
+ <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+ <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Since we are going to perform:</p>
+<div class="math">
+<p><img src="../../../../_images/math/df576a6ff28b7f5a4c17446104ad4433c31f627c.png" alt="g(x) = (1 - \alpha)f_{0}(x) + \alpha f_{1}(x)"/></p>
+</div><p>We need two source images (<img class="math" src="../../../../_images/math/a704427a493c85e884445ee21409af1205cea70b.png" alt="f_{0}(x)"/> and <img class="math" src="../../../../_images/math/a991c49714afc3341ae54beda696602533bce464.png" alt="f_{1}(x)"/>). So, we load them in the usual way:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">src1</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&quot;../../images/LinuxLogo.jpg&quot;</span><span class="p">);</span>
+<span class="n">src2</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&quot;../../images/WindowsLogo.jpg&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Since we are <em>adding</em> <em>src1</em> and <em>src2</em>, they both have to be of the same size (width and height) and type.</p>
+</div>
+</li>
+<li><p class="first">Now we need to generate the <img class="math" src="../../../../_images/math/a2485355b246d2edd3311f7599ce221536709f0e.png" alt="g(x)"/> image. For this, the function <a class="reference external" href="http://docs.opencv.org/modules/core/doc/operations_on_arrays.html?highlight=addweighted#addweighted">addWeighted</a> comes quite handy:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">beta</span> <span class="o">=</span> <span class="p">(</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span> <span class="p">);</span>
+<span class="n">addWeighted</span><span class="p">(</span> <span class="n">src1</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">src2</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">dst</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>since <a class="reference external" href="http://docs.opencv.org/modules/core/doc/operations_on_arrays.html?highlight=addweighted#addweighted">addWeighted</a> produces:</p>
+<div class="math">
+<p><img src="../../../../_images/math/ebff7098976fee857b552f1559f0d17a38370b4e.png" alt="dst = \alpha \cdot src1 + \beta \cdot src2 + \gamma"/></p>
+</div><p>In this case, <img class="math" src="../../../../_images/math/b9e28934ca3430cc3e38e109dd6554da8ae7f5bc.png" alt="\gamma"/> is the argument <img class="math" src="../../../../_images/math/c52eec3612772503e2978645e051feed01df9b28.png" alt="0.0"/> in the code above.</p>
+</li>
+<li><p class="first">Create windows, show the images and wait for the user to end the program.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="result">
+<h2>Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h2>
+<img alt="Blending Images Tutorial - Final Result" class="align-center" src="../../../../_images/Adding_Images_Tutorial_Result_0.jpg" />
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Adding (blending) two images using OpenCV</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a></li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#result">Result</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../mat-mask-operations/mat-mask-operations.html"
+                        title="previous chapter">Mask operations on matrices</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../basic_linear_transform/basic_linear_transform.html"
+                        title="next chapter">Changing the contrast and brightness of an image!</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/core/adding_images/adding_images.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../basic_linear_transform/basic_linear_transform.html" title="Changing the contrast and brightness of an image!"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../mat-mask-operations/mat-mask-operations.html" title="Mask operations on matrices"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_core/table_of_content_core.html" ><em>core</em> module. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

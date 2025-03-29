@@ -1,0 +1,298 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>OpenCV API Reference &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../index.html" />
+    <link rel="next" title="Introduction" href="core/doc/intro.html" />
+    <link rel="prev" title="Welcome to opencv documentation!" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="core/doc/intro.html" title="Introduction"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to opencv documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="opencv-api-reference">
+<h1>OpenCV API Reference<a class="headerlink" href="#opencv-api-reference" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="core/doc/intro.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core/doc/intro.html#api-concepts">API Concepts</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="core/doc/core.html">core. The Core Functionality</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core/doc/basic_structures.html">Basic Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/doc/old_basic_structures.html">Basic C Structures and Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/doc/dynamic_structures.html">Dynamic Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/doc/operations_on_arrays.html">Operations on Arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/doc/drawing_functions.html">Drawing Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/doc/xml_yaml_persistence.html">XML/YAML Persistence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/doc/old_xml_yaml_persistence.html">XML/YAML Persistence (C API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/doc/clustering.html">Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/doc/utility_and_system_functions_and_macros.html">Utility and System Functions and Macros</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/doc/opengl_interop.html">OpenGL interoperability</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="imgproc/doc/imgproc.html">imgproc. Image Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="imgproc/doc/filtering.html">Image Filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imgproc/doc/geometric_transformations.html">Geometric Image Transformations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imgproc/doc/miscellaneous_transformations.html">Miscellaneous Image Transformations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imgproc/doc/histograms.html">Histograms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imgproc/doc/structural_analysis_and_shape_descriptors.html">Structural Analysis and Shape Descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imgproc/doc/motion_analysis_and_object_tracking.html">Motion Analysis and Object Tracking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imgproc/doc/feature_detection.html">Feature Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imgproc/doc/object_detection.html">Object Detection</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="highgui/doc/highgui.html">highgui. High-level GUI and Media I/O</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="highgui/doc/user_interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="highgui/doc/reading_and_writing_images_and_video.html">Reading and Writing Images and Video</a></li>
+<li class="toctree-l2"><a class="reference internal" href="highgui/doc/qt_new_functions.html">Qt New Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="video/doc/video.html">video. Video Analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="video/doc/motion_analysis_and_object_tracking.html">Motion Analysis and Object Tracking</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="calib3d/doc/calib3d.html">calib3d. Camera Calibration and 3D Reconstruction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="calib3d/doc/camera_calibration_and_3d_reconstruction.html">Camera Calibration and 3D Reconstruction</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="features2d/doc/features2d.html">features2d. 2D Features Framework</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="features2d/doc/feature_detection_and_description.html">Feature Detection and Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features2d/doc/common_interfaces_of_feature_detectors.html">Common Interfaces of Feature Detectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features2d/doc/common_interfaces_of_descriptor_extractors.html">Common Interfaces of Descriptor Extractors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features2d/doc/common_interfaces_of_descriptor_matchers.html">Common Interfaces of Descriptor Matchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features2d/doc/common_interfaces_of_generic_descriptor_matchers.html">Common Interfaces of Generic Descriptor Matchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features2d/doc/drawing_function_of_keypoints_and_matches.html">Drawing Function of Keypoints and Matches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features2d/doc/object_categorization.html">Object Categorization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="objdetect/doc/objdetect.html">objdetect. Object Detection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="objdetect/doc/cascade_classification.html">Cascade Classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objdetect/doc/latent_svm.html">Latent SVM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ml/doc/ml.html">ml. Machine Learning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ml/doc/statistical_models.html">Statistical Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ml/doc/normal_bayes_classifier.html">Normal Bayes Classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ml/doc/k_nearest_neighbors.html">K-Nearest Neighbors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ml/doc/support_vector_machines.html">Support Vector Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ml/doc/decision_trees.html">Decision Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ml/doc/boosting.html">Boosting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ml/doc/gradient_boosted_trees.html">Gradient Boosted Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ml/doc/random_trees.html">Random Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ml/doc/ertrees.html">Extremely randomized trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ml/doc/expectation_maximization.html">Expectation Maximization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ml/doc/neural_networks.html">Neural Networks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ml/doc/mldata.html">MLData</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="flann/doc/flann.html">flann. Clustering and Search in Multi-Dimensional Spaces</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="flann/doc/flann_fast_approximate_nearest_neighbor_search.html">Fast Approximate Nearest Neighbor Search</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flann/doc/flann_clustering.html">Clustering</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gpu/doc/gpu.html">gpu. GPU-accelerated Computer Vision</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gpu/doc/introduction.html">GPU Module Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpu/doc/initalization_and_information.html">Initalization and Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpu/doc/data_structures.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpu/doc/operations_on_matrices.html">Operations on Matrices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpu/doc/per_element_operations.html">Per-element Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpu/doc/image_processing.html">Image Processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpu/doc/matrix_reductions.html">Matrix Reductions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpu/doc/object_detection.html">Object Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpu/doc/feature_detection_and_description.html">Feature Detection and Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpu/doc/image_filtering.html">Image Filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpu/doc/camera_calibration_and_3d_reconstruction.html">Camera Calibration and 3D Reconstruction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpu/doc/video.html">Video Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="photo/doc/photo.html">photo. Computational Photography</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="photo/doc/inpainting.html">Inpainting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="photo/doc/denoising.html">Denoising</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="stitching/doc/stitching.html">stitching. Images stitching</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="stitching/doc/introduction.html">Stitching Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stitching/doc/introduction.html#references">References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stitching/doc/high_level.html">High Level Functionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stitching/doc/camera.html">Camera</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stitching/doc/matching.html">Features Finding and Images Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stitching/doc/motion_estimation.html">Rotation Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stitching/doc/autocalib.html">Autocalibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stitching/doc/warpers.html">Images Warping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stitching/doc/seam_estimation.html">Seam Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stitching/doc/exposure_compensation.html">Exposure Compensation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stitching/doc/blenders.html">Image Blenders</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nonfree/doc/nonfree.html">nonfree. Non-free functionality</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nonfree/doc/feature_detection.html">Feature Detection and Description</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contrib/doc/contrib.html">contrib. Contributed/Experimental Stuff</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contrib/doc/stereo.html">Stereo Correspondence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contrib/doc/facerec/index.html">FaceRecognizer Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contrib/doc/retina/index.html">Retina Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contrib/doc/openfabmap.html">OpenFABMAP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="legacy/doc/legacy.html">legacy. Deprecated stuff</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="legacy/doc/motion_analysis.html">Motion Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="legacy/doc/expectation_maximization.html">Expectation Maximization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="legacy/doc/histograms.html">Histograms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="legacy/doc/planar_subdivisions.html">Planar Subdivisions (C API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="legacy/doc/feature_detection_and_description.html">Feature Detection and Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="legacy/doc/common_interfaces_of_descriptor_extractors.html">Common Interfaces of Descriptor Extractors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="legacy/doc/common_interfaces_of_generic_descriptor_matchers.html">Common Interfaces of Generic Descriptor Matchers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ocl/doc/ocl.html">ocl. OpenCL-accelerated Computer Vision</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ocl/doc/introduction.html">OpenCL Module Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ocl/doc/structures_and_utility_functions.html">Data Structures and Utility Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ocl/doc/data_structures.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ocl/doc/operations_on_matrices.html">Operations on Matrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ocl/doc/matrix_reductions.html">Matrix Reductions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ocl/doc/image_filtering.html">Image Filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ocl/doc/image_processing.html">Image Processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ocl/doc/ml_machine_learning.html">ml.Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ocl/doc/object_detection.html">Object Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ocl/doc/feature_detection_and_description.html">Feature Detection And Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ocl/doc/video_analysis.html">Video Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ocl/doc/camera_calibration_and_3D_reconstruction.html">Camera Calibration and 3D Reconstruction</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="superres/doc/superres.html">superres. Super Resolution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="superres/doc/super_resolution.html">Super Resolution</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="viz/doc/viz.html">viz. 3D Visualizer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="viz/doc/viz3d.html">Viz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="viz/doc/widget.html">Widget</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Welcome to opencv documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="core/doc/intro.html"
+                        title="next chapter">Introduction</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/modules/refman.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="core/doc/intro.html" title="Introduction"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to opencv documentation!"
+             >previous</a> |</li>
+        <li><a href="../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

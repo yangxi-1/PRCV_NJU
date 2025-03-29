@@ -1,0 +1,399 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Mat - The Basic Image Container &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="core module. The Core Functionality" href="../table_of_content_core/table_of_content_core.html" />
+    <link rel="next" title="How to scan images, lookup tables and time measurement with OpenCV" href="../how_to_scan_images/how_to_scan_images.html" />
+    <link rel="prev" title="core module. The Core Functionality" href="../table_of_content_core/table_of_content_core.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../how_to_scan_images/how_to_scan_images.html" title="How to scan images, lookup tables and time measurement with OpenCV"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../table_of_content_core/table_of_content_core.html" title="core module. The Core Functionality"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_core/table_of_content_core.html" accesskey="U"><em>core</em> module. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mat-the-basic-image-container">
+<span id="matthebasicimagecontainer"></span><h1>Mat - The Basic Image Container<a class="headerlink" href="#mat-the-basic-image-container" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>We have multiple ways to acquire digital images from the real world: digital cameras, scanners, computed tomography, and magnetic resonance imaging to name a few. In every case what we (humans) see are images. However, when transforming this to our digital devices what we record are numerical values for each of the points of the image.</p>
+<img alt="A matrix of the mirror of a car" class="align-center" src="../../../../_images/MatBasicImageForComputer.jpg" />
+<p>For example in the above image you can see that the mirror of the car is nothing more than a matrix containing all the intensity values of the pixel points. How we get and store the pixels values may vary according to our needs, but in the end all images inside a computer world may be reduced to numerical matrices and other information describing the matrix itself. <em>OpenCV</em> is a computer vision library whose main focus is to process and manipulate this information. Therefore, the first thing you need to be familiar with is how OpenCV stores and handles images.</p>
+</div>
+<div class="section" id="mat">
+<h2><em>Mat</em><a class="headerlink" href="#mat" title="Permalink to this headline">¶</a></h2>
+<p>OpenCV has been around since 2001. In those days the library was built around a <em>C</em> interface and to store the image in the memory they used a C structure called <em>IplImage</em>. This is the one you&#8217;ll see in most of the older tutorials and educational materials. The problem with this is that it brings to the table all the minuses of the C language. The biggest issue is the manual memory management. It builds on the assumption that the user is responsible for taking care of memory allocation and deallocation. While this is not a problem with smaller programs, once your code base grows it will be more of a struggle to handle all this rather than focusing on solving your development goal.</p>
+<p>Luckily C++ came around and introduced the concept of classes making easier for the user through automatic memory management (more or less). The good news is that C++ is fully compatible with C so no compatibility issues can arise from making the change. Therefore, OpenCV 2.0 introduced a new C++ interface which offered a new way of doing things which means you do not need to fiddle with memory management, making your code concise (less to write, to achieve more). The main downside of the C++ interface is that many embedded development systems at the moment support only C. Therefore, unless you are targeting embedded platforms, there&#8217;s no point to using the <em>old</em> methods (unless you&#8217;re a masochist programmer and you&#8217;re asking for trouble).</p>
+<p>The first thing you need to know about <em>Mat</em> is that you no longer need to manually allocate its memory and release it as soon as you do not need it. While doing this is still a possibility, most of the OpenCV functions will allocate its output data automatically. As a nice bonus if you pass on an already existing <em>Mat</em> object, which has already  allocated the required space for the matrix, this will be reused. In other words we use at all times only as much memory as we need to perform the task.</p>
+<p><em>Mat</em> is basically a class with two data parts: the matrix header (containing information such as the size of the matrix, the method used for storing, at which address is the matrix stored, and so on) and a pointer to the matrix containing the pixel values (taking any dimensionality depending on the method chosen for storing) . The matrix header size is constant, however the size of the matrix itself may vary from image to image and usually is larger by orders of magnitude.</p>
+<p>OpenCV is an image processing library. It contains a large collection of image processing functions. To solve a computational challenge, most of the time you will end up using multiple functions of the library. Because of this, passing images to functions is a common practice. We should not forget that we are talking about image processing algorithms, which tend to be quite computationally heavy. The last thing we want to do is  further decrease the speed of your program by making unnecessary copies of potentially <em>large</em> images.</p>
+<p>To tackle this issue OpenCV uses a reference counting system. The idea is that each <em>Mat</em> object has its own header, however the matrix may be shared between two instance of them by having their matrix pointers point to the same address. Moreover, the copy operators <strong>will only copy the headers</strong> and the pointer to the large matrix, not the data itself.</p>
+<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">A</span><span class="p">,</span> <span class="n">C</span><span class="p">;</span>                                 <span class="c1">// creates just the header parts</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">CV_LOAD_IMAGE_COLOR</span><span class="p">);</span> <span class="c1">// here we&#39;ll know the method used (allocate matrix)</span>
+
+<span class="n">Mat</span> <span class="nf">B</span><span class="p">(</span><span class="n">A</span><span class="p">);</span>                                 <span class="c1">// Use the copy constructor</span>
+
+<span class="n">C</span> <span class="o">=</span> <span class="n">A</span><span class="p">;</span>                                    <span class="c1">// Assignment operator</span>
+</pre></div>
+</td></tr></table></div>
+<p>All the above objects, in the end, point to the same single data matrix. Their headers are different, however, and making a modification using any of them will affect all the other ones as well. In practice the different objects just provide different access method to the same underlying data. Nevertheless, their header parts are different. The real interesting part is that you can create headers which refer to only a subsection of the full data. For example, to create a region of interest (<em>ROI</em>) in an image you just create a new header with the new boundaries:</p>
+<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">Mat</span> <span class="nf">D</span> <span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span> <span class="p">);</span> <span class="c1">// using a rectangle</span>
+<span class="n">Mat</span> <span class="n">E</span> <span class="o">=</span> <span class="n">A</span><span class="p">(</span><span class="n">Range</span><span class="o">::</span><span class="n">all</span><span class="p">(),</span> <span class="n">Range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">));</span> <span class="c1">// using row and column boundaries</span>
+</pre></div>
+</td></tr></table></div>
+<p>Now you may ask if the matrix itself may belong to multiple <em>Mat</em> objects who takes responsibility for cleaning it up when it&#8217;s no longer needed. The short answer is: the last object that used it. This is handled by using a reference counting mechanism. Whenever somebody copies a header of a <em>Mat</em> object, a counter is increased for the matrix. Whenever a header is cleaned this counter is decreased. When the counter reaches zero the matrix too is freed. Sometimes you will want to copy the matrix itself too, so OpenCV provides the <a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html#mat-clone">clone()</a> and <a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html#mat-copyto">copyTo()</a> functions.</p>
+<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">F</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="n">Mat</span> <span class="n">G</span><span class="p">;</span>
+<span class="n">A</span><span class="p">.</span><span class="n">copyTo</span><span class="p">(</span><span class="n">G</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<p>Now modifying <em>F</em> or <em>G</em> will not affect the matrix pointed by the <em>Mat</em> header. What you need to remember from all this is that:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Output image allocation for OpenCV functions is automatic (unless specified otherwise).</li>
+<li>You do not need to think about memory management with OpenCVs C++ interface.</li>
+<li>The assignment operator and the copy constructor only copies the header.</li>
+<li>The underlying matrix of an image may be copied using the <a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html#mat-clone">clone()</a> and <a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html#mat-copyto">copyTo()</a> functions.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="storing-methods">
+<h2><em>Storing</em> methods<a class="headerlink" href="#storing-methods" title="Permalink to this headline">¶</a></h2>
+<p>This is about how you store the pixel values. You can select the color space and the data type used. The color space refers to how we combine color components in order to code a given color. The simplest one is the gray scale where the colors at our disposal are black and white. The combination of these allows us to create many shades of gray.</p>
+<p>For <em>colorful</em> ways we have a lot more methods to choose from. Each of them breaks it down to three or four basic components and we can use the combination of these to create the others. The most popular one is RGB, mainly because this is also how our eye builds up colors. Its base colors are red, green and blue. To code the transparency of a color sometimes a fourth element: alpha (A) is added.</p>
+<p>There are, however, many other color systems each with their own advantages:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>RGB is the most common as our eyes use something similar, but keep in mind that the OpenCV display system uses BGR colors.</li>
+<li>The HSV and HLS decompose colors into their hue, saturation and value/luminance components, which is a more natural way for us to describe colors.  You might, for example, dismiss the value component, making your algorithm less sensitive to the light conditions of the input image.</li>
+<li>YCrCb is used by the popular JPEG image format.</li>
+<li>CIE L*a*b* is a perceptually uniform color space, which comes handy if you need to measure the <em>distance</em> of a given color to another color.</li>
+</ul>
+</div>
+<p>Each of the color components has its own valid domains. This brings us to the data type used: how we store a component defines the control we have over its domain. The smallest data type possible is <em>char</em>, which means one byte or 8 bits. This may be unsigned (so can store values from 0 to 255) or signed (values from -127 to +127). Although in the case of three components (such as BGR) this already gives 16 million representable colors. We may acquire an even finer control by using the float (4 byte = 32 bit) or double (8 byte = 64 bit) data types for each component. Nevertheless, remember that increasing the size of a component also increases the size of the whole picture in the memory.</p>
+</div>
+<div class="section" id="creating-a-mat-object-explicitly">
+<h2>Creating a <em>Mat</em> object explicitly<a class="headerlink" href="#creating-a-mat-object-explicitly" title="Permalink to this headline">¶</a></h2>
+<p>In the <a class="reference internal" href="../../introduction/load_save_image/load_save_image.html#load-save-image"><span>Load, Modify, and Save an Image</span></a> tutorial you have already learned how to write a matrix to an image file by using the <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#imwrite">imwrite()</a> function. However, for debugging purposes it&#8217;s much more convenient to see the actual values. You can do this using the &lt;&lt; operator of <em>Mat</em>. Be aware that this only works for two dimensional matrices.</p>
+<p>Although <em>Mat</em> works really well as an image container, it is also a general matrix class. Therefore, it is possible to create and manipulate multidimensional matrices. You can create a Mat object in multiple ways:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first"><a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html#mat-mat">Mat()</a> Constructor</p>
+<div class="highlight-cpp"><div class="highlight"><pre>    <span class="n">Mat</span> <span class="nf">M</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">CV_8UC3</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">));</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;M = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">M</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<blockquote>
+<div><img alt="Demo image of the matrix output" class="align-center" src="../../../../_images/MatBasicContainerOut1.png" />
+<p>For two dimensional and multichannel images we first define their size: row and column count wise.</p>
+<p>Then we need to specify the data type to use for storing the elements and the number of channels per matrix point. To do this we have multiple definitions constructed according to the following convention:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">CV_</span><span class="p">[</span><span class="n">The</span> <span class="n">number</span> <span class="n">of</span> <span class="n">bits</span> <span class="n">per</span> <span class="n">item</span><span class="p">][</span><span class="n">Signed</span> <span class="n">or</span> <span class="n">Unsigned</span><span class="p">][</span><span class="n">Type</span> <span class="n">Prefix</span><span class="p">]</span><span class="n">C</span><span class="p">[</span><span class="n">The</span> <span class="n">channel</span> <span class="n">number</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>For instance, <em>CV_8UC3</em> means we use unsigned char types that are 8 bit long and each pixel has three of these to form the three channels. These are predefined for up to four channel numbers. The <a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html#scalar">Scalar</a> is a four element short vector. Specify this and you can initialize all matrix points with a custom value. If you need more, you can create the type with the upper macro, setting the channel number in parentheses as shown below.</p>
+</div></blockquote>
+<ul>
+<li><p class="first">Use C/C++ arrays and initialize via constructor</p>
+<div class="highlight-cpp"><div class="highlight"><pre>    <span class="kt">int</span> <span class="n">sz</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">};</span>
+    <span class="n">Mat</span> <span class="nf">L</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">sz</span><span class="p">,</span> <span class="n">CV_8UC</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>The above example shows how to create a matrix with more than two dimensions. Specify the number of dimensions, then pass a pointer containing the size for each dimension, and the rest remains the same.</p>
+</li>
+<li><p class="first">Create a header for an already existing IplImage pointer:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">IplImage</span><span class="o">*</span> <span class="n">img</span> <span class="o">=</span> <span class="n">cvLoadImage</span><span class="p">(</span><span class="s">&quot;greatwave.png&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="n">Mat</span> <span class="nf">mtx</span><span class="p">(</span><span class="n">img</span><span class="p">);</span> <span class="c1">// convert IplImage* -&gt; Mat</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html#mat-create">Create()</a> function:</p>
+<div class="highlight-cpp"><div class="highlight"><pre>    <span class="n">M</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span> <span class="n">CV_8UC</span><span class="p">(</span><span class="mi">2</span><span class="p">));</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;M = &quot;</span><span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span>  <span class="o">&lt;&lt;</span> <span class="n">M</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<blockquote>
+<div><img alt="Demo image of the matrix output" class="align-center" src="../../../../_images/MatBasicContainerOut2.png" />
+<p>You cannot initialize the matrix values with this construction. It will only reallocate its matrix data memory if the new size will not fit into the old one.</p>
+</div></blockquote>
+<ul>
+<li><p class="first">MATLAB style initializers: <a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html#mat-zeros">zeros()</a>, <a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html#mat-ones">ones()</a>, <a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html#mat-eye">eye()</a>. Specify the size and data type to use:</p>
+<div class="highlight-cpp"><div class="highlight"><pre>    <span class="n">Mat</span> <span class="n">E</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">eye</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">CV_64F</span><span class="p">);</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;E = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">E</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">Mat</span> <span class="n">O</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">ones</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">);</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;O = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">O</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">Mat</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span> <span class="n">CV_8UC1</span><span class="p">);</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Z = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">Z</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<blockquote>
+<div><img alt="Demo image of the matrix output" class="align-center" src="../../../../_images/MatBasicContainerOut3.png" />
+</div></blockquote>
+<ul>
+<li><p class="first">For small matrices you may use comma separated initializers:</p>
+<div class="highlight-cpp"><div class="highlight"><pre>    <span class="n">Mat</span> <span class="n">C</span> <span class="o">=</span> <span class="p">(</span><span class="n">Mat_</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;C = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">C</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<blockquote>
+<div><img alt="Demo image of the matrix output" class="align-center" src="../../../../_images/MatBasicContainerOut6.png" />
+</div></blockquote>
+<ul>
+<li><p class="first">Create a new header for an existing <em>Mat</em> object and <a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html#mat-clone">clone()</a> or <a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html#mat-copyto">copyTo()</a> it.</p>
+<div class="highlight-cpp"><div class="highlight"><pre>    <span class="n">Mat</span> <span class="n">RowClone</span> <span class="o">=</span> <span class="n">C</span><span class="p">.</span><span class="n">row</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">clone</span><span class="p">();</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;RowClone = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">RowClone</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+<img alt="Demo image of the matrix output" class="align-center" src="../../../../_images/MatBasicContainerOut7.png" />
+</li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>You can fill out a matrix with random values using the <a class="reference external" href="http://docs.opencv.org/modules/core/doc/operations_on_arrays.html#randu">randu()</a> function. You need to give the lower and upper value for the random values:</p>
+<div class="last highlight-cpp"><div class="highlight"><pre>    <span class="n">Mat</span> <span class="n">R</span> <span class="o">=</span> <span class="n">Mat</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">CV_8UC3</span><span class="p">);</span>
+    <span class="n">randu</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">255</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="output-formatting">
+<h2>Output formatting<a class="headerlink" href="#output-formatting" title="Permalink to this headline">¶</a></h2>
+<p>In the previous examples you saw the default formatting option. OpenCV, however, allows you to format your matrix output:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first">Default</p>
+<div class="highlight-cpp"><div class="highlight"><pre>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;R (default) = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span>        <span class="n">R</span>           <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+<img alt="Default Output" class="align-center" src="../../../../_images/MatBasicContainerOut8.png" />
+</li>
+<li><p class="first">Python</p>
+<div class="highlight-cpp"><div class="highlight"><pre>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;R (python)  = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">format</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="s">&quot;python&quot;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+<img alt="Default Output" class="align-center" src="../../../../_images/MatBasicContainerOut16.png" />
+</li>
+<li><p class="first">Comma separated values (CSV)</p>
+<div class="highlight-cpp"><div class="highlight"><pre>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;R (csv)     = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">format</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="s">&quot;csv&quot;</span>   <span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+<img alt="Default Output" class="align-center" src="../../../../_images/MatBasicContainerOut10.png" />
+</li>
+<li><p class="first">Numpy</p>
+<div class="highlight-cpp"><div class="highlight"><pre>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;R (numpy)   = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">format</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="s">&quot;numpy&quot;</span> <span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+<img alt="Default Output" class="align-center" src="../../../../_images/MatBasicContainerOut9.png" />
+</li>
+<li><p class="first">C</p>
+<div class="highlight-cpp"><div class="highlight"><pre>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;R (c)       = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">format</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="s">&quot;C&quot;</span>     <span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+<img alt="Default Output" class="align-center" src="../../../../_images/MatBasicContainerOut11.png" />
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="output-of-other-common-items">
+<h2>Output of other common items<a class="headerlink" href="#output-of-other-common-items" title="Permalink to this headline">¶</a></h2>
+<p>Other common OpenCV data structures can also be output via the &lt;&lt; operator:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first">2D Point</p>
+<div class="highlight-cpp"><div class="highlight"><pre>    <span class="n">Point2f</span> <span class="nf">P</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Point (2D) = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">P</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+<img alt="Default Output" class="align-center" src="../../../../_images/MatBasicContainerOut12.png" />
+</li>
+<li><p class="first">3D Point</p>
+<div class="highlight-cpp"><div class="highlight"><pre>    <span class="n">Point3f</span> <span class="nf">P3f</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">);</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Point (3D) = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">P3f</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+<img alt="Default Output" class="align-center" src="../../../../_images/MatBasicContainerOut13.png" />
+</li>
+<li><p class="first">std::vector via cv::Mat</p>
+<div class="highlight-cpp"><div class="highlight"><pre>    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+    <span class="n">v</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">CV_PI</span><span class="p">);</span>   <span class="n">v</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>    <span class="n">v</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mf">3.01f</span><span class="p">);</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Vector of floats via Mat = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">Mat</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+<img alt="Default Output" class="align-center" src="../../../../_images/MatBasicContainerOut14.png" />
+</li>
+<li><p class="first">std::vector of points</p>
+<div class="highlight-cpp"><div class="highlight"><pre>    <span class="n">vector</span><span class="o">&lt;</span><span class="n">Point2f</span><span class="o">&gt;</span> <span class="n">vPoints</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">vPoints</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">vPoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point2f</span><span class="p">((</span><span class="kt">float</span><span class="p">)(</span><span class="n">i</span> <span class="o">*</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="kt">float</span><span class="p">)(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">7</span><span class="p">));</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;A vector of 2D Points = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">vPoints</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+<img alt="Default Output" class="align-center" src="../../../../_images/MatBasicContainerOut15.png" />
+</li>
+</ul>
+</div>
+<p>Most of the samples here have been included in a small console application. You can download it from <a class="reference download internal" href="../../../../_downloads/mat_the_basic_image_container.cpp" download=""><code class="xref download docutils literal"><span class="pre">here</span></code></a> or in the core section of the cpp samples.</p>
+<p>You can also find a quick video demonstration of this on <a class="reference external" href="https://www.youtube.com/watch?v=1tibU7vGWpk">YouTube</a>.</p>
+<div align="center">
+<iframe title="Install OpenCV by using its source files - Part 1" width="560" height="349" src="https://www.youtube.com/embed/1tibU7vGWpk?rel=0&loop=1" frameborder="0" allowfullscreen align="middle"></iframe>
+</div></div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Mat - The Basic Image Container</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#mat"><em>Mat</em></a></li>
+<li><a class="reference internal" href="#storing-methods"><em>Storing</em> methods</a></li>
+<li><a class="reference internal" href="#creating-a-mat-object-explicitly">Creating a <em>Mat</em> object explicitly</a></li>
+<li><a class="reference internal" href="#output-formatting">Output formatting</a></li>
+<li><a class="reference internal" href="#output-of-other-common-items">Output of other common items</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../table_of_content_core/table_of_content_core.html"
+                        title="previous chapter"><em>core</em> module. The Core Functionality</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../how_to_scan_images/how_to_scan_images.html"
+                        title="next chapter">How to scan images, lookup tables and time measurement with OpenCV</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/core/mat_the_basic_image_container/mat_the_basic_image_container.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../how_to_scan_images/how_to_scan_images.html" title="How to scan images, lookup tables and time measurement with OpenCV"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../table_of_content_core/table_of_content_core.html" title="core module. The Core Functionality"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_core/table_of_content_core.html" ><em>core</em> module. The Core Functionality</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

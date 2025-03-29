@@ -1,0 +1,294 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Adding a Trackbar to our applications! &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../index.html" />
+    <link rel="up" title="highgui module. High Level GUI and Media" href="../table_of_content_highgui/table_of_content_highgui.html" />
+    <link rel="next" title="Video Input with OpenCV and similarity measurement" href="../video-input-psnr-ssim/video-input-psnr-ssim.html" />
+    <link rel="prev" title="highgui module. High Level GUI and Media" href="../table_of_content_highgui/table_of_content_highgui.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../video-input-psnr-ssim/video-input-psnr-ssim.html" title="Video Input with OpenCV and similarity measurement"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../table_of_content_highgui/table_of_content_highgui.html" title="highgui module. High Level GUI and Media"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_highgui/table_of_content_highgui.html" accesskey="U"><em>highgui</em> module. High Level GUI and Media</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="adding-a-trackbar-to-our-applications">
+<span id="adding-trackbars"></span><h1>Adding a Trackbar to our applications!<a class="headerlink" href="#adding-a-trackbar-to-our-applications" title="Permalink to this headline">¶</a></h1>
+<ul>
+<li><p class="first">In the previous tutorials (about <em>linear blending</em> and the <em>brightness and contrast adjustments</em>) you might have noted that we needed to give some <strong>input</strong> to our programs, such as <img class="math" src="../../../../_images/math/69777408db155ee0fca9cc9dee60a269df6d1f96.png" alt="\alpha"/> and <img class="math" src="../../../../_images/math/b3ddeac9841066301a4182fbfbef3f23fa511eb1.png" alt="beta"/>. We accomplished that by entering this data using the Terminal</p>
+</li>
+<li><p class="first">Well, it is time to use some fancy GUI tools. OpenCV provides some GUI utilities (<em>highgui.h</em>) for you. An example of this is a <strong>Trackbar</strong></p>
+<img alt="Trackbar example" class="align-center" src="../../../../_images/Adding_Trackbars_Tutorial_Trackbar.png" />
+</li>
+<li><p class="first">In this tutorial we will just modify our two previous programs so that they get the input information from the trackbar.</p>
+</li>
+</ul>
+<div class="section" id="goals">
+<h2>Goals<a class="headerlink" href="#goals" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn how to:</p>
+<ul class="simple">
+<li>Add a Trackbar in an OpenCV window by using  <a class="reference external" href="http://docs.opencv.org/modules/highgui/doc/user_interface.html?highlight=createtrackbar#createtrackbar">createTrackbar</a></li>
+</ul>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s modify the program made in the tutorial <a class="reference internal" href="../../core/adding_images/adding_images.html#adding-images"><span>Adding (blending) two images using OpenCV</span></a>. We will let the user enter the <img class="math" src="../../../../_images/math/69777408db155ee0fca9cc9dee60a269df6d1f96.png" alt="\alpha"/> value by using the Trackbar.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&lt;cv.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;highgui.h&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="c1">/// Global Variables</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">alpha_slider_max</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">alpha_slider</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">alpha</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">beta</span><span class="p">;</span>
+
+<span class="c1">/// Matrices to store images</span>
+<span class="n">Mat</span> <span class="n">src1</span><span class="p">;</span>
+<span class="n">Mat</span> <span class="n">src2</span><span class="p">;</span>
+<span class="n">Mat</span> <span class="n">dst</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @function on_trackbar</span>
+<span class="cm"> * @brief Callback for trackbar</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="nf">on_trackbar</span><span class="p">(</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="p">)</span>
+<span class="p">{</span>
+ <span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="n">alpha_slider</span><span class="o">/</span><span class="n">alpha_slider_max</span> <span class="p">;</span>
+ <span class="n">beta</span> <span class="o">=</span> <span class="p">(</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span> <span class="p">);</span>
+
+ <span class="n">addWeighted</span><span class="p">(</span> <span class="n">src1</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">src2</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">dst</span><span class="p">);</span>
+
+ <span class="n">imshow</span><span class="p">(</span> <span class="s">&quot;Linear Blend&quot;</span><span class="p">,</span> <span class="n">dst</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+ <span class="c1">/// Read image ( same size, same type )</span>
+ <span class="n">src1</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&quot;../../images/LinuxLogo.jpg&quot;</span><span class="p">);</span>
+ <span class="n">src2</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&quot;../../images/WindowsLogo.jpg&quot;</span><span class="p">);</span>
+
+ <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">src1</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span> <span class="p">{</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Error loading src1 </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+ <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">src2</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span> <span class="p">{</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Error loading src2 </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+
+ <span class="c1">/// Initialize values</span>
+ <span class="n">alpha_slider</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+ <span class="c1">/// Create Windows</span>
+ <span class="n">namedWindow</span><span class="p">(</span><span class="s">&quot;Linear Blend&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+
+ <span class="c1">/// Create Trackbars</span>
+ <span class="kt">char</span> <span class="n">TrackbarName</span><span class="p">[</span><span class="mi">50</span><span class="p">];</span>
+ <span class="n">sprintf</span><span class="p">(</span> <span class="n">TrackbarName</span><span class="p">,</span> <span class="s">&quot;Alpha x %d&quot;</span><span class="p">,</span> <span class="n">alpha_slider_max</span> <span class="p">);</span>
+
+ <span class="n">createTrackbar</span><span class="p">(</span> <span class="n">TrackbarName</span><span class="p">,</span> <span class="s">&quot;Linear Blend&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">alpha_slider</span><span class="p">,</span> <span class="n">alpha_slider_max</span><span class="p">,</span> <span class="n">on_trackbar</span> <span class="p">);</span>
+
+ <span class="c1">/// Show some stuff</span>
+ <span class="n">on_trackbar</span><span class="p">(</span> <span class="n">alpha_slider</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+
+ <span class="c1">/// Wait until user press some key</span>
+ <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+ <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+<p>We only analyze the code that is related to Trackbar:</p>
+<ol class="arabic">
+<li><p class="first">First, we load 02 images, which are going to be blended.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">src1</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&quot;../../images/LinuxLogo.jpg&quot;</span><span class="p">);</span>
+<span class="n">src2</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&quot;../../images/WindowsLogo.jpg&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">To create a trackbar, first we have to create the window in which it is going to be located. So:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">namedWindow</span><span class="p">(</span><span class="s">&quot;Linear Blend&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Now we can create the Trackbar:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">createTrackbar</span><span class="p">(</span> <span class="n">TrackbarName</span><span class="p">,</span> <span class="s">&quot;Linear Blend&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">alpha_slider</span><span class="p">,</span> <span class="n">alpha_slider_max</span><span class="p">,</span> <span class="n">on_trackbar</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>Note the following:</p>
+<ul class="simple">
+<li>Our Trackbar has a label <strong>TrackbarName</strong></li>
+<li>The Trackbar is located in the window named <strong>&#8220;Linear Blend&#8221;</strong></li>
+<li>The Trackbar values will be in the range from <img class="math" src="../../../../_images/math/f55b2cb61596a4cb87a860cfc3657cdb56b9edba.png" alt="0"/> to <strong>alpha_slider_max</strong> (the minimum limit is always <strong>zero</strong>).</li>
+<li>The numerical value of Trackbar is stored in <strong>alpha_slider</strong></li>
+<li>Whenever the user moves the Trackbar, the callback function <strong>on_trackbar</strong> is called</li>
+</ul>
+</li>
+<li><p class="first">Finally, we have to define the callback function <strong>on_trackbar</strong></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="kt">void</span> <span class="nf">on_trackbar</span><span class="p">(</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="p">)</span>
+<span class="p">{</span>
+ <span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="n">alpha_slider</span><span class="o">/</span><span class="n">alpha_slider_max</span> <span class="p">;</span>
+ <span class="n">beta</span> <span class="o">=</span> <span class="p">(</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span> <span class="p">);</span>
+
+ <span class="n">addWeighted</span><span class="p">(</span> <span class="n">src1</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">src2</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">dst</span><span class="p">);</span>
+
+ <span class="n">imshow</span><span class="p">(</span> <span class="s">&quot;Linear Blend&quot;</span><span class="p">,</span> <span class="n">dst</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note that:</p>
+<ul class="simple">
+<li>We use the value of <strong>alpha_slider</strong> (integer) to get a double value for <strong>alpha</strong>.</li>
+<li><strong>alpha_slider</strong> is updated each time the trackbar is displaced by the user.</li>
+<li>We define <em>src1</em>, <em>src2</em>, <em>dist</em>, <em>alpha</em>, <em>alpha_slider</em> and <em>beta</em> as global  variables, so they can be used everywhere.</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section" id="result">
+<h2>Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Our program produces the following output:</p>
+<img alt="Adding Trackbars - Windows Linux" class="align-center" src="../../../../_images/Adding_Trackbars_Tutorial_Result_0.jpg" />
+</li>
+<li><p class="first">As a manner of practice, you can also add 02 trackbars for the program made in <a class="reference internal" href="../../core/basic_linear_transform/basic_linear_transform.html#basic-linear-transform"><span>Changing the contrast and brightness of an image!</span></a>. One trackbar to set <img class="math" src="../../../../_images/math/69777408db155ee0fca9cc9dee60a269df6d1f96.png" alt="\alpha"/> and another for <img class="math" src="../../../../_images/math/247b5ce2e487d3610db5ce3e3d8cc882c38ab8db.png" alt="\beta"/>. The output might look like:</p>
+<img alt="Adding Trackbars - Lena" class="align-center" src="../../../../_images/Adding_Trackbars_Tutorial_Result_1.jpg" />
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Adding a Trackbar to our applications!</a><ul>
+<li><a class="reference internal" href="#goals">Goals</a></li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#result">Result</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../table_of_content_highgui/table_of_content_highgui.html"
+                        title="previous chapter"><em>highgui</em> module. High Level GUI and Media</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../video-input-psnr-ssim/video-input-psnr-ssim.html"
+                        title="next chapter">Video Input with OpenCV and similarity measurement</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/doc/tutorials/highgui/trackbar/trackbar.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../video-input-psnr-ssim/video-input-psnr-ssim.html" title="Video Input with OpenCV and similarity measurement"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../table_of_content_highgui/table_of_content_highgui.html" title="highgui module. High Level GUI and Media"
+             >previous</a> |</li>
+        <li><a href="../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../table_of_content_highgui/table_of_content_highgui.html" ><em>highgui</em> module. High Level GUI and Media</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

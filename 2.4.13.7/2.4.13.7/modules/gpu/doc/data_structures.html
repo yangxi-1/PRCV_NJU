@@ -1,0 +1,640 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Data Structures &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="gpu. GPU-accelerated Computer Vision" href="gpu.html" />
+    <link rel="next" title="Operations on Matrices" href="operations_on_matrices.html" />
+    <link rel="prev" title="Initalization and Information" href="initalization_and_information.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="operations_on_matrices.html" title="Operations on Matrices"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="initalization_and_information.html" title="Initalization and Information"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="gpu.html" accesskey="U">gpu. GPU-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="data-structures">
+<h1>Data Structures<a class="headerlink" href="#data-structures" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gpu-ptrstepsz">
+<h2>gpu::PtrStepSz<a class="headerlink" href="#gpu-ptrstepsz" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::PtrStepSz">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">PtrStepSz</code><a class="headerlink" href="#gpu::PtrStepSz" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Lightweight class encapsulating pitched memory on a GPU and passed to nvcc-compiled code (CUDA kernels). Typically, it is used internally by OpenCV and by users who write device code. You can call its members from both host and device code.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">PtrStepSz</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">cols</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">rows</span><span class="p">;</span>
+    <span class="n">T</span><span class="o">*</span> <span class="n">data</span><span class="p">;</span>
+    <span class="kt">size_t</span> <span class="n">step</span><span class="p">;</span>
+
+    <span class="n">PtrStepSz</span><span class="p">()</span> <span class="o">:</span> <span class="n">cols</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">rows</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">data</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">step</span><span class="p">(</span><span class="mi">0</span><span class="p">){};</span>
+    <span class="n">PtrStepSz</span><span class="p">(</span><span class="kt">int</span> <span class="n">rows</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cols</span><span class="p">,</span> <span class="n">T</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">step</span><span class="p">);</span>
+
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">U</span><span class="o">&gt;</span>
+    <span class="k">explicit</span> <span class="n">PtrStepSz</span><span class="p">(</span><span class="k">const</span> <span class="n">PtrStepSz</span><span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;&amp;</span> <span class="n">d</span><span class="p">);</span>
+
+    <span class="k">typedef</span> <span class="n">T</span> <span class="n">elem_type</span><span class="p">;</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">elem_size</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">elem_type</span><span class="p">)</span> <span class="p">};</span>
+
+    <span class="n">__CV_GPU_HOST_DEVICE__</span> <span class="kt">size_t</span> <span class="nf">elemSize</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="cm">/* returns pointer to the beginning of the given image row */</span>
+    <span class="n">__CV_GPU_HOST_DEVICE__</span> <span class="n">T</span><span class="o">*</span> <span class="nf">ptr</span><span class="p">(</span><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="n">__CV_GPU_HOST_DEVICE__</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="nf">ptr</span><span class="p">(</span><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">typedef</span> <span class="n">PtrStepSz</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">&gt;</span> <span class="n">PtrStepSzb</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">PtrStepSz</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">PtrStepSzf</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">PtrStepSz</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">PtrStepSzi</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gpu-ptrstep">
+<h2>gpu::PtrStep<a class="headerlink" href="#gpu-ptrstep" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::PtrStep">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">PtrStep</code><a class="headerlink" href="#gpu::PtrStep" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Structure similar to <a class="reference internal" href="#gpu::PtrStepSz" title="class gpu::PtrStepSz"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::PtrStepSz</span></code></a> but containing only a pointer and row step. Width and height fields are excluded due to performance reasons. The structure is intended for internal use or for users who write device code.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">PtrStep</span>
+<span class="p">{</span>
+        <span class="n">T</span><span class="o">*</span> <span class="n">data</span><span class="p">;</span>
+        <span class="kt">size_t</span> <span class="n">step</span><span class="p">;</span>
+
+        <span class="n">PtrStep</span><span class="p">();</span>
+        <span class="n">PtrStep</span><span class="p">(</span><span class="k">const</span> <span class="n">PtrStepSz</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">mem</span><span class="p">);</span>
+
+        <span class="k">typedef</span> <span class="n">T</span> <span class="n">elem_type</span><span class="p">;</span>
+        <span class="k">enum</span> <span class="p">{</span> <span class="n">elem_size</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">elem_type</span><span class="p">)</span> <span class="p">};</span>
+
+        <span class="n">__CV_GPU_HOST_DEVICE__</span> <span class="kt">size_t</span> <span class="nf">elemSize</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+        <span class="n">__CV_GPU_HOST_DEVICE__</span> <span class="n">T</span><span class="o">*</span> <span class="nf">ptr</span><span class="p">(</span><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="n">__CV_GPU_HOST_DEVICE__</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="nf">ptr</span><span class="p">(</span><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">typedef</span> <span class="n">PtrStep</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">&gt;</span> <span class="n">PtrStep</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">PtrStep</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">PtrStepf</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">PtrStep</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">PtrStepi</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gpu-gpumat">
+<h2>gpu::GpuMat<a class="headerlink" href="#gpu-gpumat" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::GpuMat">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">GpuMat</code><a class="headerlink" href="#gpu::GpuMat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base storage class for GPU memory with reference counting. Its interface matches the <a class="reference internal" href="../../core/doc/basic_structures.html#Mat" title="class Mat"><code class="xref ocv ocv-class docutils literal"><span class="pre">Mat</span></code></a> interface with the following limitations:</p>
+<ul class="simple">
+<li>no arbitrary dimensions support (only 2D)</li>
+<li>no functions that return references to their data (because references on GPU are not valid for CPU)</li>
+<li>no expression templates technique support</li>
+</ul>
+<p>Beware that the latter limitation may lead to overloaded matrix operators that cause memory allocations. The <code class="docutils literal"><span class="pre">GpuMat</span></code> class is convertible to <a class="reference internal" href="#gpu::PtrStepSz" title="class gpu::PtrStepSz"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::PtrStepSz</span></code></a> and <a class="reference internal" href="#gpu::PtrStep" title="class gpu::PtrStep"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::PtrStep</span></code></a> so it can be passed directly to the kernel.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In contrast with <a class="reference internal" href="../../core/doc/basic_structures.html#Mat" title="class Mat"><code class="xref ocv ocv-class docutils literal"><span class="pre">Mat</span></code></a>, in most cases <code class="docutils literal"><span class="pre">GpuMat::isContinuous()</span> <span class="pre">==</span> <span class="pre">false</span></code> . This means that rows are aligned to a size depending on the hardware. Single-row <code class="docutils literal"><span class="pre">GpuMat</span></code> is always a continuous matrix.</p>
+</div>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">GpuMat</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+        <span class="c1">//! default constructor</span>
+        <span class="n">GpuMat</span><span class="p">();</span>
+
+        <span class="n">GpuMat</span><span class="p">(</span><span class="kt">int</span> <span class="n">rows</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cols</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">);</span>
+        <span class="n">GpuMat</span><span class="p">(</span><span class="n">Size</span> <span class="n">size</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">);</span>
+
+        <span class="p">.....</span>
+
+        <span class="c1">//! builds GpuMat from Mat. Blocks uploading to device.</span>
+        <span class="k">explicit</span> <span class="n">GpuMat</span> <span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">m</span><span class="p">);</span>
+
+        <span class="c1">//! returns lightweight PtrStepSz structure for passing</span>
+        <span class="c1">//to nvcc-compiled code. Contains size, data ptr and step.</span>
+        <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">operator</span> <span class="n">PtrStepSz</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+        <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">operator</span> <span class="n">PtrStep</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+        <span class="c1">//! blocks uploading data to GpuMat.</span>
+        <span class="kt">void</span> <span class="nf">upload</span><span class="p">(</span><span class="k">const</span> <span class="n">cv</span><span class="o">::</span><span class="n">Mat</span><span class="o">&amp;</span> <span class="n">m</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="nf">upload</span><span class="p">(</span><span class="k">const</span> <span class="n">CudaMem</span><span class="o">&amp;</span> <span class="n">m</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span><span class="p">);</span>
+
+        <span class="c1">//! downloads data from device to host memory. Blocking calls.</span>
+        <span class="kt">void</span> <span class="nf">download</span><span class="p">(</span><span class="n">cv</span><span class="o">::</span><span class="n">Mat</span><span class="o">&amp;</span> <span class="n">m</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+        <span class="c1">//! download async</span>
+        <span class="kt">void</span> <span class="nf">download</span><span class="p">(</span><span class="n">CudaMem</span><span class="o">&amp;</span> <span class="n">m</span><span class="p">,</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You are not recommended to leave static or global <code class="docutils literal"><span class="pre">GpuMat</span></code> variables allocated, that is, to rely on its destructor. The destruction order of such variables and CUDA context is undefined. GPU memory release function returns error if the CUDA context has been destroyed before.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="../../core/doc/basic_structures.html#Mat" title="class Mat"><code class="xref ocv ocv-class docutils literal"><span class="pre">Mat</span></code></a></p>
+</div>
+</div>
+<div class="section" id="gpu-createcontinuous">
+<h2>gpu::createContinuous<a class="headerlink" href="#gpu-createcontinuous" title="Permalink to this headline">¶</a></h2>
+<p>Creates a continuous matrix in the GPU memory.</p>
+<dl class="function">
+<dt id="void gpu::createContinuous(int rows, int cols, int type, GpuMat&amp; m)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">createContinuous</code><span class="sig-paren">(</span>int <strong>rows</strong>, int <strong>cols</strong>, int <strong>type</strong>, GpuMat&amp; <strong>m</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::createContinuous(int rows, int cols, int type, GpuMat& m)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GpuMat gpu::createContinuous(int rows, int cols, int type)">
+<strong>C++:</strong><code class="descname"> </code>GpuMat <code class="descclassname">gpu::</code><code class="descname">createContinuous</code><span class="sig-paren">(</span>int <strong>rows</strong>, int <strong>cols</strong>, int <strong>type</strong><span class="sig-paren">)</span><a class="headerlink" href="#GpuMat gpu::createContinuous(int rows, int cols, int type)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::createContinuous(Size size, int type, GpuMat&amp; m)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">createContinuous</code><span class="sig-paren">(</span>Size <strong>size</strong>, int <strong>type</strong>, GpuMat&amp; <strong>m</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::createContinuous(Size size, int type, GpuMat& m)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GpuMat gpu::createContinuous(Size size, int type)">
+<strong>C++:</strong><code class="descname"> </code>GpuMat <code class="descclassname">gpu::</code><code class="descname">createContinuous</code><span class="sig-paren">(</span>Size <strong>size</strong>, int <strong>type</strong><span class="sig-paren">)</span><a class="headerlink" href="#GpuMat gpu::createContinuous(Size size, int type)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>rows</strong> &#8211; Row count.</li>
+<li><strong>cols</strong> &#8211; Column count.</li>
+<li><strong>type</strong> &#8211; Type of the matrix.</li>
+<li><strong>m</strong> &#8211; Destination matrix. This parameter changes only if it has a proper type and area ( <img class="math" src="../../../_images/math/1a73bdf5631cb9d45950ff63e18d16b7029ece3c.png" alt="\texttt{rows} \times \texttt{cols}"/> ).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Matrix is called continuous if its elements are stored continuously, that is, without gaps at the end of each row.</p>
+</div>
+<div class="section" id="gpu-ensuresizeisenough">
+<h2>gpu::ensureSizeIsEnough<a class="headerlink" href="#gpu-ensuresizeisenough" title="Permalink to this headline">¶</a></h2>
+<p>Ensures that the size of a matrix is big enough and the matrix has a proper type.</p>
+<dl class="function">
+<dt id="void gpu::ensureSizeIsEnough(int rows, int cols, int type, GpuMat&amp; m)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">ensureSizeIsEnough</code><span class="sig-paren">(</span>int <strong>rows</strong>, int <strong>cols</strong>, int <strong>type</strong>, GpuMat&amp; <strong>m</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::ensureSizeIsEnough(int rows, int cols, int type, GpuMat& m)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::ensureSizeIsEnough(Size size, int type, GpuMat&amp; m)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">ensureSizeIsEnough</code><span class="sig-paren">(</span>Size <strong>size</strong>, int <strong>type</strong>, GpuMat&amp; <strong>m</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::ensureSizeIsEnough(Size size, int type, GpuMat& m)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>rows</strong> &#8211; Minimum desired number of rows.</li>
+<li><strong>cols</strong> &#8211; Minimum desired number of columns.</li>
+<li><strong>size</strong> &#8211; Rows and columns passed as a structure.</li>
+<li><strong>type</strong> &#8211; Desired matrix type.</li>
+<li><strong>m</strong> &#8211; Destination matrix.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function does not reallocate memory if the matrix has proper attributes already.</p>
+</div>
+<div class="section" id="gpu-registerpagelocked">
+<h2>gpu::registerPageLocked<a class="headerlink" href="#gpu-registerpagelocked" title="Permalink to this headline">¶</a></h2>
+<p>Page-locks the memory of matrix and maps it for the device(s).</p>
+<dl class="function">
+<dt id="void gpu::registerPageLocked(Mat&amp; m)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">registerPageLocked</code><span class="sig-paren">(</span>Mat&amp; <strong>m</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::registerPageLocked(Mat& m)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>m</strong> &#8211; Input matrix.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-unregisterpagelocked">
+<h2>gpu::unregisterPageLocked<a class="headerlink" href="#gpu-unregisterpagelocked" title="Permalink to this headline">¶</a></h2>
+<p>Unmaps the memory of matrix and makes it pageable again.</p>
+<dl class="function">
+<dt id="void gpu::unregisterPageLocked(Mat&amp; m)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::</code><code class="descname">unregisterPageLocked</code><span class="sig-paren">(</span>Mat&amp; <strong>m</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::unregisterPageLocked(Mat& m)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>m</strong> &#8211; Input matrix.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="gpu-cudamem">
+<h2>gpu::CudaMem<a class="headerlink" href="#gpu-cudamem" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::CudaMem">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">CudaMem</code><a class="headerlink" href="#gpu::CudaMem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class with reference counting wrapping special memory type allocation functions from CUDA. Its interface is also
+<code class="xref ocv ocv-func docutils literal"><span class="pre">Mat()</span></code>-like but with additional memory type parameters.</p>
+<ul class="simple">
+<li><strong>ALLOC_PAGE_LOCKED</strong> sets a page locked memory type used commonly for fast and asynchronous uploading/downloading data from/to GPU.</li>
+<li><strong>ALLOC_ZEROCOPY</strong> specifies a zero copy memory allocation that enables mapping the host memory to GPU address space, if supported.</li>
+<li><strong>ALLOC_WRITE_COMBINED</strong>  sets the write combined buffer that is not cached by CPU. Such buffers are used to supply GPU with data when GPU only reads it. The advantage is a better CPU cache utilization.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Allocation size of such memory types is usually limited. For more details, see <em>CUDA 2.2 Pinned Memory APIs</em> document or <em>CUDA C Programming Guide</em>.</p>
+</div>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">CudaMem</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+        <span class="k">enum</span>  <span class="p">{</span> <span class="n">ALLOC_PAGE_LOCKED</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ALLOC_ZEROCOPY</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+                 <span class="n">ALLOC_WRITE_COMBINED</span> <span class="o">=</span> <span class="mi">4</span> <span class="p">};</span>
+
+        <span class="n">CudaMem</span><span class="p">(</span><span class="n">Size</span> <span class="n">size</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="kt">int</span> <span class="n">alloc_type</span> <span class="o">=</span> <span class="n">ALLOC_PAGE_LOCKED</span><span class="p">);</span>
+
+        <span class="c1">//! creates from cv::Mat with coping data</span>
+        <span class="k">explicit</span> <span class="nf">CudaMem</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">m</span><span class="p">,</span> <span class="kt">int</span> <span class="n">alloc_type</span> <span class="o">=</span> <span class="n">ALLOC_PAGE_LOCKED</span><span class="p">);</span>
+
+         <span class="p">......</span>
+
+        <span class="kt">void</span> <span class="n">create</span><span class="p">(</span><span class="n">Size</span> <span class="n">size</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="kt">int</span> <span class="n">alloc_type</span> <span class="o">=</span> <span class="n">ALLOC_PAGE_LOCKED</span><span class="p">);</span>
+
+        <span class="c1">//! returns matrix header with disabled ref. counting for CudaMem data.</span>
+        <span class="n">Mat</span> <span class="nf">createMatHeader</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+        <span class="k">operator</span> <span class="nf">Mat</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+        <span class="c1">//! maps host memory into device address space</span>
+        <span class="n">GpuMat</span> <span class="nf">createGpuMatHeader</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+        <span class="k">operator</span> <span class="nf">GpuMat</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+        <span class="c1">//if host memory can be mapped to gpu address space;</span>
+        <span class="k">static</span> <span class="kt">bool</span> <span class="nf">canMapHostMemory</span><span class="p">();</span>
+
+        <span class="kt">int</span> <span class="n">alloc_type</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gpu-cudamem-creatematheader">
+<h2>gpu::CudaMem::createMatHeader<a class="headerlink" href="#gpu-cudamem-creatematheader" title="Permalink to this headline">¶</a></h2>
+<p>Creates a header without reference counting to <a class="reference internal" href="#gpu::CudaMem" title="class gpu::CudaMem"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::CudaMem</span></code></a> data.</p>
+<dl class="function">
+<dt id="Mat gpu::CudaMem::createMatHeader() const">
+<strong>C++:</strong><code class="descname"> </code>Mat <code class="descclassname">gpu::CudaMem::</code><code class="descname">createMatHeader</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#Mat gpu::CudaMem::createMatHeader() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-cudamem-creategpumatheader">
+<h2>gpu::CudaMem::createGpuMatHeader<a class="headerlink" href="#gpu-cudamem-creategpumatheader" title="Permalink to this headline">¶</a></h2>
+<p>Maps CPU memory to GPU address space and creates the <a class="reference internal" href="#gpu::GpuMat" title="class gpu::GpuMat"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::GpuMat</span></code></a> header without reference counting for it.</p>
+<dl class="function">
+<dt id="GpuMat gpu::CudaMem::createGpuMatHeader() const">
+<strong>C++:</strong><code class="descname"> </code>GpuMat <code class="descclassname">gpu::CudaMem::</code><code class="descname">createGpuMatHeader</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#GpuMat gpu::CudaMem::createGpuMatHeader() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This can be done only if memory was allocated with the <code class="docutils literal"><span class="pre">ALLOC_ZEROCOPY</span></code> flag and if it is supported by the hardware. Laptops often share video and CPU memory, so address spaces can be mapped, which eliminates an extra copy.</p>
+</div>
+<div class="section" id="gpu-cudamem-canmaphostmemory">
+<h2>gpu::CudaMem::canMapHostMemory<a class="headerlink" href="#gpu-cudamem-canmaphostmemory" title="Permalink to this headline">¶</a></h2>
+<p>Returns <code class="docutils literal"><span class="pre">true</span></code> if the current hardware supports address space mapping and <code class="docutils literal"><span class="pre">ALLOC_ZEROCOPY</span></code> memory allocation.</p>
+<dl class="function">
+<dt id="static bool gpu::CudaMem::canMapHostMemory()">
+<strong>C++:</strong><code class="descname"> </code><em class="property">static</em> bool <code class="descclassname">gpu::CudaMem::</code><code class="descname">canMapHostMemory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#static bool gpu::CudaMem::canMapHostMemory()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-stream">
+<h2>gpu::Stream<a class="headerlink" href="#gpu-stream" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gpu::Stream">
+<em class="property">class </em><code class="descclassname">gpu::</code><code class="descname">Stream</code><a class="headerlink" href="#gpu::Stream" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This class encapsulates a queue of asynchronous calls. Some functions have overloads with the additional <code class="docutils literal"><span class="pre">gpu::Stream</span></code> parameter. The overloads do initialization work (allocate output buffers, upload constants, and so on), start the GPU kernel, and return before results are ready. You can check whether all operations are complete via <a class="reference internal" href="#bool gpu::Stream::queryIfComplete()" title="bool gpu::Stream::queryIfComplete()"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::Stream::queryIfComplete()</span></code></a>. You can asynchronously upload/download data from/to page-locked buffers, using the <a class="reference internal" href="#gpu::CudaMem" title="class gpu::CudaMem"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::CudaMem</span></code></a> or <a class="reference internal" href="../../core/doc/basic_structures.html#Mat" title="class Mat"><code class="xref ocv ocv-class docutils literal"><span class="pre">Mat</span></code></a> header that points to a region of <a class="reference internal" href="#gpu::CudaMem" title="class gpu::CudaMem"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::CudaMem</span></code></a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Currently, you may face problems if an operation is enqueued twice with different data. Some functions use the constant GPU memory, and next call may update the memory before the previous one has been finished. But calling different operations asynchronously is safe because each operation has its own constant buffer. Memory copy/upload/download/set operations to the buffers you hold are also safe.</p>
+</div>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">Stream</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">Stream</span><span class="p">();</span>
+    <span class="o">~</span><span class="n">Stream</span><span class="p">();</span>
+
+    <span class="n">Stream</span><span class="p">(</span><span class="k">const</span> <span class="n">Stream</span><span class="o">&amp;</span><span class="p">);</span>
+    <span class="n">Stream</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Stream</span><span class="o">&amp;</span><span class="p">);</span>
+
+    <span class="kt">bool</span> <span class="nf">queryIfComplete</span><span class="p">();</span>
+    <span class="kt">void</span> <span class="nf">waitForCompletion</span><span class="p">();</span>
+
+    <span class="kt">void</span> <span class="nf">enqueueDownload</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">src</span><span class="p">,</span> <span class="n">CudaMem</span><span class="o">&amp;</span> <span class="n">dst</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">enqueueDownload</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">src</span><span class="p">,</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">dst</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">enqueueUpload</span><span class="p">(</span><span class="k">const</span> <span class="n">CudaMem</span><span class="o">&amp;</span> <span class="n">src</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">dst</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">enqueueUpload</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span><span class="o">&amp;</span> <span class="n">src</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">dst</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">enqueueCopy</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">src</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">dst</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">enqueueMemSet</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">src</span><span class="p">,</span> <span class="n">Scalar</span> <span class="n">val</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">enqueueMemSet</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">src</span><span class="p">,</span> <span class="n">Scalar</span> <span class="n">val</span><span class="p">,</span> <span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">mask</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">enqueueConvert</span><span class="p">(</span><span class="k">const</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">src</span><span class="p">,</span> <span class="n">GpuMat</span><span class="o">&amp;</span> <span class="n">dst</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">,</span>
+                        <span class="kt">double</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="kt">double</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">*</span><span class="n">StreamCallback</span><span class="p">)(</span><span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span><span class="p">,</span> <span class="kt">int</span> <span class="n">status</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">userData</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">enqueueHostCallback</span><span class="p">(</span><span class="n">StreamCallback</span> <span class="n">callback</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">userData</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gpu-stream-queryifcomplete">
+<h2>gpu::Stream::queryIfComplete<a class="headerlink" href="#gpu-stream-queryifcomplete" title="Permalink to this headline">¶</a></h2>
+<p>Returns <code class="docutils literal"><span class="pre">true</span></code> if the current stream queue is finished. Otherwise, it returns false.</p>
+<dl class="function">
+<dt id="bool gpu::Stream::queryIfComplete()">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">gpu::Stream::</code><code class="descname">queryIfComplete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bool gpu::Stream::queryIfComplete()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-stream-waitforcompletion">
+<h2>gpu::Stream::waitForCompletion<a class="headerlink" href="#gpu-stream-waitforcompletion" title="Permalink to this headline">¶</a></h2>
+<p>Blocks the current CPU thread until all operations in the stream are complete.</p>
+<dl class="function">
+<dt id="void gpu::Stream::waitForCompletion()">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::Stream::</code><code class="descname">waitForCompletion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::Stream::waitForCompletion()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-stream-enqueuedownload">
+<h2>gpu::Stream::enqueueDownload<a class="headerlink" href="#gpu-stream-enqueuedownload" title="Permalink to this headline">¶</a></h2>
+<p>Copies data from device to host.</p>
+<dl class="function">
+<dt id="void gpu::Stream::enqueueDownload(const GpuMat&amp; src, CudaMem&amp; dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::Stream::</code><code class="descname">enqueueDownload</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, CudaMem&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::Stream::enqueueDownload(const GpuMat& src, CudaMem& dst)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::Stream::enqueueDownload(const GpuMat&amp; src, Mat&amp; dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::Stream::</code><code class="descname">enqueueDownload</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, Mat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::Stream::enqueueDownload(const GpuMat& src, Mat& dst)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><code class="docutils literal"><span class="pre">cv::Mat</span></code> must point to page locked memory (i.e. to <code class="docutils literal"><span class="pre">CudaMem</span></code> data or to its subMat) or must be registered with <a class="reference internal" href="#void gpu::registerPageLocked(Mat&amp; m)" title="void gpu::registerPageLocked(Mat&amp; m)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::registerPageLocked()</span></code></a> .</p>
+</div>
+</div>
+<div class="section" id="gpu-stream-enqueueupload">
+<h2>gpu::Stream::enqueueUpload<a class="headerlink" href="#gpu-stream-enqueueupload" title="Permalink to this headline">¶</a></h2>
+<p>Copies data from host to device.</p>
+<dl class="function">
+<dt id="void gpu::Stream::enqueueUpload(const CudaMem&amp; src, GpuMat&amp; dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::Stream::</code><code class="descname">enqueueUpload</code><span class="sig-paren">(</span>const CudaMem&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::Stream::enqueueUpload(const CudaMem& src, GpuMat& dst)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::Stream::enqueueUpload(const Mat&amp; src, GpuMat&amp; dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::Stream::</code><code class="descname">enqueueUpload</code><span class="sig-paren">(</span>const Mat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::Stream::enqueueUpload(const Mat& src, GpuMat& dst)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><code class="docutils literal"><span class="pre">cv::Mat</span></code> must point to page locked memory (i.e. to <code class="docutils literal"><span class="pre">CudaMem</span></code> data or to its subMat) or must be registered with <a class="reference internal" href="#void gpu::registerPageLocked(Mat&amp; m)" title="void gpu::registerPageLocked(Mat&amp; m)"><code class="xref ocv ocv-func docutils literal"><span class="pre">gpu::registerPageLocked()</span></code></a> .</p>
+</div>
+</div>
+<div class="section" id="gpu-stream-enqueuecopy">
+<h2>gpu::Stream::enqueueCopy<a class="headerlink" href="#gpu-stream-enqueuecopy" title="Permalink to this headline">¶</a></h2>
+<p>Copies data from device to device.</p>
+<dl class="function">
+<dt id="void gpu::Stream::enqueueCopy(const GpuMat&amp; src, GpuMat&amp; dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::Stream::</code><code class="descname">enqueueCopy</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::Stream::enqueueCopy(const GpuMat& src, GpuMat& dst)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-stream-enqueuememset">
+<h2>gpu::Stream::enqueueMemSet<a class="headerlink" href="#gpu-stream-enqueuememset" title="Permalink to this headline">¶</a></h2>
+<p>Initializes or sets device memory to a value.</p>
+<dl class="function">
+<dt id="void gpu::Stream::enqueueMemSet(GpuMat&amp; src, Scalar val)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::Stream::</code><code class="descname">enqueueMemSet</code><span class="sig-paren">(</span>GpuMat&amp; <strong>src</strong>, Scalar <strong>val</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::Stream::enqueueMemSet(GpuMat& src, Scalar val)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="void gpu::Stream::enqueueMemSet(GpuMat&amp; src, Scalar val, const GpuMat&amp; mask)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::Stream::</code><code class="descname">enqueueMemSet</code><span class="sig-paren">(</span>GpuMat&amp; <strong>src</strong>, Scalar <strong>val</strong>, const GpuMat&amp; <strong>mask</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::Stream::enqueueMemSet(GpuMat& src, Scalar val, const GpuMat& mask)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-stream-enqueueconvert">
+<h2>gpu::Stream::enqueueConvert<a class="headerlink" href="#gpu-stream-enqueueconvert" title="Permalink to this headline">¶</a></h2>
+<p>Converts matrix type, ex from float to uchar depending on type.</p>
+<dl class="function">
+<dt id="void gpu::Stream::enqueueConvert(const GpuMat&amp; src, GpuMat&amp; dst, int dtype, double a, double b)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::Stream::</code><code class="descname">enqueueConvert</code><span class="sig-paren">(</span>const GpuMat&amp; <strong>src</strong>, GpuMat&amp; <strong>dst</strong>, int <strong>dtype</strong>, double <strong>a</strong>=1, double <strong>b</strong>=0 <span class="sig-paren">)</span><a class="headerlink" href="#void gpu::Stream::enqueueConvert(const GpuMat& src, GpuMat& dst, int dtype, double a, double b)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gpu-stream-enqueuehostcallback">
+<h2>gpu::Stream::enqueueHostCallback<a class="headerlink" href="#gpu-stream-enqueuehostcallback" title="Permalink to this headline">¶</a></h2>
+<p>Adds a callback to be called on the host after all currently enqueued items in the stream have completed.</p>
+<dl class="function">
+<dt id="void gpu::Stream::enqueueHostCallback(StreamCallback callback, void* userData)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">gpu::Stream::</code><code class="descname">enqueueHostCallback</code><span class="sig-paren">(</span>StreamCallback <strong>callback</strong>, void* <strong>userData</strong><span class="sig-paren">)</span><a class="headerlink" href="#void gpu::Stream::enqueueHostCallback(StreamCallback callback, void* userData)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Callbacks must not make any CUDA API calls. Callbacks must not perform any synchronization that may depend on outstanding device work or other callbacks that are not mandated to run earlier.  Callbacks without a mandated order (in independent streams) execute in undefined order and may be serialized.</p>
+</div>
+</div>
+<div class="section" id="gpu-streamaccessor">
+<h2>gpu::StreamAccessor<a class="headerlink" href="#gpu-streamaccessor" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="gpu::StreamAccessor">
+<em class="property">struct </em><code class="descclassname">gpu::</code><code class="descname">StreamAccessor</code><a class="headerlink" href="#gpu::StreamAccessor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Class that enables getting <code class="docutils literal"><span class="pre">cudaStream_t</span></code> from <a class="reference internal" href="#gpu::Stream" title="class gpu::Stream"><code class="xref ocv ocv-class docutils literal"><span class="pre">gpu::Stream</span></code></a> and is declared in <code class="docutils literal"><span class="pre">stream_accessor.hpp</span></code> because it is the only public header that depends on the CUDA Runtime API. Including it brings a dependency to your code.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">StreamAccessor</span>
+<span class="p">{</span>
+    <span class="n">CV_EXPORTS</span> <span class="k">static</span> <span class="n">cudaStream_t</span> <span class="n">getStream</span><span class="p">(</span><span class="k">const</span> <span class="n">Stream</span><span class="o">&amp;</span> <span class="n">stream</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Data Structures</a><ul>
+<li><a class="reference internal" href="#gpu-ptrstepsz">gpu::PtrStepSz</a></li>
+<li><a class="reference internal" href="#gpu-ptrstep">gpu::PtrStep</a></li>
+<li><a class="reference internal" href="#gpu-gpumat">gpu::GpuMat</a></li>
+<li><a class="reference internal" href="#gpu-createcontinuous">gpu::createContinuous</a></li>
+<li><a class="reference internal" href="#gpu-ensuresizeisenough">gpu::ensureSizeIsEnough</a></li>
+<li><a class="reference internal" href="#gpu-registerpagelocked">gpu::registerPageLocked</a></li>
+<li><a class="reference internal" href="#gpu-unregisterpagelocked">gpu::unregisterPageLocked</a></li>
+<li><a class="reference internal" href="#gpu-cudamem">gpu::CudaMem</a></li>
+<li><a class="reference internal" href="#gpu-cudamem-creatematheader">gpu::CudaMem::createMatHeader</a></li>
+<li><a class="reference internal" href="#gpu-cudamem-creategpumatheader">gpu::CudaMem::createGpuMatHeader</a></li>
+<li><a class="reference internal" href="#gpu-cudamem-canmaphostmemory">gpu::CudaMem::canMapHostMemory</a></li>
+<li><a class="reference internal" href="#gpu-stream">gpu::Stream</a></li>
+<li><a class="reference internal" href="#gpu-stream-queryifcomplete">gpu::Stream::queryIfComplete</a></li>
+<li><a class="reference internal" href="#gpu-stream-waitforcompletion">gpu::Stream::waitForCompletion</a></li>
+<li><a class="reference internal" href="#gpu-stream-enqueuedownload">gpu::Stream::enqueueDownload</a></li>
+<li><a class="reference internal" href="#gpu-stream-enqueueupload">gpu::Stream::enqueueUpload</a></li>
+<li><a class="reference internal" href="#gpu-stream-enqueuecopy">gpu::Stream::enqueueCopy</a></li>
+<li><a class="reference internal" href="#gpu-stream-enqueuememset">gpu::Stream::enqueueMemSet</a></li>
+<li><a class="reference internal" href="#gpu-stream-enqueueconvert">gpu::Stream::enqueueConvert</a></li>
+<li><a class="reference internal" href="#gpu-stream-enqueuehostcallback">gpu::Stream::enqueueHostCallback</a></li>
+<li><a class="reference internal" href="#gpu-streamaccessor">gpu::StreamAccessor</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="initalization_and_information.html"
+                        title="previous chapter">Initalization and Information</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="operations_on_matrices.html"
+                        title="next chapter">Operations on Matrices</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/gpu/doc/data_structures.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="operations_on_matrices.html" title="Operations on Matrices"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="initalization_and_information.html" title="Initalization and Information"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="gpu.html" >gpu. GPU-accelerated Computer Vision</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

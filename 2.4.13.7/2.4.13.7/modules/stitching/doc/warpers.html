@@ -1,0 +1,527 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Images Warping &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="stitching. Images stitching" href="stitching.html" />
+    <link rel="next" title="Seam Estimation" href="seam_estimation.html" />
+    <link rel="prev" title="Autocalibration" href="autocalib.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="seam_estimation.html" title="Seam Estimation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="autocalib.html" title="Autocalibration"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="stitching.html" accesskey="U">stitching. Images stitching</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="images-warping">
+<h1>Images Warping<a class="headerlink" href="#images-warping" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="detail-rotationwarper">
+<h2>detail::RotationWarper<a class="headerlink" href="#detail-rotationwarper" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="detail::RotationWarper">
+<em class="property">class </em><code class="descclassname">detail::</code><code class="descname">RotationWarper</code><a class="headerlink" href="#detail::RotationWarper" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Rotation-only model image warper interface.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="n">RotationWarper</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">RotationWarper</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="k">virtual</span> <span class="n">Point2f</span> <span class="n">warpPoint</span><span class="p">(</span><span class="k">const</span> <span class="n">Point2f</span> <span class="o">&amp;</span><span class="n">pt</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">K</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">R</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="n">Rect</span> <span class="nf">buildMaps</span><span class="p">(</span><span class="n">Size</span> <span class="n">src_size</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">K</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">R</span><span class="p">,</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">xmap</span><span class="p">,</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">ymap</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="n">Point</span> <span class="nf">warp</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">src</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">K</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">R</span><span class="p">,</span> <span class="kt">int</span> <span class="n">interp_mode</span><span class="p">,</span> <span class="kt">int</span> <span class="n">border_mode</span><span class="p">,</span>
+                       <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">dst</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">warpBackward</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">src</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">K</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">R</span><span class="p">,</span> <span class="kt">int</span> <span class="n">interp_mode</span><span class="p">,</span> <span class="kt">int</span> <span class="n">border_mode</span><span class="p">,</span>
+                              <span class="n">Size</span> <span class="n">dst_size</span><span class="p">,</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">dst</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="n">Rect</span> <span class="nf">warpRoi</span><span class="p">(</span><span class="n">Size</span> <span class="n">src_size</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">K</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">R</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="detail-rotationwarper-warppoint">
+<h2>detail::RotationWarper::warpPoint<a class="headerlink" href="#detail-rotationwarper-warppoint" title="Permalink to this headline">¶</a></h2>
+<p>Projects the image point.</p>
+<dl class="function">
+<dt id="Point2f detail::RotationWarper::warpPoint(const Point2f &amp;pt, const Mat &amp;K, const Mat &amp;R)">
+<strong>C++:</strong><code class="descname"> </code>Point2f <code class="descclassname">detail::RotationWarper::</code><code class="descname">warpPoint</code><span class="sig-paren">(</span>const Point2f&amp; <strong>pt</strong>, const Mat&amp; <strong>K</strong>, const Mat&amp; <strong>R</strong><span class="sig-paren">)</span><a class="headerlink" href="#Point2f detail::RotationWarper::warpPoint(const Point2f &pt, const Mat &K, const Mat &R)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pt</strong> &#8211; Source point</li>
+<li><strong>K</strong> &#8211; Camera intrinsic parameters</li>
+<li><strong>R</strong> &#8211; Camera rotation matrix</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Projected point</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="detail-rotationwarper-buildmaps">
+<h2>detail::RotationWarper::buildMaps<a class="headerlink" href="#detail-rotationwarper-buildmaps" title="Permalink to this headline">¶</a></h2>
+<p>Builds the projection maps according to the given camera data.</p>
+<dl class="function">
+<dt id="Rect detail::RotationWarper::buildMaps(Size src_size, const Mat &amp;K, const Mat &amp;R, Mat &amp;xmap, Mat &amp;ymap)">
+<strong>C++:</strong><code class="descname"> </code>Rect <code class="descclassname">detail::RotationWarper::</code><code class="descname">buildMaps</code><span class="sig-paren">(</span>Size <strong>src_size</strong>, const Mat&amp; <strong>K</strong>, const Mat&amp; <strong>R</strong>, Mat&amp; <strong>xmap</strong>, Mat&amp; <strong>ymap</strong><span class="sig-paren">)</span><a class="headerlink" href="#Rect detail::RotationWarper::buildMaps(Size src_size, const Mat &K, const Mat &R, Mat &xmap, Mat &ymap)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>src_size</strong> &#8211; Source image size</li>
+<li><strong>K</strong> &#8211; Camera intrinsic parameters</li>
+<li><strong>R</strong> &#8211; Camera rotation matrix</li>
+<li><strong>xmap</strong> &#8211; Projection map for the x axis</li>
+<li><strong>ymap</strong> &#8211; Projection map for the y axis</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Projected image minimum bounding box</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="detail-rotationwarper-warp">
+<h2>detail::RotationWarper::warp<a class="headerlink" href="#detail-rotationwarper-warp" title="Permalink to this headline">¶</a></h2>
+<p>Projects the image.</p>
+<dl class="function">
+<dt id="Point detail::RotationWarper::warp(const Mat &amp;src, const Mat &amp;K, const Mat &amp;R, int interp_mode, int border_mode, Mat &amp;dst)">
+<strong>C++:</strong><code class="descname"> </code>Point <code class="descclassname">detail::RotationWarper::</code><code class="descname">warp</code><span class="sig-paren">(</span>const Mat&amp; <strong>src</strong>, const Mat&amp; <strong>K</strong>, const Mat&amp; <strong>R</strong>, int <strong>interp_mode</strong>, int <strong>border_mode</strong>, Mat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#Point detail::RotationWarper::warp(const Mat &src, const Mat &K, const Mat &R, int interp_mode, int border_mode, Mat &dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>src</strong> &#8211; Source image</li>
+<li><strong>K</strong> &#8211; Camera intrinsic parameters</li>
+<li><strong>R</strong> &#8211; Camera rotation matrix</li>
+<li><strong>interp_mode</strong> &#8211; Interpolation mode</li>
+<li><strong>border_mode</strong> &#8211; Border extrapolation mode</li>
+<li><strong>dst</strong> &#8211; Projected image</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Project image top-left corner</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="detail-rotationwarper-warpbackward">
+<h2>detail::RotationWarper::warpBackward<a class="headerlink" href="#detail-rotationwarper-warpbackward" title="Permalink to this headline">¶</a></h2>
+<p>Projects the image backward.</p>
+<dl class="function">
+<dt id="void detail::RotationWarper::warpBackward(const Mat &amp;src, const Mat &amp;K, const Mat &amp;R, int interp_mode, int border_mode, Size dst_size, Mat &amp;dst)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">detail::RotationWarper::</code><code class="descname">warpBackward</code><span class="sig-paren">(</span>const Mat&amp; <strong>src</strong>, const Mat&amp; <strong>K</strong>, const Mat&amp; <strong>R</strong>, int <strong>interp_mode</strong>, int <strong>border_mode</strong>, Size <strong>dst_size</strong>, Mat&amp; <strong>dst</strong><span class="sig-paren">)</span><a class="headerlink" href="#void detail::RotationWarper::warpBackward(const Mat &src, const Mat &K, const Mat &R, int interp_mode, int border_mode, Size dst_size, Mat &dst)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src</strong> &#8211; Projected image</li>
+<li><strong>K</strong> &#8211; Camera intrinsic parameters</li>
+<li><strong>R</strong> &#8211; Camera rotation matrix</li>
+<li><strong>interp_mode</strong> &#8211; Interpolation mode</li>
+<li><strong>border_mode</strong> &#8211; Border extrapolation mode</li>
+<li><strong>dst_size</strong> &#8211; Backward-projected image size</li>
+<li><strong>dst</strong> &#8211; Backward-projected image</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="detail-rotationwarper-warproi">
+<h2>detail::RotationWarper::warpRoi<a class="headerlink" href="#detail-rotationwarper-warproi" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="Rect detail::RotationWarper::warpRoi(Size src_size, const Mat &amp;K, const Mat &amp;R)">
+<strong>C++:</strong><code class="descname"> </code>Rect <code class="descclassname">detail::RotationWarper::</code><code class="descname">warpRoi</code><span class="sig-paren">(</span>Size <strong>src_size</strong>, const Mat&amp; <strong>K</strong>, const Mat&amp; <strong>R</strong><span class="sig-paren">)</span><a class="headerlink" href="#Rect detail::RotationWarper::warpRoi(Size src_size, const Mat &K, const Mat &R)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>src_size</strong> &#8211; Source image bounding box</li>
+<li><strong>K</strong> &#8211; Camera intrinsic parameters</li>
+<li><strong>R</strong> &#8211; Camera rotation matrix</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Projected image minimum bounding box</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="detail-projectorbase">
+<h2>detail::ProjectorBase<a class="headerlink" href="#detail-projectorbase" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="detail::ProjectorBase">
+<em class="property">struct </em><code class="descclassname">detail::</code><code class="descname">ProjectorBase</code><a class="headerlink" href="#detail::ProjectorBase" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for warping logic implementation.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">struct</span> <span class="n">CV_EXPORTS</span> <span class="n">ProjectorBase</span>
+<span class="p">{</span>
+    <span class="kt">void</span> <span class="n">setCameraParams</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">K</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">),</span>
+                        <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">R</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">),</span>
+                        <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">T</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">));</span>
+
+    <span class="kt">float</span> <span class="n">scale</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">k</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span>
+    <span class="kt">float</span> <span class="n">rinv</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span>
+    <span class="kt">float</span> <span class="n">r_kinv</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span>
+    <span class="kt">float</span> <span class="n">k_rinv</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span>
+    <span class="kt">float</span> <span class="n">t</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="detail-rotationwarperbase">
+<h2>detail::RotationWarperBase<a class="headerlink" href="#detail-rotationwarperbase" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="detail::RotationWarperBase">
+<em class="property">class </em><code class="descclassname">detail::</code><code class="descname">RotationWarperBase</code><a class="headerlink" href="#detail::RotationWarperBase" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Base class for rotation-based warper using a <a class="reference internal" href="#detail-projectorbase">detail::ProjectorBase</a> derived class.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">P</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">RotationWarperBase</span> <span class="p">:</span> <span class="k">public</span> <span class="n">RotationWarper</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">Point2f</span> <span class="n">warpPoint</span><span class="p">(</span><span class="k">const</span> <span class="n">Point2f</span> <span class="o">&amp;</span><span class="n">pt</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">K</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">R</span><span class="p">);</span>
+
+    <span class="n">Rect</span> <span class="nf">buildMaps</span><span class="p">(</span><span class="n">Size</span> <span class="n">src_size</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">K</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">R</span><span class="p">,</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">xmap</span><span class="p">,</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">ymap</span><span class="p">);</span>
+
+    <span class="n">Point</span> <span class="nf">warp</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">src</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">K</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">R</span><span class="p">,</span> <span class="kt">int</span> <span class="n">interp_mode</span><span class="p">,</span> <span class="kt">int</span> <span class="n">border_mode</span><span class="p">,</span>
+            <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">dst</span><span class="p">);</span>
+
+    <span class="kt">void</span> <span class="nf">warpBackward</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">src</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">K</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">R</span><span class="p">,</span> <span class="kt">int</span> <span class="n">interp_mode</span><span class="p">,</span> <span class="kt">int</span> <span class="n">border_mode</span><span class="p">,</span>
+                    <span class="n">Size</span> <span class="n">dst_size</span><span class="p">,</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">dst</span><span class="p">);</span>
+
+    <span class="n">Rect</span> <span class="nf">warpRoi</span><span class="p">(</span><span class="n">Size</span> <span class="n">src_size</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">K</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">R</span><span class="p">);</span>
+
+<span class="k">protected</span><span class="o">:</span>
+
+    <span class="c1">// Detects ROI of the destination image. It&#39;s correct for any projection.</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">detectResultRoi</span><span class="p">(</span><span class="n">Size</span> <span class="n">src_size</span><span class="p">,</span> <span class="n">Point</span> <span class="o">&amp;</span><span class="n">dst_tl</span><span class="p">,</span> <span class="n">Point</span> <span class="o">&amp;</span><span class="n">dst_br</span><span class="p">);</span>
+
+    <span class="c1">// Detects ROI of the destination image by walking over image border.</span>
+    <span class="c1">// Correctness for any projection isn&#39;t guaranteed.</span>
+    <span class="kt">void</span> <span class="nf">detectResultRoiByBorder</span><span class="p">(</span><span class="n">Size</span> <span class="n">src_size</span><span class="p">,</span> <span class="n">Point</span> <span class="o">&amp;</span><span class="n">dst_tl</span><span class="p">,</span> <span class="n">Point</span> <span class="o">&amp;</span><span class="n">dst_br</span><span class="p">);</span>
+
+    <span class="n">P</span> <span class="n">projector_</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="detail-planewarper">
+<h2>detail::PlaneWarper<a class="headerlink" href="#detail-planewarper" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="detail::PlaneWarper : public detail::RotationWarperBase&lt;PlaneProjector&gt;">
+<em class="property">class </em><code class="descclassname">detail::</code><code class="descname">PlaneWarper</code> : <em class="property">public</em> <code class="descclassname">detail::</code><code class="descname">RotationWarperBase&lt;PlaneProjector&gt;</code><a class="headerlink" href="#detail::PlaneWarper : public detail::RotationWarperBase<PlaneProjector>" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Warper that maps an image onto the z = 1 plane.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">PlaneWarper</span> <span class="p">:</span> <span class="k">public</span> <span class="n">RotationWarperBase</span><span class="o">&lt;</span><span class="n">PlaneProjector</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">PlaneWarper</span><span class="p">(</span><span class="kt">float</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.f</span><span class="p">)</span> <span class="p">{</span> <span class="n">projector_</span><span class="p">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">scale</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">setScale</span><span class="p">(</span><span class="kt">float</span> <span class="n">scale</span><span class="p">)</span> <span class="p">{</span> <span class="n">projector_</span><span class="p">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">scale</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="n">Point2f</span> <span class="n">warpPoint</span><span class="p">(</span><span class="k">const</span> <span class="n">Point2f</span> <span class="o">&amp;</span><span class="n">pt</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">K</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">R</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">T</span><span class="p">);</span>
+
+    <span class="n">Rect</span> <span class="nf">buildMaps</span><span class="p">(</span><span class="n">Size</span> <span class="n">src_size</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">K</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">R</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">T</span><span class="p">,</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">xmap</span><span class="p">,</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">ymap</span><span class="p">);</span>
+
+    <span class="n">Point</span> <span class="nf">warp</span><span class="p">(</span><span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">src</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">K</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">R</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">T</span><span class="p">,</span> <span class="kt">int</span> <span class="n">interp_mode</span><span class="p">,</span> <span class="kt">int</span> <span class="n">border_mode</span><span class="p">,</span>
+               <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">dst</span><span class="p">);</span>
+
+    <span class="n">Rect</span> <span class="nf">warpRoi</span><span class="p">(</span><span class="n">Size</span> <span class="n">src_size</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">K</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">R</span><span class="p">,</span> <span class="k">const</span> <span class="n">Mat</span> <span class="o">&amp;</span><span class="n">T</span><span class="p">);</span>
+
+<span class="k">protected</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">detectResultRoi</span><span class="p">(</span><span class="n">Size</span> <span class="n">src_size</span><span class="p">,</span> <span class="n">Point</span> <span class="o">&amp;</span><span class="n">dst_tl</span><span class="p">,</span> <span class="n">Point</span> <span class="o">&amp;</span><span class="n">dst_br</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#detail::RotationWarper" title="class detail::RotationWarper"><code class="xref ocv ocv-class docutils literal"><span class="pre">detail::RotationWarper</span></code></a></p>
+</div>
+</div>
+<div class="section" id="detail-planewarper-planewarper">
+<h2>detail::PlaneWarper::PlaneWarper<a class="headerlink" href="#detail-planewarper-planewarper" title="Permalink to this headline">¶</a></h2>
+<p>Construct an instance of the plane warper class.</p>
+<dl class="function">
+<dt id="void detail::PlaneWarper::PlaneWarper(float scale)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">detail::PlaneWarper::</code><code class="descname">PlaneWarper</code><span class="sig-paren">(</span>float <strong>scale</strong>=1.f<span class="sig-paren">)</span><a class="headerlink" href="#void detail::PlaneWarper::PlaneWarper(float scale)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>scale</strong> &#8211; Projected image scale multiplier</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="detail-sphericalwarper">
+<h2>detail::SphericalWarper<a class="headerlink" href="#detail-sphericalwarper" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="detail::SphericalWarper : public detail::RotationWarperBase&lt;SphericalProjector&gt;">
+<em class="property">class </em><code class="descclassname">detail::</code><code class="descname">SphericalWarper</code> : <em class="property">public</em> <code class="descclassname">detail::</code><code class="descname">RotationWarperBase&lt;SphericalProjector&gt;</code><a class="headerlink" href="#detail::SphericalWarper : public detail::RotationWarperBase<SphericalProjector>" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Warper that maps an image onto the unit sphere located at the origin.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">SphericalWarper</span> <span class="p">:</span> <span class="k">public</span> <span class="n">RotationWarperBase</span><span class="o">&lt;</span><span class="n">SphericalProjector</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">SphericalWarper</span><span class="p">(</span><span class="kt">float</span> <span class="n">scale</span><span class="p">)</span> <span class="p">{</span> <span class="n">projector_</span><span class="p">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">scale</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="k">protected</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">detectResultRoi</span><span class="p">(</span><span class="n">Size</span> <span class="n">src_size</span><span class="p">,</span> <span class="n">Point</span> <span class="o">&amp;</span><span class="n">dst_tl</span><span class="p">,</span> <span class="n">Point</span> <span class="o">&amp;</span><span class="n">dst_br</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#detail::RotationWarper" title="class detail::RotationWarper"><code class="xref ocv ocv-class docutils literal"><span class="pre">detail::RotationWarper</span></code></a></p>
+</div>
+</div>
+<div class="section" id="detail-sphericalwarper-sphericalwarper">
+<h2>detail::SphericalWarper::SphericalWarper<a class="headerlink" href="#detail-sphericalwarper-sphericalwarper" title="Permalink to this headline">¶</a></h2>
+<p>Construct an instance of the spherical warper class.</p>
+<dl class="function">
+<dt id="void detail::SphericalWarper::SphericalWarper(float scale)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">detail::SphericalWarper::</code><code class="descname">SphericalWarper</code><span class="sig-paren">(</span>float <strong>scale</strong><span class="sig-paren">)</span><a class="headerlink" href="#void detail::SphericalWarper::SphericalWarper(float scale)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>scale</strong> &#8211; Projected image scale multiplier</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="detail-cylindricalwarper">
+<h2>detail::CylindricalWarper<a class="headerlink" href="#detail-cylindricalwarper" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="detail::CylindricalWarper : public detail::RotationWarperBase&lt;CylindricalProjector&gt;">
+<em class="property">class </em><code class="descclassname">detail::</code><code class="descname">CylindricalWarper</code> : <em class="property">public</em> <code class="descclassname">detail::</code><code class="descname">RotationWarperBase&lt;CylindricalProjector&gt;</code><a class="headerlink" href="#detail::CylindricalWarper : public detail::RotationWarperBase<CylindricalProjector>" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Warper that maps an image onto the x*x + z*z = 1 cylinder.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CV_EXPORTS</span> <span class="nl">CylindricalWarper</span> <span class="p">:</span> <span class="k">public</span> <span class="n">RotationWarperBase</span><span class="o">&lt;</span><span class="n">CylindricalProjector</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">CylindricalWarper</span><span class="p">(</span><span class="kt">float</span> <span class="n">scale</span><span class="p">)</span> <span class="p">{</span> <span class="n">projector_</span><span class="p">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">scale</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="k">protected</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">detectResultRoi</span><span class="p">(</span><span class="n">Size</span> <span class="n">src_size</span><span class="p">,</span> <span class="n">Point</span> <span class="o">&amp;</span><span class="n">dst_tl</span><span class="p">,</span> <span class="n">Point</span> <span class="o">&amp;</span><span class="n">dst_br</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">RotationWarperBase</span><span class="o">&lt;</span><span class="n">CylindricalProjector</span><span class="o">&gt;::</span><span class="n">detectResultRoiByBorder</span><span class="p">(</span><span class="n">src_size</span><span class="p">,</span> <span class="n">dst_tl</span><span class="p">,</span> <span class="n">dst_br</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#detail::RotationWarper" title="class detail::RotationWarper"><code class="xref ocv ocv-class docutils literal"><span class="pre">detail::RotationWarper</span></code></a></p>
+</div>
+</div>
+<div class="section" id="detail-cylindricalwarper-cylindricalwarper">
+<h2>detail::CylindricalWarper::CylindricalWarper<a class="headerlink" href="#detail-cylindricalwarper-cylindricalwarper" title="Permalink to this headline">¶</a></h2>
+<p>Construct an instance of the cylindrical warper class.</p>
+<dl class="function">
+<dt id="void detail::CylindricalWarper::CylindricalWarper(float scale)">
+<strong>C++:</strong><code class="descname"> </code>void <code class="descclassname">detail::CylindricalWarper::</code><code class="descname">CylindricalWarper</code><span class="sig-paren">(</span>float <strong>scale</strong><span class="sig-paren">)</span><a class="headerlink" href="#void detail::CylindricalWarper::CylindricalWarper(float scale)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>scale</strong> &#8211; Projected image scale multiplier</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Images Warping</a><ul>
+<li><a class="reference internal" href="#detail-rotationwarper">detail::RotationWarper</a></li>
+<li><a class="reference internal" href="#detail-rotationwarper-warppoint">detail::RotationWarper::warpPoint</a></li>
+<li><a class="reference internal" href="#detail-rotationwarper-buildmaps">detail::RotationWarper::buildMaps</a></li>
+<li><a class="reference internal" href="#detail-rotationwarper-warp">detail::RotationWarper::warp</a></li>
+<li><a class="reference internal" href="#detail-rotationwarper-warpbackward">detail::RotationWarper::warpBackward</a></li>
+<li><a class="reference internal" href="#detail-rotationwarper-warproi">detail::RotationWarper::warpRoi</a></li>
+<li><a class="reference internal" href="#detail-projectorbase">detail::ProjectorBase</a></li>
+<li><a class="reference internal" href="#detail-rotationwarperbase">detail::RotationWarperBase</a></li>
+<li><a class="reference internal" href="#detail-planewarper">detail::PlaneWarper</a></li>
+<li><a class="reference internal" href="#detail-planewarper-planewarper">detail::PlaneWarper::PlaneWarper</a></li>
+<li><a class="reference internal" href="#detail-sphericalwarper">detail::SphericalWarper</a></li>
+<li><a class="reference internal" href="#detail-sphericalwarper-sphericalwarper">detail::SphericalWarper::SphericalWarper</a></li>
+<li><a class="reference internal" href="#detail-cylindricalwarper">detail::CylindricalWarper</a></li>
+<li><a class="reference internal" href="#detail-cylindricalwarper-cylindricalwarper">detail::CylindricalWarper::CylindricalWarper</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="autocalib.html"
+                        title="previous chapter">Autocalibration</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="seam_estimation.html"
+                        title="next chapter">Seam Estimation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/stitching/doc/warpers.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="seam_estimation.html" title="Seam Estimation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="autocalib.html" title="Autocalibration"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="stitching.html" >stitching. Images stitching</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

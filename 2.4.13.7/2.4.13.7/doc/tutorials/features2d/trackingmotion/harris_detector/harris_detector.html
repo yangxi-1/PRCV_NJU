@@ -1,0 +1,373 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Harris corner detector &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../../../index.html" />
+    <link rel="up" title="feature2d module. 2D Features framework" href="../../table_of_content_features2d/table_of_content_features2d.html" />
+    <link rel="next" title="Feature Matching with FLANN" href="../../feature_flann_matcher/feature_flann_matcher.html" />
+    <link rel="prev" title="Feature Description" href="../../feature_description/feature_description.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../feature_flann_matcher/feature_flann_matcher.html" title="Feature Matching with FLANN"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../../feature_description/feature_description.html" title="Feature Description"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_features2d/table_of_content_features2d.html" accesskey="U"><em>feature2d</em> module. 2D Features framework</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="harris-corner-detector">
+<span id="harris-detector"></span><h1>Harris corner detector<a class="headerlink" href="#harris-corner-detector" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial you will learn:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>What features are and why they are important</li>
+<li>Use the function <a class="reference external" href="http://docs.opencv.org/modules/imgproc/doc/feature_detection.html?highlight=cornerharris#cornerharris">cornerHarris</a> to detect corners using the Harris-Stephens method.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="what-is-a-feature">
+<h3>What is a feature?<a class="headerlink" href="#what-is-a-feature" title="Permalink to this headline">¶</a></h3>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>In computer vision, usually we need to find matching points between different frames of an environment. Why? If we know how two images relate to each other, we can use <em>both</em> images to extract information of them.</li>
+<li>When we say <strong>matching points</strong> we are referring, in a general sense, to <em>characteristics</em> in the scene that we can recognize easily. We call these characteristics <strong>features</strong>.</li>
+<li><strong>So, what characteristics should a feature have?</strong><ul>
+<li>It must be <em>uniquely recognizable</em></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="types-of-image-features">
+<h3>Types of Image Features<a class="headerlink" href="#types-of-image-features" title="Permalink to this headline">¶</a></h3>
+<p>To mention a few:</p>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Edges</li>
+<li><strong>Corners</strong> (also known as interest points)</li>
+<li>Blobs (also known as regions of interest )</li>
+</ul>
+</div>
+<p>In this tutorial we will study the <em>corner</em> features, specifically.</p>
+</div>
+<div class="section" id="why-is-a-corner-so-special">
+<h3>Why is a corner so special?<a class="headerlink" href="#why-is-a-corner-so-special" title="Permalink to this headline">¶</a></h3>
+<div class="enumeratevisibleitemswithsquare container">
+<ul class="simple">
+<li>Because, since it is the intersection of two edges, it represents a point in which the directions of these two edges <em>change</em>. Hence, the gradient of the image (in both directions) have a high variation, which can be used to detect it.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="how-does-it-work">
+<h3>How does it work?<a class="headerlink" href="#how-does-it-work" title="Permalink to this headline">¶</a></h3>
+<div class="enumeratevisibleitemswithsquare container">
+<ul>
+<li><p class="first">Let&#8217;s look for corners. Since corners represents a variation in the gradient in the image, we will look for this &#8220;variation&#8221;.</p>
+</li>
+<li><p class="first">Consider a grayscale image <img class="math" src="../../../../../_images/math/06f9f0fcaa8d96a6a23b0f7d1566fe5efaa789ad.png" alt="I"/>. We are going to sweep a window <img class="math" src="../../../../../_images/math/1431642c5b55b1b86af92025f2ec3ee601e34fa7.png" alt="w(x,y)"/> (with displacements <img class="math" src="../../../../../_images/math/79dd859f9388201a83726bce301ab177f9e78991.png" alt="u"/> in the x direction and <img class="math" src="../../../../../_images/math/c06ba1e6d4bd12c79b045d76a3729a22df0dad8b.png" alt="v"/> in the right direction) <img class="math" src="../../../../../_images/math/06f9f0fcaa8d96a6a23b0f7d1566fe5efaa789ad.png" alt="I"/> and will calculate the variation of intensity.</p>
+<div class="math">
+<p><img src="../../../../../_images/math/64298b2668229d15649e5042e90af81a629ab075.png" alt="E(u,v) = \sum _{x,y} w(x,y)[ I(x+u,y+v) - I(x,y)]^{2}"/></p>
+</div><p>where:</p>
+<ul class="simple">
+<li><img class="math" src="../../../../../_images/math/1431642c5b55b1b86af92025f2ec3ee601e34fa7.png" alt="w(x,y)"/> is the window at position <img class="math" src="../../../../../_images/math/45b34b73b5a1fed1fd38b3a37ca1ada031de9970.png" alt="(x,y)"/></li>
+<li><img class="math" src="../../../../../_images/math/3e2f1e2db86b7346f20046df8d2e778973837ca2.png" alt="I(x,y)"/> is the intensity at <img class="math" src="../../../../../_images/math/45b34b73b5a1fed1fd38b3a37ca1ada031de9970.png" alt="(x,y)"/></li>
+<li><img class="math" src="../../../../../_images/math/bb2eb13b515024ea4e193cc9946a4f725072b0c3.png" alt="I(x+u,y+v)"/> is the intensity at the moved window <img class="math" src="../../../../../_images/math/5cfa3418be2101b2680cf5460a6da1877d394585.png" alt="(x+u,y+v)"/></li>
+</ul>
+</li>
+<li><p class="first">Since we are looking for windows with corners, we are looking for windows with a large variation in intensity. Hence, we have to maximize the equation above, specifically the term:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/710a44e744b7529f26b0f3695ad3d56bfaf61a90.png" alt="\sum _{x,y}[ I(x+u,y+v) - I(x,y)]^{2}"/></p>
+</div></li>
+<li><p class="first">Using <em>Taylor expansion</em>:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/610201413953d93b59b2983f1756611e7957cf04.png" alt="E(u,v) \approx \sum _{x,y}[ I(x,y) + u I_{x} + vI_{y} - I(x,y)]^{2}"/></p>
+</div></li>
+<li><p class="first">Expanding the equation and cancelling properly:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/a9d243bcf97d3fc03740575ebd15eed8e9a55e21.png" alt="E(u,v) \approx \sum _{x,y} u^{2}I_{x}^{2} + 2uvI_{x}I_{y} + v^{2}I_{y}^{2}"/></p>
+</div></li>
+<li><p class="first">Which can be expressed in a matrix form as:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/7d9c727e127a2a8579a1b693fe5eed3ca18e3b9c.png" alt="E(u,v) \approx \begin{bmatrix}
+                u &amp; v
+               \end{bmatrix}
+               \left (
+               \displaystyle \sum_{x,y}
+               w(x,y)
+               \begin{bmatrix}
+                I_x^{2} &amp; I_{x}I_{y} \\
+                I_xI_{y} &amp; I_{y}^{2}
+               \end{bmatrix}
+               \right )
+               \begin{bmatrix}
+                u \\
+                v
+               \end{bmatrix}"/></p>
+</div></li>
+<li><p class="first">Let&#8217;s denote:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/fe6c19e59bff5774bacf9c99d0aac458bd4cb8f0.png" alt="M = \displaystyle \sum_{x,y}
+                      w(x,y)
+                      \begin{bmatrix}
+                        I_x^{2} &amp; I_{x}I_{y} \\
+                        I_xI_{y} &amp; I_{y}^{2}
+                       \end{bmatrix}"/></p>
+</div></li>
+<li><p class="first">So, our equation now is:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/0a93c99b29b4cd456004792f52a3b5684e779148.png" alt="E(u,v) \approx \begin{bmatrix}
+                u &amp; v
+               \end{bmatrix}
+               M
+               \begin{bmatrix}
+                u \\
+                v
+               \end{bmatrix}"/></p>
+</div></li>
+<li><p class="first">A score is calculated for each window, to determine if it can possibly contain a corner:</p>
+<div class="math">
+<p><img src="../../../../../_images/math/c37fb3804b0dc6bd182e05cc4e0ce8ac1765a037.png" alt="R = det(M) - k(trace(M))^{2}"/></p>
+</div><p>where:</p>
+<ul class="simple">
+<li>det(M) = <img class="math" src="../../../../../_images/math/5fc6c43ba07b457b18d265a88bac4af22f235b1b.png" alt="\lambda_{1}\lambda_{2}"/></li>
+<li>trace(M) = <img class="math" src="../../../../../_images/math/a0321436f074f4413bad19a3a9878c7e38fcf9a5.png" alt="\lambda_{1}+\lambda_{2}"/></li>
+</ul>
+<p>a window with a score <img class="math" src="../../../../../_images/math/8fa391da5431a5d6eaba1325c3e7cb3da22812b5.png" alt="R"/> greater than a certain value is considered a &#8220;corner&#8221;</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial code&#8217;s is shown lines below. You can also download it from <a class="reference external" href="https://github.com/opencv/opencv/tree/master/samples/cpp/tutorial_code/TrackingMotion/cornerHarris_Demo.cpp">here</a></p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&quot;opencv2/highgui/highgui.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;opencv2/imgproc/imgproc.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="c1">/// Global variables</span>
+<span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">src_gray</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">thresh</span> <span class="o">=</span> <span class="mi">200</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">max_thresh</span> <span class="o">=</span> <span class="mi">255</span><span class="p">;</span>
+
+<span class="kt">char</span><span class="o">*</span> <span class="n">source_window</span> <span class="o">=</span> <span class="s">&quot;Source image&quot;</span><span class="p">;</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">corners_window</span> <span class="o">=</span> <span class="s">&quot;Corners detected&quot;</span><span class="p">;</span>
+
+<span class="c1">/// Function header</span>
+<span class="kt">void</span> <span class="nf">cornerHarris_demo</span><span class="p">(</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="p">);</span>
+
+<span class="cm">/** @function main */</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">/// Load source image and convert it to gray</span>
+  <span class="n">src</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+  <span class="n">cvtColor</span><span class="p">(</span> <span class="n">src</span><span class="p">,</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">CV_BGR2GRAY</span> <span class="p">);</span>
+
+  <span class="c1">/// Create a window and a trackbar</span>
+  <span class="n">namedWindow</span><span class="p">(</span> <span class="n">source_window</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+  <span class="n">createTrackbar</span><span class="p">(</span> <span class="s">&quot;Threshold: &quot;</span><span class="p">,</span> <span class="n">source_window</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">thresh</span><span class="p">,</span> <span class="n">max_thresh</span><span class="p">,</span> <span class="n">cornerHarris_demo</span> <span class="p">);</span>
+  <span class="n">imshow</span><span class="p">(</span> <span class="n">source_window</span><span class="p">,</span> <span class="n">src</span> <span class="p">);</span>
+
+  <span class="n">cornerHarris_demo</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+
+  <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">return</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/** @function cornerHarris_demo */</span>
+<span class="kt">void</span> <span class="nf">cornerHarris_demo</span><span class="p">(</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="p">)</span>
+<span class="p">{</span>
+
+  <span class="n">Mat</span> <span class="n">dst</span><span class="p">,</span> <span class="n">dst_norm</span><span class="p">,</span> <span class="n">dst_norm_scaled</span><span class="p">;</span>
+  <span class="n">dst</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span> <span class="n">src</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">CV_32FC1</span> <span class="p">);</span>
+
+  <span class="c1">/// Detector parameters</span>
+  <span class="kt">int</span> <span class="n">blockSize</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">apertureSize</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="kt">double</span> <span class="n">k</span> <span class="o">=</span> <span class="mf">0.04</span><span class="p">;</span>
+
+  <span class="c1">/// Detecting corners</span>
+  <span class="n">cornerHarris</span><span class="p">(</span> <span class="n">src_gray</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">blockSize</span><span class="p">,</span> <span class="n">apertureSize</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">BORDER_DEFAULT</span> <span class="p">);</span>
+
+  <span class="c1">/// Normalizing</span>
+  <span class="n">normalize</span><span class="p">(</span> <span class="n">dst</span><span class="p">,</span> <span class="n">dst_norm</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="n">NORM_MINMAX</span><span class="p">,</span> <span class="n">CV_32FC1</span><span class="p">,</span> <span class="n">Mat</span><span class="p">()</span> <span class="p">);</span>
+  <span class="n">convertScaleAbs</span><span class="p">(</span> <span class="n">dst_norm</span><span class="p">,</span> <span class="n">dst_norm_scaled</span> <span class="p">);</span>
+
+  <span class="c1">/// Drawing a circle around corners</span>
+  <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">dst_norm</span><span class="p">.</span><span class="n">rows</span> <span class="p">;</span> <span class="n">j</span><span class="o">++</span> <span class="p">)</span>
+     <span class="p">{</span> <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">dst_norm</span><span class="p">.</span><span class="n">cols</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+          <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">dst_norm</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">thresh</span> <span class="p">)</span>
+              <span class="p">{</span>
+               <span class="n">circle</span><span class="p">(</span> <span class="n">dst_norm_scaled</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="p">),</span> <span class="mi">5</span><span class="p">,</span>  <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+              <span class="p">}</span>
+          <span class="p">}</span>
+     <span class="p">}</span>
+  <span class="c1">/// Showing the result</span>
+  <span class="n">namedWindow</span><span class="p">(</span> <span class="n">corners_window</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span> <span class="p">);</span>
+  <span class="n">imshow</span><span class="p">(</span> <span class="n">corners_window</span><span class="p">,</span> <span class="n">dst_norm_scaled</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="explanation">
+<h2>Explanation<a class="headerlink" href="#explanation" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="result">
+<h2>Result<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h2>
+<p>The original image:</p>
+<img alt="../../../../../_images/Harris_Detector_Original_Image.jpg" class="align-center" src="../../../../../_images/Harris_Detector_Original_Image.jpg" />
+<p>The detected corners are surrounded by a small black circle</p>
+<img alt="../../../../../_images/Harris_Detector_Result.jpg" class="align-center" src="../../../../../_images/Harris_Detector_Result.jpg" />
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Harris corner detector</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#theory">Theory</a><ul>
+<li><a class="reference internal" href="#what-is-a-feature">What is a feature?</a></li>
+<li><a class="reference internal" href="#types-of-image-features">Types of Image Features</a></li>
+<li><a class="reference internal" href="#why-is-a-corner-so-special">Why is a corner so special?</a></li>
+<li><a class="reference internal" href="#how-does-it-work">How does it work?</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#explanation">Explanation</a></li>
+<li><a class="reference internal" href="#result">Result</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../../feature_description/feature_description.html"
+                        title="previous chapter">Feature Description</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../feature_flann_matcher/feature_flann_matcher.html"
+                        title="next chapter">Feature Matching with FLANN</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../../_sources/doc/tutorials/features2d/trackingmotion/harris_detector/harris_detector.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../feature_flann_matcher/feature_flann_matcher.html" title="Feature Matching with FLANN"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../../feature_description/feature_description.html" title="Feature Description"
+             >previous</a> |</li>
+        <li><a href="../../../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../../tutorials.html" >OpenCV Tutorials</a> &raquo;</li>
+          <li><a href="../../table_of_content_features2d/table_of_content_features2d.html" ><em>feature2d</em> module. 2D Features framework</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,565 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33108845-1']);
+  _gaq.push(['_setDomainName', 'opencv.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Support Vector Machines &mdash; OpenCV 2.4.13.7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2.4.13.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OpenCV 2.4.13.7 documentation" href="../../../index.html" />
+    <link rel="up" title="ml. Machine Learning" href="ml.html" />
+    <link rel="next" title="Decision Trees" href="decision_trees.html" />
+    <link rel="prev" title="K-Nearest Neighbors" href="k_nearest_neighbors.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="decision_trees.html" title="Decision Trees"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="k_nearest_neighbors.html" title="K-Nearest Neighbors"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" accesskey="U">ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+  
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="support-vector-machines">
+<h1>Support Vector Machines<a class="headerlink" href="#support-vector-machines" title="Permalink to this headline">¶</a></h1>
+<p>Originally, support vector machines (SVM) was a technique for building an optimal binary (2-class) classifier. Later the technique was extended to regression and clustering problems. SVM is a partial case of kernel-based methods. It maps feature vectors into a higher-dimensional space using a kernel function and builds an optimal linear discriminating function in this space or an optimal hyper-plane that fits into the training data. In case of SVM, the kernel is not defined explicitly. Instead, a distance between any 2 points in the hyper-space needs to be defined.</p>
+<p>The solution is optimal, which means that the margin between the separating hyper-plane and the nearest feature vectors from both classes (in case of 2-class classifier) is maximal. The feature vectors that are the closest to the hyper-plane are called <em>support vectors</em>, which means that the position of other vectors does not affect the hyper-plane (the decision function).</p>
+<p>SVM implementation in OpenCV is based on <a class="reference internal" href="#libsvm" id="id1">[LibSVM]</a>.</p>
+<table class="docutils citation" frame="void" id="burges98" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Burges98]</td><td><ol class="first last upperalpha simple" start="3">
+<li>Burges. <em>A tutorial on support vector machines for pattern recognition</em>, Knowledge Discovery and Data Mining 2(2), 1998 (available online at <a class="reference external" href="http://citeseer.ist.psu.edu/burges98tutorial.html">http://citeseer.ist.psu.edu/burges98tutorial.html</a>)</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="libsvm" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[LibSVM]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> C.-C. Chang and C.-J. Lin. <em>LIBSVM: a library for support vector machines</em>, ACM Transactions on Intelligent Systems and Technology, 2:27:1&#8211;27:27, 2011. (<a class="reference external" href="http://www.csie.ntu.edu.tw/~cjlin/papers/libsvm.pdf">http://www.csie.ntu.edu.tw/~cjlin/papers/libsvm.pdf</a>)</td></tr>
+</tbody>
+</table>
+<div class="section" id="cvparamgrid">
+<h2>CvParamGrid<a class="headerlink" href="#cvparamgrid" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvParamGrid">
+<em class="property">struct </em><code class="descname">CvParamGrid</code><a class="headerlink" href="#CvParamGrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>The structure represents the logarithmic grid range of statmodel parameters. It is used for optimizing statmodel accuracy by varying model parameters, the accuracy estimate being computed by cross-validation.</p>
+<dl class="member">
+<dt id="double CvParamGrid::min_val">
+double <code class="descclassname">CvParamGrid::</code><code class="descname">min_val</code><a class="headerlink" href="#double CvParamGrid::min_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimum value of the statmodel parameter.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="double CvParamGrid::max_val">
+double <code class="descclassname">CvParamGrid::</code><code class="descname">max_val</code><a class="headerlink" href="#double CvParamGrid::max_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum value of the statmodel parameter.</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="double CvParamGrid::step">
+double <code class="descclassname">CvParamGrid::</code><code class="descname">step</code><a class="headerlink" href="#double CvParamGrid::step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logarithmic step for iterating the statmodel parameter.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>The grid determines the following iteration sequence of the statmodel parameter values:</p>
+<div class="math">
+<p><img src="../../../_images/math/2891d5bd6633a81c5315677619bdcc524a80d4e8.png" alt="(min\_val, min\_val*step, min\_val*{step}^2, \dots,  min\_val*{step}^n),"/></p>
+</div><p>where <img class="math" src="../../../_images/math/95984a3ee1c7b534830cfc6a19a5410d83ea85fe.png" alt="n"/> is the maximal index satisfying</p>
+<div class="math">
+<p><img src="../../../_images/math/5f348f5819f323989c20a97de7bd86db214e1c9e.png" alt="\texttt{min\_val} * \texttt{step} ^n &lt;  \texttt{max\_val}"/></p>
+</div><p>The grid is logarithmic, so <code class="docutils literal"><span class="pre">step</span></code> must always be greater then 1.</p>
+</div>
+<div class="section" id="cvparamgrid-cvparamgrid">
+<h2>CvParamGrid::CvParamGrid<a class="headerlink" href="#cvparamgrid-cvparamgrid" title="Permalink to this headline">¶</a></h2>
+<p>The constructors.</p>
+<dl class="function">
+<dt id="CvParamGrid::CvParamGrid()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">CvParamGrid::</code><code class="descname">CvParamGrid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CvParamGrid::CvParamGrid()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="CvParamGrid::CvParamGrid(double min_val, double max_val, double log_step)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">CvParamGrid::</code><code class="descname">CvParamGrid</code><span class="sig-paren">(</span>double <strong>min_val</strong>, double <strong>max_val</strong>, double <strong>log_step</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvParamGrid::CvParamGrid(double min_val, double max_val, double log_step)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The full constructor initializes corresponding members. The default constructor creates a dummy grid:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">CvParamGrid</span><span class="o">::</span><span class="n">CvParamGrid</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">min_val</span> <span class="o">=</span> <span class="n">max_val</span> <span class="o">=</span> <span class="n">step</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cvparamgrid-check">
+<h2>CvParamGrid::check<a class="headerlink" href="#cvparamgrid-check" title="Permalink to this headline">¶</a></h2>
+<p>Checks validness of the grid.</p>
+<dl class="function">
+<dt id="bool CvParamGrid::check()">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CvParamGrid::</code><code class="descname">check</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bool CvParamGrid::check()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Returns <code class="docutils literal"><span class="pre">true</span></code> if the grid is valid and <code class="docutils literal"><span class="pre">false</span></code> otherwise. The grid is valid if and only if:</p>
+<ul class="simple">
+<li>Lower bound of the grid is less then the upper one.</li>
+<li>Lower bound of the grid is positive.</li>
+<li>Grid step is greater then 1.</li>
+</ul>
+</div>
+<div class="section" id="cvsvmparams">
+<h2>CvSVMParams<a class="headerlink" href="#cvsvmparams" title="Permalink to this headline">¶</a></h2>
+<dl class="struct">
+<dt id="CvSVMParams">
+<em class="property">struct </em><code class="descname">CvSVMParams</code><a class="headerlink" href="#CvSVMParams" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>SVM training parameters.</p>
+<p>The structure must be initialized and passed to the training method of <a class="reference internal" href="#CvSVM : public CvStatModel" title="class CvSVM : public CvStatModel"><code class="xref ocv ocv-class docutils literal"><span class="pre">CvSVM</span></code></a>.</p>
+</div>
+<div class="section" id="cvsvmparams-cvsvmparams">
+<h2>CvSVMParams::CvSVMParams<a class="headerlink" href="#cvsvmparams-cvsvmparams" title="Permalink to this headline">¶</a></h2>
+<p>The constructors.</p>
+<dl class="function">
+<dt id="CvSVMParams::CvSVMParams()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">CvSVMParams::</code><code class="descname">CvSVMParams</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CvSVMParams::CvSVMParams()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="CvSVMParams::CvSVMParams(int svm_type, int kernel_type, double degree, double gamma, double coef0, double Cvalue, double nu, double p, CvMat* class_weights, CvTermCriteria term_crit)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">CvSVMParams::</code><code class="descname">CvSVMParams</code><span class="sig-paren">(</span>int <strong>svm_type</strong>, int <strong>kernel_type</strong>, double <strong>degree</strong>, double <strong>gamma</strong>, double <strong>coef0</strong>, double <strong>Cvalue</strong>, double <strong>nu</strong>, double <strong>p</strong>, CvMat* <strong>class_weights</strong>, CvTermCriteria <strong>term_crit</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvSVMParams::CvSVMParams(int svm_type, int kernel_type, double degree, double gamma, double coef0, double Cvalue, double nu, double p, CvMat* class_weights, CvTermCriteria term_crit)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>svm_type</strong> &#8211; <p>Type of a SVM formulation. Possible values are:</p>
+<ul>
+<li><strong>CvSVM::C_SVC</strong> C-Support Vector Classification. <code class="docutils literal"><span class="pre">n</span></code>-class classification (<code class="docutils literal"><span class="pre">n</span></code> <img class="math" src="../../../_images/math/1d68cb93582bda70a78f9342048fdecdfda7324a.png" alt="\geq"/> 2), allows imperfect separation of classes with penalty multiplier <code class="docutils literal"><span class="pre">C</span></code> for outliers.</li>
+<li><strong>CvSVM::NU_SVC</strong> <img class="math" src="../../../_images/math/838dfbaf671c5ef2c85ac66c5def3213779a9839.png" alt="\nu"/>-Support Vector Classification. <code class="docutils literal"><span class="pre">n</span></code>-class classification with possible imperfect separation. Parameter <img class="math" src="../../../_images/math/838dfbaf671c5ef2c85ac66c5def3213779a9839.png" alt="\nu"/>  (in the range 0..1, the larger the value, the smoother the decision boundary) is used instead of <code class="docutils literal"><span class="pre">C</span></code>.</li>
+<li><strong>CvSVM::ONE_CLASS</strong> Distribution Estimation (One-class SVM). All the training data are from the same class, SVM builds a boundary that separates the class from the rest of the feature space.</li>
+<li><strong>CvSVM::EPS_SVR</strong> <img class="math" src="../../../_images/math/1b0eecce9b731287354fdc72d11213e7fc7f89f1.png" alt="\epsilon"/>-Support Vector Regression. The distance between feature vectors from the training set and the fitting hyper-plane must be less than <code class="docutils literal"><span class="pre">p</span></code>. For outliers the penalty multiplier <code class="docutils literal"><span class="pre">C</span></code> is used.</li>
+<li><strong>CvSVM::NU_SVR</strong> <img class="math" src="../../../_images/math/838dfbaf671c5ef2c85ac66c5def3213779a9839.png" alt="\nu"/>-Support Vector Regression. <img class="math" src="../../../_images/math/838dfbaf671c5ef2c85ac66c5def3213779a9839.png" alt="\nu"/> is used instead of <code class="docutils literal"><span class="pre">p</span></code>.</li>
+</ul>
+<p>See <a class="reference internal" href="#libsvm" id="id2">[LibSVM]</a> for details.</p>
+</li>
+<li><strong>kernel_type</strong> &#8211; <p>Type of a SVM kernel. Possible values are:</p>
+<ul>
+<li><strong>CvSVM::LINEAR</strong> Linear kernel. No mapping is done, linear discrimination (or regression) is done in the original feature space. It is the fastest option. <img class="math" src="../../../_images/math/7b3330cf231a649ac1d0b8752827699a8515aa27.png" alt="K(x_i, x_j) = x_i^T x_j"/>.</li>
+<li><strong>CvSVM::POLY</strong> Polynomial kernel: <img class="math" src="../../../_images/math/ca7469caa02a5d07b2c144d8ff29b0b1b2db7983.png" alt="K(x_i, x_j) = (\gamma x_i^T x_j + coef0)^{degree}, \gamma &gt; 0"/>.</li>
+<li><strong>CvSVM::RBF</strong> Radial basis function (RBF), a good choice in most cases. <img class="math" src="../../../_images/math/1510d308e92f2363953c491fb0cd4873d1b623d8.png" alt="K(x_i, x_j) = e^{-\gamma ||x_i - x_j||^2}, \gamma &gt; 0"/>.</li>
+<li><strong>CvSVM::SIGMOID</strong> Sigmoid kernel: <img class="math" src="../../../_images/math/a97fe8c9738e8fc808eb2a9b7e96248a1dc5febc.png" alt="K(x_i, x_j) = \tanh(\gamma x_i^T x_j + coef0)"/>.</li>
+</ul>
+</li>
+<li><strong>degree</strong> &#8211; Parameter <code class="docutils literal"><span class="pre">degree</span></code> of a kernel function (POLY).</li>
+<li><strong>gamma</strong> &#8211; Parameter <img class="math" src="../../../_images/math/b9e28934ca3430cc3e38e109dd6554da8ae7f5bc.png" alt="\gamma"/> of a kernel function (POLY / RBF / SIGMOID).</li>
+<li><strong>coef0</strong> &#8211; Parameter <code class="docutils literal"><span class="pre">coef0</span></code> of a kernel function (POLY / SIGMOID).</li>
+<li><strong>Cvalue</strong> &#8211; Parameter <code class="docutils literal"><span class="pre">C</span></code> of a SVM optimization problem (C_SVC / EPS_SVR / NU_SVR).</li>
+<li><strong>nu</strong> &#8211; Parameter <img class="math" src="../../../_images/math/838dfbaf671c5ef2c85ac66c5def3213779a9839.png" alt="\nu"/> of a SVM optimization problem (NU_SVC / ONE_CLASS / NU_SVR).</li>
+<li><strong>p</strong> &#8211; Parameter <img class="math" src="../../../_images/math/1b0eecce9b731287354fdc72d11213e7fc7f89f1.png" alt="\epsilon"/> of a SVM optimization problem (EPS_SVR).</li>
+<li><strong>class_weights</strong> &#8211; Optional weights in the C_SVC problem , assigned to particular classes. They are multiplied by <code class="docutils literal"><span class="pre">C</span></code> so the parameter <code class="docutils literal"><span class="pre">C</span></code> of class <code class="docutils literal"><span class="pre">#i</span></code> becomes <img class="math" src="../../../_images/math/1a053373809454028ff8db8da09f2ab7b45dd815.png" alt="class\_weights_i * C"/>. Thus these weights affect the misclassification penalty for different classes. The larger weight, the larger penalty on misclassification of data from the corresponding class.</li>
+<li><strong>term_crit</strong> &#8211; Termination criteria of the iterative SVM training procedure which solves a partial case of constrained quadratic optimization problem. You can specify tolerance and/or the maximum number of iterations.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The default constructor initialize the structure with following values:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">CvSVMParams</span><span class="o">::</span><span class="n">CvSVMParams</span><span class="p">()</span> <span class="o">:</span>
+    <span class="n">svm_type</span><span class="p">(</span><span class="n">CvSVM</span><span class="o">::</span><span class="n">C_SVC</span><span class="p">),</span> <span class="n">kernel_type</span><span class="p">(</span><span class="n">CvSVM</span><span class="o">::</span><span class="n">RBF</span><span class="p">),</span> <span class="n">degree</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+    <span class="n">gamma</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">coef0</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">C</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">nu</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">class_weights</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">term_crit</span> <span class="o">=</span> <span class="n">cvTermCriteria</span><span class="p">(</span> <span class="n">CV_TERMCRIT_ITER</span><span class="o">+</span><span class="n">CV_TERMCRIT_EPS</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">FLT_EPSILON</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cvsvm">
+<h2>CvSVM<a class="headerlink" href="#cvsvm" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="CvSVM : public CvStatModel">
+<em class="property">class </em><code class="descname">CvSVM</code> : <em class="property">public</em> <code class="descname">CvStatModel</code><a class="headerlink" href="#CvSVM : public CvStatModel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Support Vector Machines.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>(Python) An example of digit recognition using SVM can be found at opencv_source/samples/python2/digits.py</li>
+<li>(Python) An example of grid search digit recognition using SVM can be found at opencv_source/samples/python2/digits_adjust.py</li>
+<li>(Python) An example of video digit recognition using SVM can be found at opencv_source/samples/python2/digits_video.py</li>
+</ul>
+</div>
+</div>
+<div class="section" id="cvsvm-cvsvm">
+<h2>CvSVM::CvSVM<a class="headerlink" href="#cvsvm-cvsvm" title="Permalink to this headline">¶</a></h2>
+<p>Default and training constructors.</p>
+<dl class="function">
+<dt id="CvSVM::CvSVM()">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">CvSVM::</code><code class="descname">CvSVM</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CvSVM::CvSVM()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="CvSVM::CvSVM(const Mat&amp; trainData, const Mat&amp; responses, const Mat&amp; varIdx, const Mat&amp; sampleIdx, CvSVMParams params)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">CvSVM::</code><code class="descname">CvSVM</code><span class="sig-paren">(</span>const Mat&amp; <strong>trainData</strong>, const Mat&amp; <strong>responses</strong>, const Mat&amp; <strong>varIdx</strong>=Mat(), const Mat&amp; <strong>sampleIdx</strong>=Mat(), CvSVMParams <strong>params</strong>=CvSVMParams() <span class="sig-paren">)</span><a class="headerlink" href="#CvSVM::CvSVM(const Mat& trainData, const Mat& responses, const Mat& varIdx, const Mat& sampleIdx, CvSVMParams params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="CvSVM::CvSVM(const CvMat* trainData, const CvMat* responses, const CvMat* varIdx, const CvMat* sampleIdx, CvSVMParams params)">
+<strong>C++:</strong><code class="descname"> </code> <code class="descclassname">CvSVM::</code><code class="descname">CvSVM</code><span class="sig-paren">(</span>const CvMat* <strong>trainData</strong>, const CvMat* <strong>responses</strong>, const CvMat* <strong>varIdx</strong>=0, const CvMat* <strong>sampleIdx</strong>=0, CvSVMParams <strong>params</strong>=CvSVMParams() <span class="sig-paren">)</span><a class="headerlink" href="#CvSVM::CvSVM(const CvMat* trainData, const CvMat* responses, const CvMat* varIdx, const CvMat* sampleIdx, CvSVMParams params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.SVM">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.</code><code class="descname">SVM</code><span class="sig-paren">(</span><span class="optional">[</span>trainData, responses<span class="optional">[</span>, varIdx<span class="optional">[</span>, sampleIdx<span class="optional">[</span>, params<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; &lt;SVM object&gt;<a class="headerlink" href="#cv2.SVM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The constructors follow conventions of <a class="reference internal" href="statistical_models.html#CvStatModel::CvStatModel()" title="CvStatModel::CvStatModel()"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvStatModel::CvStatModel()</span></code></a>. See <a class="reference internal" href="statistical_models.html#bool CvStatModel::train(const Mat&amp; train_data, [int tflag,] ..., const Mat&amp; responses, ..., [const Mat&amp; var_idx,] ..., [const Mat&amp; sample_idx,] ... [const Mat&amp; var_type,] ..., [const Mat&amp; missing_mask,] &lt;misc_training_alg_params&gt; ...)" title="bool CvStatModel::train(const Mat&amp; train_data, [int tflag,] ..., const Mat&amp; responses, ..., [const Mat&amp; var_idx,] ..., [const Mat&amp; sample_idx,] ... [const Mat&amp; var_type,] ..., [const Mat&amp; missing_mask,] &lt;misc_training_alg_params&gt; ...)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvStatModel::train()</span></code></a> for parameters descriptions.</p>
+</div>
+<div class="section" id="cvsvm-train">
+<h2>CvSVM::train<a class="headerlink" href="#cvsvm-train" title="Permalink to this headline">¶</a></h2>
+<p>Trains an SVM.</p>
+<dl class="function">
+<dt id="bool CvSVM::train(const Mat&amp; trainData, const Mat&amp; responses, const Mat&amp; varIdx, const Mat&amp; sampleIdx, CvSVMParams params)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CvSVM::</code><code class="descname">train</code><span class="sig-paren">(</span>const Mat&amp; <strong>trainData</strong>, const Mat&amp; <strong>responses</strong>, const Mat&amp; <strong>varIdx</strong>=Mat(), const Mat&amp; <strong>sampleIdx</strong>=Mat(), CvSVMParams <strong>params</strong>=CvSVMParams() <span class="sig-paren">)</span><a class="headerlink" href="#bool CvSVM::train(const Mat& trainData, const Mat& responses, const Mat& varIdx, const Mat& sampleIdx, CvSVMParams params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bool CvSVM::train(const CvMat* trainData, const CvMat* responses, const CvMat* varIdx, const CvMat* sampleIdx, CvSVMParams params)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CvSVM::</code><code class="descname">train</code><span class="sig-paren">(</span>const CvMat* <strong>trainData</strong>, const CvMat* <strong>responses</strong>, const CvMat* <strong>varIdx</strong>=0, const CvMat* <strong>sampleIdx</strong>=0, CvSVMParams <strong>params</strong>=CvSVMParams() <span class="sig-paren">)</span><a class="headerlink" href="#bool CvSVM::train(const CvMat* trainData, const CvMat* responses, const CvMat* varIdx, const CvMat* sampleIdx, CvSVMParams params)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.SVM.train">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.SVM.</code><code class="descname">train</code><span class="sig-paren">(</span>trainData, responses<span class="optional">[</span>, varIdx<span class="optional">[</span>, sampleIdx<span class="optional">[</span>, params<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.SVM.train" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The method trains the SVM model. It follows the conventions of the generic <a class="reference internal" href="statistical_models.html#bool CvStatModel::train(const Mat&amp; train_data, [int tflag,] ..., const Mat&amp; responses, ..., [const Mat&amp; var_idx,] ..., [const Mat&amp; sample_idx,] ... [const Mat&amp; var_type,] ..., [const Mat&amp; missing_mask,] &lt;misc_training_alg_params&gt; ...)" title="bool CvStatModel::train(const Mat&amp; train_data, [int tflag,] ..., const Mat&amp; responses, ..., [const Mat&amp; var_idx,] ..., [const Mat&amp; sample_idx,] ... [const Mat&amp; var_type,] ..., [const Mat&amp; missing_mask,] &lt;misc_training_alg_params&gt; ...)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvStatModel::train()</span></code></a> approach with the following limitations:</p>
+<ul class="simple">
+<li>Only the <code class="docutils literal"><span class="pre">CV_ROW_SAMPLE</span></code> data layout is supported.</li>
+<li>Input variables are all ordered.</li>
+<li>Output variables can be either categorical (<code class="docutils literal"><span class="pre">params.svm_type=CvSVM::C_SVC</span></code> or <code class="docutils literal"><span class="pre">params.svm_type=CvSVM::NU_SVC</span></code>), or ordered (<code class="docutils literal"><span class="pre">params.svm_type=CvSVM::EPS_SVR</span></code> or <code class="docutils literal"><span class="pre">params.svm_type=CvSVM::NU_SVR</span></code>), or not required at all (<code class="docutils literal"><span class="pre">params.svm_type=CvSVM::ONE_CLASS</span></code>).</li>
+<li>Missing measurements are not supported.</li>
+</ul>
+<p>All the other parameters are gathered in the
+<code class="xref ocv ocv-class docutils literal"><span class="pre">CvSVMParams</span></code> structure.</p>
+</div>
+<div class="section" id="cvsvm-train-auto">
+<h2>CvSVM::train_auto<a class="headerlink" href="#cvsvm-train-auto" title="Permalink to this headline">¶</a></h2>
+<p>Trains an SVM with optimal parameters.</p>
+<dl class="function">
+<dt id="bool CvSVM::train_auto(const Mat&amp; trainData, const Mat&amp; responses, const Mat&amp; varIdx, const Mat&amp; sampleIdx, CvSVMParams params, int k_fold , CvParamGrid Cgrid , CvParamGrid gammaGrid , CvParamGrid pGrid , CvParamGrid nuGrid , CvParamGrid coeffGrid , CvParamGrid degreeGrid , bool balanced)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CvSVM::</code><code class="descname">train_auto</code><span class="sig-paren">(</span>const Mat&amp; <strong>trainData</strong>, const Mat&amp; <strong>responses</strong>, const Mat&amp; <strong>varIdx</strong>, const Mat&amp; <strong>sampleIdx</strong>, CvSVMParams <strong>params</strong>, int <strong>k_fold</strong>=10, CvParamGrid <strong>Cgrid</strong>=CvSVM::get_default_grid(CvSVM::C), CvParamGrid <strong>gammaGrid</strong>=CvSVM::get_default_grid(CvSVM::GAMMA), CvParamGrid <strong>pGrid</strong>=CvSVM::get_default_grid(CvSVM::P), CvParamGrid <strong>nuGrid</strong>=CvSVM::get_default_grid(CvSVM::NU), CvParamGrid <strong>coeffGrid</strong>=CvSVM::get_default_grid(CvSVM::COEF), CvParamGrid <strong>degreeGrid</strong>=CvSVM::get_default_grid(CvSVM::DEGREE), bool <strong>balanced</strong>=false<span class="sig-paren">)</span><a class="headerlink" href="#bool CvSVM::train_auto(const Mat& trainData, const Mat& responses, const Mat& varIdx, const Mat& sampleIdx, CvSVMParams params, int k_fold , CvParamGrid Cgrid , CvParamGrid gammaGrid , CvParamGrid pGrid , CvParamGrid nuGrid , CvParamGrid coeffGrid , CvParamGrid degreeGrid , bool balanced)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bool CvSVM::train_auto(const CvMat* trainData, const CvMat* responses, const CvMat* varIdx, const CvMat* sampleIdx, CvSVMParams params, int kfold , CvParamGrid Cgrid , CvParamGrid gammaGrid , CvParamGrid pGrid , CvParamGrid nuGrid , CvParamGrid coeffGrid , CvParamGrid degreeGrid , bool balanced)">
+<strong>C++:</strong><code class="descname"> </code>bool <code class="descclassname">CvSVM::</code><code class="descname">train_auto</code><span class="sig-paren">(</span>const CvMat* <strong>trainData</strong>, const CvMat* <strong>responses</strong>, const CvMat* <strong>varIdx</strong>, const CvMat* <strong>sampleIdx</strong>, CvSVMParams <strong>params</strong>, int <strong>kfold</strong>=10, CvParamGrid <strong>Cgrid</strong>=get_default_grid(CvSVM::C), CvParamGrid <strong>gammaGrid</strong>=get_default_grid(CvSVM::GAMMA), CvParamGrid <strong>pGrid</strong>=get_default_grid(CvSVM::P), CvParamGrid <strong>nuGrid</strong>=get_default_grid(CvSVM::NU), CvParamGrid <strong>coeffGrid</strong>=get_default_grid(CvSVM::COEF), CvParamGrid <strong>degreeGrid</strong>=get_default_grid(CvSVM::DEGREE), bool <strong>balanced</strong>=false <span class="sig-paren">)</span><a class="headerlink" href="#bool CvSVM::train_auto(const CvMat* trainData, const CvMat* responses, const CvMat* varIdx, const CvMat* sampleIdx, CvSVMParams params, int kfold , CvParamGrid Cgrid , CvParamGrid gammaGrid , CvParamGrid pGrid , CvParamGrid nuGrid , CvParamGrid coeffGrid , CvParamGrid degreeGrid , bool balanced)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.SVM.train_auto">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.SVM.</code><code class="descname">train_auto</code><span class="sig-paren">(</span>trainData, responses, varIdx, sampleIdx, params<span class="optional">[</span>, k_fold<span class="optional">[</span>, Cgrid<span class="optional">[</span>, gammaGrid<span class="optional">[</span>, pGrid<span class="optional">[</span>, nuGrid<span class="optional">[</span>, coeffGrid<span class="optional">[</span>, degreeGrid<span class="optional">[</span>, balanced<span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.SVM.train_auto" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>k_fold</strong> &#8211; Cross-validation parameter. The training set is divided into <code class="docutils literal"><span class="pre">k_fold</span></code> subsets. One subset is used to test the model, the others form the train set. So, the SVM algorithm is executed <code class="docutils literal"><span class="pre">k_fold</span></code> times.</li>
+<li><strong>*Grid</strong> &#8211; Iteration grid for the corresponding SVM parameter.</li>
+<li><strong>balanced</strong> &#8211; If <code class="docutils literal"><span class="pre">true</span></code> and the problem is 2-class classification then the method creates more balanced cross-validation subsets that is proportions between classes in subsets are close to such proportion in the whole train dataset.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The method trains the SVM model automatically by choosing the optimal
+parameters <code class="docutils literal"><span class="pre">C</span></code>, <code class="docutils literal"><span class="pre">gamma</span></code>, <code class="docutils literal"><span class="pre">p</span></code>, <code class="docutils literal"><span class="pre">nu</span></code>, <code class="docutils literal"><span class="pre">coef0</span></code>, <code class="docutils literal"><span class="pre">degree</span></code> from
+<code class="xref ocv ocv-class docutils literal"><span class="pre">CvSVMParams</span></code>. Parameters are considered optimal
+when the cross-validation estimate of the test set error
+is minimal.</p>
+<p>If there is no need to optimize a parameter, the corresponding grid step should be set to any value less than or equal to 1. For example, to avoid optimization in <code class="docutils literal"><span class="pre">gamma</span></code>, set <code class="docutils literal"><span class="pre">gamma_grid.step</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal"><span class="pre">gamma_grid.min_val</span></code>, <code class="docutils literal"><span class="pre">gamma_grid.max_val</span></code> as arbitrary numbers. In this case, the value <code class="docutils literal"><span class="pre">params.gamma</span></code> is taken for <code class="docutils literal"><span class="pre">gamma</span></code>.</p>
+<p>And, finally, if the optimization in a parameter is required but
+the corresponding grid is unknown, you may call the function <a class="reference internal" href="#CvParamGrid CvSVM::get_default_grid(int param_id)" title="CvParamGrid CvSVM::get_default_grid(int param_id)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvSVM::get_default_grid()</span></code></a>. To generate a grid, for example, for <code class="docutils literal"><span class="pre">gamma</span></code>, call <code class="docutils literal"><span class="pre">CvSVM::get_default_grid(CvSVM::GAMMA)</span></code>.</p>
+<p>This function works for the classification
+(<code class="docutils literal"><span class="pre">params.svm_type=CvSVM::C_SVC</span></code> or <code class="docutils literal"><span class="pre">params.svm_type=CvSVM::NU_SVC</span></code>)
+as well as for the regression
+(<code class="docutils literal"><span class="pre">params.svm_type=CvSVM::EPS_SVR</span></code> or <code class="docutils literal"><span class="pre">params.svm_type=CvSVM::NU_SVR</span></code>). If <code class="docutils literal"><span class="pre">params.svm_type=CvSVM::ONE_CLASS</span></code>, no optimization is made and the usual SVM with parameters specified in <code class="docutils literal"><span class="pre">params</span></code> is executed.</p>
+</div>
+<div class="section" id="cvsvm-predict">
+<h2>CvSVM::predict<a class="headerlink" href="#cvsvm-predict" title="Permalink to this headline">¶</a></h2>
+<p>Predicts the response for input sample(s).</p>
+<dl class="function">
+<dt id="float CvSVM::predict(const Mat&amp; sample, bool returnDFVal) const">
+<strong>C++:</strong><code class="descname"> </code>float <code class="descclassname">CvSVM::</code><code class="descname">predict</code><span class="sig-paren">(</span>const Mat&amp; <strong>sample</strong>, bool <strong>returnDFVal</strong>=false <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#float CvSVM::predict(const Mat& sample, bool returnDFVal) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="float CvSVM::predict(const CvMat* sample, bool returnDFVal) const">
+<strong>C++:</strong><code class="descname"> </code>float <code class="descclassname">CvSVM::</code><code class="descname">predict</code><span class="sig-paren">(</span>const CvMat* <strong>sample</strong>, bool <strong>returnDFVal</strong>=false <span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#float CvSVM::predict(const CvMat* sample, bool returnDFVal) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="float CvSVM::predict(const CvMat* samples, CvMat* results) const">
+<strong>C++:</strong><code class="descname"> </code>float <code class="descclassname">CvSVM::</code><code class="descname">predict</code><span class="sig-paren">(</span>const CvMat* <strong>samples</strong>, CvMat* <strong>results</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#float CvSVM::predict(const CvMat* samples, CvMat* results) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.SVM.predict">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.SVM.</code><code class="descname">predict</code><span class="sig-paren">(</span>sample<span class="optional">[</span>, returnDFVal<span class="optional">]</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.SVM.predict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.SVM.predict_all">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.SVM.</code><code class="descname">predict_all</code><span class="sig-paren">(</span>samples<span class="optional">[</span>, results<span class="optional">]</span><span class="sig-paren">)</span> &rarr; results<a class="headerlink" href="#cv2.SVM.predict_all" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sample</strong> &#8211; Input sample for prediction.</li>
+<li><strong>samples</strong> &#8211; Input samples for prediction.</li>
+<li><strong>returnDFVal</strong> &#8211; Specifies a type of the return value. If <code class="docutils literal"><span class="pre">true</span></code> and the problem is 2-class classification then the method returns the decision function value that is signed distance to the margin, else the function returns a class label (classification) or estimated function value (regression).</li>
+<li><strong>results</strong> &#8211; Output prediction responses for corresponding samples.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>If you pass one sample then prediction result is returned. If you want to get responses for several samples then you should pass the <code class="docutils literal"><span class="pre">results</span></code> matrix where prediction results will be stored.</p>
+<p>The function is parallelized with the TBB library.</p>
+</div>
+<div class="section" id="cvsvm-get-default-grid">
+<h2>CvSVM::get_default_grid<a class="headerlink" href="#cvsvm-get-default-grid" title="Permalink to this headline">¶</a></h2>
+<p>Generates a grid for SVM parameters.</p>
+<dl class="function">
+<dt id="CvParamGrid CvSVM::get_default_grid(int param_id)">
+<strong>C++:</strong><code class="descname"> </code>CvParamGrid <code class="descclassname">CvSVM::</code><code class="descname">get_default_grid</code><span class="sig-paren">(</span>int <strong>param_id</strong><span class="sig-paren">)</span><a class="headerlink" href="#CvParamGrid CvSVM::get_default_grid(int param_id)" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>param_id</strong> &#8211; <p>SVM parameters IDs that must be one of the following:</p>
+<blockquote>
+<div><ul>
+<li><strong>CvSVM::C</strong></li>
+<li><strong>CvSVM::GAMMA</strong></li>
+<li><strong>CvSVM::P</strong></li>
+<li><strong>CvSVM::NU</strong></li>
+<li><strong>CvSVM::COEF</strong></li>
+<li><strong>CvSVM::DEGREE</strong></li>
+</ul>
+</div></blockquote>
+<p>The grid is generated for the parameter with this ID.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The function generates a grid for the specified parameter of the SVM algorithm. The grid may be passed to the function <a class="reference internal" href="#bool CvSVM::train_auto(const Mat&amp; trainData, const Mat&amp; responses, const Mat&amp; varIdx, const Mat&amp; sampleIdx, CvSVMParams params, int k_fold , CvParamGrid Cgrid , CvParamGrid gammaGrid , CvParamGrid pGrid , CvParamGrid nuGrid , CvParamGrid coeffGrid , CvParamGrid degreeGrid , bool balanced)" title="bool CvSVM::train_auto(const Mat&amp; trainData, const Mat&amp; responses, const Mat&amp; varIdx, const Mat&amp; sampleIdx, CvSVMParams params, int k_fold , CvParamGrid Cgrid , CvParamGrid gammaGrid , CvParamGrid pGrid , CvParamGrid nuGrid , CvParamGrid coeffGrid , CvParamGrid degreeGrid , bool balanced)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvSVM::train_auto()</span></code></a>.</p>
+</div>
+<div class="section" id="cvsvm-get-params">
+<h2>CvSVM::get_params<a class="headerlink" href="#cvsvm-get-params" title="Permalink to this headline">¶</a></h2>
+<p>Returns the current SVM parameters.</p>
+<dl class="function">
+<dt id="CvSVMParams CvSVM::get_params() const">
+<strong>C++:</strong><code class="descname"> </code>CvSVMParams <code class="descclassname">CvSVM::</code><code class="descname">get_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#CvSVMParams CvSVM::get_params() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This function may be used to get the optimal parameters obtained while automatically training <a class="reference internal" href="#bool CvSVM::train_auto(const Mat&amp; trainData, const Mat&amp; responses, const Mat&amp; varIdx, const Mat&amp; sampleIdx, CvSVMParams params, int k_fold , CvParamGrid Cgrid , CvParamGrid gammaGrid , CvParamGrid pGrid , CvParamGrid nuGrid , CvParamGrid coeffGrid , CvParamGrid degreeGrid , bool balanced)" title="bool CvSVM::train_auto(const Mat&amp; trainData, const Mat&amp; responses, const Mat&amp; varIdx, const Mat&amp; sampleIdx, CvSVMParams params, int k_fold , CvParamGrid Cgrid , CvParamGrid gammaGrid , CvParamGrid pGrid , CvParamGrid nuGrid , CvParamGrid coeffGrid , CvParamGrid degreeGrid , bool balanced)"><code class="xref ocv ocv-func docutils literal"><span class="pre">CvSVM::train_auto()</span></code></a>.</p>
+</div>
+<div class="section" id="cvsvm-get-support-vector">
+<h2>CvSVM::get_support_vector<a class="headerlink" href="#cvsvm-get-support-vector" title="Permalink to this headline">¶</a></h2>
+<p>Retrieves a number of support vectors and the particular vector.</p>
+<dl class="function">
+<dt id="int CvSVM::get_support_vector_count() const">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">CvSVM::</code><code class="descname">get_support_vector_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#int CvSVM::get_support_vector_count() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="const float* CvSVM::get_support_vector(int i) const">
+<strong>C++:</strong><code class="descname"> </code>const float* <code class="descclassname">CvSVM::</code><code class="descname">get_support_vector</code><span class="sig-paren">(</span>int <strong>i</strong><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#const float* CvSVM::get_support_vector(int i) const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.SVM.get_support_vector_count">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.SVM.</code><code class="descname">get_support_vector_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.SVM.get_support_vector_count" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>i</strong> &#8211; Index of the particular support vector.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>The methods can be used to retrieve a set of support vectors.</p>
+</div>
+<div class="section" id="cvsvm-get-var-count">
+<h2>CvSVM::get_var_count<a class="headerlink" href="#cvsvm-get-var-count" title="Permalink to this headline">¶</a></h2>
+<p>Returns the number of used features (variables count).</p>
+<dl class="function">
+<dt id="int CvSVM::get_var_count() const">
+<strong>C++:</strong><code class="descname"> </code>int <code class="descclassname">CvSVM::</code><code class="descname">get_var_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><code class="descclassname"> const</code><a class="headerlink" href="#int CvSVM::get_var_count() const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="pyfunction">
+<dt id="cv2.SVM.get_var_count">
+<strong>Python:</strong><code class="descname"> </code><code class="descclassname">cv2.SVM.</code><code class="descname">get_var_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &rarr; retval<a class="headerlink" href="#cv2.SVM.get_var_count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="feedback">
+              <h2>Help and Feedback</h2>
+              You did not find what you were looking for?
+              <ul>
+                  
+                  
+                  
+                  <li>Ask a question on the <a href="http://answers.opencv.org">Q&A forum</a>.</li>
+                  <li>If you think something is missing or wrong in the documentation,
+                  please file a <a href="http://code.opencv.org">bug report</a>.</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/opencv-logo-white.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+      <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Search" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+      </p>
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Support Vector Machines</a><ul>
+<li><a class="reference internal" href="#cvparamgrid">CvParamGrid</a></li>
+<li><a class="reference internal" href="#cvparamgrid-cvparamgrid">CvParamGrid::CvParamGrid</a></li>
+<li><a class="reference internal" href="#cvparamgrid-check">CvParamGrid::check</a></li>
+<li><a class="reference internal" href="#cvsvmparams">CvSVMParams</a></li>
+<li><a class="reference internal" href="#cvsvmparams-cvsvmparams">CvSVMParams::CvSVMParams</a></li>
+<li><a class="reference internal" href="#cvsvm">CvSVM</a></li>
+<li><a class="reference internal" href="#cvsvm-cvsvm">CvSVM::CvSVM</a></li>
+<li><a class="reference internal" href="#cvsvm-train">CvSVM::train</a></li>
+<li><a class="reference internal" href="#cvsvm-train-auto">CvSVM::train_auto</a></li>
+<li><a class="reference internal" href="#cvsvm-predict">CvSVM::predict</a></li>
+<li><a class="reference internal" href="#cvsvm-get-default-grid">CvSVM::get_default_grid</a></li>
+<li><a class="reference internal" href="#cvsvm-get-params">CvSVM::get_params</a></li>
+<li><a class="reference internal" href="#cvsvm-get-support-vector">CvSVM::get_support_vector</a></li>
+<li><a class="reference internal" href="#cvsvm-get-var-count">CvSVM::get_var_count</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="k_nearest_neighbors.html"
+                        title="previous chapter">K-Nearest Neighbors</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="decision_trees.html"
+                        title="next chapter">Decision Trees</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/modules/ml/doc/support_vector_machines.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="decision_trees.html" title="Decision Trees"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="k_nearest_neighbors.html" title="K-Nearest Neighbors"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">OpenCV 2.4.13.7 documentation</a> &raquo;</li>
+          <li><a href="../../refman.html" >OpenCV API Reference</a> &raquo;</li>
+          <li><a href="ml.html" >ml. Machine Learning</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, opencv dev team.
+      Last updated on Jul 12, 2018.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>
